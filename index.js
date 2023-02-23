@@ -42,6 +42,7 @@ function events(request, response, next) {
 
 async function sendEvent(request, response, next) {
     const data = request.body;
+    console.log("PETICION");
     subscribers.forEach(subscriber => {
         subscriber.response.write(`data: ${JSON.stringify(data)}\n\n`);
         var resData = data;
