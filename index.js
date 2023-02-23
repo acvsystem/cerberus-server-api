@@ -45,7 +45,7 @@ async function sendEvent(request, response, next) {
     subscribers.forEach(subscriber => {
         subscriber.response.write(`data: ${JSON.stringify(data)}\n\n`);
         var resData = data;
-
+        console.log(resData);
         if ((resData || "").id == "response") {
             var allData = JSON.parse((resData || {}).allData);
             var receptData = JSON.parse((resData || {}).receptData);
