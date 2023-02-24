@@ -6,7 +6,6 @@ const app = express();
 
 app.use(cors());
 
-
 var bodyParser = require('body-parser');
 app.use(bodyParser.json({ limit: '1000000mb' }));
 app.use(bodyParser.urlencoded({ limit: '1000000mb', extended: true }));
@@ -102,5 +101,5 @@ app.post('/send-event', sendEvent);
 app.post('/verify', verifyData);
 
 app.listen(3200, () => {
-    console.log('Events service started at http://localhost:3200')
+    console.log('Events service started')
 });
