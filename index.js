@@ -42,7 +42,6 @@ function events(request, response, next) {
 
 async function sendEvent(request, response, next) {
     const data = request.body;
-    console.log("PETICION");
     subscribers.forEach(subscriber => {
         subscriber.response.write(`data: ${JSON.stringify(data)}\n\n`);
         var resData = data;
@@ -69,7 +68,9 @@ async function sendEvent(request, response, next) {
                 }
             });
 
-            
+            console.log(`${refTienda} - Comprobantes enviados: ${arrNotReg.length}`);
+
+            if (arrNotReg.length) {
                 const XLSX = require("xlsx");
                 const workSheet = XLSX.utils.json_to_sheet(arrNotReg);
                 const workBook = XLSX.utils.book_new();
@@ -77,7 +78,7 @@ async function sendEvent(request, response, next) {
                 const xlsFile = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
                 require("./send_mail")('andrecanalesv@gmail.com', `${refTienda} - FACTURAS FALTANTES EN SERVIDOR`, xlsFile)
                     .catch(error => res.send(error));
-            
+            }
             
 
         }
