@@ -66,12 +66,13 @@ async function sendEvent(request, response, next) {
                 if (!(arAllComprobantes || {}).includes(newCp)) {
                     (arrNotReg || []).push({
                         "CORRELATIVO": newCp,
+                        "TIPO DOCUMENTO" : (cmp || {}).cmpTipo,
                         "FECHA": (cmp || {}).cmpFecha
                     });
                 }
             });
 
-            console.log(`${day}-${year}-${month} - ${refTienda} - Comprobantes enviados: ${arrNotReg.length}`);
+            console.log(`${day}-${month}-${year} - ${refTienda} - Comprobantes enviados: ${arrNotReg.length}`);
 
             if (arrNotReg.length) {
                 const XLSX = require("xlsx");
