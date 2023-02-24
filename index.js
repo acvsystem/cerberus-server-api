@@ -52,6 +52,10 @@ async function sendEvent(request, response, next) {
             var refTienda = receptData.local;
             var arAllComprobantes = [];
             var arrNotReg = [];
+            let date = new Date();
+            let day = `0${date.getDate()}`.slice(-2);
+            let month = `0${date.getMonth() + 1}`.slice(-2);
+            let year = date.getFullYear();
 
             (allData || []).filter((dataCentral) => {
                 var newCp = (dataCentral || {}).cmpNumero.split('-');
@@ -68,7 +72,7 @@ async function sendEvent(request, response, next) {
                 }
             });
 
-            console.log(`${refTienda} - Comprobantes enviados: ${arrNotReg.length}`);
+            console.log(`${day}-${year}-${month} - ${refTienda} - Comprobantes enviados: ${arrNotReg.length}`);
 
             if (arrNotReg.length) {
                 const XLSX = require("xlsx");
