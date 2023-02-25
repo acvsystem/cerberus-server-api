@@ -57,7 +57,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('petitionFront', (data) => {
-        socket.broadcast.emit("sendDataFront", data['local']);
+        socket.broadcast.emit("sendDataFront", data);
     });
 
     socket.on('disconnect', () => {
