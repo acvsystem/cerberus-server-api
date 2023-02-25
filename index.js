@@ -12,7 +12,9 @@ app.use(bodyParser.urlencoded({ limit: '1000000mb', extended: true }));
 
 
 io.on('connection', (socket) => {
-    console.log(socket.id);
+    socket.on('sendDataFront', (msg) => {
+        console.log('message: ' + msg);
+      });
     console.log('a user connected');
 
     socket.on('disconnect', () => {
