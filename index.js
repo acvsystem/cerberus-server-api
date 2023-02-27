@@ -1,7 +1,9 @@
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, {
+    cors: { origin: '*' }
+});
 const cors = require('cors');
 
 app.use(cors());
@@ -14,26 +16,26 @@ io.on('connection', (socket) => {
     socket.on('verifyDocument', (resData) => {
         if ((resData || "").id == "server") {
             let tiendasList = [
-                {code:'7A',name:'BBW JOCKEY'},
-                {code:'9A',name:'VSBA JOCKEY'},
-                {code:'PC',name:'AEO JOCKEY'},
-                {code:'PB',name:'AEO ASIA'},
-                {code:'7E',name:'BBW LA RAMBLA'},
-                {code:'9D',name:'VS LA RAMBLA'},
-                {code:'9B',name:'VS PLAZA NORTE'},
-                {code:'7C',name:'BBW SAN MIGUEL'},
-                {code:'9C',name:'VS SAN MIGUEL'},
-                {code:'7D',name:'BBW SALAVERRY'},
-                {code:'9I',name:'VS SALAVERRY'},
-                {code:'9G',name:'VS MALL DEL SUR'},
-                {code:'9H',name:'VS PURUCHUCO'},
-                {code:'9M',name:'VS ECOMMERCE'},
-                {code:'7F',name:'BBW ECOMMERCE'},
-                {code:'PA',name:'AEO ECOMMERCE'},
-                {code:'9K',name:'VS MEGA PLAZA'},
-                {code:'9L',name:'VS MINKA'},
-                {code:'9F',name:'VSFA JOCKEY FULL'},
-                {code:'7A',name:'AEO ASIA'}
+                { code: '7A', name: 'BBW JOCKEY' },
+                { code: '9A', name: 'VSBA JOCKEY' },
+                { code: 'PC', name: 'AEO JOCKEY' },
+                { code: 'PB', name: 'AEO ASIA' },
+                { code: '7E', name: 'BBW LA RAMBLA' },
+                { code: '9D', name: 'VS LA RAMBLA' },
+                { code: '9B', name: 'VS PLAZA NORTE' },
+                { code: '7C', name: 'BBW SAN MIGUEL' },
+                { code: '9C', name: 'VS SAN MIGUEL' },
+                { code: '7D', name: 'BBW SALAVERRY' },
+                { code: '9I', name: 'VS SALAVERRY' },
+                { code: '9G', name: 'VS MALL DEL SUR' },
+                { code: '9H', name: 'VS PURUCHUCO' },
+                { code: '9M', name: 'VS ECOMMERCE' },
+                { code: '7F', name: 'BBW ECOMMERCE' },
+                { code: 'PA', name: 'AEO ECOMMERCE' },
+                { code: '9K', name: 'VS MEGA PLAZA' },
+                { code: '9L', name: 'VS MINKA' },
+                { code: '9F', name: 'VSFA JOCKEY FULL' },
+                { code: '7A', name: 'AEO ASIA' }
             ];
             var allData = JSON.parse((resData || {}).allData);
             var receptData = JSON.parse((resData || {}).receptData);
@@ -51,7 +53,7 @@ io.on('connection', (socket) => {
             });
 
             (dataFront || []).filter((cmp) => {
-                numeroSerie = (cmp || {}).cmpSerie.substr(1,2);
+                numeroSerie = (cmp || {}).cmpSerie.substr(1, 2);
                 var newCp = (cmp || {}).cmpSerie + '-' + (cmp || {}).cmpNumero;
                 if (!(arAllComprobantes || {}).includes(newCp)) {
                     (arrNotReg || []).push({
@@ -61,8 +63,8 @@ io.on('connection', (socket) => {
                     });
                 }
             });
-            
-            let selectedLocal = tiendasList.find((data)=>data.code == numeroSerie);
+
+            let selectedLocal = tiendasList.find((data) => data.code == numeroSerie);
             console.log(`${day}-${month}-${year} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${arrNotReg.length}`);
 
             if (arrNotReg.length) {
