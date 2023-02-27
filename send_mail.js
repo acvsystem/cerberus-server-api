@@ -1,16 +1,12 @@
 const mailer = require("nodemailer");
+var smtpTransport = require('nodemailer-smtp-transport');
 
 module.exports = (email, nome, mensagem) => {
-    const smtpTransport = mailer.createTransport(smtpTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
+    const transport = mailer.createTransport(smtpTransport({
+        service: 'gmail',
         auth: {
             user: 'andrecanalesv@gmail.com',
             pass: 'nathrakh'
-        },
-        tls: {
-            rejectUnauthorized: false
         }
     }))
     
@@ -21,15 +17,15 @@ module.exports = (email, nome, mensagem) => {
     }
         
     return new Promise((resolve, reject) => {
-        smtpTransport.sendMail(mail)
+        transport.sendMail(mail)
             .then(response => {
                 console.log(response);
-                smtpTransport.close();
+                transport.close();
                 return resolve(response);
             })
             .catch(error => {
                 console.log(error);
-                smtpTransport.close();
+                transport.close();
                 return reject(error);
             });
     })
