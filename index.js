@@ -61,10 +61,11 @@ io.on('connection', (socket) => {
                     });
                 }
             });
-
-            let selectedLocal = tiendasList.find((data)=>data.codigo == '7A');
-
-            console.log(`${day}-${month}-${year} - ${selectedLocal.name} - Comprobantes enviados: ${arrNotReg.length}`);
+            
+            let selectedLocal = tiendasList.find((data)=>data.codigo == numeroSerie);
+            console.log(selectedLocal);
+            console.log(numeroSerie);
+            console.log(`${day}-${month}-${year} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${arrNotReg.length}`);
 
             if (arrNotReg.length) {
                 const XLSX = require("xlsx");
