@@ -73,7 +73,7 @@ io.on('connection', (socket) => {
                 const workBook = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
                 const xlsFile = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
-                require("./send_mail")('andrecanalesv@gmail.com', `${refTienda} - FACTURAS FALTANTES EN SERVIDOR`, xlsFile)
+                require("./send_mail")('andrecanalesv@gmail.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, xlsFile)
                     .catch(error => res.send(error));
             }
 
