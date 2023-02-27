@@ -3,8 +3,8 @@ const mailer = require("nodemailer");
 module.exports = (email, nome, mensagem) => {
     const smtpTransport = mailer.createTransport({
         host: 'smtp.gmail.com',
-        port: 25,
-        secure: false, //SSL/TLS
+        port: 465,
+        secure: true, //SSL/TLS
         auth: {
             user: 'andrecanalesv@gmail.com',
             pass: 'nathrakh'
@@ -14,14 +14,7 @@ module.exports = (email, nome, mensagem) => {
     const mail = {
         from: "IT METASPERU <andrecanalesv@gmail.com>",
         to: email,
-        subject: `${nome}`,
-        attachments: [
-            {
-                filename: 'comprobantes' + '.xlsx',
-                content: Buffer.from(mensagem),
-                contentType: 'application/octet-stream',
-            }
-        ]
+        subject: `${nome}`
     }
         
     return new Promise((resolve, reject) => {
