@@ -2,17 +2,17 @@ const mailer = require("nodemailer");
 
 module.exports = (email, nome, mensagem) => {
     const smtpTransport = mailer.createTransport({
-        host: 'smtp.zoho.com',
+        host: 'smtp.gmail.com',
         port: 465,
         secure: true, //SSL/TLS
         auth: {
-            user: 'skyboxdev@zohomail.com',
-            pass: 'P4ssw0rd$'
+            user: 'andrecanalesv@gmail.com',
+            pass: 'P4ssw0rd$$'
         }
     })
     
     const mail = {
-        from: "IT METASPERU <skyboxdev@zohomail.com>",
+        from: "IT METASPERU <andrecanalesv@gmail.com>",
         to: email,
         subject: `${nome}`,
         attachments: [
