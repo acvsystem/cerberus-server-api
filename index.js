@@ -63,8 +63,6 @@ io.on('connection', (socket) => {
             });
             
             let selectedLocal = tiendasList.find((data)=>data.code == numeroSerie);
-            console.log(selectedLocal);
-            console.log(numeroSerie);
             console.log(`${day}-${month}-${year} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${arrNotReg.length}`);
 
             if (arrNotReg.length) {
@@ -76,7 +74,6 @@ io.on('connection', (socket) => {
                 require("./send_mail")('andrecanalesv@gmail.com', `${refTienda} - FACTURAS FALTANTES EN SERVIDOR`, xlsFile)
                     .catch(error => res.send(error));
             }
-
 
         }
     });
