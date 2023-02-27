@@ -62,7 +62,7 @@ io.on('connection', (socket) => {
                 }
             });
             
-            let selectedLocal = tiendasList.find((data)=>data.codigo == numeroSerie);
+            let selectedLocal = tiendasList.find((data)=>data.code == numeroSerie);
             console.log(selectedLocal);
             console.log(numeroSerie);
             console.log(`${day}-${month}-${year} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${arrNotReg.length}`);
