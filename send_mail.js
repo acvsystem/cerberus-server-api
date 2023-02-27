@@ -4,7 +4,7 @@ module.exports = (email, nome, mensagem) => {
     const smtpTransport = mailer.createTransport({
         host: 'smtp.gmail.com',
         port: 465,
-        secure: true, //SSL/TLS
+        secure: false, //SSL/TLS
         auth: {
             user: 'andrecanalesv@gmail.com',
             pass: 'nathrakh'
