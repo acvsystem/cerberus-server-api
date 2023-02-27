@@ -7,7 +7,7 @@ module.exports = (email, nome, mensagem) => {
         secure: false, //SSL/TLS
         auth: {
             user: 'andrecanalesv@gmail.com',
-            pass: 'P4ssw0rd$$'
+            pass: 'nathrakh'
         }
     })
     
