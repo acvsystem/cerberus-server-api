@@ -1,9 +1,8 @@
 const mailer = require("nodemailer");
 
 module.exports = (email, nome, mensagem) => {
-    const smtpTransport = mailer.createTransport("SMTP",{
+    const smtpTransport = mailer.createTransport(smtpTransport({
         service: "gmail",
-        port: 587,
         auth: {
             user: 'andrecanalesv@gmail.com',
             pass: 'nathrakh'
@@ -11,7 +10,7 @@ module.exports = (email, nome, mensagem) => {
         tls: {
             rejectUnauthorized: false
         }
-    })
+    }))
     
     const mail = {
         from: "IT METASPERU <andrecanalesv@gmail.com>",
