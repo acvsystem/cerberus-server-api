@@ -63,9 +63,9 @@ io.on('connection', (socket) => {
                     });
                 }
             });
-
+            
             let selectedLocal = tiendasList.find((data) => data.code == numeroSerie);
-            console.log(`${day}-${month}-${year} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${arrNotReg.length}`);
+            console.log(`${day}-${month}-${year} - ${numeroSerie} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${arrNotReg.length}`);
 
             if (arrNotReg.length) {
                 const XLSX = require("xlsx");
