@@ -85,7 +85,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('comunicationFront', (data) => {
-        socket.broadcast.emit("consultinfToFront", 'ready');
+        socket.broadcast.emit("consultingToFront", 'ready');
     });
 
     socket.on('disconnect', () => {
