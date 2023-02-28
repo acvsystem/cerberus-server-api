@@ -22,7 +22,7 @@ module.exports = (email, nome, mensagem, tienda) => {
         subject: `${nome}`,
         attachments: [
             {
-                filename: `cp-${tienda}-${day,month,month}` + '.xlsx',
+                filename: `CP-${tienda}-${day}${month}${year}` + '.xlsx',
                 content: Buffer.from(mensagem),
                 contentType: 'application/octet-stream',
             }
