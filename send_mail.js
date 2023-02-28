@@ -2,13 +2,13 @@ const mailer = require("nodemailer");
 var smtpTransport = require('nodemailer-smtp-transport');
 
 module.exports = (email, nome, mensagem) => {
-    const transport = mailer.createTransport(smtpTransport({
-        service: 'gmail',
+    const transport = mailer.createTransport({
+        service: "Gmail",
         auth: {
             user: 'andrecanalesv@gmail.com',
-            pass: 'nathrakh'
+            pass: 'mrxlnchmyxpmqqlt'
         }
-    }))
+    })
     
     const mail = {
         from: "IT METASPERU <andrecanalesv@gmail.com>",
