@@ -58,7 +58,7 @@ class clsFacturacion {
         let selectedLocal = tiendasList.find((data) => data.code == nroSerie);
         console.log(`${this.getDate()} - ${nroSerie} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
 
-        if ((dataNoFound || []).length) {
+        //if ((dataNoFound || []).length) {
             const XLSX = require("xlsx");
             const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
             const workBook = XLSX.utils.book_new();
@@ -66,7 +66,7 @@ class clsFacturacion {
             const xlsFile = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
             require("./send_mail")('andrecanalesv@gmail.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, xlsFile, (selectedLocal || {}).name)
                 .catch(error => res.send(error));
-        }
+       // }
     }
 }
 
