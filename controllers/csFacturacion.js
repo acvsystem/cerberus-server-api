@@ -56,7 +56,7 @@ class clsFacturacion {
         });
 
         let selectedLocal = tiendasList.find((data) => data.code == nroSerie);
-        console.log(`${getDate()} - ${nroSerie} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
+        console.log(`${this.getDate()} - ${nroSerie} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
 
         if ((dataNoFound || []).length) {
             const XLSX = require("xlsx");
