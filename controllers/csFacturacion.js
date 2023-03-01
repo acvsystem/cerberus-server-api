@@ -10,7 +10,7 @@ class clsFacturacion {
     }
 
     verificacionDocumentos(dataVerify) {
-
+console.log((dataVerify || {}).frontData)
         let tiendasList = [
             { code: '7A', name: 'BBW JOCKEY' },
             { code: '9A', name: 'VSBA JOCKEY' },
