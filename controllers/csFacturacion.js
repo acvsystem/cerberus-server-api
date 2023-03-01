@@ -10,7 +10,6 @@ class clsFacturacion {
     }
 
     verificacionDocumentos(dataVerify) {
-        console.log(dataVerify)
         let tiendasList = [
             { code: '7A', name: 'BBW JOCKEY' },
             { code: '9A', name: 'VSBA JOCKEY' },
@@ -46,12 +45,12 @@ class clsFacturacion {
 
         (frontData || []).filter((data) => {
             nroSerie = (data || {}).cmpSerie.substr(1, 2) || '00';
-            var cpParse = (cmp || {}).cmpSerie + '-' + (cmp || {}).cmpNumero;
+            var cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
             if (!(paseDataList || []).includes(cpParse)) {
                 (dataNoFound || []).push({
                     "CORRELATIVO": cpParse,
-                    "TIPO DOCUMENTO": (cmp || {}).cmpTipo,
-                    "FECHA": (cmp || {}).cmpFecha
+                    "TIPO DOCUMENTO": (data || {}).cmpTipo,
+                    "FECHA": (data || {}).cmpFecha
                 });
             }
         });
