@@ -10,7 +10,7 @@ class clsFacturacion {
     }
 
     verificacionDocumentos(dataVerify) {
-console.log((dataVerify || {}).frontData)
+
         let tiendasList = [
             { code: '7A', name: 'BBW JOCKEY' },
             { code: '9A', name: 'VSBA JOCKEY' },
@@ -40,7 +40,7 @@ console.log((dataVerify || {}).frontData)
             frontData: JSON.parse((dataVerify || {}).frontData),
             paseDataList: []
         };
-
+        console.log(objVerificacion.frontData)
         ((objVerificacion || {}).serverData || []).filter((data) => {
             var cpParse = (data || {}).cmpNumero.split('-');
             ((objVerificacion || {}).paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
