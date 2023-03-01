@@ -15,8 +15,9 @@ app.use(bodyParser.urlencoded({ limit: '1000000mb', extended: true }));
 
 io.on('connection', (socket) => {
     socket.on('verifyDocument', (resData) => {
+        console.log(resData);
         if ((resData || "").id == "server") {
-            csFacturacion.verificacionDocumentos();
+            csFacturacion.verificacionDocumentos(resData);
         }
     });
 
