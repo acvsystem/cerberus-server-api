@@ -1,4 +1,5 @@
 import emailController from '../sendEmail.js';
+import * as XLSX from 'xlsx';
 
 class clsFacturacion {
 
@@ -61,7 +62,6 @@ class clsFacturacion {
         console.log(`${this.getDate()} - ${nroSerie} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
 
         //if ((dataNoFound || []).length) {
-            const XLSX = require("xlsx");
             const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
             const workBook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
