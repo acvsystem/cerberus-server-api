@@ -37,7 +37,7 @@ class clsFacturacion {
         var nroSerie = '00';
         var serverData = JSON.parse((dataVerify || {}).serverData);
         var frontData = JSON.parse((dataVerify || {}).frontData);
-        
+
         (serverData || []).filter((data) => {
             var cpParse = (data || {}).cmpNumero.split('-');
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
@@ -55,7 +55,7 @@ class clsFacturacion {
             }
         });
 
-        let selectedLocal = tiendasList.find((data) => data.code == (objVerificacion || {}).nroSerie);
+        let selectedLocal = tiendasList.find((data) => data.code == nroSerie);
         console.log(`${getDate()} - ${nroSerie} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
 
         if ((dataNoFound || []).length) {
