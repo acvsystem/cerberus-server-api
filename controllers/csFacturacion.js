@@ -34,22 +34,20 @@ class clsFacturacion {
             { code: '7A', name: 'AEO ASIA' }
         ];
         var dataNoFound = [];
-        var objVerificacion = {
-            nroSerie: '00',
-            serverData: JSON.parse((dataVerify || {}).serverData),
-            frontData: JSON.parse((dataVerify || {}).frontData),
-            paseDataList: []
-        };
-        console.log(objVerificacion.frontData)
-        ((objVerificacion || {}).serverData || []).filter((data) => {
+        var paseDataList = [];
+        var nroSerie = '00';
+        var serverData = JSON.parse((dataVerify || {}).serverData);
+        var frontData = JSON.parse((dataVerify || {}).frontData);
+        console.log(frontData)
+        (serverData || []).filter((data) => {
             var cpParse = (data || {}).cmpNumero.split('-');
-            ((objVerificacion || {}).paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
+            (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
         });
 
-        ((objVerificacion || {}).frontData || []).filter((data) => {
-            (objVerificacion || {}).nroSerie = (data || {}).cmpSerie.substr(1, 2) || '00';
+        (frontData || []).filter((data) => {
+            nroSerie = (data || {}).cmpSerie.substr(1, 2) || '00';
             var cpParse = (cmp || {}).cmpSerie + '-' + (cmp || {}).cmpNumero;
-            if (!((objVerificacion || {}).paseDataList || []).includes(cpParse)) {
+            if (!(paseDataList || []).includes(cpParse)) {
                 (dataNoFound || []).push({
                     "CORRELATIVO": cpParse,
                     "TIPO DOCUMENTO": (cmp || {}).cmpTipo,
@@ -59,7 +57,7 @@ class clsFacturacion {
         });
 
         let selectedLocal = tiendasList.find((data) => data.code == (objVerificacion || {}).nroSerie);
-        console.log(`${getDate()} - ${(objVerificacion || {}).nroSerie} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
+        console.log(`${getDate()} - ${nroSerie} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
 
         if ((dataNoFound || []).length) {
             const XLSX = require("xlsx");
