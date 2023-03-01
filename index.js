@@ -3,7 +3,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import * as csFacturacion from './controllers/csFacturacion.js'
+import facturacionController from './controllers/csFacturacion.js'
 
 const app = express();
 const httpServer = createServer(app);
@@ -17,7 +17,7 @@ io.on('connection', (socket) => {
     socket.on('verifyDocument', (resData) => {
         console.log(resData);
         if ((resData || "").id == "server") {
-            csFacturacion.verificacionDocumentos(resData);
+            facturacionController.verificacionDocumentos(resData);
         }
     });
 
