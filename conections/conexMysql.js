@@ -1,6 +1,9 @@
-import createPool from 'mysql2/promise';
-const keys = require('../keys');
+import { createPool } from 'mysql2/promise';
 
-const pool =  createPool(keys.database);
+export const pool = createPool({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'BD_METASPERU'
+});
 
-exports.default = pool

@@ -1,5 +1,7 @@
 import emailController from '../sendEmail.js';
 import * as XLSX from 'xlsx';
+import { pool } from '../conections/conexMysql.js';
+import sessionSocket from './csSessionSocket.js'
 
 class clsFacturacion {
 
@@ -12,7 +14,7 @@ class clsFacturacion {
         return `${day}-${month}-${year}`;
     }
 
-    verificacionDocumentos(dataVerify) {
+    async verificacionDocumentos(dataVerify, codigo) {
         let tiendasList = [
             { code: '7A', name: 'BBW JOCKEY' },
             { code: '9A', name: 'VSBA JOCKEY' },
@@ -33,7 +35,6 @@ class clsFacturacion {
             { code: '9K', name: 'VS MEGA PLAZA' },
             { code: '9L', name: 'VS MINKA' },
             { code: '9F', name: 'VSFA JOCKEY FULL' },
-            { code: '7A', name: 'AEO ASIA' }
         ];
         var dataNoFound = [];
         var paseDataList = [];
@@ -69,6 +70,10 @@ class clsFacturacion {
             emailController.sendEmail('andrecanalesv@gmail.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, xlsFile, (selectedLocal || {}).name)
                 .catch(error => res.send(error));
         }
+
+        await pool.query(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigo}'`);
+        let listSession = await sessionSocket.sessionList();
+        return listSession;
     }
 }
 

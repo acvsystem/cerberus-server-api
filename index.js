@@ -4,6 +4,7 @@ import { Server } from "socket.io";
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import facturacionController from './controllers/csFacturacion.js'
+import sessionSocket from './controllers/csSessionSocket.js'
 
 const app = express();
 const httpServer = createServer(app);
@@ -13,10 +14,20 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '1000000mb' }));
 app.use(bodyParser.urlencoded({ limit: '1000000mb', extended: true }));
 
-io.on('connection', (socket) => {
+var listClient = { id: '' };
+
+io.on('connection', async (socket) => {
+    let codeQuery = socket.handshake.query.code;
+    let codeTerminal = socket.handshake.headers.code;
+
+    if (codeQuery == 'app') {
+        listClient.id = socket.id;
+    }
+
     socket.on('verifyDocument', (resData) => {
         if ((resData || "").id == "server") {
-            facturacionController.verificacionDocumentos(resData);
+            let listSessionConnect = facturacionController.verificacionDocumentos(resData);
+            socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
         }
     });
 
@@ -28,15 +39,21 @@ io.on('connection', (socket) => {
         socket.broadcast.emit("consultingToFront", 'ready');
     });
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
+        let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
+        socket.to(`${listClient.id}`).emit("sessionConnect", listSessionDisconnet);
         console.log('user disconnected');
     });
+
+
+    let listSessionConnect = await sessionSocket.connect(codeTerminal);
+    socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
 
     console.log('a user connected');
 });
 
 httpServer.listen(3200, async () => {
-    console.log('listening on *:3200'); 
-   /*const result = await database.query('select * from TB_TERMINAL_TIENDA')
-    console.log(result);*/
+    console.log('listening on *:3200');
+    /*const result = await database.query('select * from TB_TERMINAL_TIENDA')
+     console.log(result);*/
 });
