@@ -1,4 +1,4 @@
-import { pool } from '../conections/conexDB.js';
+import { pool } from '../conections/conexMysql.js';
 
 class clsSessionSocket {
 

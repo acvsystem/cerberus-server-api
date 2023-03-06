@@ -1,6 +1,6 @@
 import emailController from '../sendEmail.js';
 import * as XLSX from 'xlsx';
-import { pool } from '../conections/conexDB.js';
+import { pool } from '../conections/conexMysql.js';
 import sessionSocket from './csSessionSocket.js'
 
 class clsFacturacion {
