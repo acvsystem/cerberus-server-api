@@ -5,7 +5,6 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import facturacionController from './controllers/csFacturacion.js'
 import sessionSocket from './controllers/csSessionSocket.js'
-import { pool } from './conections/conexMysql.js';
 
 const app = express();
 const httpServer = createServer(app);
@@ -16,8 +15,6 @@ app.use(bodyParser.json({ limit: '1000000mb' }));
 app.use(bodyParser.urlencoded({ limit: '1000000mb', extended: true }));
 
 var listClient = { id: '' };
-
-
 
 io.on('connection', async (socket) => {
     let codeQuery = socket.handshake.query.code;
@@ -57,6 +54,4 @@ io.on('connection', async (socket) => {
 
 httpServer.listen(3200, async () => {
     console.log('listening on *:3200');
-    const result = await pool.query(`SELECT * FROM TB_TERMINAL_TIENDA;`);
-     console.log(result);
 });
