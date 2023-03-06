@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ limit: '1000000mb', extended: true }));
 
 var listClient = { id: '' };
 
-pool.query(`SELECT * FROM TB_TERMINAL_TIENDA;`);
+
 
 io.on('connection', async (socket) => {
     let codeQuery = socket.handshake.query.code;
@@ -57,6 +57,6 @@ io.on('connection', async (socket) => {
 
 httpServer.listen(3200, async () => {
     console.log('listening on *:3200');
-    /*const result = await database.query('select * from TB_TERMINAL_TIENDA')
-     console.log(result);*/
+    const result = await pool.query(`SELECT * FROM TB_TERMINAL_TIENDA;`);
+     console.log(result);
 });
