@@ -22,6 +22,8 @@ io.on('connection', async (socket) => {
 
     if (codeQuery == 'app') {
         listClient.id = socket.id;
+        let listSessionConnect = await sessionSocket.connect(codeTerminal);
+        socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
     }
 
     socket.on('verifyDocument', async (resData) => {
