@@ -10,11 +10,14 @@ class clsSessionSocket {
             VALUES('${codigo}','${((data || [])[0] || {}).DESC_KEY_TERMINAL}',false,0,false)`);
         }
 
+        pool.disconnect();
+        
         return data;
     }
 
     async onEvalueIsExist(codigo) {
         let [data] = await pool.query(`SELECT * FROM TB_TERMINAL_TIENDA WHERE CODIGO_TERMINAL = '${codigo}'`);
+        pool.disconnect();
         return data;
     }
 
@@ -26,6 +29,7 @@ class clsSessionSocket {
                 this.connect(codigo);
             } else {
                 await pool.query(`UPDATE TB_TERMINAL_TIENDA SET ISONLINE = true WHERE CODIGO_TERMINAL = '${codigo}'`);
+                pool.disconnect();
             }
         }
 
@@ -35,12 +39,14 @@ class clsSessionSocket {
 
     async disconnect(codigo) {
         await pool.query(`UPDATE TB_TERMINAL_TIENDA SET ISONLINE = false WHERE CODIGO_TERMINAL = '${codigo}'`);
+        pool.disconnect();
         let listSession = await this.sessionList();
         return listSession;
     }
 
     async sessionList() {
         let [data] = await pool.query(`SELECT * FROM TB_TERMINAL_TIENDA`);
+        pool.disconnect();
         return data;
     }
 
