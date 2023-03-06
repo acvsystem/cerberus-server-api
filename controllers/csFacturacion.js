@@ -14,7 +14,7 @@ class clsFacturacion {
         return `${day}-${month}-${year}`;
     }
 
-    async verificacionDocumentos(dataVerify, codigo) {
+    async verificacionDocumentos(dataVerify) {
         let tiendasList = [
             { code: '7A', name: 'BBW JOCKEY' },
             { code: '9A', name: 'VSBA JOCKEY' },
@@ -70,8 +70,8 @@ class clsFacturacion {
             emailController.sendEmail('andrecanalesv@gmail.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, xlsFile, (selectedLocal || {}).name)
                 .catch(error => res.send(error));
         }
-        console.log('verificacionDocumentos', codigo);
-        await pool.query(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigo}'`);
+      
+        await pool.query(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${nroSerie}'`);
         let listSession = await sessionSocket.sessionList();
         return listSession;
     }

@@ -26,7 +26,7 @@ io.on('connection', async (socket) => {
 
     socket.on('verifyDocument', async (resData) => {
         if ((resData || "").id == "server") {
-            let listSessionConnect = await facturacionController.verificacionDocumentos(resData, codeTerminal);
+            let listSessionConnect = await facturacionController.verificacionDocumentos(resData);
             console.log("verifyDocument - idApp", listClient.id);
             socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
         }
