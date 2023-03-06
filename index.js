@@ -29,7 +29,7 @@ io.on('connection', async (socket) => {
     socket.on('verifyDocument', async (resData) => {
         if ((resData || "").id == "server") {
             let listSessionConnect = await facturacionController.verificacionDocumentos(resData);
-            console.log("verifyDocument - idApp", listClient.id);
+            console.log(`verifyDocument ${codeTerminal} - idApp`, listClient.id);
             socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
         }
     });
@@ -44,14 +44,14 @@ io.on('connection', async (socket) => {
 
     socket.on('disconnect', async () => {
         let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
-        console.log("disconnect - idApp", listClient.id);
+        console.log(`disconnect ${codeTerminal} - idApp`, listClient.id);
         socket.to(`${listClient.id}`).emit("sessionConnect", listSessionDisconnet);
         console.log('user disconnected');
     });
 
 
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
-    console.log("connect - idApp", listClient.id);
+    console.log(`connect ${codeTerminal} - idApp`, listClient.id);
     socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
 
     console.log('a user connected');
