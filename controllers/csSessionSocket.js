@@ -37,7 +37,6 @@ class clsSessionSocket {
 
     async disconnect(codigo) {
         await pool.query(`UPDATE TB_TERMINAL_TIENDA SET ISONLINE = false WHERE CODIGO_TERMINAL = '${codigo}'`);
-        pool.disconnect();
         let listSession = await this.sessionList();
         return listSession;
     }
