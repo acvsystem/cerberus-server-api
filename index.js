@@ -5,6 +5,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import facturacionController from './controllers/csFacturacion.js'
 import sessionSocket from './controllers/csSessionSocket.js'
+import { pool } from './conections/conexMysql.js';
 
 const app = express();
 const httpServer = createServer(app);
@@ -15,6 +16,8 @@ app.use(bodyParser.json({ limit: '1000000mb' }));
 app.use(bodyParser.urlencoded({ limit: '1000000mb', extended: true }));
 
 var listClient = { id: '' };
+
+pool.query(`SELECT * FROM TB_TERMINAL_TIENDA;`);
 
 io.on('connection', async (socket) => {
     let codeQuery = socket.handshake.query.code;
