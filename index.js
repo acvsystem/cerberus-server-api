@@ -20,9 +20,10 @@ var agenteList = [];
 io.on('connection', async (socket) => {
     let codeQuery = socket.handshake.query.code;
     let codeTerminal = socket.handshake.headers.code;
-/*
-    let indexAgente = (agenteList || []).findIndex((data, i) => (data || {}).code == codeTerminal);
 
+    let indexAgente = (agenteList || []).findIndex((data, i) => (data || {}).code == codeTerminal);
+        console.log(indexAgente)
+/*
     if (!indexAgente) {
         agenteList.push({ id: socket.id, code: codeTerminal });
     } else {
@@ -37,7 +38,7 @@ io.on('connection', async (socket) => {
 
     socket.on('verifyDocument', async (resData) => {
         if ((resData || "").id == "server") {
-            let listSessionConnect = await facturacionController.verificacionDocumentos(resData);
+            let listSessionConnect = await facturacionController.verificacionDocumentos(resData,'00');
             console.log(`verifyDocument ${codeTerminal} - idApp`, listClient.id);
             socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
         }
