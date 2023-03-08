@@ -46,7 +46,8 @@ io.on('connection', async (socket) => {
     });
 
     socket.on('petitionFront', (data) => {
-        console.log("selectAgente",socket.id);
+        let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
+        console.log(selectAgente.code);
         socket.broadcast.emit("sendDataFront", data);
     });
 
