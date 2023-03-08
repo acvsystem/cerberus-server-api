@@ -14,7 +14,7 @@ class clsFacturacion {
         return `${day}-${month}-${year}`;
     }
 
-    async verificacionDocumentos(dataVerify) {
+    async verificacionDocumentos(dataVerify, codigo) {
         let tiendasList = [
             { code: '7A', name: 'BBW JOCKEY' },
             { code: '9A', name: 'VSBA JOCKEY' },
@@ -38,7 +38,6 @@ class clsFacturacion {
         ];
         var dataNoFound = [];
         var paseDataList = [];
-        var nroSerie = '00';
         var serverData = JSON.parse((dataVerify || {}).serverData);
         var frontData = JSON.parse((dataVerify || {}).frontData);
 
@@ -48,7 +47,6 @@ class clsFacturacion {
         });
 
         (frontData || []).filter((data) => {
-            nroSerie = (data || {}).cmpSerie.substr(1, 2) || '00';
             var cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
             if (!(paseDataList || []).includes(cpParse)) {
                 (dataNoFound || []).push({
@@ -59,8 +57,8 @@ class clsFacturacion {
             }
         });
 
-        let selectedLocal = tiendasList.find((data) => data.code == nroSerie);
-        console.log(`${this.getDate()} - ${nroSerie} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
+        let selectedLocal = tiendasList.find((data) => data.code == codigo);
+        console.log(`${this.getDate()} - ${codigo} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
 
         if ((dataNoFound || []).length) {
             const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
@@ -70,8 +68,8 @@ class clsFacturacion {
             emailController.sendEmail('andrecanalesv@gmail.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, xlsFile, (selectedLocal || {}).name)
                 .catch(error => res.send(error));
         }
-      
-        await pool.query(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${nroSerie}'`);
+
+        await pool.query(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigo}'`);
         let listSession = await sessionSocket.sessionList();
         return listSession;
     }
