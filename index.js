@@ -26,6 +26,7 @@ io.on('connection', async (socket) => {
 
     if (!indexAgente) {
         agenteList.push({ id: socket.id, code: codeTerminal });
+        console.log(agenteList);
     } else {
         agenteList[indexAgente]['id'] = socket.id;
     }
