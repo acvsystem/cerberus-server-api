@@ -14,7 +14,7 @@ class clsFacturacion {
         return `${day}-${month}-${year}`;
     }
 
-    async verificacionDocumentos(dataVerify, codigo) {
+    async verificacionDocumentos(dataVerify) {
         let tiendasList = [
             { code: '7A', name: 'BBW JOCKEY' },
             { code: '9A', name: 'VSBA JOCKEY' },
@@ -40,6 +40,7 @@ class clsFacturacion {
         var paseDataList = [];
         var serverData = JSON.parse((dataVerify || {}).serverData);
         var frontData = JSON.parse((dataVerify || {}).frontData);
+        var codigoFront = (dataVerify || {}).codigoFront;
 
         (serverData || []).filter((data) => {
             var cpParse = (data || {}).cmpNumero.split('-');
@@ -57,8 +58,8 @@ class clsFacturacion {
             }
         });
 
-        let selectedLocal = tiendasList.find((data) => data.code == codigo);
-        console.log(`${this.getDate()} - ${codigo} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
+        let selectedLocal = tiendasList.find((data) => data.code == codigoFront);
+        console.log(`${this.getDate()} - ${codigoFront} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
 
         if ((dataNoFound || []).length) {
             const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
@@ -69,7 +70,7 @@ class clsFacturacion {
                 .catch(error => res.send(error));
         }
 
-        await pool.query(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigo}'`);
+        await pool.query(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
         let listSession = await sessionSocket.sessionList();
         return listSession;
     }
