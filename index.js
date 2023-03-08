@@ -15,10 +15,19 @@ app.use(bodyParser.json({ limit: '1000000mb' }));
 app.use(bodyParser.urlencoded({ limit: '1000000mb', extended: true }));
 
 var listClient = { id: '' };
+var agenteList = [];
 
 io.on('connection', async (socket) => {
     let codeQuery = socket.handshake.query.code;
     let codeTerminal = socket.handshake.headers.code;
+
+    let indexAgente = agenteList.find((data, i) => data.code == codigo ? i : -1);
+
+    if (!indexAgente) {
+        agenteList.push({ id: socket.id, code: codeTerminal });
+    } else {
+        agenteList[index].id = socket.id;
+    }
 
     if (codeQuery == 'app') {
         listClient.id = socket.id;
@@ -28,7 +37,7 @@ io.on('connection', async (socket) => {
 
     socket.on('verifyDocument', async (resData) => {
         if ((resData || "").id == "server") {
-            let listSessionConnect = await facturacionController.verificacionDocumentos(resData, codeTerminal);
+            let listSessionConnect = await facturacionController.verificacionDocumentos(resData);
             console.log(`verifyDocument ${codeTerminal} - idApp`, listClient.id);
             socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
         }

@@ -14,7 +14,7 @@ class clsFacturacion {
         return `${day}-${month}-${year}`;
     }
 
-    async verificacionDocumentos(dataVerify, codigo) {
+    async verificacionDocumentos(dataVerify) {
         let tiendasList = [
             { code: '7A', name: 'BBW JOCKEY' },
             { code: '9A', name: 'VSBA JOCKEY' },
