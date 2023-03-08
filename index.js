@@ -28,7 +28,6 @@ io.on('connection', async (socket) => {
         agenteList[indexAgente]['id'] = socket.id;
     } else {
         agenteList.push({ id: socket.id, code: codeTerminal });
-        console.log(agenteList);
     }
 
     if (codeQuery == 'app') {
@@ -40,7 +39,7 @@ io.on('connection', async (socket) => {
     socket.on('verifyDocument', async (resData) => {
         if ((resData || "").id == "server") {
             let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
-            console.log("selectAgente",selectAgente);
+            console.log("selectAgente",socket.id);
             let listSessionConnect = await facturacionController.verificacionDocumentos(resData, (selectAgente || {}).code);
             console.log(`verifyDocument ${codeTerminal} - idApp`, listClient.id);
             socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
