@@ -20,14 +20,14 @@ var agenteList = [];
 io.on('connection', async (socket) => {
     let codeQuery = socket.handshake.query.code;
     let codeTerminal = socket.handshake.headers.code;
-
+/*
     let indexAgente = (agenteList || []).findIndex((data, i) => (data || {}).code == codeTerminal);
 
     if (!indexAgente) {
         agenteList.push({ id: socket.id, code: codeTerminal });
     } else {
         agenteList[indexAgente].id = socket.id;
-    }
+    }*/
 
     if (codeQuery == 'app') {
         listClient.id = socket.id;
