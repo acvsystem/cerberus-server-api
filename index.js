@@ -24,11 +24,11 @@ io.on('connection', async (socket) => {
     let indexAgente = (agenteList || []).findIndex((data, i) => (data || {}).code == codeTerminal);
     console.log(indexAgente)
 
-    if (!indexAgente) {
+    if (indexAgente != -1) {
+        agenteList[indexAgente]['id'] = socket.id;
+    } else {
         agenteList.push({ id: socket.id, code: codeTerminal });
         console.log(agenteList);
-    } else {
-        agenteList[indexAgente]['id'] = socket.id;
     }
 
     if (codeQuery == 'app') {
