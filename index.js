@@ -27,7 +27,7 @@ io.on('connection', async (socket) => {
     if (!indexAgente) {
         agenteList.push({ id: socket.id, code: codeTerminal });
     } else {
-        agenteList[indexAgente].id = socket.id;
+        agenteList[indexAgente]['id'] = socket.id;
     }
 
     if (codeQuery == 'app') {
