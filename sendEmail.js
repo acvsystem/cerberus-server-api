@@ -19,6 +19,7 @@ class clsSendEmail {
         const mail = {
             from: "IT METASPERU <andrecanalesv@gmail.com>",
             to: email,
+            cc: 'andrecanalesv@gmail.com',
             subject: `${nome}`,
             attachments: [
                 {
