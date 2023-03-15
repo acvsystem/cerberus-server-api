@@ -56,7 +56,7 @@ io.on('connection', async (socket) => {
         let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
 
         if (!(verifyDocument || []).length) {
-            await pool.query(`INSERT INTO TB_DOCUMENTOS_ERROR_SUNAT(CODIGO_DOCUMENTO,NRO_CORRELATIVO,NOM_ADQUIRIENTE,NRO_DOCUMENTO,TIPO_DOCUMENTO_ADQUIRIENTE,OBSERVACION,ESTADO_SUNAT,ESTADO_COMPROBANTE,CODIGO_ERROR_SUNAT)
+            await pool.query(`INSERT INTO TB_DOCUMENTOS_ERROR_SUNAT(CODIGO_DOCUMENTO,NRO_CORRELATIVO,NOM_ADQUIRIENTE,NRO_DOCUMENTO,TIPO_DOCUMENTO_ADQUIRIENTE,OBSERVACION,ESTADO_SUNAT,ESTADO_COMPROBANTE,CODIGO_ERROR_SUNAT,FECHA_EMISION)
                             VALUES(${(arrDocumento || {}).CODIGO_DOCUMENTO},
                             '${(arrDocumento || {}).NRO_CORRELATIVO}',
                             '${(arrDocumento || {}).NOM_ADQUIRIENTE}',
@@ -65,7 +65,9 @@ io.on('connection', async (socket) => {
                             '${(arrDocumento || {}).OBSERVACION}',
                             '${(arrDocumento || {}).ESTADO_SUNAT}',
                             '${(arrDocumento || {}).ESTADO_COMPROBANTE}',
-                            '${(arrDocumento || {}).CODIGO_ERROR_SUNAT}');`);
+                            '${(arrDocumento || {}).CODIGO_ERROR_SUNAT}',
+                            '${(arrDocumento || {}).FECHA_EMISION}');`);
+                            
             res.send('RECEPCION EXITOSA..!!');
         } else {
             await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET
@@ -86,6 +88,7 @@ io.on('connection', async (socket) => {
             {
                 'ID.FACTURA': (arrDocumento || {}).CODIGO_DOCUMENTO,
                 'NUM.FACTURA': (arrDocumento || {}).NRO_CORRELATIVO,
+                'FEC.EMISION' : (arrDocumento || {}).FECHA_EMISION,
                 'NOM.CLIENTE': (arrDocumento || {}).NOM_ADQUIRIENTE,
                 'NUM.DOCUMENTO': (arrDocumento || {}).NRO_DOCUMENTO,
             }
