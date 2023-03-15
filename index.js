@@ -5,6 +5,9 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import facturacionController from './controllers/csFacturacion.js'
 import sessionSocket from './controllers/csSessionSocket.js'
+import { pool } from './conections/conexMysql.js';
+import emailController from './sendEmail.js';
+import * as XLSX from 'xlsx';
 
 const app = express();
 const httpServer = createServer(app);
@@ -43,6 +46,59 @@ io.on('connection', async (socket) => {
         let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
         socket.to(`${listClient.id}`).emit("sessionConnect", listSessionDisconnet);
         console.log('user disconnected');
+    });
+
+
+    app.post('/sunat-notification', async (req, res) => {
+
+        let arrDocumento = (((req || []).body || [])[0] || {});
+
+        let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
+
+        if (!(verifyDocument || []).length) {
+            await pool.query(`INSERT INTO TB_DOCUMENTOS_ERROR_SUNAT(CODIGO_DOCUMENTO,NRO_CORRELATIVO,NOM_ADQUIRIENTE,NRO_DOCUMENTO,TIPO_DOCUMENTO_ADQUIRIENTE,OBSERVACION,ESTADO_SUNAT,ESTADO_COMPROBANTE,CODIGO_ERROR_SUNAT)
+                            VALUES(${(arrDocumento || {}).CODIGO_DOCUMENTO},
+                            '${(arrDocumento || {}).NRO_CORRELATIVO}',
+                            '${(arrDocumento || {}).NOM_ADQUIRIENTE}',
+                            '${(arrDocumento || {}).NRO_DOCUMENTO}',
+                            '${(arrDocumento || {}).TIPO_DOCUMENTO_ADQUIRIENTE}',
+                            '${(arrDocumento || {}).OBSERVACION}',
+                            '${(arrDocumento || {}).ESTADO_SUNAT}',
+                            '${(arrDocumento || {}).ESTADO_COMPROBANTE}',
+                            '${(arrDocumento || {}).CODIGO_ERROR_SUNAT}');`);
+            res.send('RECEPCION EXITOSA..!!');
+        } else {
+            await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET
+                            NOM_ADQUIRIENTE ='${(arrDocumento || {}).NOM_ADQUIRIENTE}',
+                            NRO_DOCUMENTO = '${(arrDocumento || {}).NRO_DOCUMENTO}',
+                            TIPO_DOCUMENTO_ADQUIRIENTE = '${(arrDocumento || {}).TIPO_DOCUMENTO_ADQUIRIENTE}',
+                            OBSERVACION = '${(arrDocumento || {}).OBSERVACION}',
+                            ESTADO_SUNAT = '${(arrDocumento || {}).ESTADO_SUNAT}',
+                            ESTADO_COMPROBANTE = '${(arrDocumento || {}).ESTADO_COMPROBANTE}',
+                            CODIGO_ERROR_SUNAT = '${(arrDocumento || {}).CODIGO_ERROR_SUNAT}'`);
+            res.send('RECEPCION EXITOSA..!!');
+        }
+
+        let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
+        socket.emit("sendNotificationSunat", documentList);
+
+        let errDocument = [
+            {
+                'ID.FACTURA': (arrDocumento || {}).CODIGO_DOCUMENTO,
+                'NUM.FACTURA': (arrDocumento || {}).NRO_CORRELATIVO,
+                'NOM.CLIENTE': (arrDocumento || {}).NOM_ADQUIRIENTE,
+                'NUM.DOCUMENTO': (arrDocumento || {}).NRO_DOCUMENTO,
+            }
+        ]
+
+        const workSheet = XLSX.utils.json_to_sheet((errDocument || []));
+        const workBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
+        const xlsFile = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
+
+        emailController.sendEmail('andrecanalesv@gmail.com', `FACTURA CON RUC ERRADO`, xlsFile, 'Documento_rechazado')
+            .catch(error => res.send(error));
+
     });
 
 
