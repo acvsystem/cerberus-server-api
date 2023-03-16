@@ -35,6 +35,7 @@ class clsFacturacion {
             { code: '9K', name: 'VS MEGA PLAZA' },
             { code: '9L', name: 'VS MINKA' },
             { code: '9F', name: 'VSFA JOCKEY FULL' },
+            { code: '7A7', name: 'BBW ASIA' }
         ];
         var dataNoFound = [];
         var paseDataList = [];
@@ -57,11 +58,6 @@ class clsFacturacion {
                 });
             }
         });
-
-        if (codigoFront == '9M') {
-            console.log('serverData',paseDataList);
-            console.log('frontData',frontData);
-        }
 
         let selectedLocal = tiendasList.find((data) => data.code == codigoFront);
         console.log(`${this.getDate()} - ${codigoFront} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
