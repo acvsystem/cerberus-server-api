@@ -58,7 +58,7 @@ class clsFacturacion {
             }
         });
 
-        if (nroSerie == '9M') {
+        if (codigoFront == '9M') {
             console.log('serverData',serverData);
             console.log('frontData',frontData);
         }
