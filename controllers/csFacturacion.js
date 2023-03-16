@@ -58,6 +58,11 @@ class clsFacturacion {
             }
         });
 
+        if (nroSerie == '9M') {
+            console.log('serverData',serverData);
+            console.log('frontData',frontData);
+        }
+
         let selectedLocal = tiendasList.find((data) => data.code == codigoFront);
         console.log(`${this.getDate()} - ${codigoFront} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
 
