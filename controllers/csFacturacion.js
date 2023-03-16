@@ -59,7 +59,7 @@ class clsFacturacion {
         });
 
         if (codigoFront == '9M') {
-            console.log('serverData',serverData);
+            console.log('serverData',paseDataList);
             console.log('frontData',frontData);
         }
 
