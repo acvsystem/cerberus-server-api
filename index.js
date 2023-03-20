@@ -51,6 +51,10 @@ io.on('connection', async (socket) => {
         socket.broadcast.emit("consultingToFront", 'ready');
     });
 
+    socket.on('conexion:serverICG', (data) => {
+        socket.broadcast.emit("conexion:serverICG:send", data);
+    });
+
     socket.on('disconnect', async () => {
         let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
         console.log(`disconnect ${codeTerminal} - idApp`, listClient.id);
