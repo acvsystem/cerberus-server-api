@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import facturacionController from './controllers/csFacturacion.js'
 import sessionSocket from './controllers/csSessionSocket.js'
 import securityRoutes from './routes/security.routes.js';
+import configurationRoutes from './routes/configuration.routes.js';
 import Jwt from 'jsonwebtoken';
 import { prop } from './keys.js';
 
@@ -24,6 +25,7 @@ var listClient = { id: '' };
 var agenteList = [];
 
 app.use('/security', securityRoutes);
+app.use('/settings', configurationRoutes);
 
 io.use(function (socket, next) {
     let token = socket.handshake.query.token || socket.handshake.headers.token;
@@ -75,7 +77,7 @@ io.use(function (socket, next) {
 
     //EMITE DESDE EL FRONT
     socket.on('comunicationFront', (data) => {
-        if (socket.decoded.aud == 'ADMINISTRATOR') {
+        if (socket.decoded.aud == 'ADMINISTRADOR') {
             socket.broadcast.emit("consultingToFront", 'ready');
         }
     });

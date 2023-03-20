@@ -1,30 +1,40 @@
 
 import nodemailer from 'nodemailer';
+import { pool } from './conections/conexMysql.js';
 
 class clsSendEmail {
-    sendEmail(email, nome, mensagem, tienda) {
+    async sendEmail(nome, file, tienda) {
         let date = new Date();
         let day = `0${date.getDate()}`.slice(-2);
         let month = `0${date.getMonth() + 1}`.slice(-2);
         let year = date.getFullYear();
+        let strSendTo = "";
+        let [serviceData] = await pool.query(`SELECT * FROM TB_CONFIGURATION_EMAIL`);
+        let [emailSendList] = await pool.query(`SELECT * FROM TB_EMAIL_TO`);
+        
+        (emailSendList || []).filter((data) => {
+            strSendTo += `${data.EMAIL},`;
+        });
+
+        let emailService = serviceData[0].USER_NAME || "";
+        let emailPassword = serviceData[0].PASSWORD || "";
 
         const transport = nodemailer.createTransport({
             service: "Gmail",
             auth: {
-                user: 'andrecanalesv@gmail.com',
-                pass: 'mrxlnchmyxpmqqlt'
+                user: emailService,
+                pass: emailPassword
             }
         })
 
         const mail = {
-            from: "IT METASPERU <andrecanalesv@gmail.com>",
-            to: email,
-            cc: 'andrecanalesv@gmail.com',
+            from: `IT METASPERU <andrecanalesv@gmail.com>`,
+            to: strSendTo,
             subject: `${nome}`,
             attachments: [
                 {
                     filename: `CP-${tienda}-${day}${month}${year}` + '.xlsx',
-                    content: Buffer.from(mensagem),
+                    content: Buffer.from(file),
                     contentType: 'application/octet-stream',
                 }
             ]
