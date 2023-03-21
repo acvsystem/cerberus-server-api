@@ -16,12 +16,16 @@ class clsSendEmail {
             }
         })
 
-        const mail = {
+        let mail = {
             from: "IT METASPERU <andrecanalesv@gmail.com>",
             to: email,
             cc: 'andrecanalesv@gmail.com',
             subject: `${nome}`,
-            attachments: [
+            attachments: []
+        }
+
+        if (mensagem != null) {
+            (mail || {}).attachments = [
                 {
                     filename: `CP-${tienda}-${day}${month}${year}` + '.xlsx',
                     content: Buffer.from(mensagem),

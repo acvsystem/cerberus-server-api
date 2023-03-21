@@ -1,4 +1,5 @@
 import { pool } from '../conections/conexMysql.js';
+import emailController from '../sendEmail.js';
 
 class clsSessionSocket {
 
@@ -40,6 +41,11 @@ class clsSessionSocket {
         await pool.query(`UPDATE TB_TERMINAL_TIENDA SET ISONLINE = false WHERE CODIGO_TERMINAL = '${codigo}'`);
         let listSession = await this.sessionList();
         return listSession;
+    }
+
+    async disconnectServer() {
+        emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION DESCONECTADO..!!!!!`, null, `SERVIDOR FACTURACION`)
+        .catch(error => res.send(error));
     }
 
     async sessionList() {

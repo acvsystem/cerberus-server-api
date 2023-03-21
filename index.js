@@ -56,17 +56,29 @@ io.on('connection', async (socket) => {
     });
 
     socket.on('disconnect', async () => {
-        let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
+        if (codeTerminal == "SRVFACT") {
+            sessionSocket.disconnectServer();
+            socket.broadcast.emit("status:serverSUNAT:send", { 'code': 'SRVFACT', 'online': 'false' });
+        } else {
+            let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
+            socket.to(`${listClient.id}`).emit("sessionConnect", listSessionDisconnet);
+        }
+
         console.log(`disconnect ${codeTerminal} - idApp`, listClient.id);
-        socket.to(`${listClient.id}`).emit("sessionConnect", listSessionDisconnet);
         console.log('user disconnected');
     });
 
+    socket.on('status:serverSUNAT', (data) => {
+        socket.broadcast.emit("status:serverSUNAT:send", data);
+    });
+    
 
-    let listSessionConnect = await sessionSocket.connect(codeTerminal);
+    if (codeTerminal != "SRVFACT") {
+        let listSessionConnect = await sessionSocket.connect(codeTerminal);
+        socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
+    } 
+
     console.log(`connect ${codeTerminal} - idApp`, listClient.id);
-    socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
-
     console.log('a user connected');
 });
 
