@@ -57,10 +57,10 @@ io.on('connection', async (socket) => {
     });
 
     socket.on('disconnect', async () => {
-        if (codeTerminal == "SRVFACT" && isIcg != 'true') {
+        if (codeTerminal == "SRVFACT") {
             sessionSocket.disconnectServer();
             socket.broadcast.emit("status:serverSUNAT:send", { 'code': 'SRVFACT', 'online': 'false' });
-        } else {
+        } else if (isIcg != 'true') {
             let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
             socket.to(`${listClient.id}`).emit("sessionConnect", listSessionDisconnet);
         }
@@ -72,12 +72,12 @@ io.on('connection', async (socket) => {
     socket.on('status:serverSUNAT', (data) => {
         socket.broadcast.emit("status:serverSUNAT:send", data);
     });
-    
+
 
     if (codeTerminal != "SRVFACT" && isIcg != 'true') {
         let listSessionConnect = await sessionSocket.connect(codeTerminal);
         socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
-    } 
+    }
 
     console.log(`connect ${codeTerminal} - idApp`, listClient.id);
     console.log('a user connected');
