@@ -57,7 +57,7 @@ io.on('connection', async (socket) => {
     });
 
     socket.on('disconnect', async () => {
-        if (codeTerminal == "SRVFACT") {
+        if (codeTerminal == "SRVFACT" && isIcg != 'true') {
             sessionSocket.disconnectServer();
             socket.broadcast.emit("status:serverSUNAT:send", { 'code': 'SRVFACT', 'online': 'false' });
         } else {
