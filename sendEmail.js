@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 import { pool } from './conections/conexMysql.js';
 
 class clsSendEmail {
-    async sendEmail(nome, file, tienda) {
+    async sendEmail(nome, file, mensagem, tienda) {
         let date = new Date();
         let day = `0${date.getDate()}`.slice(-2);
         let month = `0${date.getMonth() + 1}`.slice(-2);
@@ -11,7 +11,7 @@ class clsSendEmail {
         let strSendTo = "";
         let [serviceData] = await pool.query(`SELECT * FROM TB_CONFIGURATION_EMAIL`);
         let [emailSendList] = await pool.query(`SELECT * FROM TB_EMAIL_TO`);
-        
+
         (emailSendList || []).filter((data) => {
             strSendTo += `${data.EMAIL},`;
         });
@@ -27,11 +27,16 @@ class clsSendEmail {
             }
         })
 
-        const mail = {
-            from: `IT METASPERU <andrecanalesv@gmail.com>`,
-            to: strSendTo,
+        let mail = {
+            from: "IT METASPERU <andrecanalesv@gmail.com>",
+            to: email,
+            cc: 'andrecanalesv@gmail.com',
             subject: `${nome}`,
-            attachments: [
+            attachments: []
+        }
+
+        if (mensagem != null) {
+            (mail || {}).attachments = [
                 {
                     filename: `CP-${tienda}-${day}${month}${year}` + '.xlsx',
                     content: Buffer.from(file),

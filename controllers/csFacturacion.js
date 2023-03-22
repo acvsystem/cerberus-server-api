@@ -35,6 +35,7 @@ class clsFacturacion {
             { code: '9K', name: 'VS MEGA PLAZA' },
             { code: '9L', name: 'VS MINKA' },
             { code: '9F', name: 'VSFA JOCKEY FULL' },
+            { code: '7A7', name: 'BBW ASIA' }
         ];
         var dataNoFound = [];
         var paseDataList = [];
@@ -62,16 +63,16 @@ class clsFacturacion {
         console.log(`${this.getDate()} - ${codigoFront} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
 
         if ((dataNoFound || []).length) {
-            const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
+           /* const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
             const workBook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
             const xlsFile = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
-            emailController.sendEmail('', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, xlsFile, (selectedLocal || {}).name)
-                .catch(error => res.send(error));
+            emailController.sendEmail('johnnygermano@grupodavid.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, xlsFile, (selectedLocal || {}).name)
+                .catch(error => res.send(error));*/
         }
 
         await pool.query(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
-        let listSession = await sessionSocket.sessionList();
+        let listSession = await sessionSocket.sessionOneList(codigoFront);
         return listSession;
     }
 }

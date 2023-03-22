@@ -42,6 +42,7 @@ io.use(function (socket, next) {
 }).on('connection', async (socket) => {
     let codeQuery = socket.handshake.query.code;
     let codeTerminal = socket.handshake.headers.code;
+    let isIcg = socket.handshake.headers.icg;
 
     if (socket.decoded.aud == 'AGENTE') {
         let indexAgente = (agenteList || []).findIndex((data, i) => (data || {}).code == codeTerminal);
@@ -55,7 +56,7 @@ io.use(function (socket, next) {
 
     if (codeQuery == 'app') {
         listClient.id = socket.id;
-        let listSessionConnect = await sessionSocket.connect(codeTerminal);
+        let listSessionConnect = await sessionSocket.connect();
         socket.emit("sessionConnect", listSessionConnect);
     }
 
@@ -82,18 +83,39 @@ io.use(function (socket, next) {
         }
     });
 
+    socket.on('conexion:serverICG', (data) => {
+        socket.broadcast.emit("conexion:serverICG:send", data);
+    });
+
     socket.on('disconnect', async () => {
-        let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
-        console.log(`disconnect ${codeTerminal} - idApp`, listClient.id);
-        socket.to(`${listClient.id}`).emit("sessionConnect", listSessionDisconnet);
+        if (codeTerminal == "SRVFACT") {
+            sessionSocket.disconnectServer();
+            socket.broadcast.emit("status:serverSUNAT:send", { 'code': 'SRVFACT', 'online': 'false' });
+        } else if (isIcg != 'true') {
+            console.log(`disconnect ${codeTerminal} - idApp`, listClient.id);
+            let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
+            socket.to(`${listClient.id}`).emit("sessionConnect", listSessionDisconnet);
+        }
+
+        if (isIcg == 'true') {
+            socket.broadcast.emit("conexion:serverICG:send", [{'code': codeTerminal,'isConect' : '0'}]);
+        }
+
+        
         console.log('user disconnected');
     });
 
+    socket.on('status:serverSUNAT', (data) => {
+        socket.broadcast.emit("status:serverSUNAT:send", data);
+    });
 
-    let listSessionConnect = await sessionSocket.connect(codeTerminal);
+
+    if (codeTerminal != "SRVFACT" && isIcg != 'true') {
+        let listSessionConnect = await sessionSocket.connect(codeTerminal);
+        socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
+    }
+
     console.log(`connect ${codeTerminal} - idApp`, listClient.id);
-    socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
-
     console.log('a user connected');
 });
 
