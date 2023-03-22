@@ -61,6 +61,7 @@ io.on('connection', async (socket) => {
             sessionSocket.disconnectServer();
             socket.broadcast.emit("status:serverSUNAT:send", { 'code': 'SRVFACT', 'online': 'false' });
         } else if (isIcg != 'true') {
+            console.log(`disconnect ${codeTerminal} - idApp`, listClient.id);
             let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
             socket.to(`${listClient.id}`).emit("sessionConnect", listSessionDisconnet);
         }
@@ -69,7 +70,7 @@ io.on('connection', async (socket) => {
             socket.broadcast.emit("conexion:serverICG:send", [{'code': codeTerminal,'isConect' : '0'}]);
         }
 
-        console.log(`disconnect ${codeTerminal} - idApp`, listClient.id);
+        
         console.log('user disconnected');
     });
 
