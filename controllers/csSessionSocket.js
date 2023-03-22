@@ -33,7 +33,7 @@ class clsSessionSocket {
             }
         }
 
-        let listSession = await this.sessionList();
+        let listSession = await this.sessionOneList(codigo);
         return listSession;
     }
 
@@ -45,12 +45,18 @@ class clsSessionSocket {
 
     async disconnectServer() {
         emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION DESCONECTADO..!!!!!`, null, `SERVIDOR FACTURACION`)
-        .catch(error => res.send(error));
+            .catch(error => res.send(error));
     }
 
     async sessionList() {
         let [data] = await pool.query(`SELECT CODIGO_TERMINAL, DESCRIPCION, VERIFICACION, CANT_COMPROBANTES, ISONLINE FROM TB_TERMINAL_TIENDA 
         INNER JOIN TB_KEY_TERMINAL ON TB_KEY_TERMINAL.KEY_CODE = TB_TERMINAL_TIENDA.CODIGO_TERMINAL ORDER BY TB_KEY_TERMINAL.ID_UBIGEO_TERMINAL_KEY;`);
+        return data;
+    }
+
+    async sessionOneList(codigo) {
+        let [data] = await pool.query(`SELECT CODIGO_TERMINAL, DESCRIPCION, VERIFICACION, CANT_COMPROBANTES, ISONLINE FROM TB_TERMINAL_TIENDA 
+        INNER JOIN TB_KEY_TERMINAL ON TB_KEY_TERMINAL.KEY_CODE = TB_TERMINAL_TIENDA.CODIGO_TERMINAL ORDER BY TB_KEY_TERMINAL.ID_UBIGEO_TERMINAL_KEY WHERE CODIGO_TERMINAL = ${codigo};`);
         return data;
     }
 
