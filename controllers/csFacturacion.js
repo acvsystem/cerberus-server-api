@@ -14,7 +14,7 @@ class clsFacturacion {
         return `${day}-${month}-${year}`;
     }
 
-    async verificacionDocumentos(dataVerify, codigo) {
+    async verificacionDocumentos(dataVerify) {
         let tiendasList = [
             { code: '7A', name: 'BBW JOCKEY' },
             { code: '9A', name: 'VSBA JOCKEY' },
@@ -35,12 +35,13 @@ class clsFacturacion {
             { code: '9K', name: 'VS MEGA PLAZA' },
             { code: '9L', name: 'VS MINKA' },
             { code: '9F', name: 'VSFA JOCKEY FULL' },
+            { code: '7A7', name: 'BBW ASIA' }
         ];
         var dataNoFound = [];
         var paseDataList = [];
-        var nroSerie = '00';
         var serverData = JSON.parse((dataVerify || {}).serverData);
         var frontData = JSON.parse((dataVerify || {}).frontData);
+        var codigoFront = (dataVerify || {}).codigoFront;
 
         (serverData || []).filter((data) => {
             var cpParse = (data || {}).cmpNumero.split('-');
@@ -48,7 +49,6 @@ class clsFacturacion {
         });
 
         (frontData || []).filter((data) => {
-            nroSerie = (data || {}).cmpSerie.substr(1, 2) || '00';
             var cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
             if (!(paseDataList || []).includes(cpParse)) {
                 (dataNoFound || []).push({
@@ -59,20 +59,20 @@ class clsFacturacion {
             }
         });
 
-        let selectedLocal = tiendasList.find((data) => data.code == nroSerie);
-        console.log(`${this.getDate()} - ${nroSerie} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
+        let selectedLocal = tiendasList.find((data) => data.code == codigoFront);
+        console.log(`${this.getDate()} - ${codigoFront} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
 
         if ((dataNoFound || []).length) {
-            const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
+           /* const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
             const workBook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
             const xlsFile = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
-            emailController.sendEmail('andrecanalesv@gmail.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, xlsFile, (selectedLocal || {}).name)
-                .catch(error => res.send(error));
+            emailController.sendEmail('johnnygermano@grupodavid.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, xlsFile, (selectedLocal || {}).name)
+                .catch(error => res.send(error));*/
         }
 
-        await pool.query(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigo}'`);
-        let listSession = await sessionSocket.sessionList();
+        await pool.query(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
+        let listSession = await sessionSocket.sessionOneList(codigoFront);
         return listSession;
     }
 }

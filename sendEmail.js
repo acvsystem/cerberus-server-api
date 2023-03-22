@@ -1,24 +1,35 @@
 
 import nodemailer from 'nodemailer';
+import { pool } from './conections/conexMysql.js';
 
 class clsSendEmail {
-    sendEmail(email, nome, mensagem, nombre_documento) {
+    async sendEmail(email, nome, file, mensagem, tienda) {
         let date = new Date();
         let day = `0${date.getDate()}`.slice(-2);
         let month = `0${date.getMonth() + 1}`.slice(-2);
         let year = date.getFullYear();
+        let strSendTo = "";
+        let [serviceData] = await pool.query(`SELECT * FROM TB_CONFIGURATION_EMAIL`);
+        let [emailSendList] = await pool.query(`SELECT * FROM TB_EMAIL_TO`);
+
+        (emailSendList || []).filter((data) => {
+            strSendTo += `${data.EMAIL},`;
+        });
+
+        let emailService = serviceData[0].USER_NAME || "";
+        let emailPassword = serviceData[0].PASSWORD || "";
 
         const transport = nodemailer.createTransport({
             service: "Gmail",
             auth: {
-                user: 'andrecanalesv@gmail.com',
-                pass: 'mrxlnchmyxpmqqlt'
+                user: emailService,
+                pass: emailPassword
             }
         })
 
-        const mail = {
+        let mail = {
             from: "IT METASPERU <andrecanalesv@gmail.com>",
-            to: email,
+            to: email || strSendTo,
             subject: `${nome}`,
             html: `<p>Buenos días, adjunto los datos de una factura emitida con numero de RUC errado (Cliente Con DNI, lo cual está prohibido para el caso de factura, para esos casos existen las boletas).</p> 
 
@@ -29,10 +40,14 @@ class clsSendEmail {
             <p>Realizar la NC con anticipo y/o vale.  Si tienen alguna inquietud me dejan saber.</p>
             
             <p>Saludos.`,
-            attachments: [
+            attachments: []
+        }
+
+        if (mensagem != null) {
+            (mail || {}).attachments = [
                 {
-                    filename: `${nombre_documento}` + '.xlsx',
-                    content: Buffer.from(mensagem),
+                    filename: `CP-${tienda}-${day}${month}${year}` + '.xlsx',
+                    content: Buffer.from(file),
                     contentType: 'application/octet-stream',
                 }
             ]
