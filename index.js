@@ -65,8 +65,10 @@ io.on('connection', async (socket) => {
             socket.to(`${listClient.id}`).emit("sessionConnect", listSessionDisconnet);
         }
 
-        socket.broadcast.emit("status:serverSUNAT:send", [{'code': codeTerminal,'isConect' : '0'}]);
-        
+        if (isIcg == 'true') {
+            socket.broadcast.emit("conexion:serverICG:send", [{'code': codeTerminal,'isConect' : '0'}]);
+        }
+
         console.log(`disconnect ${codeTerminal} - idApp`, listClient.id);
         console.log('user disconnected');
     });
