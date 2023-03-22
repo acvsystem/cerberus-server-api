@@ -72,7 +72,7 @@ class clsFacturacion {
         }
 
         await pool.query(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
-        let listSession = await sessionSocket.sessionList();
+        let listSession = await sessionSocket.sessionOneList(codigoFront);
         return listSession;
     }
 }
