@@ -25,7 +25,7 @@ class clsConfiguration {
 
     saveSendEmail = async (req, res) => {
         let emailList = ((req || {}).body || []);
-
+        
         (emailList || []).filter(async (email) => {
             let [existEmail] = await pool.query(`SELECT * FROM TB_EMAIL_TO WHERE EMAIL = '${email.name}';`);
 
@@ -42,9 +42,9 @@ class clsConfiguration {
 
         (emailList || []).filter(async (email) => {
             let [existEmail] = await pool.query(`SELECT * FROM TB_EMAIL_TO WHERE EMAIL = '${email.name}';`);
-
+            console.log(existEmail);
             if (existEmail.length) {
-                await pool.query(`DELETE FROM TB_EMAIL_TO WHERE EMAIL = '${email.name}');`);
+                await pool.query(`DELETE FROM TB_EMAIL_TO WHERE ID_EMAIL_TO = ${existEmail[0].ID_EMAIL_TO};`);
             }
         });
 
@@ -70,10 +70,9 @@ class clsConfiguration {
     }
 
     sendTestEmail = async (req, res) => {
-        emailController.sendEmail(`CORREO DE PRUEBA METASPERU`, '', 'PRUEBA').then((response) => {
+        emailController.sendEmail(null, `CORREO DE PRUEBA METASPERU`, [], null, 'PRUEBA').then((response) => {
             res.json(response)
-        })
-            .catch(error => res.json(error));
+        }).catch(error => res.json(error));
     }
 
 }

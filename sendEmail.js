@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 import { pool } from './conections/conexMysql.js';
 
 class clsSendEmail {
-    async sendEmail(nome, file, mensagem, tienda) {
+    async sendEmail(email, nome, file, mensagem, tienda) {
         let date = new Date();
         let day = `0${date.getDate()}`.slice(-2);
         let month = `0${date.getMonth() + 1}`.slice(-2);
@@ -29,8 +29,7 @@ class clsSendEmail {
 
         let mail = {
             from: "IT METASPERU <andrecanalesv@gmail.com>",
-            to: email,
-            cc: 'andrecanalesv@gmail.com',
+            to: email || strSendTo,
             subject: `${nome}`,
             attachments: []
         }
