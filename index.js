@@ -101,10 +101,10 @@ io.use(function (socket, next) {
         }
 
         if (isIcg == 'true') {
-            socket.broadcast.emit("conexion:serverICG:send", [{'code': codeTerminal,'isConect' : '0'}]);
+            socket.broadcast.emit("conexion:serverICG:send", [{ 'code': codeTerminal, 'isConect': '0' }]);
         }
 
-        
+
         console.log('user disconnected');
     });
 
@@ -130,7 +130,7 @@ io.use(function (socket, next) {
                             '${(arrDocumento || {}).ESTADO_COMPROBANTE}',
                             '${(arrDocumento || {}).CODIGO_ERROR_SUNAT}',
                             '${(arrDocumento || {}).FECHA_EMISION}');`);
-                            
+
             res.send('RECEPCION EXITOSA..!!');
         } else {
             await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET
@@ -151,18 +151,46 @@ io.use(function (socket, next) {
             {
                 'ID.FACTURA': (arrDocumento || {}).CODIGO_DOCUMENTO,
                 'NUM.FACTURA': (arrDocumento || {}).NRO_CORRELATIVO,
-                'FEC.EMISION' : (arrDocumento || {}).FECHA_EMISION,
+                'FEC.EMISION': (arrDocumento || {}).FECHA_EMISION,
                 'NOM.CLIENTE': (arrDocumento || {}).NOM_ADQUIRIENTE,
                 'NUM.DOCUMENTO': (arrDocumento || {}).NRO_DOCUMENTO,
             }
         ]
 
-        const workSheet = XLSX.utils.json_to_sheet((errDocument || []));
-        const workBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
-        const xlsFile = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
+        var bodyHTML = `<p>Buenos días, adjunto los datos de una factura emitida con numero de RUC errado (Cliente Con DNI, lo cual está prohibido para el caso de factura, para esos casos existen las boletas).</p> 
 
-        emailController.sendEmail('andrecanalesv@gmail.com', `FACTURA CON RUC ERRADO`, xlsFile, 'Documento_rechazado')
+        <p>Lamentablemente no han cumplido con los procesos y métodos de validación que se les han proporcionado.</p>  
+        
+        <p>Quedo atento de la persona responsable de emitir dicha factura.</p>  
+        
+        <p>Realizar la NC con anticipo y/o vale.  Si tienen alguna inquietud me dejan saber.</p>
+        
+        <p>Saludos.
+
+        <p><strong>Datos de factura emitida:</strong></p>
+        
+        <table align="left" cellspacing="0">
+    	    <thead>
+    	    	<tr>
+    	    		<th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">ID.FACTURA</th>
+    	    		<th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">NUM.FACTURA</th>
+    	    		<th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">FEC.EMISION</th>
+    	    		<th style="border: 1px solid #9E9E9E;border-right:0px" width="200px">NOM.CLIENTE</th>
+    	    		<th style="border: 1px solid #9E9E9E" width="140px">NUM.DOCUMENTO</th>
+    	    	</tr>
+    	    </thead>
+    	    <tbody>
+    	    	<tr>
+    	    		<td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(arrDocumento || {}).CODIGO_DOCUMENTO}</td>
+    	    		<td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(arrDocumento || {}).NRO_CORRELATIVO}</td>
+    	    		<td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(arrDocumento || {}).FECHA_EMISION}</td>
+    	    		<td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(arrDocumento || {}).NOM_ADQUIRIENTE}</td>
+    	    		<td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(arrDocumento || {}).NRO_DOCUMENTO}</td>
+    	    	</tr>
+    	    </tbody>
+        </table>`;
+
+        emailController.sendEmail(null, `FACTURA CON RUC ERRADO`, bodyHTML, null, 'Documento rechazado', '')
             .catch(error => res.send(error));
 
     });
