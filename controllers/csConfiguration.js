@@ -7,20 +7,17 @@ class clsConfiguration {
         let email = ((req || {}).body || {}).usuario || "";
         let pass = ((req || {}).body || {}).password || "";
 
-        let [data] = await pool.query(`SELECT * FROM TB_CONFIGURATION_EMAIL WHERE USER_NAME = '${email}'`);
+       // let [data] = await pool.query(`SELECT * FROM TB_CONFIGURATION_EMAIL WHERE USER_NAME = '${email}'`);
 
+  /*
         if (email.length && pass.length && !data.length) {
             await pool.query(`INSERT INTO TB_CONFIGURATION_EMAIL(USER_NAME,PASSWORD)VALUES('${email}','${pass}');`);
         }
-
-        if (email.length && pass.length && data.length) {
-            await pool.query(`UPDATE TB_CONFIGURATION_EMAIL SET USER_NAME = '${email}', PASSWORD = '${pass}' WHERE ID_CONFIGURATION = ${data[0].ID_CONFIGURATION};`);
-        }
-
-        if (data.length) {
+*/
+        if (email.length && pass.length) {
+            await pool.query(`UPDATE TB_CONFIGURATION_EMAIL SET USER_NAME = '${email}', PASSWORD = '${pass}' WHERE ID_CONFIGURATION = 1;`);
             res.json({ msj: "SUCCESS" });
         }
-
     }
 
     saveSendEmail = async (req, res) => {
