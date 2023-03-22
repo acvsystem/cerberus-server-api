@@ -66,6 +66,7 @@ io.on('connection', async (socket) => {
         }
 
         if (isIcg == 'true') {
+            console.log(codeTerminal,'ICG');
             socket.broadcast.emit("status:serverSUNAT:send", [{'code': codeTerminal,'isConect' : '0'}]);
         }
 
