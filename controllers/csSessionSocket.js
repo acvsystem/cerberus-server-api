@@ -22,6 +22,7 @@ class clsSessionSocket {
     }
 
     async connect(codigo) {
+        let listSession = [];
         if (codigo) {
             let isExistTerminal = await this.onEvalueIsExist(codigo);
             if (!isExistTerminal.length) {
@@ -31,9 +32,12 @@ class clsSessionSocket {
                 await pool.query(`UPDATE TB_TERMINAL_TIENDA SET ISONLINE = true WHERE CODIGO_TERMINAL = '${codigo}'`);
 
             }
+
+            listSession = await this.sessionOneList(codigo);
+        } else {
+            listSession = await this.sessionList();
         }
 
-        let listSession = await this.sessionOneList(codigo);
         return listSession;
     }
 
