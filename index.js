@@ -20,6 +20,7 @@ var agenteList = [];
 io.on('connection', async (socket) => {
     let codeQuery = socket.handshake.query.code;
     let codeTerminal = socket.handshake.headers.code;
+    let isIcg = socket.handshake.headers.icg;
 
     let indexAgente = (agenteList || []).findIndex((data, i) => (data || {}).code == codeTerminal);
 
@@ -73,7 +74,7 @@ io.on('connection', async (socket) => {
     });
     
 
-    if (codeTerminal != "SRVFACT") {
+    if (codeTerminal != "SRVFACT" && isIcg != 'true') {
         let listSessionConnect = await sessionSocket.connect(codeTerminal);
         socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
     } 
