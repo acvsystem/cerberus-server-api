@@ -47,11 +47,9 @@ io.on('connection', async (socket) => {
 
     socket.on('petitionFront', (data) => {
         let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
-        console.log(agenteList);
-        console.log(codeTerminal, '-', socket.id);
-        console.log(selectAgente);
-        if ((selectAgente || {}).code) {
-            socket.broadcast.emit("sendDataFront", data, (selectAgente || {}).code);
+        console.log(codeTerminal);
+        if (typeof codeTerminal != 'undefined' && codeTerminal != '') {
+            socket.broadcast.emit("sendDataFront", data, codeTerminal);
         }
 
     });
