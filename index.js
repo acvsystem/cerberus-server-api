@@ -32,6 +32,7 @@ io.on('connection', async (socket) => {
     }
 
     if (codeQuery == 'app') {
+        console.log('app', socket.id);
         listClient.id = socket.id;
         let listSessionConnect = await sessionSocket.connect();
         socket.emit("sessionConnect", listSessionConnect);
