@@ -84,8 +84,8 @@ io.on('connection', async (socket) => {
         let listSessionConnect = await sessionSocket.connect(codeTerminal);
         socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
     } else {
-        emailController.sendEmail('', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, `SERVIDOR FACTURACION`)
-            .catch(error => res.send(error));
+       /* emailController.sendEmail('', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, `SERVIDOR FACTURACION`)
+            .catch(error => res.send(error));*/
     }
 
     console.log(`connect ${codeTerminal} - idApp`, listClient.id);
