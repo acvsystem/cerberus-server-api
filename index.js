@@ -44,10 +44,10 @@ io.on('connection', async (socket) => {
         }
     });
 
-    socket.on('petitionFront', (data) => {
+   /* socket.on('petitionFront', (data) => {
         let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
         socket.broadcast.emit("sendDataFront", data, selectAgente.code);
-    });
+    });*/
 
     socket.on('comunicationFront', (data) => {
         socket.broadcast.emit("consultingToFront", 'ready');
