@@ -89,7 +89,7 @@ io.on('connection', async (socket) => {
     } else {
         if (codeTerminal == "SRVFACT") {
             console.log('SERVIDOR', codeTerminal);
-            emailController.sendEmail('', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, `SERVIDOR FACTURACION`)
+            emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, `SERVIDOR FACTURACION`)
                 .catch(error => res.send(error));
         }
     }
