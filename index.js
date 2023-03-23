@@ -49,6 +49,7 @@ io.on('connection', async (socket) => {
         let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
         console.log(agenteList);
         console.log(codeTerminal, '-', socket.id);
+        console.log(selectAgente);
         if ((selectAgente || {}).code) {
             socket.broadcast.emit("sendDataFront", data, (selectAgente || {}).code);
         }
