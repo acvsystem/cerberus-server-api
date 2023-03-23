@@ -5,6 +5,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import facturacionController from './controllers/csFacturacion.js'
 import sessionSocket from './controllers/csSessionSocket.js'
+import emailController from './sendEmail.js';
 
 const app = express();
 const httpServer = createServer(app);
@@ -67,10 +68,10 @@ io.on('connection', async (socket) => {
         }
 
         if (isIcg == 'true') {
-            socket.broadcast.emit("conexion:serverICG:send", [{'code': codeTerminal,'isConect' : '0'}]);
+            socket.broadcast.emit("conexion:serverICG:send", [{ 'code': codeTerminal, 'isConect': '0' }]);
         }
 
-        
+
         console.log('user disconnected');
     });
 
@@ -79,7 +80,10 @@ io.on('connection', async (socket) => {
     });
 
 
-    if (codeTerminal != "SRVFACT" && isIcg != 'true') {
+    if (codeTerminal == "SRVFACT" && isIcg == 'true') {
+        emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, `SERVIDOR FACTURACION`)
+            .catch(error => res.send(error));
+    } else {
         let listSessionConnect = await sessionSocket.connect(codeTerminal);
         socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
     }
