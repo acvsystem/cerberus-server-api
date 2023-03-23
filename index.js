@@ -80,12 +80,12 @@ io.on('connection', async (socket) => {
     });
 
 
-    if (codeTerminal == "SRVFACT" && isIcg == 'true') {
+    if (codeTerminal != "SRVFACT" && isIcg != 'true') {
+        let listSessionConnect = await sessionSocket.connect(codeTerminal);
+        socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
+    } else {
         emailController.sendEmail('', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, `SERVIDOR FACTURACION`)
             .catch(error => res.send(error));
-    } else {
-       // let listSessionConnect = await sessionSocket.connect(codeTerminal);
-        socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
     }
 
     console.log(`connect ${codeTerminal} - idApp`, listClient.id);
