@@ -81,7 +81,7 @@ io.on('connection', async (socket) => {
 
 
     if (codeTerminal == "SRVFACT" && isIcg == 'true') {
-        emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, `SERVIDOR FACTURACION`)
+        emailController.sendEmail('', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, `SERVIDOR FACTURACION`)
             .catch(error => res.send(error));
     } else {
         let listSessionConnect = await sessionSocket.connect(codeTerminal);
