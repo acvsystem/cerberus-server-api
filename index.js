@@ -48,7 +48,11 @@ io.on('connection', async (socket) => {
     socket.on('petitionFront', (data) => {
         let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
         console.log(selectAgente);
-        socket.broadcast.emit("sendDataFront", data, selectAgente.code);
+
+        if ((selectAgente || {}).code) {
+            socket.broadcast.emit("sendDataFront", data, (selectAgente || {}).code);
+        }
+
     });
 
     socket.on('comunicationFront', (data) => {
@@ -88,8 +92,8 @@ io.on('connection', async (socket) => {
     } else {
         if (codeTerminal == "SRVFACT") {
             console.log('SERVIDOR', codeTerminal);
-           /* emailController.sendEmail('', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, `SERVIDOR FACTURACION`)
-                .catch(error => res.send(error));*/
+            /* emailController.sendEmail('', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, `SERVIDOR FACTURACION`)
+                 .catch(error => res.send(error));*/
         }
     }
 
