@@ -6,12 +6,11 @@ import bodyParser from 'body-parser';
 import facturacionController from './controllers/csFacturacion.js'
 import sessionSocket from './controllers/csSessionSocket.js'
 import { pool } from './conections/conexMysql.js';
-import emailController from './sendEmail.js';
-import * as XLSX from 'xlsx';
 import securityRoutes from './routes/security.routes.js';
 import configurationRoutes from './routes/configuration.routes.js';
 import Jwt from 'jsonwebtoken';
 import { prop } from './keys.js';
+import emailController from './sendEmail.js';
 
 const app = express();
 const httpServer = createServer(app);
@@ -202,6 +201,12 @@ io.use(function (socket, next) {
     if (codeTerminal != "SRVFACT" && isIcg != 'true') {
         let listSessionConnect = await sessionSocket.connect(codeTerminal);
         socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
+    } else {
+        if(codeTerminal == "SRVFACT"){
+            console.log('SERVIDOR', codeTerminal);
+            emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, `SERVIDOR FACTURACION`)
+                .catch(error => res.send(error));
+        }
     }
 
     console.log(`connect ${codeTerminal} - idApp`, listClient.id);
