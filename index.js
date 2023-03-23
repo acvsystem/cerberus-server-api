@@ -57,6 +57,7 @@ io.use(function (socket, next) {
     }
 
     if (codeQuery == 'app') {
+        console.log('app', socket.id);
         listClient.id = socket.id;
         let listSessionConnect = await sessionSocket.connect();
         socket.emit("sessionConnect", listSessionConnect);
@@ -72,9 +73,9 @@ io.use(function (socket, next) {
 
     //EMITE DESDE EL AGENTE PY
     socket.on('petitionFront', (data) => {
-        if (socket.decoded.aud == 'AGENTE') {
-            let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
-            socket.broadcast.emit("sendDataFront", data, selectAgente.code);
+        let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
+        if (typeof codeTerminal != 'undefined' && codeTerminal != '') {
+            socket.broadcast.emit("sendDataFront", data, codeTerminal);
         }
     });
 
@@ -202,7 +203,7 @@ io.use(function (socket, next) {
         let listSessionConnect = await sessionSocket.connect(codeTerminal);
         socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
     } else {
-        if(codeTerminal == "SRVFACT"){
+        if (codeTerminal == "SRVFACT") {
             console.log('SERVIDOR', codeTerminal);
             emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, `SERVIDOR FACTURACION`)
                 .catch(error => res.send(error));
