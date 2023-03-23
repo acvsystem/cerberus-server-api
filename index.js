@@ -84,7 +84,7 @@ io.on('connection', async (socket) => {
         emailController.sendEmail('', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, `SERVIDOR FACTURACION`)
             .catch(error => res.send(error));
     } else {
-        let listSessionConnect = await sessionSocket.connect(codeTerminal);
+       // let listSessionConnect = await sessionSocket.connect(codeTerminal);
         socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
     }
 
