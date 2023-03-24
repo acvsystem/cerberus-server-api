@@ -1,6 +1,5 @@
 import { pool } from '../conections/conexMysql.js';
-import Jwt from 'jsonwebtoken';
-import { prop } from '../keys.js';
+import tokenController from './csToken.js';
 
 export const Login = async (req, res) => {
     let objLogin = req.body;
@@ -19,12 +18,8 @@ export const Login = async (req, res) => {
             INNER JOIN TB_NIVEL_ACCESS ON TB_NIVEL_ACCESS.ID_NVL_ACCESS = TB_LOGIN.FK_ID_NVL_ACCESS
             INNER JOIN TB_MENU_SISTEMA ON TB_MENU_SISTEMA.FK_ID_LOGIN_MENU = TB_LOGIN.ID_LOGIN WHERE TB_NIVEL_ACCESS.ID_NVL_ACCESS = ${((dataUser || [])[0] || {}).ID_NVL_ACCESS}`);
 
-        let privateKey = prop.keyCrypt || 'fgpbr';
-        let option = {
-            issuer: 'cerberus.server',
-            audience: `${nivelUser}`
-        };
-        const token = Jwt.sign({ id: usuario }, privateKey, option);
+        const token = tokenController.createToken(usuario, nivelUser);
+
         let parseResponse = {
             auth: { token: token },
             profile: { name: ((dataUser || [])[0] || {}).NOMBRE, nivel: ((dataUser || [])[0] || {}).NM_NIVEL },

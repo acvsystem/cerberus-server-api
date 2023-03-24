@@ -7,6 +7,7 @@ router.post('/service/email/delete', configurationController.deleteSendEmail);
 router.post('/service/email/save', configurationController.saveSendEmail);
 router.get('/service/email/sendList', configurationController.onlistConfiguration);
 router.post('/service/email/sendTest', configurationController.sendTestEmail);
+router.post('/service/email/register', configurationController.sendLinkRegister);
 
 
 const configurationRoutes = router;

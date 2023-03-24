@@ -1,5 +1,7 @@
 import { pool } from '../conections/conexMysql.js';
 import emailController from '../sendEmail.js';
+import templateHtmlController from '../template/csTemplatesHtml.js';
+import { prop } from '../keys.js';
 
 class clsConfiguration {
 
@@ -7,13 +9,13 @@ class clsConfiguration {
         let email = ((req || {}).body || {}).usuario || "";
         let pass = ((req || {}).body || {}).password || "";
 
-       // let [data] = await pool.query(`SELECT * FROM TB_CONFIGURATION_EMAIL WHERE USER_NAME = '${email}'`);
+        // let [data] = await pool.query(`SELECT * FROM TB_CONFIGURATION_EMAIL WHERE USER_NAME = '${email}'`);
 
-  /*
-        if (email.length && pass.length && !data.length) {
-            await pool.query(`INSERT INTO TB_CONFIGURATION_EMAIL(USER_NAME,PASSWORD)VALUES('${email}','${pass}');`);
-        }
-*/
+        /*
+              if (email.length && pass.length && !data.length) {
+                  await pool.query(`INSERT INTO TB_CONFIGURATION_EMAIL(USER_NAME,PASSWORD)VALUES('${email}','${pass}');`);
+              }
+      */
         if (email.length && pass.length) {
             await pool.query(`UPDATE TB_CONFIGURATION_EMAIL SET USER_NAME = '${email}', PASSWORD = '${pass}' WHERE ID_CONFIGURATION = 1;`);
             res.json({ msj: "SUCCESS" });
@@ -70,6 +72,17 @@ class clsConfiguration {
         emailController.sendEmail(null, `CORREO DE PRUEBA METASPERU`, '', '', null, 'PRUEBA').then((response) => {
             res.json(response)
         }).catch(error => res.json(error));
+    }
+
+    sendLinkRegister = async (req, res) => {
+        let data = ((req || {}).body || []);
+        let ipServer = prop.ipServer;
+        var bodyHTML = templateHtmlController.registerAccount({ link: `http://${ipServer}/${(data || {}).path || ''}/asdadasdsad` });
+
+        emailController.sendEmail(`${(data || {}).email || ''}`, `REGISTRO SISTEMA IT METAS PERU`, bodyHTML, '', null, 'REGISTRO SISTEMA').then((response) => {
+            res.json(response)
+        }).catch(error => res.json(error));
+
     }
 
 }

@@ -11,6 +11,7 @@ import configurationRoutes from './routes/configuration.routes.js';
 import Jwt from 'jsonwebtoken';
 import { prop } from './keys.js';
 import emailController from './sendEmail.js';
+import tokenController from './controllers/csToken.js';
 
 const app = express();
 const httpServer = createServer(app);
@@ -27,16 +28,27 @@ var listClient = { id: '' };
 var agenteList = [];
 
 app.use('/security', securityRoutes);
-app.use('/settings', configurationRoutes);
+app.use('/settings', (req, res, next) => {
+    const token = req.header('auth-token') || "";
+    let resValidation = tokenController.verificationToken(token);
+    if ((resValidation || {}).isValid) {
+        next()
+    } else {
+        return res.status(401).json('Access denied');
+    }
+}, configurationRoutes);
 
 io.use(function (socket, next) {
     let token = socket.handshake.query.token || socket.handshake.headers.token;
     if (token) {
-        Jwt.verify(token, prop.keyCrypt, function (err, decoded) {
-            if (err) return next(new Error('Authentication error'));
-            socket.decoded = decoded;
+        let resValidToken = tokenController.verificationToken(token);
+
+        if ((resValidToken || {}).isValid) {
+            socket.decoded = (resValidToken || {}).decoded;
             next();
-        });
+        } else {
+            next(new Error('Authentication error'))
+        }
     }
     else {
         next(new Error('Authentication error'));
