@@ -59,9 +59,7 @@ class clsFacturacion {
             }
         });
 
-        if (codigoFront == '9C') {
-            console.log('9C', dataNoFound);
-        }
+        console.log(codigoFront, dataNoFound);
 
         let selectedLocal = tiendasList.find((data) => data.code == codigoFront);
         console.log(`${this.getDate()} - ${codigoFront} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
