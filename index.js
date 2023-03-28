@@ -28,9 +28,11 @@ var listClient = { id: '' };
 var agenteList = [];
 
 app.use('/security', securityRoutes);
-app.use('/settings', (req, res, next) => {
-    const token = req.header('auth-token') || "";
+app.use('/settings', async (req, res, next) => {
+    const token = req.header('Authorization') || "";
+    
     let resValidation = tokenController.verificationToken(token);
+    
     if ((resValidation || {}).isValid) {
         next()
     } else {
@@ -41,8 +43,9 @@ app.use('/settings', (req, res, next) => {
 io.use(function (socket, next) {
     let token = socket.handshake.query.token || socket.handshake.headers.token;
     if (token) {
+       
         let resValidToken = tokenController.verificationToken(token);
-
+        
         if ((resValidToken || {}).isValid) {
             socket.decoded = (resValidToken || {}).decoded;
             next();

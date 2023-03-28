@@ -25,7 +25,7 @@ export const Login = async (req, res) => {
             profile: { name: ((dataUser || [])[0] || {}).NOMBRE, nivel: ((dataUser || [])[0] || {}).NM_NIVEL },
             menu: menuUser
         }
-        res.header('auth-token', token).json(parseResponse);
+        res.header('Authorization', token).json(parseResponse);
     } else {
         res.json([{ msj: 'Usuario o contraseña invalidos.' }]);
     }
