@@ -208,15 +208,15 @@ io.on('connection', async (socket) => {
         var codigo = serie.substr(1, 2);
         var selectedLocal = {};
         var count = 0;
-
+        console.log("CODIGO", codigo);
         while (count <= 1) {
             count++;
 
             if (count == 1) {
                 codigo = serie.substr(1, 3);
             }
-            
-            console.log("CODIGO", codigo);
+
+            console.log("CODIGO w", codigo);
             selectedLocal = tiendasList.find((data) => data.code == codigo) || {};
             if (Object.keys(selectedLocal).length) {
                 count = 1;
