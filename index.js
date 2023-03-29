@@ -41,7 +41,7 @@ io.on('connection', async (socket) => {
         let listSessionConnect = await sessionSocket.connect();
         socket.emit("sessionConnect", listSessionConnect);
         let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
-        socket.to(`${listClient.id}`).emit("sendNotificationSunat", documentList);
+        socket.emit("sendNotificationSunat", documentList);
     }
 
     socket.on('verifyDocument', async (resData) => {
