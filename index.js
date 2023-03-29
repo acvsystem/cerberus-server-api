@@ -53,7 +53,7 @@ app.post('/sunat-notification', async (req, res) => {
     }
 
     let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
-    socket.emit("sendNotificationSunat", documentList);
+    //socket.emit("sendNotificationSunat", documentList);
 
     /*let errDocument = [
         {
