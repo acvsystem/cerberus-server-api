@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import facturacionController from './controllers/csFacturacion.js'
 import sessionSocket from './controllers/csSessionSocket.js'
 import emailController from './sendEmail.js';
+import { pool } from './conections/conexMysql.js';
 
 const app = express();
 const httpServer = createServer(app);
