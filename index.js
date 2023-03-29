@@ -205,22 +205,28 @@ io.on('connection', async (socket) => {
 
         let serie = ((arrDocumento || {}).NRO_CORRELATIVO || "").split('-')[0];
 
-        let codigo = serie.substr(1, 2);
+        let codigo = '';
         let selectedLocal = {};
         let count = 0;
         console.log("CODIGO", codigo);
-        console.log("TIENDA", selectedLocal);
+
         while (count <= 2) {
+            count++;
+
+            if (count == 2) {
+                codigo = serie.substr(1, 3);
+            }else{
+                codigo = serie.substr(1, 2);
+            }
+            
             selectedLocal = tiendasList.find((data) => data.code == codigo);
             if (Object.keys(selectedLocal).length) {
                 count = 2;
-            } else {
-                count++;
             }
         }
-
-       /* emailController.sendEmail((selectedLocal || {}).email || '', `FACTURA CON RUC ERRADO`, bodyHTML, null, null)
-            .catch(error => res.send(error));*/
+        console.log("TIENDA", selectedLocal);
+        /* emailController.sendEmail((selectedLocal || {}).email || '', `FACTURA CON RUC ERRADO`, bodyHTML, null, null)
+             .catch(error => res.send(error));*/
     });
 
     console.log(`connect ${codeTerminal} - idApp`, listClient.id);
