@@ -201,30 +201,27 @@ io.on('connection', async (socket) => {
             </tbody>
         </table>`;
 
-        console.log('sunat-notification', codeTerminal);
+      
 
         let serie = ((arrDocumento || {}).NRO_CORRELATIVO || "").split('-')[0];
 
-        let codigo = '';
-        let selectedLocal = {};
-        let count = 0;
+        var codigo = serie.substr(1, 2);
+        var selectedLocal = {};
+        var count = 0;
 
-        
-
-        while (count <= 2) {
+        while (count <= 1) {
             count++;
 
-            if (count == 2) {
+            if (count == 1) {
                 codigo = serie.substr(1, 3);
-            }else{
-                codigo = serie.substr(1, 2);
             }
             
             selectedLocal = tiendasList.find((data) => data.code == codigo);
             if (Object.keys(selectedLocal).length) {
-                count = 2;
+                count = 1;
             }
         }
+
         console.log("CODIGO", codigo);
         console.log("TIENDA", selectedLocal);
         /* emailController.sendEmail((selectedLocal || {}).email || '', `FACTURA CON RUC ERRADO`, bodyHTML, null, null)
