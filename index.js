@@ -216,13 +216,14 @@ io.on('connection', async (socket) => {
                 codigo = serie.substr(1, 3);
             }
             
-            selectedLocal = tiendasList.find((data) => data.code == codigo);
+            console.log("CODIGO", codigo);
+            selectedLocal = tiendasList.find((data) => data.code == codigo) || {};
             if (Object.keys(selectedLocal).length) {
                 count = 1;
             }
         }
 
-        console.log("CODIGO", codigo);
+        
         console.log("TIENDA", selectedLocal);
         /* emailController.sendEmail((selectedLocal || {}).email || '', `FACTURA CON RUC ERRADO`, bodyHTML, null, null)
              .catch(error => res.send(error));*/
