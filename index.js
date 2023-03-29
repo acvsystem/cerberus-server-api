@@ -95,7 +95,7 @@ io.on('connection', async (socket) => {
     } else {
         if (codeTerminal == "SRVFACT") {
             console.log('SERVIDOR', codeTerminal);
-            emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
+            emailController.sendEmail('', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
                 .catch(error => res.send(error));
         }
     }
@@ -208,7 +208,8 @@ io.on('connection', async (socket) => {
         let codigo = '';
         let selectedLocal = {};
         let count = 0;
-        console.log("CODIGO", codigo);
+
+        
 
         while (count <= 2) {
             count++;
@@ -224,6 +225,7 @@ io.on('connection', async (socket) => {
                 count = 2;
             }
         }
+        console.log("CODIGO", codigo);
         console.log("TIENDA", selectedLocal);
         /* emailController.sendEmail((selectedLocal || {}).email || '', `FACTURA CON RUC ERRADO`, bodyHTML, null, null)
              .catch(error => res.send(error));*/
