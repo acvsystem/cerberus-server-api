@@ -93,18 +93,18 @@ io.on('connection', async (socket) => {
     } else {
         if (codeTerminal == "SRVFACT") {
             console.log('SERVIDOR', codeTerminal);
-            emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, `SERVIDOR FACTURACION`)
+            emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
                 .catch(error => res.send(error));
         }
     }
-    
+
 
     app.post('/sunat-notification', async (req, res) => {
 
         let arrDocumento = (((req || []).body || [])[0] || {});
-    
+
         let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
-    
+
         if (!(verifyDocument || []).length) {
             await pool.query(`INSERT INTO TB_DOCUMENTOS_ERROR_SUNAT(CODIGO_DOCUMENTO,NRO_CORRELATIVO,NOM_ADQUIRIENTE,NRO_DOCUMENTO,TIPO_DOCUMENTO_ADQUIRIENTE,OBSERVACION,ESTADO_SUNAT,ESTADO_COMPROBANTE,CODIGO_ERROR_SUNAT,FECHA_EMISION)
                             VALUES(${(arrDocumento || {}).CODIGO_DOCUMENTO},
@@ -117,7 +117,7 @@ io.on('connection', async (socket) => {
                             '${(arrDocumento || {}).ESTADO_COMPROBANTE}',
                             '${(arrDocumento || {}).CODIGO_ERROR_SUNAT}',
                             '${(arrDocumento || {}).FECHA_EMISION}');`);
-    
+
             res.send('RECEPCION EXITOSA..!!');
         } else {
             await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET
@@ -130,10 +130,10 @@ io.on('connection', async (socket) => {
                             CODIGO_ERROR_SUNAT = '${(arrDocumento || {}).CODIGO_ERROR_SUNAT}'`);
             res.send('RECEPCION EXITOSA..!!');
         }
-    
+
         let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
         socket.emit("sendNotificationSunat", documentList);
-    
+
         /*let errDocument = [
             {
                 'ID.FACTURA': (arrDocumento || {}).CODIGO_DOCUMENTO,
@@ -143,7 +143,7 @@ io.on('connection', async (socket) => {
                 'NUM.DOCUMENTO': (arrDocumento || {}).NRO_DOCUMENTO,
             }
         ]*/
-    
+
         var bodyHTML = `<p>Buenos días, adjunto los datos de una factura emitida con numero de RUC errado (Cliente Con DNI, lo cual está prohibido para el caso de factura, para esos casos existen las boletas).</p> 
     
         <p>Lamentablemente no han cumplido con los procesos y métodos de validación que se les han proporcionado.</p>  
@@ -176,7 +176,7 @@ io.on('connection', async (socket) => {
                 </tr>
             </tbody>
         </table>`;
-    
+
         emailController.sendEmail('', `FACTURA CON RUC ERRADO`, bodyHTML, null, null)
             .catch(error => res.send(error));
     });
