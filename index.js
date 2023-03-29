@@ -132,7 +132,7 @@ io.on('connection', async (socket) => {
         }
 
         let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
-        socket.emit("sendNotificationSunat", documentList);
+        socket.to(`${listClient.id}`).emit("sendNotificationSunat", documentList);
 
         /*let errDocument = [
             {
