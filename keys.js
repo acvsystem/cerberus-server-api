@@ -1,5 +1,5 @@
 export const prop = {
-    ipServer: '159.65.226.239',
+    ipServer: 'localhost:4200', //'159.65.226.239',
     database: {
         host: '159.65.226.239',
         user: 'dbapp',
@@ -12,6 +12,7 @@ export const prop = {
         idleTimeout: 60000,
         queueLimit: 0
     },
-    keyCrypt: "C3rB3rvSFL@@"
+    keyCrypt: "C3rB3rvSFL@@",
+    keyCryptHash: "@g3nt3MT432"
 
 };

@@ -2,6 +2,8 @@ import { pool } from '../conections/conexMysql.js';
 import emailController from '../sendEmail.js';
 import templateHtmlController from '../template/csTemplatesHtml.js';
 import { prop } from '../keys.js';
+import tokenController from './csToken.js';
+import { prop as defaultResponse } from '../const/defaultResponse.js';
 
 class clsConfiguration {
 
@@ -18,7 +20,7 @@ class clsConfiguration {
       */
         if (email.length && pass.length) {
             await pool.query(`UPDATE TB_CONFIGURATION_EMAIL SET USER_NAME = '${email}', PASSWORD = '${pass}' WHERE ID_CONFIGURATION = 1;`);
-            res.json({ msj: "SUCCESS" });
+            res.json(defaultResponse.success.default);
         }
     }
 
@@ -33,7 +35,7 @@ class clsConfiguration {
             }
         });
 
-        res.json({ msj: "SUCCESS" });
+        res.json(defaultResponse.success.default);
     }
 
     deleteSendEmail = async (req, res) => {
@@ -47,7 +49,7 @@ class clsConfiguration {
             }
         });
 
-        res.json({ msj: "SUCCESS" });
+        res.json(defaultResponse.success.default);
     }
 
     onlistConfiguration = async (req, res) => {
@@ -77,7 +79,9 @@ class clsConfiguration {
     sendLinkRegister = async (req, res) => {
         let data = ((req || {}).body || []);
         let ipServer = prop.ipServer;
-        var bodyHTML = templateHtmlController.registerAccount({ link: `http://${ipServer}/${(data || {}).path || ''}/asdadasdsad` });
+        const token = tokenController.createToken('NEW_USER', 'REGISTER_USER');
+
+        var bodyHTML = templateHtmlController.registerAccount({ link: `http://${ipServer}/${(data || {}).path || ''}/${token}` });
 
         emailController.sendEmail(`${(data || {}).email || ''}`, `REGISTRO SISTEMA IT METAS PERU`, bodyHTML, '', null, 'REGISTRO SISTEMA').then((response) => {
             res.json(response)

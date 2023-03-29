@@ -8,10 +8,10 @@ import sessionSocket from './controllers/csSessionSocket.js'
 import { pool } from './conections/conexMysql.js';
 import securityRoutes from './routes/security.routes.js';
 import configurationRoutes from './routes/configuration.routes.js';
-import Jwt from 'jsonwebtoken';
-import { prop } from './keys.js';
 import emailController from './sendEmail.js';
 import tokenController from './controllers/csToken.js';
+import CryptoJS from 'crypto-js';
+import { prop } from './keys.js';
 
 const app = express();
 const httpServer = createServer(app);
@@ -30,9 +30,9 @@ var agenteList = [];
 app.use('/security', securityRoutes);
 app.use('/settings', async (req, res, next) => {
     const token = req.header('Authorization') || "";
-    
+
     let resValidation = tokenController.verificationToken(token);
-    
+
     if ((resValidation || {}).isValid) {
         next()
     } else {
@@ -41,21 +41,27 @@ app.use('/settings', async (req, res, next) => {
 }, configurationRoutes);
 
 io.use(function (socket, next) {
-    let token = socket.handshake.query.token || socket.handshake.headers.token;
-    if (token) {
-       
-        let resValidToken = tokenController.verificationToken(token);
-        
-        if ((resValidToken || {}).isValid) {
-            socket.decoded = (resValidToken || {}).decoded;
-            next();
-        } else {
-            next(new Error('Authentication error'))
+    let token = socket.handshake.query.token;
+    let hash = socket.handshake.headers.hash;
+
+    if (hash) {
+        var bytes = CryptoJS.AES.decrypt(hash, prop.keyCryptHash);
+        var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8)) || {};
+
+        if (Object.keys(decryptedData).length) {
+            token = tokenController.createToken((decryptedData || {}).user, (decryptedData || {}).nivel);
         }
     }
-    else {
-        next(new Error('Authentication error'));
+
+    let resValidToken = tokenController.verificationToken(token);
+
+    if ((resValidToken || {}).isValid) {
+        socket.decoded = (resValidToken || {}).decoded;
+        next();
+    } else {
+        next(new Error('Authentication error'))
     }
+
 }).on('connection', async (socket) => {
     let codeQuery = socket.handshake.query.code;
     let codeTerminal = socket.handshake.headers.code;
@@ -98,6 +104,12 @@ io.use(function (socket, next) {
     socket.on('comunicationFront', (data) => {
         if (socket.decoded.aud == 'ADMINISTRADOR') {
             socket.broadcast.emit("consultingToFront", 'ready');
+        }
+    });
+
+    socket.on('update:file:FrontAgent', (data) => {
+        if (socket.decoded.aud == 'ADMINISTRADOR') {
+            socket.broadcast.emit("update_file_Agente", data);
         }
     });
 
