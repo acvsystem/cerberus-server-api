@@ -208,14 +208,14 @@ io.on('connection', async (socket) => {
         var codigo = serie.substr(1, 2);
         var selectedLocal = {};
         var count = 0;
-        console.log("CODIGO", codigo);
+       
+
         while (count <= 1) {
             
             if (count == 1) {
                 codigo = serie.substr(1, 3);
             }
 
-            console.log("CODIGO w", codigo);
             selectedLocal = tiendasList.find((data) => data.code == codigo) || {};
             if (Object.keys(selectedLocal).length) {
                 count = 1;
@@ -224,10 +224,11 @@ io.on('connection', async (socket) => {
             count++;
         }
 
-        
-        console.log("TIENDA", selectedLocal);
-        /* emailController.sendEmail((selectedLocal || {}).email || '', `FACTURA CON RUC ERRADO`, bodyHTML, null, null)
-             .catch(error => res.send(error));*/
+        console.log("sunat:codigo_tienda", codigo);
+        console.log("sunat:tienda", selectedLocal);
+
+         emailController.sendEmail((selectedLocal || {}).email || '', `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
+             .catch(error => res.send(error));
     });
 
     console.log(`connect ${codeTerminal} - idApp`, listClient.id);
