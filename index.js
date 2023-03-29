@@ -104,6 +104,28 @@ io.on('connection', async (socket) => {
     app.post('/sunat-notification', async (req, res) => {
 
         let arrDocumento = (((req || []).body || [])[0] || {});
+        let tiendasList = [
+            { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@grupodavid.com' },
+            { code: '9A', name: 'VSBA JOCKEY', email: 'vsjockeyplaza@grupodavid.com' },
+            { code: 'PC', name: 'AEO JOCKEY', email: 'americaneaglejp@grupodavid.com' },
+            { code: 'PB', name: 'AEO ASIA', email: 'aeopopupasia@grupodavid.com' },
+            { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@grupodavid.com' },
+            { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@grupodavid.com' },
+            { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@grupodavid.com' },
+            { code: '7C', name: 'BBW SAN MIGUEL', email: 'bbwsanmiguel@grupodavid.com' },
+            { code: '9C', name: 'VS SAN MIGUEL', email: 'vssanmiguel@grupodavid.com' },
+            { code: '7D', name: 'BBW SALAVERRY', email: 'bbwsalaverry@grupodavid.com' },
+            { code: '9I', name: 'VS SALAVERRY', email: 'vssalaverry@grupodavid.com' },
+            { code: '9G', name: 'VS MALL DEL SUR', email: 'vsmalldelsur@grupodavid.com' },
+            { code: '9H', name: 'VS PURUCHUCO', email: 'vspuruchuco@grupodavid.com' },
+            { code: '9M', name: 'VS ECOMMERCE', email: 'vsecommpe@grupodavid.com' },
+            { code: '7F', name: 'BBW ECOMMERCE', email: 'bbwecommperu@grupodavid.com' },
+            { code: 'PA', name: 'AEO ECOMMERCE', email: 'aeecompe@grupodavid.com' },
+            { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@grupodavid.com' },
+            { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@grupodavid.com' },
+            { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyventas@grupodavid.com' },
+            { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
+        ];
 
         let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
 
@@ -179,8 +201,26 @@ io.on('connection', async (socket) => {
             </tbody>
         </table>`;
 
-        emailController.sendEmail('', `FACTURA CON RUC ERRADO`, bodyHTML, null, null)
-            .catch(error => res.send(error));
+        console.log('sunat-notification', codeTerminal);
+
+        let serie = ((arrDocumento || {}).NRO_CORRELATIVO || "").split('-')[0];
+
+        let codigo = serie.substr(1, 2);
+        let selectedLocal = {};
+        let count = 0;
+        console.log("CODIGO", codigo);
+        console.log("TIENDA", selectedLocal);
+        while (count <= 2) {
+            selectedLocal = tiendasList.find((data) => data.code == codigo);
+            if (Object.keys(selectedLocal).length) {
+                count = 2;
+            } else {
+                count++;
+            }
+        }
+
+       /* emailController.sendEmail((selectedLocal || {}).email || '', `FACTURA CON RUC ERRADO`, bodyHTML, null, null)
+            .catch(error => res.send(error));*/
     });
 
     console.log(`connect ${codeTerminal} - idApp`, listClient.id);
