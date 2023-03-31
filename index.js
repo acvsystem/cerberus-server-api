@@ -123,7 +123,7 @@ io.on('connection', async (socket) => {
             { code: 'PA', name: 'AEO ECOMMERCE', email: 'aeecompe@grupodavid.com' },
             { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@grupodavid.com' },
             { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@grupodavid.com' },
-            { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyventas@grupodavid.com' },
+            { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@grupodavid.com' },
             { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
         ];
 
