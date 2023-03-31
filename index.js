@@ -129,7 +129,7 @@ io.on('connection', async (socket) => {
 
         if ((arrDocumento || {}).CODIGO_ERROR_SUNAT == 2800) {
             let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
-            let isEmailEnvio = (verifyDocument || [])[0].ENVIO_EMAIL || 'false';
+            let isEmailEnvio = ((verifyDocument || [])[0] || {}).ENVIO_EMAIL || 'false';
             console.log('verifyDocument', verifyDocument);
             console.log('isEmailEnvio', isEmailEnvio);
 
