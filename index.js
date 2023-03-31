@@ -100,6 +100,10 @@ io.on('connection', async (socket) => {
         }
     }
 
+    app.post('/verificacion-programada', async (req, res) => {
+        console.log('ENVIO DESDE MYSQL');
+    });
+
 
     app.post('/sunat-notification', async (req, res) => {
 
