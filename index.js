@@ -131,7 +131,6 @@ io.on('connection', async (socket) => {
             let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
             let isEmailEnvio = ((verifyDocument || [])[0] || {}).ENVIO_EMAIL || 'false';
             console.log('verifyDocument', verifyDocument);
-            console.log('isEmailEnvio', isEmailEnvio);
 
             if (!(verifyDocument || []).length) {
                 await pool.query(`INSERT INTO TB_DOCUMENTOS_ERROR_SUNAT(CODIGO_DOCUMENTO,NRO_CORRELATIVO,NOM_ADQUIRIENTE,NRO_DOCUMENTO,TIPO_DOCUMENTO_ADQUIRIENTE,OBSERVACION,ESTADO_SUNAT,ESTADO_COMPROBANTE,CODIGO_ERROR_SUNAT,ENVIO_EMAIL,FECHA_EMISION)
@@ -231,12 +230,12 @@ io.on('connection', async (socket) => {
 
             if (Object.keys(selectedLocal).length && isEmailEnvio != 'true') {
                 console.log("sunat:codigo_tienda", codigo);
-                /*console.log("sunat:tienda", selectedLocal);*/
+                console.log("sunat:tienda", selectedLocal);
 
                 await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET ENVIO_EMAIL ='true' WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
-                /*
-                                emailController.sendEmail('', `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
-                                    .catch(error => res.send(error));*/
+
+                emailController.sendEmail([(selectedLocal || {}).email || '','johnnygermano@grupodavid.com'], `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
+                    .catch(error => res.send(error));
             }
         }
 
