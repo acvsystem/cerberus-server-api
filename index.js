@@ -172,7 +172,7 @@ io.on('connection', async (socket) => {
                 }
             ]*/
 
-            var bodyHTML = `<p>Buenos días, adjunto los datos de una factura emitida con numero de RUC errado (Cliente Con DNI, lo cual está prohibido para el caso de factura, para esos casos existen las boletas).</p> 
+            var bodyHTML = `<p>Buenos días, adjunto los datos de una factura emitida con numero de RUC errado.</p> 
         
             <p>Lamentablemente no han cumplido con los procesos y métodos de validación que se les han proporcionado.</p>  
             
