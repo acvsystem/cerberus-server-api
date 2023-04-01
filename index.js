@@ -7,6 +7,8 @@ import facturacionController from './controllers/csFacturacion.js'
 import sessionSocket from './controllers/csSessionSocket.js'
 import emailController from './sendEmail.js';
 import { pool } from './conections/conexMysql.js';
+import * as cron from 'node-cron';
+import { EventEmitter } from "events";
 
 const app = express();
 const httpServer = createServer(app);
@@ -15,12 +17,30 @@ const io = new Server(httpServer, { cors: { origin: '*' } })
 app.use(cors());
 app.use(bodyParser.json({ limit: '1000000mb' }));
 app.use(bodyParser.urlencoded({ limit: '1000000mb', extended: true }));
+const emiter = new EventEmitter();
 
 var listClient = { id: '' };
 var agenteList = [];
 
+const task_1 = cron.schedule('00 10 * * *', () => {
+    emitVerificationDoc();
+});
 
+const task_2 = cron.schedule('00 15 * * *', () => {
+    emitVerificationDoc();
+});
 
+const task_3 = cron.schedule('00 19 * * *', () => {
+    emitVerificationDoc();
+});
+
+task_1.start();
+task_2.start();
+task_3.start();
+
+function emitVerificationDoc() {
+    io.emit('consultingToFront', 'emitVerificationDoc');
+}
 
 io.on('connection', async (socket) => {
     let codeQuery = socket.handshake.query.code;
@@ -59,6 +79,7 @@ io.on('connection', async (socket) => {
     });
 
     socket.on('comunicationFront', (data) => {
+        console.log('comunicationFront');
         socket.broadcast.emit("consultingToFront", 'ready');
     });
 
@@ -99,12 +120,6 @@ io.on('connection', async (socket) => {
                 .catch(error => res.send(error));
         }
     }
-
-    app.post('/verificacion-programada', async (req, res) => {
-        console.log('ENVIO DESDE MYSQL');
-        res.send('SUCCESS...!!');
-    });
-
 
     app.post('/sunat-notification', async (req, res) => {
 
@@ -239,7 +254,7 @@ io.on('connection', async (socket) => {
 
                 await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET ENVIO_EMAIL ='true' WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
 
-                emailController.sendEmail([(selectedLocal || {}).email || '','johnnygermano@grupodavid.com'], `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
+                emailController.sendEmail([(selectedLocal || {}).email || '', 'johnnygermano@grupodavid.com'], `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
                     .catch(error => res.send(error));
             }
         }
@@ -249,6 +264,8 @@ io.on('connection', async (socket) => {
     console.log(`connect ${codeTerminal} - idApp`, listClient.id);
     console.log('a user connected');
 });
+
+
 
 httpServer.listen(3200, async () => {
     console.log('listening on *:3200');
