@@ -23,14 +23,17 @@ var listClient = { id: '' };
 var agenteList = [];
 
 const task_1 = cron.schedule('00 10 * * *', () => {
+    console.log('00 10');
     emitVerificationDoc();
 });
 
 const task_2 = cron.schedule('00 15 * * *', () => {
+    console.log('00 15');
     emitVerificationDoc();
 });
 
 const task_3 = cron.schedule('00 19 * * *', () => {
+    console.log('00 19');
     emitVerificationDoc();
 });
 
