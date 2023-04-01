@@ -11,13 +11,13 @@ class clsSendEmail {
         const transport = nodemailer.createTransport({
             service: "Gmail",
             auth: {
-                user: 'andrecanalesv@gmail.com',
-                pass: 'mrxlnchmyxpmqqlt'
+                user: 'itperu.notification@gmail.com',
+                pass: 'zgbiaxbnhulwlvqk'
             }
         })
 
         let mail = {
-            from: "IT METASPERU <andrecanalesv@gmail.com>",
+            from: "IT METASPERU <itperu.notification@gmail.com>",
             to: email,
             cc: 'andrecanalesv@gmail.com',
             subject: `${subject}`,
