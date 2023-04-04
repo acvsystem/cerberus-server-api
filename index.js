@@ -12,6 +12,8 @@ import emailController from './sendEmail.js';
 import tokenController from './controllers/csToken.js';
 import CryptoJS from 'crypto-js';
 import { prop } from './keys.js';
+import * as cron from 'node-cron';
+import { EventEmitter } from "events";
 
 const app = express();
 const httpServer = createServer(app);
@@ -23,6 +25,7 @@ app.use(cors({
 
 app.use(bodyParser.json({ limit: '1000000mb' }));
 app.use(bodyParser.urlencoded({ limit: '1000000mb', extended: true }));
+const emiter = new EventEmitter();
 
 var listClient = { id: '' };
 var agenteList = [];
@@ -39,6 +42,29 @@ app.use('/settings', async (req, res, next) => {
         return res.status(401).json('Access denied');
     }
 }, configurationRoutes);
+
+const task_1 = cron.schedule('00 10 * * *', () => {
+    console.log('00 10');
+    emitVerificationDoc();
+});
+
+const task_2 = cron.schedule('00 15 * * *', () => {
+    console.log('00 15');
+    emitVerificationDoc();
+});
+
+const task_3 = cron.schedule('00 19 * * *', () => {
+    console.log('00 19');
+    emitVerificationDoc();
+});
+
+task_1.start();
+task_2.start();
+task_3.start();
+
+function emitVerificationDoc() {
+    io.emit('consultingToFront', 'emitVerificationDoc');
+}
 
 io.use(function (socket, next) {
     let token = socket.handshake.query.token;
@@ -239,7 +265,6 @@ io.use(function (socket, next) {
         }
     }
 
-
     app.post('/sunat-notification', async (req, res) => {
 
         let arrDocumento = (((req || []).body || [])[0] || {});
@@ -262,7 +287,7 @@ io.use(function (socket, next) {
             { code: 'PA', name: 'AEO ECOMMERCE', email: 'aeecompe@grupodavid.com' },
             { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@grupodavid.com' },
             { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@grupodavid.com' },
-            { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyventas@grupodavid.com' },
+            { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@grupodavid.com' },
             { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
         ];
 
@@ -311,7 +336,7 @@ io.use(function (socket, next) {
                 }
             ]*/
 
-            var bodyHTML = `<p>Buenos días, adjunto los datos de una factura emitida con numero de RUC errado (Cliente Con DNI, lo cual está prohibido para el caso de factura, para esos casos existen las boletas).</p> 
+            var bodyHTML = `<p>Buenos días, adjunto los datos de una factura emitida con numero de RUC errado.</p> 
         
             <p>Lamentablemente no han cumplido con los procesos y métodos de validación que se les han proporcionado.</p>  
             
@@ -373,7 +398,7 @@ io.use(function (socket, next) {
 
                 await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET ENVIO_EMAIL ='true' WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
 
-                emailController.sendEmail([(selectedLocal || {}).email || '','johnnygermano@grupodavid.com'], `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
+                emailController.sendEmail([(selectedLocal || {}).email || '', 'johnnygermano@grupodavid.com'], `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
                     .catch(error => res.send(error));
             }
         }
@@ -383,6 +408,8 @@ io.use(function (socket, next) {
     console.log(`connect ${codeTerminal} - idApp`, listClient.id);
     console.log('a user connected');
 });
+
+
 
 httpServer.listen(3200, async () => {
     console.log('listening on *:3200');
