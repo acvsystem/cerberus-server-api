@@ -12,7 +12,7 @@ export const Login = async (req, res) => {
                                         WHERE DESC_USUARIO = '${usuario}' AND PASSWORD = '${password}'`)
 
     let nivelUser = ((dataUser || [])[0] || {}).NM_NIVEL;
-
+    console.log(objLogin);
     if (dataUser.length > 0) {
         const [menuUser] = await pool.query(`SELECT NAME_MENU,RUTE_PAGE FROM TB_PROFILE_USER 
             INNER JOIN TB_LOGIN ON TB_LOGIN.ID_LOGIN = TB_PROFILE_USER.FK_ID_LOGIN 
@@ -20,7 +20,7 @@ export const Login = async (req, res) => {
             INNER JOIN TB_MENU_SISTEMA ON TB_MENU_SISTEMA.FK_ID_LOGIN_MENU = TB_LOGIN.ID_LOGIN WHERE TB_NIVEL_ACCESS.ID_NVL_ACCESS = ${((dataUser || [])[0] || {}).ID_NVL_ACCESS} GROUP BY RUTE_PAGE`);
 
         const token = tokenController.createToken(usuario, nivelUser);
-
+        
         let parseResponse = {
             auth: { token: token },
             profile: { name: ((dataUser || [])[0] || {}).NOMBRE, nivel: ((dataUser || [])[0] || {}).NM_NIVEL },

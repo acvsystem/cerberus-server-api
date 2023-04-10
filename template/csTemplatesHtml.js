@@ -45,6 +45,46 @@ class clsTemplate {
         return body;
     }
 
+    errorSunat(data) {
+        let dataDocument = data || {};
+
+        let body = `<p>Buenos días, adjunto los datos de una factura emitida con numero de RUC errado (Cliente Con DNI, lo cual está prohibido para el caso de factura, para esos casos existen las boletas).</p> 
+
+        <p>Lamentablemente no han cumplido con los procesos y métodos de validación que se les han proporcionado.</p>  
+        
+        <p>Quedo atento de la persona responsable de emitir dicha factura.</p>  
+        
+        <p>Realizar la NC con anticipo y/o vale.  Si tienen alguna inquietud me dejan saber.</p>
+        
+        <p>Saludos.
+
+        <p><strong>Datos de factura emitida:</strong></p>
+        
+        <table align="left" cellspacing="0">
+    	    <thead>
+    	    	<tr>
+    	    		<th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">ID.FACTURA</th>
+    	    		<th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">NUM.FACTURA</th>
+    	    		<th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">FEC.EMISION</th>
+    	    		<th style="border: 1px solid #9E9E9E;border-right:0px" width="200px">NOM.CLIENTE</th>
+    	    		<th style="border: 1px solid #9E9E9E" width="140px">NUM.DOCUMENTO</th>
+    	    	</tr>
+    	    </thead>
+    	    <tbody>
+    	    	<tr>
+    	    		<td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(dataDocument || {}).CODIGO_DOCUMENTO}</td>
+    	    		<td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(dataDocument || {}).NRO_CORRELATIVO}</td>
+    	    		<td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(dataDocument || {}).FECHA_EMISION}</td>
+    	    		<td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(dataDocument || {}).NOM_ADQUIRIENTE}</td>
+    	    		<td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(dataDocument || {}).NRO_DOCUMENTO}</td>
+    	    	</tr>
+    	    </tbody>
+        </table>`;
+
+        return body;
+    }
+
+
 
 }
 
