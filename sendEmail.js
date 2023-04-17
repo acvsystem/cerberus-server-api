@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 
 
 class clsSendEmail {
-    async sendEmail(email, nome, html, mensagem, tienda) {
+    async sendEmail(email, subject, html, mensagem, tienda) {
         let date = new Date();
         let day = `0${date.getDate()}`.slice(-2);
         let month = `0${date.getMonth() + 1}`.slice(-2);
