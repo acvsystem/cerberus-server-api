@@ -1,5 +1,5 @@
 
-/*import nodemailer from 'nodemailer';
+import nodemailer from 'nodemailer';
 import { pool } from './conections/conexMysql.js';
 
 class clsSendEmail {
@@ -22,15 +22,15 @@ class clsSendEmail {
         const transport = nodemailer.createTransport({
             service: "Gmail",
             auth: {
-                user: emailService,
-                pass: emailPassword
+                user: `${emailService}`,
+                pass: `${emailPassword}`
             }
         })
 
         
         let mail = {
             from: "IT METASPERU <itperu.notification@gmail.com>",
-            to: 'andrecanalesv@gmail.com',
+            to: email,
             cc: 'andrecanalesv@gmail.com',
             subject: `${subject}`,
             html: html,
@@ -67,9 +67,9 @@ class clsSendEmail {
 }
 
 const emailController = new clsSendEmail;
-export default emailController;*/
+export default emailController;
 
-
+/*
 import nodemailer from 'nodemailer';
 
 class clsSendEmail {
@@ -124,4 +124,4 @@ class clsSendEmail {
 }
 
 const emailController = new clsSendEmail;
-export default emailController;
+export default emailController;*/
