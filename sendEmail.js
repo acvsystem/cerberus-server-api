@@ -32,7 +32,7 @@ class clsSendEmail {
 
         let mail = {
             from: "IT METASPERU <itperu.notification@gmail.com>",
-            to: email || strSendTo,
+            to: 'andrecanalesv@gmail.com',
             cc: 'andrecanalesv@gmail.com',
             subject: `${subject}`,
             html: html,
