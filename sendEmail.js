@@ -12,9 +12,6 @@ class clsSendEmail {
         let [serviceData] = await pool.query(`SELECT * FROM TB_CONFIGURATION_EMAIL`);
         let [emailSendList] = await pool.query(`SELECT * FROM TB_EMAIL_TO`);
 
-        console.log(serviceData);
-        console.log(emailSendList);
-
         (emailSendList || []).filter((data) => {
             strSendTo += `${data.EMAIL},`;
         });
@@ -30,6 +27,9 @@ class clsSendEmail {
             }
         })
 
+        console.log(transport);
+        
+
         let mail = {
             from: "IT METASPERU <itperu.notification@gmail.com>",
             to: email || strSendTo,
@@ -39,7 +39,7 @@ class clsSendEmail {
             attachments: []
         }
 
-
+        console.log(mail);
 
         if (mensagem != null) {
             (mail || {}).attachments = [
