@@ -1,10 +1,10 @@
 import { createPool } from 'mysql2/promise';
 
 export const pool = createPool({
-    host: 'localhost',
-    user: 'root',
+    host: '127.0.0.1',
+    user: 'dbapp',
     port: 3306,
-    password: '',
+    password: 'J4s0nd34d$$',
     database: 'BD_METASPERU',
     waitForConnections : true , 
     connectionLimit : 100 , 
