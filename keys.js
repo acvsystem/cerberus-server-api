@@ -1,5 +1,5 @@
 export const prop = {
-    ipServer: 'localhost:4200', //'159.65.226.239',
+    ipServer: '159.65.226.239:4200', //'159.65.226.239',
     database: {
         host: '159.65.226.239',
         user: 'dbapp',
