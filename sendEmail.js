@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 
 
 class clsSendEmail {
-    async sendEmail(email, nome, html, file, mensagem, tienda) {
+    async sendEmail(email, nome, html, mensagem, tienda) {
         let date = new Date();
         let day = `0${date.getDate()}`.slice(-2);
         let month = `0${date.getMonth() + 1}`.slice(-2);
@@ -43,7 +43,7 @@ class clsSendEmail {
             (mail || {}).attachments = [
                 {
                     filename: `CP-${tienda}-${day}${month}${year}` + '.xlsx',
-                    content: Buffer.from(file),
+                    content: Buffer.from(mensagem),
                     contentType: 'application/octet-stream',
                 }
             ]
