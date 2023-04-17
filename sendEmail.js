@@ -1,6 +1,6 @@
 
 import nodemailer from 'nodemailer';
-import { pool } from './conections/conexMysql.js';
+
 
 class clsSendEmail {
     async sendEmail(email, nome, html, file, mensagem, tienda) {
