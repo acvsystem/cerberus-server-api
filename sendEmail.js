@@ -27,9 +27,7 @@ class clsSendEmail {
             }
         })
 
-        console.log(transport);
         
-
         let mail = {
             from: "IT METASPERU <itperu.notification@gmail.com>",
             to: 'andrecanalesv@gmail.com',
@@ -39,7 +37,7 @@ class clsSendEmail {
             attachments: []
         }
 
-        console.log(mail);
+       
 
         if (mensagem != null) {
             (mail || {}).attachments = [
