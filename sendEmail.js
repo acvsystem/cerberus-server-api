@@ -11,7 +11,7 @@ class clsSendEmail {
         let strSendTo = "";
         let [serviceData] = await pool.query(`SELECT * FROM TB_CONFIGURATION_EMAIL`);
         let [emailSendList] = await pool.query(`SELECT * FROM TB_EMAIL_TO`);
-        let emailTo = 'andrecanalesv@gmail.com';
+       
         (emailSendList || []).filter((data) => {
             strSendTo += `${data.EMAIL},`;
         });
