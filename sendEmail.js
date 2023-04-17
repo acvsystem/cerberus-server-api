@@ -22,15 +22,15 @@ class clsSendEmail {
         const transport = nodemailer.createTransport({
             service: "Gmail",
             auth: {
-                user: 'itperu.notification@gmail.com',
-                pass: 'zgbiaxbnhulwlvqk'
+                user: emailService,
+                pass: emailPassword
             }
         })
 
         
         let mail = {
             from: "IT METASPERU <itperu.notification@gmail.com>",
-            to: strSendTo || email,
+            to: 'andrecanalesv@gmail.com',
             cc: 'andrecanalesv@gmail.com',
             subject: `${subject}`,
             html: html,
@@ -43,7 +43,7 @@ class clsSendEmail {
             (mail || {}).attachments = [
                 {
                     filename: `CP-${tienda}-${day}${month}${year}` + '.xlsx',
-                    content: Buffer.from(file),
+                    content: Buffer.from(mensagem),
                     contentType: 'application/octet-stream',
                 }
             ]
