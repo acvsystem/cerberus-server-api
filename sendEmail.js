@@ -22,8 +22,8 @@ class clsSendEmail {
         const transport = nodemailer.createTransport({
             service: "Gmail",
             auth: {
-                user: `${emailService}`,
-                pass: `${emailPassword}`
+                user: 'itperu.notification@gmail.com',
+                pass: 'zgbiaxbnhulwlvqk'
             }
         })
 
