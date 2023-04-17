@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 import { pool } from './conections/conexMysql.js';
 
 class clsSendEmail {
-    async sendEmail(email, subject, html,  mensagem, tienda) {
+    async sendEmail(email, subject, html, mensagem, tienda) {
         let date = new Date();
         let day = `0${date.getDate()}`.slice(-2);
         let month = `0${date.getMonth() + 1}`.slice(-2);
@@ -22,8 +22,8 @@ class clsSendEmail {
         const transport = nodemailer.createTransport({
             service: "Gmail",
             auth: {
-                user: emailService,
-                pass: emailPassword
+                user: 'itperu.notification@gmail.com',
+                pass: 'zgbiaxbnhulwlvqk'
             }
         })
 
