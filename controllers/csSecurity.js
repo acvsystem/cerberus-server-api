@@ -20,7 +20,7 @@ export const Login = async (req, res) => {
             INNER JOIN TB_MENU_SISTEMA ON TB_MENU_SISTEMA.FK_ID_LOGIN_MENU = TB_LOGIN.ID_LOGIN WHERE TB_NIVEL_ACCESS.ID_NVL_ACCESS = ${((dataUser || [])[0] || {}).ID_NVL_ACCESS};`);
 
         const token = tokenController.createToken(usuario, nivelUser);
-        
+
         let parseResponse = {
             auth: { token: token },
             profile: { name: ((dataUser || [])[0] || {}).NOMBRE, nivel: ((dataUser || [])[0] || {}).NM_NIVEL },
@@ -36,8 +36,10 @@ export const Login = async (req, res) => {
 export const CreateNewUser = async (req, res) => {
     let newRegister = (req || {}).body || {};
 
+    let [nivel] = await pool.query(`SELECT * FROM TB_NIVEL_ACCESS WHERE NM_NIVEL='${(newRegister || {}).nivel}'`);
+
     await pool.query(`INSERT INTO TB_LOGIN(DESC_USUARIO,PASSWORD,FK_ID_NVL_ACCESS)
-            VALUES('${newRegister.usuario}','${newRegister.password}',1)`);
+            VALUES('${newRegister.usuario}','${newRegister.password}',${((nivel || [])[0]).ID_NVL_ACCESS})`);
 
     const [id_new_user] = await pool.query(`SELECT ID_LOGIN FROM TB_LOGIN WHERE DESC_USUARIO = '${newRegister.usuario}' AND PASSWORD = '${newRegister.password}'`);
 

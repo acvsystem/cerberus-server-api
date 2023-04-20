@@ -79,7 +79,7 @@ class clsConfiguration {
     sendLinkRegister = async (req, res) => {
         let data = ((req || {}).body || []);
         let ipServer = prop.ipServer;
-        const token = tokenController.createToken('NEW_USER', 'REGISTER_USER');
+        const token = tokenController.createToken('NEW_USER', (data || {}).nivel);
 
         var bodyHTML = templateHtmlController.registerAccount({ link: `http://${ipServer}/${(data || {}).path || ''}/${token}` });
 
