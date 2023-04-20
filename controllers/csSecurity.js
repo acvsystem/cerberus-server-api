@@ -37,9 +37,9 @@ export const CreateNewUser = async (req, res) => {
     let newRegister = (req || {}).body || {};
 
     let [nivel] = await pool.query(`SELECT * FROM TB_NIVEL_ACCESS WHERE NM_NIVEL='${(newRegister || {}).nivel}'`);
-
+    console.log(nivel);
     await pool.query(`INSERT INTO TB_LOGIN(DESC_USUARIO,PASSWORD,FK_ID_NVL_ACCESS)
-            VALUES('${newRegister.usuario}','${newRegister.password}',${((nivel || [])[0]).ID_NVL_ACCESS})`);
+            VALUES('${newRegister.usuario}','${newRegister.password}',${((nivel || [])[0] || {}).ID_NVL_ACCESS})`);
 
     const [id_new_user] = await pool.query(`SELECT ID_LOGIN FROM TB_LOGIN WHERE DESC_USUARIO = '${newRegister.usuario}' AND PASSWORD = '${newRegister.password}'`);
 
