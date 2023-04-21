@@ -83,7 +83,7 @@ class clsConfiguration {
 
         var bodyHTML = templateHtmlController.registerAccount({ link: `http://${ipServer}/${(data || {}).path || ''}/${token}` });
 
-        emailController.sendEmail(`${(data || {}).email || ''}`, `REGISTRO SISTEMA IT METAS PERU`, bodyHTML, '', null, 'REGISTRO SISTEMA').then((response) => {
+        emailController.sendEmail(`${(data || {}).email || ''}`, `REGISTRO SISTEMA IT METAS PERU`, bodyHTML, null, null, 'REGISTRO SISTEMA').then((response) => {
             res.json(response)
         }).catch(error => res.json(error));
 
