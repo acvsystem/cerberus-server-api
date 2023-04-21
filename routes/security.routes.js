@@ -53,25 +53,13 @@ router.get('/download', (req, res) => {
             file = pathDownload.path.agente;
         }
 
-        var fileLocation = path.join('./', file);
+        var fileLocation = path.join('./download/agnMetasPeru', file);
         res.download(fileLocation, file);
     } else {
         return res.status(401).json('Access denied');
     }
 
 });
-
-router.post('/create/user', async (req, res, next) => {
-    const token = req.header('Authorization') || "";
-
-    let resValidation = tokenController.verificationToken(token);
-    console.log(resValidation);
-    if ((resValidation || {}).isValid) {
-        next()
-    } else {
-        return res.status(401).json('Access denied');
-    }
-}, CreateNewUser);
 
 const securityRoutes = router;
 export default securityRoutes

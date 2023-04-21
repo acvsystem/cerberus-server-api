@@ -8,6 +8,7 @@ import sessionSocket from './controllers/csSessionSocket.js'
 import { pool } from './conections/conexMysql.js';
 import securityRoutes from './routes/security.routes.js';
 import configurationRoutes from './routes/configuration.routes.js';
+import frontRetailRoutes from './routes/frontRetail.routes.js';
 import emailController from './sendEmail.js';
 import tokenController from './controllers/csToken.js';
 import CryptoJS from 'crypto-js';
@@ -41,6 +42,8 @@ app.use('/settings', async (req, res, next) => {
         return res.status(401).json('Access denied');
     }
 }, configurationRoutes);
+
+app.use('/frontRetail', frontRetailRoutes);
 
 const task_1 = cron.schedule('00 10 * * *', () => {
     console.log('00 10');

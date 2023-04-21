@@ -9,6 +9,5 @@ router.get('/service/email/sendList', configurationController.onlistConfiguratio
 router.post('/service/email/sendTest', configurationController.sendTestEmail);
 router.post('/service/email/register', configurationController.sendLinkRegister);
 
-
 const configurationRoutes = router;
 export default configurationRoutes
