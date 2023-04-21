@@ -66,7 +66,7 @@ router.post('/create/user', async (req, res, next) => {
 
     let resValidation = tokenController.verificationToken(token);
     console.log(resValidation);
-    if ((resValidation || {}).isValid && ((resValidation || {}).decoded || {}).aud == "REGISTER_USER") {
+    if ((resValidation || {}).isValid) {
         next()
     } else {
         return res.status(401).json('Access denied');

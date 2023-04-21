@@ -10,6 +10,7 @@ class clsToken {
             issuer: 'cerberus.server',
             audience: `${nivelUser}`
         };
+        console.log("createToken", option);
         const token = Jwt.sign({ id: usuario }, privateKey, option);
         return token;
     }
