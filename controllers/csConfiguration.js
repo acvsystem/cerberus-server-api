@@ -71,7 +71,7 @@ class clsConfiguration {
     }
 
     sendTestEmail = async (req, res) => {
-        emailController.sendEmail(null, `CORREO DE PRUEBA METASPERU`, '', '', null, 'PRUEBA').then((response) => {
+        emailController.sendEmail(null, `CORREO DE PRUEBA METASPERU`, '', null, null, 'PRUEBA').then((response) => {
             res.json(response)
         }).catch(error => res.json(error));
     }
