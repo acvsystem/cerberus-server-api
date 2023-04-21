@@ -53,7 +53,7 @@ router.get('/download', (req, res) => {
             file = pathDownload.path.agente;
         }
 
-        var fileLocation = path.join('./download/agnMetasPeru', file);
+        var fileLocation = path.join('./', file);
         res.download(fileLocation, file);
     } else {
         return res.status(401).json('Access denied');

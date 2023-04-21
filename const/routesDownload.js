@@ -1,6 +1,6 @@
 export const pathDownload = {
     path: {
-        agente: "./update/agente.py",
+        agente: "./download/agnMetasPeru/agnFront.py",
         server: "./update/server.py"
     }
 };
