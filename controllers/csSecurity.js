@@ -38,8 +38,8 @@ export const CreateNewUser = async (req, res) => {
     let newRegister = (req || {}).body || {};
     let headers = (req || {}).headers;
     let validToken = tokenController.verificationToken((headers || {}).authorization);
-    console.log("CreateNewUser",validToken);
-    let [nivel] = await pool.query(`SELECT * FROM TB_NIVEL_ACCESS WHERE NM_NIVEL='${(validToken || {}).aud}'`);
+    
+    let [nivel] = await pool.query(`SELECT * FROM TB_NIVEL_ACCESS WHERE NM_NIVEL='${((validToken || {}).decoded || {}).aud}'`);
 
     await pool.query(`INSERT INTO TB_LOGIN(DESC_USUARIO,PASSWORD,FK_ID_NVL_ACCESS)
             VALUES('${newRegister.usuario}','${newRegister.password}',${((nivel || [])[0] || {}).ID_NVL_ACCESS})`);
