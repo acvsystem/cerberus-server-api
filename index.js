@@ -94,7 +94,7 @@ app.post('/control-asistencia', async (req, res) => {
         { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
     ];
     console.log("empleadoList", empleadoList);
-    let [verifyEmpleado] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE CODEMPLEADO = ${(empleadoList || {}).CODVENDEDOR} AND DIA = NOW();`);
+    let [verifyEmpleado] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND DIA = NOW();`);
 
     
     console.log("verifyEmpleado", verifyEmpleado);
