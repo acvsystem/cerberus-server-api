@@ -99,7 +99,7 @@ app.post('/control-asistencia', async (req, res) => {
     
     console.log("verifyEmpleado", verifyEmpleado);
 
-    if (!(empleadoList || {}).HORAIN && (!verifyEmpleado.length || verifyEmpleado.length == 1)) {
+    if (!(empleadoList || [])[0].HORAIN && (!verifyEmpleado.length || verifyEmpleado.length == 1)) {
         await pool.query(`INSERT INTO TB_REGISTROEMPLEADOS(FO,CODEMPLEADO,DIA,HORAIN,HORAOUT,HORAS,VENTAS,NUMVENTAS,Z,CAJA,HORASNORMAL,HORASEXTRA,COSTEHORA,COSTEHORAEXTRA,CODMOTIVO,CODMOTIVOENTRADA,TERMINAL)
                             VALUES(${(empleadoList || {}).FO},
                             '${(empleadoList || {}).CODEMPLEADO}',
