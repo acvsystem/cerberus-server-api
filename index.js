@@ -209,7 +209,7 @@ io.use(function (socket, next) {
             { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
         ];
 
-        if ((arrDocumento || {}).CODIGO_ERROR_SUNAT == 2800) {
+        if ((arrDocumento || {}).CODIGO_ERROR_SUNAT == 2800 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 1032) {
             let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
             let isEmailEnvio = ((verifyDocument || [])[0] || {}).ENVIO_EMAIL || 'false';
             console.log('verifyDocument', verifyDocument);
@@ -280,12 +280,87 @@ io.use(function (socket, next) {
 
     });
 
+    app.post('/control-asistencia', async (req, res) => {
+
+        let empleadoList = (((req || []).body || [])[0] || {});
+        let tiendasList = [
+            { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@grupodavid.com' },
+            { code: '9A', name: 'VSBA JOCKEY', email: 'vsjockeyplaza@grupodavid.com' },
+            { code: 'PC', name: 'AEO JOCKEY', email: 'americaneaglejp@grupodavid.com' },
+            { code: 'PB', name: 'AEO ASIA', email: 'aeopopupasia@grupodavid.com' },
+            { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@grupodavid.com' },
+            { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@grupodavid.com' },
+            { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@grupodavid.com' },
+            { code: '7C', name: 'BBW SAN MIGUEL', email: 'bbwsanmiguel@grupodavid.com' },
+            { code: '9C', name: 'VS SAN MIGUEL', email: 'vssanmiguel@grupodavid.com' },
+            { code: '7D', name: 'BBW SALAVERRY', email: 'bbwsalaverry@grupodavid.com' },
+            { code: '9I', name: 'VS SALAVERRY', email: 'vssalaverry@grupodavid.com' },
+            { code: '9G', name: 'VS MALL DEL SUR', email: 'vsmalldelsur@grupodavid.com' },
+            { code: '9H', name: 'VS PURUCHUCO', email: 'vspuruchuco@grupodavid.com' },
+            { code: '9M', name: 'VS ECOMMERCE', email: 'vsecommpe@grupodavid.com' },
+            { code: '7F', name: 'BBW ECOMMERCE', email: 'bbwecommperu@grupodavid.com' },
+            { code: 'PA', name: 'AEO ECOMMERCE', email: 'aeecompe@grupodavid.com' },
+            { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@grupodavid.com' },
+            { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@grupodavid.com' },
+            { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@grupodavid.com' },
+            { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
+        ];
+
+        let [verifyEmpleado] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE CODEMPLEADO = ${(empleadoList || {}).CODVENDEDOR} AND DIA = NOW();`);
+
+        console.log("empleadoList", empleadoList);
+        console.log("verifyEmpleado", verifyEmpleado);
+
+        if (!(empleadoList || {}).HORAIN && (!verifyEmpleado.length || verifyEmpleado.length == 1)) {
+            await pool.query(`INSERT INTO TB_REGISTROEMPLEADOS(FO,CODEMPLEADO,DIA,HORAIN,HORAOUT,HORAS,VENTAS,NUMVENTAS,Z,CAJA,HORASNORMAL,HORASEXTRA,COSTEHORA,COSTEHORAEXTRA,CODMOTIVO,CODMOTIVOENTRADA,TERMINAL)
+                                VALUES(${(empleadoList || {}).FO},
+                                '${(empleadoList || {}).CODEMPLEADO}',
+                                '${(empleadoList || {}).DIA}',
+                                '${(empleadoList || {}).HORAIN}',
+                                '${(empleadoList || {}).HORAOUT}',
+                                '${(empleadoList || {}).HORAS}',
+                                '${(empleadoList || {}).VENTAS}',
+                                '${(empleadoList || {}).NUMVENTAS}',
+                                '${(empleadoList || {}).Z}',
+                                '${(empleadoList || {}).CAJA}',
+                                '${(empleadoList || {}).HORASNORMAL}',
+                                '${(empleadoList || {}).HORASEXTRA}',
+                                '${(empleadoList || {}).COSTEHORA}',
+                                '${(empleadoList || {}).COSTEHORAEXTRA}',
+                                '${(empleadoList || {}).CODMOTIVO}',
+                                '${(empleadoList || {}).CODMOTIVOENTRADA}',
+                                '${(empleadoList || {}).TERMINAL}');`);
+
+            res.send('RECEPCION EXITOSA..!!');
+        }
+
+        if (!(empleadoList || {}).HORAOUT && verifyEmpleado.length && verifyEmpleado.length >= 1) {
+
+            if (!(empleadoList || {}).HORAOUT) {
+                await pool.query(`UPDATE TB_REGISTROEMPLEADOS SET
+                HORAIN ='${(empleadoList || {}).NOM_ADQUIRIENTE}',
+                HORAOUT = '${(empleadoList || {}).NRO_DOCUMENTO}',
+                HORAS = '${(empleadoList || {}).TIPO_DOCUMENTO_ADQUIRIENTE}',
+                NUMVENTAS = '${(empleadoList || {}).OBSERVACION}',
+                Z = '${(empleadoList || {}).ESTADO_SUNAT}',
+                CAJA = '${(empleadoList || {}).ESTADO_COMPROBANTE}' WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO};`);
+            }
+
+            res.send('RECEPCION EXITOSA..!!');
+        }
+
+        //let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
+        //socket.to(`${listClient.id}`).emit("sendControlAsistencia", documentList);
+
+
+    });
+
     console.log(`connect ${codeTerminal} - idApp`, listClient.id);
     console.log('a user connected');
 });
 
 
- 
+
 httpServer.listen(4200, async () => {
     console.log('listening on *:4200');
 });
