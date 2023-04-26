@@ -93,10 +93,10 @@ app.post('/control-asistencia', async (req, res) => {
         { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@grupodavid.com' },
         { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
     ];
-
+    console.log("empleadoList", empleadoList);
     let [verifyEmpleado] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE CODEMPLEADO = ${(empleadoList || {}).CODVENDEDOR} AND DIA = NOW();`);
 
-    console.log("empleadoList", empleadoList);
+    
     console.log("verifyEmpleado", verifyEmpleado);
 
     if (!(empleadoList || {}).HORAIN && (!verifyEmpleado.length || verifyEmpleado.length == 1)) {
