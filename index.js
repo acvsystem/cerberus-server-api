@@ -139,6 +139,8 @@ app.post('/control-asistencia', async (req, res) => {
         res.send('RECEPCION EXITOSA..!!');
     }
 
+    res.send('RECEPCION NO INSERT');
+
 
 
 
