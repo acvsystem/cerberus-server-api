@@ -101,7 +101,7 @@ app.post('/control-asistencia', async (req, res) => {
 
     console.log("verifyEmpleado", verifyEmpleado);
 
-   if (((verifyEmpleado || [])[0] || {}).INPUT && ((verifyEmpleado || [])[0] || {}).OUTPUT < 1) {
+   if (((verifyEmpleado || [])[0] || {}).INPUT == 0  && ((verifyEmpleado || [])[0] || {}).OUTPUT < 1) {
 
         await pool.query(`UPDATE TB_REGISTROEMPLEADOS SET
             HORAIN ='${(empleadoList || {}).NOM_ADQUIRIENTE}',
@@ -114,8 +114,6 @@ app.post('/control-asistencia', async (req, res) => {
 
         res.send('RECEPCION EXITOSA..!!');
     }
-
-
 
     if (((verifyEmpleado || [])[0] || {}).INPUT < 1 || !verifyEmpleado.length) {
 
