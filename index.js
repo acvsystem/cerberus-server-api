@@ -112,7 +112,7 @@ app.post('/control-asistencia', async (req, res) => {
             Z = '${(empleadoList || {}).ESTADO_SUNAT}',
             CAJA = '${(empleadoList || {}).ESTADO_COMPROBANTE}' WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO};`);
 
-        res.send('RECEPCION EXITOSA..!!');
+        res.send('RECEPCION UPDATE EXITOSA..!!');
     }
 
     if (((verifyEmpleado || [])[0] || {}).INPUT < 1 || !verifyEmpleado.length) {
@@ -138,7 +138,7 @@ app.post('/control-asistencia', async (req, res) => {
         '${(empleadoList || {}).CODMOTIVOENTRADA}',
         '${(empleadoList || {}).TERMINAL}');`);
 
-        res.send('RECEPCION EXITOSA..!!');
+        res.send('RECEPCION INSERT EXITOSA..!!');
     }
 
     res.send('RECEPCION NO INSERT');
