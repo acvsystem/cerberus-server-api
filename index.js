@@ -94,11 +94,55 @@ app.post('/control-asistencia', async (req, res) => {
         { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
     ];
     console.log("empleadoList", empleadoList);
-    let [verifyEmpleado] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND DIA = NOW();`);
+    let [verifyEmpleado] = await pool.query(`SELECT TOP 1 * FROM TB_REGISTROEMPLEADOS WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND DIA = NOW();`);
 
-    
+
     console.log("verifyEmpleado", verifyEmpleado);
 
+    if (((empleadoList || [])[0] || {}).INPUT && ((empleadoList || [])[0] || {}).OUTPUT < 1) {
+
+        await pool.query(`UPDATE TB_REGISTROEMPLEADOS SET
+            HORAIN ='${(empleadoList || {}).NOM_ADQUIRIENTE}',
+            HORAOUT = '${(empleadoList || {}).NRO_DOCUMENTO}',
+            OUTPUT = 'true',
+            HORAS = '${(empleadoList || {}).TIPO_DOCUMENTO_ADQUIRIENTE}',
+            NUMVENTAS = '${(empleadoList || {}).OBSERVACION}',
+            Z = '${(empleadoList || {}).ESTADO_SUNAT}',
+            CAJA = '${(empleadoList || {}).ESTADO_COMPROBANTE}' WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO};`);
+
+        res.send('RECEPCION EXITOSA..!!');
+    }
+
+    if (((empleadoList || [])[0] || {}).INPUT < 1) {
+
+        await pool.query(`INSERT INTO TB_REGISTROEMPLEADOS(FO,CODEMPLEADO,DIA,HORAIN,HORAOUT,INPUT,OUTPUT,HORAS,VENTAS,NUMVENTAS,Z,CAJA,HORASNORMAL,HORASEXTRA,COSTEHORA,COSTEHORAEXTRA,CODMOTIVO,CODMOTIVOENTRADA,TERMINAL)
+        VALUES(${(empleadoList || {}).FO},
+        '${(empleadoList || {}).CODEMPLEADO}',
+        '${(empleadoList || {}).DIA}',
+        '${(empleadoList || {}).HORAIN}',
+        '${(empleadoList || {}).HORAOUT}',
+        '${(empleadoList || {}).HORAS}',
+        'true',
+        'false',
+        '${(empleadoList || {}).VENTAS}',
+        '${(empleadoList || {}).NUMVENTAS}',
+        '${(empleadoList || {}).Z}',
+        '${(empleadoList || {}).CAJA}',
+        '${(empleadoList || {}).HORASNORMAL}',
+        '${(empleadoList || {}).HORASEXTRA}',
+        '${(empleadoList || {}).COSTEHORA}',
+        '${(empleadoList || {}).COSTEHORAEXTRA}',
+        '${(empleadoList || {}).CODMOTIVO}',
+        '${(empleadoList || {}).CODMOTIVOENTRADA}',
+        '${(empleadoList || {}).TERMINAL}');`);
+
+        res.send('RECEPCION EXITOSA..!!');
+    }
+
+
+
+
+/*
     if (!((empleadoList || [])[0] || {}).HORAIN && (!verifyEmpleado.length || verifyEmpleado.length == 1)) {
         await pool.query(`INSERT INTO TB_REGISTROEMPLEADOS(FO,CODEMPLEADO,DIA,HORAIN,HORAOUT,HORAS,VENTAS,NUMVENTAS,Z,CAJA,HORASNORMAL,HORASEXTRA,COSTEHORA,COSTEHORAEXTRA,CODMOTIVO,CODMOTIVOENTRADA,TERMINAL)
                             VALUES(${(empleadoList || {}).FO},
@@ -136,7 +180,7 @@ app.post('/control-asistencia', async (req, res) => {
 
         res.send('RECEPCION EXITOSA..!!');
     }
-
+*/
     //let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
     //socket.to(`${listClient.id}`).emit("sendControlAsistencia", documentList);
 
