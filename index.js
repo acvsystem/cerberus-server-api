@@ -72,7 +72,7 @@ app.post('/control-asistencia', async (req, res) => {
 
     let empleadoList = (((req || []).body || [])[0] || {});
     console.log("empleadoList", empleadoList);
-    
+
     let tiendasList = [
         { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@grupodavid.com' },
         { code: '9A', name: 'VSBA JOCKEY', email: 'vsjockeyplaza@grupodavid.com' },
@@ -95,7 +95,7 @@ app.post('/control-asistencia', async (req, res) => {
         { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@grupodavid.com' },
         { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
     ];
-    
+
     let [verifyEmpleado] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} ORDER by ID_REG_EMPLEADO DESC LIMIT 1`);
 
 
@@ -115,7 +115,7 @@ app.post('/control-asistencia', async (req, res) => {
         res.send('RECEPCION EXITOSA..!!');
     }
 
-    if (((verifyEmpleado || [])[0] || {}).INPUT < 1) {
+    if (((verifyEmpleado || [])[0] || {}).INPUT < 1 || !verifyEmpleado.length) {
 
         await pool.query(`INSERT INTO TB_REGISTROEMPLEADOS(FO,CODEMPLEADO,DIA,HORAIN,HORAOUT,INPUT,OUTPUT,HORAS,VENTAS,NUMVENTAS,Z,CAJA,HORASNORMAL,HORASEXTRA,COSTEHORA,COSTEHORAEXTRA,CODMOTIVO,CODMOTIVOENTRADA,TERMINAL)
         VALUES(${(empleadoList || {}).FO},
@@ -146,45 +146,45 @@ app.post('/control-asistencia', async (req, res) => {
 
 
 
-/*
-    if (!((empleadoList || [])[0] || {}).HORAIN && (!verifyEmpleado.length || verifyEmpleado.length == 1)) {
-        await pool.query(`INSERT INTO TB_REGISTROEMPLEADOS(FO,CODEMPLEADO,DIA,HORAIN,HORAOUT,HORAS,VENTAS,NUMVENTAS,Z,CAJA,HORASNORMAL,HORASEXTRA,COSTEHORA,COSTEHORAEXTRA,CODMOTIVO,CODMOTIVOENTRADA,TERMINAL)
-                            VALUES(${(empleadoList || {}).FO},
-                            '${(empleadoList || {}).CODEMPLEADO}',
-                            '${(empleadoList || {}).DIA}',
-                            '${(empleadoList || {}).HORAIN}',
-                            '${(empleadoList || {}).HORAOUT}',
-                            '${(empleadoList || {}).HORAS}',
-                            '${(empleadoList || {}).VENTAS}',
-                            '${(empleadoList || {}).NUMVENTAS}',
-                            '${(empleadoList || {}).Z}',
-                            '${(empleadoList || {}).CAJA}',
-                            '${(empleadoList || {}).HORASNORMAL}',
-                            '${(empleadoList || {}).HORASEXTRA}',
-                            '${(empleadoList || {}).COSTEHORA}',
-                            '${(empleadoList || {}).COSTEHORAEXTRA}',
-                            '${(empleadoList || {}).CODMOTIVO}',
-                            '${(empleadoList || {}).CODMOTIVOENTRADA}',
-                            '${(empleadoList || {}).TERMINAL}');`);
-
-        res.send('RECEPCION EXITOSA..!!');
-    }
-
-    if (!(empleadoList || {}).HORAOUT && verifyEmpleado.length && verifyEmpleado.length >= 1) {
-
-        if (!(empleadoList || {}).HORAOUT) {
-            await pool.query(`UPDATE TB_REGISTROEMPLEADOS SET
-            HORAIN ='${(empleadoList || {}).NOM_ADQUIRIENTE}',
-            HORAOUT = '${(empleadoList || {}).NRO_DOCUMENTO}',
-            HORAS = '${(empleadoList || {}).TIPO_DOCUMENTO_ADQUIRIENTE}',
-            NUMVENTAS = '${(empleadoList || {}).OBSERVACION}',
-            Z = '${(empleadoList || {}).ESTADO_SUNAT}',
-            CAJA = '${(empleadoList || {}).ESTADO_COMPROBANTE}' WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO};`);
+    /*
+        if (!((empleadoList || [])[0] || {}).HORAIN && (!verifyEmpleado.length || verifyEmpleado.length == 1)) {
+            await pool.query(`INSERT INTO TB_REGISTROEMPLEADOS(FO,CODEMPLEADO,DIA,HORAIN,HORAOUT,HORAS,VENTAS,NUMVENTAS,Z,CAJA,HORASNORMAL,HORASEXTRA,COSTEHORA,COSTEHORAEXTRA,CODMOTIVO,CODMOTIVOENTRADA,TERMINAL)
+                                VALUES(${(empleadoList || {}).FO},
+                                '${(empleadoList || {}).CODEMPLEADO}',
+                                '${(empleadoList || {}).DIA}',
+                                '${(empleadoList || {}).HORAIN}',
+                                '${(empleadoList || {}).HORAOUT}',
+                                '${(empleadoList || {}).HORAS}',
+                                '${(empleadoList || {}).VENTAS}',
+                                '${(empleadoList || {}).NUMVENTAS}',
+                                '${(empleadoList || {}).Z}',
+                                '${(empleadoList || {}).CAJA}',
+                                '${(empleadoList || {}).HORASNORMAL}',
+                                '${(empleadoList || {}).HORASEXTRA}',
+                                '${(empleadoList || {}).COSTEHORA}',
+                                '${(empleadoList || {}).COSTEHORAEXTRA}',
+                                '${(empleadoList || {}).CODMOTIVO}',
+                                '${(empleadoList || {}).CODMOTIVOENTRADA}',
+                                '${(empleadoList || {}).TERMINAL}');`);
+    
+            res.send('RECEPCION EXITOSA..!!');
         }
-
-        res.send('RECEPCION EXITOSA..!!');
-    }
-*/
+    
+        if (!(empleadoList || {}).HORAOUT && verifyEmpleado.length && verifyEmpleado.length >= 1) {
+    
+            if (!(empleadoList || {}).HORAOUT) {
+                await pool.query(`UPDATE TB_REGISTROEMPLEADOS SET
+                HORAIN ='${(empleadoList || {}).NOM_ADQUIRIENTE}',
+                HORAOUT = '${(empleadoList || {}).NRO_DOCUMENTO}',
+                HORAS = '${(empleadoList || {}).TIPO_DOCUMENTO_ADQUIRIENTE}',
+                NUMVENTAS = '${(empleadoList || {}).OBSERVACION}',
+                Z = '${(empleadoList || {}).ESTADO_SUNAT}',
+                CAJA = '${(empleadoList || {}).ESTADO_COMPROBANTE}' WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO};`);
+            }
+    
+            res.send('RECEPCION EXITOSA..!!');
+        }
+    */
     //let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
     //socket.to(`${listClient.id}`).emit("sendControlAsistencia", documentList);
 
