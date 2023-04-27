@@ -96,17 +96,17 @@ app.post('/control-asistencia', async (req, res) => {
         { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
     ];
 
-   // let [verifyEmpleado] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} ORDER by ID_REG_EMPLEADO DESC LIMIT 1`);
+    let [verifyEmpleado] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} ORDER by ID_REG_EMPLEADO DESC LIMIT 1`);
 
 
-   // console.log("verifyEmpleado", verifyEmpleado);
+    console.log("verifyEmpleado", verifyEmpleado);
 
-  /*  if (((verifyEmpleado || [])[0] || {}).INPUT && ((verifyEmpleado || [])[0] || {}).OUTPUT < 1) {
+   if (((verifyEmpleado || [])[0] || {}).INPUT && ((verifyEmpleado || [])[0] || {}).OUTPUT < 1) {
 
         await pool.query(`UPDATE TB_REGISTROEMPLEADOS SET
             HORAIN ='${(empleadoList || {}).NOM_ADQUIRIENTE}',
             HORAOUT = '${(empleadoList || {}).NRO_DOCUMENTO}',
-            OUTPUT = 'true',
+            OUTPUT = true,
             HORAS = '${(empleadoList || {}).TIPO_DOCUMENTO_ADQUIRIENTE}',
             NUMVENTAS = '${(empleadoList || {}).OBSERVACION}',
             Z = '${(empleadoList || {}).ESTADO_SUNAT}',
@@ -142,7 +142,7 @@ app.post('/control-asistencia', async (req, res) => {
 
         res.send('RECEPCION EXITOSA..!!');
     }
-*/
+
     res.send('RECEPCION NO INSERT');
 
 
