@@ -102,7 +102,7 @@ app.post('/control-asistencia', async (req, res) => {
     console.log("verifyEmpleado", verifyEmpleado);
     console.log(!verifyEmpleado.length);
     console.log(((verifyEmpleado || [])[0] || {}).INPUT);
-    
+
     if (((verifyEmpleado || [])[0] || {}).INPUT && ((verifyEmpleado || [])[0] || {}).OUTPUT < 1) {
 
         await pool.query(`UPDATE TB_REGISTROEMPLEADOS SET
@@ -128,8 +128,8 @@ app.post('/control-asistencia', async (req, res) => {
         '${(empleadoList || {}).HORAIN}',
         '${(empleadoList || {}).HORAOUT}',
         '${(empleadoList || {}).HORAS}',
-        'true',
-        'false',
+        true,
+        false,
         '${(empleadoList || {}).VENTAS}',
         '${(empleadoList || {}).NUMVENTAS}',
         '${(empleadoList || {}).Z}',
