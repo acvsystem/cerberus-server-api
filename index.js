@@ -111,7 +111,7 @@ app.post('/control-asistencia', async (req, res) => {
             OUTPUT = 0,
             HORAS = '${(empleadoList || {}).HORAS}',
             NUMVENTAS = '${(empleadoList || {}).NUMVENTAS}',
-            CAJA = '${(empleadoList || {}).CAJA}' WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO};`);
+            CAJA = '${(empleadoList || {}).CAJA}' WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND ID_REG_EMPLEADO = ${((verifyEmpleado || [])[0] || {}).ID_REG_EMPLEADO};`);
 
         res.send('RECEPCION UPDATE EXITOSA..!!');
     }
