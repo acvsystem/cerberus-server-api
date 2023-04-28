@@ -108,7 +108,7 @@ app.post('/control-asistencia', async (req, res) => {
         await pool.query(`UPDATE TB_REGISTROEMPLEADOS SET
             HORAIN ='${(empleadoList || {}).HORAIN}',
             HORAOUT = '${(empleadoList || {}).HORAOUT}',
-            OUTPUT = true,
+            OUTPUT = 0,
             HORAS = '${(empleadoList || {}).HORAS}',
             NUMVENTAS = '${(empleadoList || {}).NUMVENTAS}',
             CAJA = '${(empleadoList || {}).CAJA}' WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO};`);
