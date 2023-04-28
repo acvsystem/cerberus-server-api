@@ -104,13 +104,13 @@ app.post('/control-asistencia', async (req, res) => {
    if (((verifyEmpleado || [])[0] || {}).INPUT == 0  && ((verifyEmpleado || [])[0] || {}).OUTPUT > 0) {
 
         await pool.query(`UPDATE TB_REGISTROEMPLEADOS SET
-            HORAIN ='${(empleadoList || {}).NOM_ADQUIRIENTE}',
-            HORAOUT = '${(empleadoList || {}).NRO_DOCUMENTO}',
+            HORAIN ='${(empleadoList || {}).HORAIN}',
+            HORAOUT = '${(empleadoList || {}).HORAOUT}',
             OUTPUT = true,
-            HORAS = '${(empleadoList || {}).TIPO_DOCUMENTO_ADQUIRIENTE}',
-            NUMVENTAS = '${(empleadoList || {}).OBSERVACION}',
-            Z = '${(empleadoList || {}).ESTADO_SUNAT}',
-            CAJA = '${(empleadoList || {}).ESTADO_COMPROBANTE}' WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO};`);
+            HORAS = '${(empleadoList || {}).HORAS}',
+            NUMVENTAS = '${(empleadoList || {}).NUMVENTAS}',
+            Z = '${(empleadoList || {}).z}',
+            CAJA = '${(empleadoList || {}).CAJA}' WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO};`);
 
         res.send('RECEPCION UPDATE EXITOSA..!!');
     }
