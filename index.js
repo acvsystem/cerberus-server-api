@@ -114,7 +114,7 @@ app.post('/control-asistencia', async (req, res) => {
             CAJA = '${(empleadoList || {}).CAJA}' WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND ID_REG_EMPLEADO = ${((verifyEmpleado || [])[0] || {}).ID_REG_EMPLEADO};`);
 
         let [registroAsistenciaList] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA = '2023-04-28' AND CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} ORDER by ID_REG_EMPLEADO DESC LIMIT 1`);
-        socket.to(`${listClient.id}`).emit("sendControlAsistencia", registroAsistenciaList);
+        io.to(`${listClient.id}`).emit("sendControlAsistencia", registroAsistenciaList);
 
         res.send('RECEPCION UPDATE EXITOSA..!!');
     }
@@ -143,7 +143,7 @@ app.post('/control-asistencia', async (req, res) => {
         '${(empleadoList || {}).TERMINAL}');`);
 
         let [registroAsistenciaList] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA = '2023-04-28' AND CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} ORDER by ID_REG_EMPLEADO DESC LIMIT 1`);
-        socket.to(`${listClient.id}`).emit("sendControlAsistencia", registroAsistenciaList);
+        io.to(`${listClient.id}`).emit("sendControlAsistencia", registroAsistenciaList);
 
         res.send('RECEPCION INSERT EXITOSA..!!');
     }
