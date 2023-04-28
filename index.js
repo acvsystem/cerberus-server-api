@@ -116,7 +116,7 @@ app.post('/control-asistencia', async (req, res) => {
         res.send('RECEPCION UPDATE EXITOSA..!!');
     }
 
-    if (((verifyEmpleado || [])[0] || {}).INPUT > 1 || !verifyEmpleado.length) {
+    if (((verifyEmpleado || [])[0] || {}).INPUT > 0 || !verifyEmpleado.length) {
 
         await pool.query(`INSERT INTO TB_REGISTROEMPLEADOS(FO,CODEMPLEADO,DIA,HORAIN,HORAOUT,INPUT,OUTPUT,HORAS,VENTAS,NUMVENTAS,Z,CAJA,HORASNORMAL,HORASEXTRA,COSTEHORA,COSTEHORAEXTRA,CODMOTIVO,CODMOTIVOENTRADA,TERMINAL)
         VALUES(${(empleadoList || {}).FO},
