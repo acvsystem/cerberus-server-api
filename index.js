@@ -71,7 +71,7 @@ function emitVerificationDoc() {
 app.post('/control-asistencia', async (req, res) => {
 
     let empleadoList = (((req || []).body || [])[0] || {});
-    console.log("empleadoList", empleadoList);
+
 
     let tiendasList = [
         { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@grupodavid.com' },
@@ -96,12 +96,14 @@ app.post('/control-asistencia', async (req, res) => {
         { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
     ];
 
-    let [verifyEmpleado] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} ORDER by ID_REG_EMPLEADO DESC LIMIT 1`);
+    let [verifyEmpleado] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA = '2023-04-28' AND CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} ORDER by ID_REG_EMPLEADO DESC LIMIT 1`);
 
 
     console.log("verifyEmpleado", verifyEmpleado);
 
-   if (((verifyEmpleado || [])[0] || {}).INPUT == 0  && ((verifyEmpleado || [])[0] || {}).OUTPUT > 0) {
+    if (((verifyEmpleado || [])[0] || {}).INPUT == 0 && ((verifyEmpleado || [])[0] || {}).OUTPUT > 0) {
+
+        console.log("empleadoList", empleadoList);
 
         await pool.query(`UPDATE TB_REGISTROEMPLEADOS SET
             HORAIN ='${(empleadoList || {}).HORAIN}',
