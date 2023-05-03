@@ -5,10 +5,10 @@ class clsControlAsistencia {
     onSearchData = async (req, res) => {
         let dataRecept = ((req || {}).body || {});
         let response = [];
-        let dateInit = (dataRecept || {}).dataRecept || '';
+        let dateInit = (dataRecept || {}).dateInit || '';
         let dateEnd = (dataRecept || {}).dateEnd || '';
 
-        console.log("onSearchData", dataRecept);
+        console.log("onSearchData", req);
         /*
         let consulta = `SELECT * FROM TB_REGISTROEMPLEADOS;`;
 
