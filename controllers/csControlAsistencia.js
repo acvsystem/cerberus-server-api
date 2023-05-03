@@ -25,7 +25,7 @@ class clsControlAsistencia {
 
         response.push(
             {
-                data: {},
+                data: data,
                 status: defaultResponse.success.default
             }
         );
