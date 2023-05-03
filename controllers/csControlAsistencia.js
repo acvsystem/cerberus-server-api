@@ -10,7 +10,7 @@ class clsControlAsistencia {
         let dateEnd = (dataRecept || {}).dateEnd || '';
 
         console.log("onSearchData", dataRecept);
-        /*
+       
         let consulta = `SELECT * FROM TB_REGISTROEMPLEADOS;`;
 
         if (dateInit.length && !dateEnd.length) {
@@ -22,7 +22,7 @@ class clsControlAsistencia {
         }
 
         let [data] = await pool.query(consulta);
-*/
+
         response.push(
             {
                 data: {},
