@@ -3,8 +3,8 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import facturacionController from './controllers/csFacturacion.js'
-import sessionSocket from './controllers/csSessionSocket.js'
+import facturacionController from './controllers/csFacturacion.js';
+import sessionSocket from './controllers/csSessionSocket.js';
 import { pool } from './conections/conexMysql.js';
 import securityRoutes from './routes/security.routes.js';
 import configurationRoutes from './routes/configuration.routes.js';
@@ -15,6 +15,7 @@ import CryptoJS from 'crypto-js';
 import { prop } from './keys.js';
 import * as cron from 'node-cron';
 import templateHtmlController from './template/csTemplatesHtml.js';
+import recursosHumanosRoutes from './routes/recursosHumanos.routes.js';
 
 const app = express();
 const httpServer = createServer(app);
@@ -42,6 +43,18 @@ app.use('/settings', async (req, res, next) => {
         return res.status(401).json('Access denied');
     }
 }, configurationRoutes);
+
+app.use('/rrhh', async (req, res, next) => {
+    const token = req.header('Authorization') || "";
+
+    let resValidation = tokenController.verificationToken(token);
+
+    if ((resValidation || {}).isValid) {
+        next()
+    } else {
+        return res.status(401).json('Access denied');
+    }
+}, recursosHumanosRoutes);
 
 app.use('/frontRetail', frontRetailRoutes);
 
