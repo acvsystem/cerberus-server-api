@@ -126,8 +126,22 @@ app.post('/control-asistencia', async (req, res) => {
             NUMVENTAS = '${(empleadoList || {}).NUMVENTAS}',
             CAJA = '${(empleadoList || {}).CAJA}' WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND ID_REG_EMPLEADO = ${((verifyEmpleado || [])[0] || {}).ID_REG_EMPLEADO};`);
 
-        let [registroAsistenciaList] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA = '2023-04-28' AND CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} ORDER by ID_REG_EMPLEADO DESC LIMIT 1`);
-        io.to(`${listClient.id}`).emit("sendControlAsistencia", registroAsistenciaList);
+        let response = {
+            FO: (empleadoList || {}).FO,
+            CODEMPLEADO: (empleadoList || {}).CODEMPLEADO,
+            DIA: (empleadoList || {}).DIA,
+            HORAIN: (empleadoList || {}).HORAIN,
+            HORAOUT: (empleadoList || {}).HORAOUT,
+            HORAS: (empleadoList || {}).HORAS,
+            INPUT: isInput,
+            OUTPUT: isOutput,
+            VENTAS: (empleadoList || {}).VENTAS,
+            NUMVENTAS: (empleadoList || {}).NUMVENTAS,
+            CAJA: (empleadoList || {}).CAJA,
+            TERMINAL: (empleadoList || {}).TERMINAL
+        };
+
+        io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
 
         res.send('RECEPCION UPDATE EXITOSA..!!');
     }
@@ -142,9 +156,9 @@ app.post('/control-asistencia', async (req, res) => {
         '${(empleadoList || {}).DIA}',
         '${(empleadoList || {}).HORAIN}',
         '${(empleadoList || {}).HORAOUT}',
-        '${(empleadoList || {}).HORAS}',
         ${isInput},
         ${isOutput},
+        '${(empleadoList || {}).HORAS}',
         '${(empleadoList || {}).VENTAS}',
         '${(empleadoList || {}).NUMVENTAS}',
         '${(empleadoList || {}).Z}',
@@ -158,7 +172,7 @@ app.post('/control-asistencia', async (req, res) => {
         '${(empleadoList || {}).TERMINAL}');`);
 
         //let [registroAsistenciaList] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA = '2023-05-03';`);
-        
+
         let response = {
             FO: (empleadoList || {}).FO,
             CODEMPLEADO: (empleadoList || {}).CODEMPLEADO,
