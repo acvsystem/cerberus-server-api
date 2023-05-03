@@ -157,7 +157,8 @@ app.post('/control-asistencia', async (req, res) => {
         '${(empleadoList || {}).CODMOTIVOENTRADA}',
         '${(empleadoList || {}).TERMINAL}');`);
 
-        let [registroAsistenciaList] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA = '2023-05-03';`);
+        //let [registroAsistenciaList] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA = '2023-05-03';`);
+        
         let response = {
             FO: (empleadoList || {}).FO,
             CODEMPLEADO: (empleadoList || {}).CODEMPLEADO,

@@ -11,14 +11,14 @@ class clsControlAsistencia {
 
         console.log("onSearchData", dataRecept);
        
-        let consulta = `SELECT * FROM TB_REGISTROEMPLEADOS;`;
+        let consulta = `SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA DESC;`;
 
         if (dateInit.length && !dateEnd.length) {
-            consulta = `SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA = '${dateInit}';`
+            consulta = `SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA = '${dateInit}' DESC;`
         }
 
         if (dateInit.length && dateEnd.length) {
-            consulta = `SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA BETWEEN '${dateInit}' AND '${dateEnd}';`
+            consulta = `SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA BETWEEN '${dateInit}' AND '${dateEnd}' DESC;`
         }
 
         let [data] = await pool.query(consulta);
