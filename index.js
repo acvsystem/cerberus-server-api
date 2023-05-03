@@ -109,7 +109,7 @@ app.post('/control-asistencia', async (req, res) => {
         { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
     ];
 
-    let [verifyEmpleado] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA = '2023-05-03' AND CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} ORDER BY ID_REG_EMPLEADO DESC LIMIT 1`);
+    let [verifyEmpleado] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND CAST(DIA AS DATE) BETWEEN '2023-05-03' AND '2023-05-03' ORDER BY ID_REG_EMPLEADO DESC LIMIT 1`);
 
 
     console.log("verifyEmpleado", verifyEmpleado);
