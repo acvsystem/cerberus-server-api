@@ -157,7 +157,7 @@ app.post('/control-asistencia', async (req, res) => {
         '${(empleadoList || {}).CODMOTIVOENTRADA}',
         '${(empleadoList || {}).TERMINAL}');`);
 
-        let [registroAsistenciaList] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA = '2023-04-28';`);
+        let [registroAsistenciaList] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA = '2023-05-03';`);
         io.to(`${listClient.id}`).emit("sendControlAsistencia", registroAsistenciaList);
 
         res.send('RECEPCION INSERT EXITOSA..!!');
