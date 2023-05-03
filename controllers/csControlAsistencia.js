@@ -1,4 +1,5 @@
 import { pool } from '../conections/conexMysql.js';
+import { prop as defaultResponse } from '../const/defaultResponse.js';
 
 class clsControlAsistencia {
 
