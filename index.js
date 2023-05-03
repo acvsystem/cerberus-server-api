@@ -158,7 +158,22 @@ app.post('/control-asistencia', async (req, res) => {
         '${(empleadoList || {}).TERMINAL}');`);
 
         let [registroAsistenciaList] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA = '2023-05-03';`);
-        io.to(`${listClient.id}`).emit("sendControlAsistencia", registroAsistenciaList);
+        let response = {
+            FO: (empleadoList || {}).FO,
+            CODEMPLEADO: (empleadoList || {}).CODEMPLEADO,
+            DIA: (empleadoList || {}).DIA,
+            HORAIN: (empleadoList || {}).HORAIN,
+            HORAOUT: (empleadoList || {}).HORAOUT,
+            HORAS: (empleadoList || {}).HORAS,
+            INPUT: isInput,
+            OUTPUT: isOutput,
+            VENTAS: (empleadoList || {}).VENTAS,
+            NUMVENTAS: (empleadoList || {}).NUMVENTAS,
+            CAJA: (empleadoList || {}).CAJA,
+            TERMINAL: (empleadoList || {}).TERMINAL
+        };
+
+        io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
 
         res.send('RECEPCION INSERT EXITOSA..!!');
     }
