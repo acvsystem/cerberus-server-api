@@ -4,12 +4,12 @@ import { prop as defaultResponse } from '../const/defaultResponse.js';
 class clsControlAsistencia {
 
     onSearchData = async (req, res) => {
-        let dataRecept = ((req || {}).body || {});
+        let dataRecept = ((req || {}).query || {});
         let response = [];
         let dateInit = (dataRecept || {}).dateInit || '';
         let dateEnd = (dataRecept || {}).dateEnd || '';
 
-        console.log("onSearchData", req);
+        console.log("onSearchData", dataRecept);
         /*
         let consulta = `SELECT * FROM TB_REGISTROEMPLEADOS;`;
 
