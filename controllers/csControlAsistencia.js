@@ -41,7 +41,7 @@ class clsControlAsistencia {
 
         console.log("onSearchData", dataRecept);
 
-        let consulta = `SELECT * FROM TB_REGISTROEMPLEADOS ORDER BY ID_REG_EMPLEADO DESC LIMIT ${limitPage} OFFSET ${cantRegister + 1};`;
+        let consulta = `SELECT * FROM TB_REGISTROEMPLEADOS ORDER BY ID_REG_EMPLEADO DESC LIMIT ${limitPage} OFFSET ${cantRegister};`;
         let countData = `SELECT COUNT(*) AS COUNT FROM TB_REGISTROEMPLEADOS;`;
 
         let [totalCountData] = await pool.query(countData);
