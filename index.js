@@ -158,7 +158,8 @@ app.post('/control-asistencia', async (req, res) => {
 
         io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
 
-        res.send(verifyEmpleado);
+        res.send('RECEPCION INSERT EXITOSO..!!');
+
     } else if ((empleadoList || {}).HORAS > 0) {
 
         console.log("empleadoList", empleadoList);
@@ -191,11 +192,7 @@ app.post('/control-asistencia', async (req, res) => {
         res.send('RECEPCION UPDATE EXITOSA..!!');
     }
 
-
-
-
-
-    //res.send('RECEPCION NO INSERT');
+    res.send('RECEPCION NO INSERT');
 });
 
 io.use(function (socket, next) {
