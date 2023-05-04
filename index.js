@@ -114,7 +114,7 @@ app.post('/control-asistencia', async (req, res) => {
 
     console.log("verifyEmpleado", verifyEmpleado);
 
-    if (((verifyEmpleado || [])[0] || {}).INPUT == 0 && ((verifyEmpleado || [])[0] || {}).OUTPUT > 0) {
+    if ((empleadoList || {}).HORAS > 0) {
 
         console.log("empleadoList", empleadoList);
 
@@ -146,7 +146,7 @@ app.post('/control-asistencia', async (req, res) => {
         res.send('RECEPCION UPDATE EXITOSA..!!');
     }
 
-    if (((verifyEmpleado || [])[0] || {}).INPUT > 0 || !verifyEmpleado.length || (((verifyEmpleado || [])[0] || {}).INPUT == 0 && ((verifyEmpleado || [])[0] || {}).OUTPUT == 0)) {
+    if ((empleadoList || {}).HORAS == 0) {
         let isInput = true;
         let isOutput = (empleadoList || {}).HORAS == 0 ? false : true;
 
@@ -194,7 +194,7 @@ app.post('/control-asistencia', async (req, res) => {
     }
 
 
-    
+
 
 
     //res.send('RECEPCION NO INSERT');
