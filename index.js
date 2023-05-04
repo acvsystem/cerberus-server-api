@@ -190,14 +190,14 @@ app.post('/control-asistencia', async (req, res) => {
 
         io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
 
-        res.send(response);
+        res.send(verifyEmpleado);
     }
 
 
+    
 
 
-
-    res.send('RECEPCION NO INSERT');
+    //res.send('RECEPCION NO INSERT');
 });
 
 io.use(function (socket, next) {
