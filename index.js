@@ -190,7 +190,7 @@ app.post('/control-asistencia', async (req, res) => {
 
         io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
 
-        res.send('RECEPCION INSERT EXITOSA..!!');
+        res.send(response);
     }
 
 
