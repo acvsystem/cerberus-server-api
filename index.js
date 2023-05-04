@@ -147,7 +147,7 @@ app.post('/control-asistencia', async (req, res) => {
     }
 
     if (((verifyEmpleado || [])[0] || {}).INPUT > 0 || !verifyEmpleado.length || (((verifyEmpleado || [])[0] || {}).INPUT == 0 && ((verifyEmpleado || [])[0] || {}).OUTPUT == 0)) {
-        let isInput = (empleadoList || {}).HORAS == 0 ? true : false;
+        let isInput = true;
         let isOutput = (empleadoList || {}).HORAS == 0 ? false : true;
 
         await pool.query(`INSERT INTO TB_REGISTROEMPLEADOS(FO,CODEMPLEADO,DIA,HORAIN,HORAOUT,INPUT,OUTPUT,HORAS,VENTAS,NUMVENTAS,Z,CAJA,HORASNORMAL,HORASEXTRA,COSTEHORA,COSTEHORAEXTRA,CODMOTIVO,CODMOTIVOENTRADA,TERMINAL)
