@@ -114,39 +114,7 @@ app.post('/control-asistencia', async (req, res) => {
 
     console.log("verifyEmpleado", verifyEmpleado);
 
-    if ((empleadoList || {}).HORAS > 0) {
-
-        console.log("empleadoList", empleadoList);
-
-        await pool.query(`UPDATE TB_REGISTROEMPLEADOS SET
-            HORAIN ='${(empleadoList || {}).HORAIN}',
-            HORAOUT = '${(empleadoList || {}).HORAOUT}',
-            OUTPUT = 0,
-            HORAS = '${(empleadoList || {}).HORAS}',
-            NUMVENTAS = '${(empleadoList || {}).NUMVENTAS}',
-            CAJA = '${(empleadoList || {}).CAJA}' WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND ID_REG_EMPLEADO = ${((verifyEmpleado || [])[0] || {}).ID_REG_EMPLEADO};`);
-
-        let response = {
-            FO: (empleadoList || {}).FO,
-            CODEMPLEADO: (empleadoList || {}).CODEMPLEADO,
-            DIA: (empleadoList || {}).DIA,
-            HORAIN: (empleadoList || {}).HORAIN,
-            HORAOUT: (empleadoList || {}).HORAOUT,
-            HORAS: (empleadoList || {}).HORAS,
-            INPUT: true,
-            OUTPUT: true,
-            VENTAS: (empleadoList || {}).VENTAS,
-            NUMVENTAS: (empleadoList || {}).NUMVENTAS,
-            CAJA: (empleadoList || {}).CAJA,
-            TERMINAL: (empleadoList || {}).TERMINAL
-        };
-
-        io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
-
-        res.send('RECEPCION UPDATE EXITOSA..!!');
-    }
-
-    if ((empleadoList || {}).HORAS == 0) {
+    if ((empleadoList || {}).HORAS == 0 || ((verifyEmpleado || [])[0] || {}).HORAS > 0) {
         let isInput = true;
         let isOutput = (empleadoList || {}).HORAS == 0 ? false : true;
 
@@ -191,6 +159,36 @@ app.post('/control-asistencia', async (req, res) => {
         io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
 
         res.send(verifyEmpleado);
+    } else if ((empleadoList || {}).HORAS > 0) {
+
+        console.log("empleadoList", empleadoList);
+
+        await pool.query(`UPDATE TB_REGISTROEMPLEADOS SET
+            HORAIN ='${(empleadoList || {}).HORAIN}',
+            HORAOUT = '${(empleadoList || {}).HORAOUT}',
+            OUTPUT = 0,
+            HORAS = '${(empleadoList || {}).HORAS}',
+            NUMVENTAS = '${(empleadoList || {}).NUMVENTAS}',
+            CAJA = '${(empleadoList || {}).CAJA}' WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND ID_REG_EMPLEADO = ${((verifyEmpleado || [])[0] || {}).ID_REG_EMPLEADO};`);
+
+        let response = {
+            FO: (empleadoList || {}).FO,
+            CODEMPLEADO: (empleadoList || {}).CODEMPLEADO,
+            DIA: (empleadoList || {}).DIA,
+            HORAIN: (empleadoList || {}).HORAIN,
+            HORAOUT: (empleadoList || {}).HORAOUT,
+            HORAS: (empleadoList || {}).HORAS,
+            INPUT: true,
+            OUTPUT: true,
+            VENTAS: (empleadoList || {}).VENTAS,
+            NUMVENTAS: (empleadoList || {}).NUMVENTAS,
+            CAJA: (empleadoList || {}).CAJA,
+            TERMINAL: (empleadoList || {}).TERMINAL
+        };
+
+        io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
+
+        res.send('RECEPCION UPDATE EXITOSA..!!');
     }
 
 
