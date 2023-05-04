@@ -10,7 +10,7 @@ class clsControlAsistencia {
         let dateEnd = (dataRecept || {}).dateEnd || '';
 
         console.log("onSearchData", dataRecept);
-       
+
         let consulta = `SELECT * FROM TB_REGISTROEMPLEADOS ORDER BY ID_REG_EMPLEADO DESC;`;
 
         if (dateInit && !dateEnd) {
@@ -26,6 +26,31 @@ class clsControlAsistencia {
         response.push(
             {
                 data: data,
+                status: defaultResponse.success.default
+            }
+        );
+
+        res.json(response);
+    }
+
+    onPaginationData = async (req, res) => {
+        let dataRecept = ((req || {}).query || {});
+        let response = [];
+        let limitPage = (dataRecept || {}).limitPage || '';
+        let cantRegister = (dataRecept || {}).cantRegister || '';
+
+        console.log("onSearchData", dataRecept);
+
+        let consulta = `SELECT * FROM TB_REGISTROEMPLEADOS ORDER BY ID_REG_EMPLEADO DESC LIMIT ${limitPage} OFFSET ${cantRegister};`;
+        let countData = `SELECT COUNT(*) AS COUNT FROM TB_REGISTROEMPLEADOS;`;
+
+        let [totalCountData] = await pool.query(countData);
+        let [data] = await pool.query(consulta);
+
+        response.push(
+            {
+                data: data,
+                cant_registros: totalCountData,
                 status: defaultResponse.success.default
             }
         );
