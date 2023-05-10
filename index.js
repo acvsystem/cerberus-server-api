@@ -84,7 +84,7 @@ function emitVerificationDoc() {
 app.post('/control-asistencia', async (req, res) => {
 
     let empleadoList = (((req || []).body || [])[0] || {});
-    let terminal = (empleadoList || {}).TERMINAL || "";
+    let terminal = (empleadoList || {}).CAJA || "";
 
     let tiendasList = [
         { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@grupodavid.com' },
@@ -112,7 +112,7 @@ app.post('/control-asistencia', async (req, res) => {
     let codigoTienda = terminal.slice(0, 2);
 
     if (terminal.slice(2, 3) == 7 && terminal.slice(0, 2) == '7A') {
-        codigoTienda = (empleadoList || {}).TERMINAL;
+        codigoTienda = (empleadoList || {}).CAJA;
     }
 
     let selectedLocal = tiendasList.find((data) => data.code == codigoTienda);
@@ -121,7 +121,7 @@ app.post('/control-asistencia', async (req, res) => {
 
 
     console.log("selectedLocal", selectedLocal);
-    console.log("codigoTienda", (empleadoList || {}).TERMINAL);
+    console.log("codigoTienda", codigoTienda);
 
     if ((empleadoList || {}).HORAS == 0 || ((verifyEmpleado || [])[0] || {}).HORAS > 0) {
         let isInput = true;
