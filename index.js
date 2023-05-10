@@ -109,7 +109,13 @@ app.post('/control-asistencia', async (req, res) => {
         { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
     ];
 
-    let selectedLocal = tiendasList.find((data) => data.code == (empleadoList || {}).TERMINAL) || {};
+    let codigoTienda = ((empleadoList || {}).TERMINAL).slice(0,2);
+
+    if(((empleadoList || {}).TERMINAL).slice(2,3) == 7 && ((empleadoList || {}).TERMINAL).slice(0,2) == '7A'){
+        codigoTienda = (empleadoList || {}).TERMINAL;
+    }
+
+    let selectedLocal = tiendasList.find((data) => data.code == codigoTienda);
 
     let [verifyEmpleado] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND CAST(DIA AS DATE) BETWEEN '2023-05-03' AND '2023-05-03' ORDER BY ID_REG_EMPLEADO DESC LIMIT 1`);
 
