@@ -84,7 +84,7 @@ function emitVerificationDoc() {
 app.post('/control-asistencia', async (req, res) => {
 
     let empleadoList = (((req || []).body || [])[0] || {});
-
+    let terminal = (empleadoList || {}).TERMINAL || "";
 
     let tiendasList = [
         { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@grupodavid.com' },
@@ -109,9 +109,9 @@ app.post('/control-asistencia', async (req, res) => {
         { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
     ];
 
-    let codigoTienda = ((empleadoList || {}).TERMINAL || "").slice(0,2);
+    let codigoTienda = terminal.slice(0, 2);
 
-    if(((empleadoList || {}).TERMINAL || "").slice(2,3) == 7 && ((empleadoList || {}).TERMINAL || "").slice(0,2) == '7A'){
+    if (terminal.slice(2, 3) == 7 && terminal.slice(0, 2) == '7A') {
         codigoTienda = (empleadoList || {}).TERMINAL;
     }
 
@@ -121,7 +121,7 @@ app.post('/control-asistencia', async (req, res) => {
 
 
     console.log("selectedLocal", selectedLocal);
-    console.log("codigoTienda", codigoTienda);
+    console.log("codigoTienda", terminal);
 
     if ((empleadoList || {}).HORAS == 0 || ((verifyEmpleado || [])[0] || {}).HORAS > 0) {
         let isInput = true;
