@@ -162,11 +162,11 @@ app.post('/control-asistencia', async (req, res) => {
             OUTPUT: isOutput,
             VENTAS: (empleadoList || {}).VENTAS,
             NUMVENTAS: (empleadoList || {}).NUMVENTAS,
-            CAJA: (empleadoList || {}).CAJA,
+            CAJA: (empleadoList || {}).CAJA, 
             TERMINAL: (empleadoList || {}).TERMINAL,
-            NOMBRE_TIENDA: (empleadoList || {}).NOMBRE_TIENDA
+            NOMBRE_TIENDA: (selectedLocal || {}).name
         };
-        
+
         console.log("sendControlAsistencia",response);
         io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
 
