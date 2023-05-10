@@ -109,9 +109,9 @@ app.post('/control-asistencia', async (req, res) => {
         { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
     ];
 
-    let codigoTienda = ((empleadoList || {}).TERMINAL).slice(0,2);
+    let codigoTienda = ((empleadoList || {}).TERMINAL || "").slice(0,2);
 
-    if(((empleadoList || {}).TERMINAL).slice(2,3) == 7 && ((empleadoList || {}).TERMINAL).slice(0,2) == '7A'){
+    if(((empleadoList || {}).TERMINAL || "").slice(2,3) == 7 && ((empleadoList || {}).TERMINAL || "").slice(0,2) == '7A'){
         codigoTienda = (empleadoList || {}).TERMINAL;
     }
 
