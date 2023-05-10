@@ -166,7 +166,8 @@ app.post('/control-asistencia', async (req, res) => {
             TERMINAL: (empleadoList || {}).TERMINAL,
             NOMBRE_TIENDA: (empleadoList || {}).NOMBRE_TIENDA
         };
-
+        
+        console.log("sendControlAsistencia",response);
         io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
 
         res.send('RECEPCION INSERT EXITOSO..!!');
