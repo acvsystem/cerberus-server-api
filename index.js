@@ -120,7 +120,8 @@ app.post('/control-asistencia', async (req, res) => {
     let [verifyEmpleado] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND CAST(DIA AS DATE) BETWEEN '2023-05-03' AND '2023-05-03' ORDER BY ID_REG_EMPLEADO DESC LIMIT 1`);
 
 
-    console.log("verifyEmpleado", verifyEmpleado);
+    console.log("selectedLocal", selectedLocal);
+    console.log("codigoTienda", codigoTienda);
 
     if ((empleadoList || {}).HORAS == 0 || ((verifyEmpleado || [])[0] || {}).HORAS > 0) {
         let isInput = true;

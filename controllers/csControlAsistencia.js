@@ -46,7 +46,7 @@ class clsControlAsistencia {
 
         let [totalCountData] = await pool.query(countData);
 
-        if (((totalCountData || [])[0] || {}).COUNT == 1) {
+        if (((totalCountData || [])[0] || {}).COUNT < 10) {
             cantRegister = 0;
         }
 
