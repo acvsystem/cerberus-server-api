@@ -121,7 +121,7 @@ app.post('/control-asistencia', async (req, res) => {
 
 
     console.log("selectedLocal", selectedLocal);
-    console.log("codigoTienda", terminal);
+    console.log("codigoTienda", (empleadoList || {}).TERMINAL);
 
     if ((empleadoList || {}).HORAS == 0 || ((verifyEmpleado || [])[0] || {}).HORAS > 0) {
         let isInput = true;
