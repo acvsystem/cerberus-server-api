@@ -163,7 +163,8 @@ app.post('/control-asistencia', async (req, res) => {
             VENTAS: (empleadoList || {}).VENTAS,
             NUMVENTAS: (empleadoList || {}).NUMVENTAS,
             CAJA: (empleadoList || {}).CAJA,
-            TERMINAL: (empleadoList || {}).TERMINAL
+            TERMINAL: (empleadoList || {}).TERMINAL,
+            NOMBRE_TIENDA: (empleadoList || {}).NOMBRE_TIENDA
         };
 
         io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
@@ -194,7 +195,8 @@ app.post('/control-asistencia', async (req, res) => {
             VENTAS: (empleadoList || {}).VENTAS,
             NUMVENTAS: (empleadoList || {}).NUMVENTAS,
             CAJA: (empleadoList || {}).CAJA,
-            TERMINAL: (empleadoList || {}).TERMINAL
+            TERMINAL: (empleadoList || {}).TERMINAL,
+            NOMBRE_TIENDA: (empleadoList || {}).NOMBRE_TIENDA
         };
 
         io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
