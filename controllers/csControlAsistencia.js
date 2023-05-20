@@ -8,6 +8,8 @@ class clsControlAsistencia {
         let response = [];
         let dateInit = (dataRecept || {}).dateInit || '';
         let dateEnd = (dataRecept || {}).dateEnd || '';
+        let dateNomTienda = (dataRecept || {}).dateNomTienda || '';
+        let dateNomEmp = (dataRecept || {}).dateNomEmp || '';
 
         console.log("onSearchData", dataRecept);
 
@@ -20,8 +22,21 @@ class clsControlAsistencia {
         if (dateInit && dateEnd) {
             consulta = `SELECT TB_REGISTROEMPLEADOS.ID_REG_EMPLEADO, TB_VENDEDORES.NOMVENDEDOR,TB_REGISTROEMPLEADOS.DIA,TB_REGISTROEMPLEADOS.HORAIN,TB_REGISTROEMPLEADOS.HORAOUT,TB_REGISTROEMPLEADOS.HORAS,TB_REGISTROEMPLEADOS.VENTAS,TB_REGISTROEMPLEADOS.NOMBRE_TIENDA FROM TB_VENDEDORES INNER JOIN TB_REGISTROEMPLEADOS ON TB_VENDEDORES.CODVENDEDOR = TB_REGISTROEMPLEADOS.CODEMPLEADO WHERE DIA BETWEEN '${dateInit}' AND '${dateEnd}' ORDER BY ID_REG_EMPLEADO DESC;`
         }
-        console.log(consulta);
+
         let [data] = await pool.query(consulta);
+
+        if (dateNomTienda) {
+            data = data.filter((datos) => {
+                return datos.NOMBRE_TIENDA == dateNomTienda;
+            });
+        }
+
+        if (dateNomEmp) {
+            data = data.filter((datos) => {
+                return datos.NOMVENDEDOR == dateNomEmp;
+            });
+        }
+
 
         response.push(
             {
