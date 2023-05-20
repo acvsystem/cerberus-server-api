@@ -11,14 +11,14 @@ class clsControlAsistencia {
 
         console.log("onSearchData", dataRecept);
 
-        let consulta = `SELECT * FROM TB_REGISTROEMPLEADOS ORDER BY ID_REG_EMPLEADO DESC;`;
+        let consulta = `INNER JOIN TB_REGISTROEMPLEADOS ON TB_VENDEDORES.CODVENDEDOR = TB_REGISTROEMPLEADOS.CODEMPLEADO ORDER BY ID_REG_EMPLEADO DESC;`;
 
         if (dateInit && !dateEnd) {
-            consulta = `SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA = '${dateInit}' ORDER BY ID_REG_EMPLEADO DESC;`
+            consulta = `INNER JOIN TB_REGISTROEMPLEADOS ON TB_VENDEDORES.CODVENDEDOR = TB_REGISTROEMPLEADOS.CODEMPLEADO WHERE DIA = '${dateInit}' ORDER BY ID_REG_EMPLEADO DESC;`
         }
 
         if (dateInit && dateEnd) {
-            consulta = `SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA BETWEEN '${dateInit}' AND '${dateEnd}' ORDER BY ID_REG_EMPLEADO DESC;`
+            consulta = `INNER JOIN TB_REGISTROEMPLEADOS ON TB_VENDEDORES.CODVENDEDOR = TB_REGISTROEMPLEADOS.CODEMPLEADO WHERE DIA BETWEEN '${dateInit}' AND '${dateEnd}' ORDER BY ID_REG_EMPLEADO DESC;`
         }
         console.log(consulta);
         let [data] = await pool.query(consulta);
