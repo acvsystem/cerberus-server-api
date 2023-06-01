@@ -127,7 +127,7 @@ app.post('/control-asistencia', async (req, res) => {
         let isInput = true;
         let isOutput = (empleadoList || {}).HORAS == 0 ? false : true;
         let dia = new Date((empleadoList || {}).DIA);
-        let diaFormat = `${dia.getFullYear()}-${dia.getMonth()}-${dia.getDay()}`;
+        let diaFormat = `${dia.getFullYear()}-${(dia.getMonth() < 10 ? '0' + dia.getMonth() : dia.getDay())}-${(dia.getDay() < 10 ? '0' + dia.getDay() : dia.getDay())}`;
         await pool.query(`INSERT INTO TB_REGISTROEMPLEADOS(FO,CODEMPLEADO,DIA,HORAIN,HORAOUT,INPUT,OUTPUT,HORAS,VENTAS,NUMVENTAS,Z,CAJA,HORASNORMAL,HORASEXTRA,COSTEHORA,COSTEHORAEXTRA,CODMOTIVO,CODMOTIVOENTRADA,TERMINAL,NOMBRE_TIENDA)
         VALUES(${(empleadoList || {}).FO},
         '${(empleadoList || {}).CODEMPLEADO}',
