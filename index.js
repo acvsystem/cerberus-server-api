@@ -118,7 +118,7 @@ app.post('/control-asistencia', async (req, res) => {
     let selectedLocal = tiendasList.find((data) => data.code == codigoTienda);
 
     let [verifyEmpleado] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND CAST(DIA AS DATE) BETWEEN '2023-05-03' AND '2023-05-03' ORDER BY ID_REG_EMPLEADO DESC LIMIT 1`);
-
+    let [selectEmpleado] = await pool.query(`SELECT * FROM TB_VENDEDORES WHERE CODVENDEDOR = ${(empleadoList || {}).CODEMPLEADO};`);
 
     console.log("selectedLocal", selectedLocal);
     console.log("codigoTienda", codigoTienda);
@@ -162,12 +162,13 @@ app.post('/control-asistencia', async (req, res) => {
             OUTPUT: isOutput,
             VENTAS: (empleadoList || {}).VENTAS,
             NUMVENTAS: (empleadoList || {}).NUMVENTAS,
-            CAJA: (empleadoList || {}).CAJA, 
+            CAJA: (empleadoList || {}).CAJA,
             TERMINAL: (empleadoList || {}).TERMINAL,
-            NOMBRE_TIENDA: (selectedLocal || {}).name
+            NOMBRE_TIENDA: (selectedLocal || {}).name,
+            NOMVENDEDOR: ((selectEmpleado || [])[0] || {}).NOMVENDEDOR
         };
 
-        console.log("sendControlAsistencia",response);
+        console.log("sendControlAsistencia", response);
         io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
 
         res.send('RECEPCION INSERT EXITOSO..!!');
