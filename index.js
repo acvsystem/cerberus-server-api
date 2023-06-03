@@ -83,7 +83,14 @@ function emitVerificationDoc() {
 
 app.post('/control-asistencia', async (req, res) => {
 
-    let empleadoList = (((req || []).body || [])[0] || {});
+    let dataICG = (((req || []).body || [])[0] || {});
+
+    console.log(dataICG);
+
+    res.send('RECEPCION NO INSERT');
+
+/*
+    
     let terminal = (empleadoList || {}).CAJA || "";
 
     let tiendasList = [
@@ -207,7 +214,7 @@ app.post('/control-asistencia', async (req, res) => {
         res.send('RECEPCION UPDATE EXITOSA..!!');
     }
 
-    res.send('RECEPCION NO INSERT');
+    res.send('RECEPCION NO INSERT');*/
 });
 
 io.use(function (socket, next) {
