@@ -83,7 +83,7 @@ function emitVerificationDoc() {
 
 app.post('/control-asistencia', async (req, res) => {
 
-    let dataICG = (((req || []).body || [])[0] || {});
+    let dataICG = JSON.parse((((req || []).body || [])[0] || {}));
 
     console.log(dataICG);
 
