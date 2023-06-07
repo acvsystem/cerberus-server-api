@@ -16,6 +16,7 @@ import { prop } from './keys.js';
 import * as cron from 'node-cron';
 import templateHtmlController from './template/csTemplatesHtml.js';
 import recursosHumanosRoutes from './routes/recursosHumanos.routes.js';
+import actionBDController from './controllers/csActionOnBD.js';
 
 const app = express();
 const httpServer = createServer(app);
@@ -83,138 +84,164 @@ function emitVerificationDoc() {
 
 app.post('/control-asistencia', async (req, res) => {
 
-    let dataICG = (((req || []).body || [])[0] || {});
+    let dataICG = {
+        COD_ICG: '500010',
+        DATA_EMPLEADO: [
+            {
+                DNI: '72359799',
+                NOMVENDEDOR: 'VALERIA NICOLE OCHOA MEDINA',
+                ACTIVO: 'F',
+                BLOQUEADO: 'F',
+                EMAIL: 'VALERIA.OCHOA.29@HOTMAIL.COM'
+            }
+        ],
+        DATA_IN_OUT: [
+            {
+                CODEMPLEADO: 500010,
+                DIA: '2023-05-05T00:00:00',
+                HORAIN: '2023-05-03T05:09:03',
+                HORAOUT: '2023-05-03T10:09:03',
+                HORAS: 0,
+                VENTAS: 0,
+                NUMVENTAS: 0,
+                CAJA: '7C1'
+            }
+        ]
+    };
 
-    console.log(dataICG);
+    let dataEmpleado = ((dataICG || {}).DATA_EMPLEADO || [])[0] || {};
+    let dataAsistencia = ((dataICG || {}).DATA_IN_OUT || [])[0] || {};
+
+    let verifiedData = await actionBDController.verificationRegister('EXAMPLE_TABLE', `DNI = '${(dataEmpleado || {}).DNI}'`);
+
+    if ((verifiedData || []).length) {
+        //REGISTRAR EN TABLA DE ASISTENCIA
+        let terminal = (dataAsistencia || {}).CAJA || "";
+
+        let codigoTienda = terminal.slice(0, 2);
+
+        if (terminal.slice(2, 3) == 7 && terminal.slice(0, 2) == '7A') {
+            codigoTienda = (empleadoList || {}).CAJA;
+        }
+
+        let tiendasList = [
+            { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@grupodavid.com' },
+            { code: '9A', name: 'VSBA JOCKEY', email: 'vsjockeyplaza@grupodavid.com' },
+            { code: 'PC', name: 'AEO JOCKEY', email: 'americaneaglejp@grupodavid.com' },
+            { code: 'PB', name: 'AEO ASIA', email: 'aeopopupasia@grupodavid.com' },
+            { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@grupodavid.com' },
+            { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@grupodavid.com' },
+            { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@grupodavid.com' },
+            { code: '7C', name: 'BBW SAN MIGUEL', email: 'bbwsanmiguel@grupodavid.com' },
+            { code: '9C', name: 'VS SAN MIGUEL', email: 'vssanmiguel@grupodavid.com' },
+            { code: '7D', name: 'BBW SALAVERRY', email: 'bbwsalaverry@grupodavid.com' },
+            { code: '9I', name: 'VS SALAVERRY', email: 'vssalaverry@grupodavid.com' },
+            { code: '9G', name: 'VS MALL DEL SUR', email: 'vsmalldelsur@grupodavid.com' },
+            { code: '9H', name: 'VS PURUCHUCO', email: 'vspuruchuco@grupodavid.com' },
+            { code: '9M', name: 'VS ECOMMERCE', email: 'vsecommpe@grupodavid.com' },
+            { code: '7F', name: 'BBW ECOMMERCE', email: 'bbwecommperu@grupodavid.com' },
+            { code: 'PA', name: 'AEO ECOMMERCE', email: 'aeecompe@grupodavid.com' },
+            { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@grupodavid.com' },
+            { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@grupodavid.com' },
+            { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@grupodavid.com' },
+            { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
+        ];
+
+        let selectedLocal = tiendasList.find((data) => data.code == codigoTienda);
+
+        let newDate = new Date();
+        let diaFormat = `${newDate.getFullYear()}-${(newDate.getMonth() < 10 ? '0' + newDate.getMonth() : newDate.getDay())}-${(newDate.getDay() < 10 ? '0' + newDate.getDay() : newDate.getDay())}`;
+
+        let [verifyEmpleado] = await actionBDController.verificationRegister("TB_REGISTROEMPLEADOS",`CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND CAST(DIA AS DATE) BETWEEN '${diaFormat}' AND '${diaFormat}' ORDER BY ID_REG_EMPLEADO DESC LIMIT 1`);
+        let [selectEmpleado] = await actionBDController.verificationRegister("TB_VENDEDORES",`CODVENDEDOR = ${(empleadoList || {}).CODEMPLEADO}`);
+
+        if ((empleadoList || {}).HORAS == 0 || ((verifyEmpleado || [])[0] || {}).HORAS > 0) {
+            let isInput = true;
+            let isOutput = (empleadoList || {}).HORAS == 0 ? false : true;
+            let dia = new Date((empleadoList || {}).DIA);
+            let diaFormat = `${dia.getFullYear()}-${(dia.getMonth() < 10 ? '0' + dia.getMonth() : dia.getDay())}-${(dia.getDay() < 10 ? '0' + dia.getDay() : dia.getDay())}`;
+
+            await pool.query(`INSERT INTO TB_REGISTROEMPLEADOS(FO,CODEMPLEADO,DIA,HORAIN,HORAOUT,INPUT,OUTPUT,HORAS,VENTAS,NUMVENTAS,Z,CAJA,HORASNORMAL,HORASEXTRA,COSTEHORA,COSTEHORAEXTRA,CODMOTIVO,CODMOTIVOENTRADA,TERMINAL,NOMBRE_TIENDA)
+            VALUES(${(empleadoList || {}).FO},
+            '${(empleadoList || {}).CODEMPLEADO}',
+            '${diaFormat}',
+            '${(empleadoList || {}).HORAIN}',
+            '${(empleadoList || {}).HORAOUT}',
+            ${isInput},
+            ${isOutput},
+            '${(empleadoList || {}).HORAS}',
+            '${(empleadoList || {}).VENTAS}',
+            '${(empleadoList || {}).NUMVENTAS}',
+            '${(empleadoList || {}).Z}',
+            '${(empleadoList || {}).CAJA}',
+            '${(empleadoList || {}).HORASNORMAL}',
+            '${(empleadoList || {}).HORASEXTRA}',
+            '${(empleadoList || {}).COSTEHORA}',
+            '${(empleadoList || {}).COSTEHORAEXTRA}',
+            '${(empleadoList || {}).CODMOTIVO}',
+            '${(empleadoList || {}).CODMOTIVOENTRADA}',
+            '${(empleadoList || {}).TERMINAL}',
+            '${(selectedLocal || {}).name}');`);
+    
+            let response = {
+                FO: (empleadoList || {}).FO,
+                CODEMPLEADO: (empleadoList || {}).CODEMPLEADO,
+                DIA: (empleadoList || {}).DIA,
+                HORAIN: (empleadoList || {}).HORAIN,
+                HORAOUT: (empleadoList || {}).HORAOUT,
+                HORAS: (empleadoList || {}).HORAS,
+                INPUT: isInput,
+                OUTPUT: isOutput,
+                VENTAS: (empleadoList || {}).VENTAS,
+                NUMVENTAS: (empleadoList || {}).NUMVENTAS,
+                CAJA: (empleadoList || {}).CAJA,
+                TERMINAL: (empleadoList || {}).TERMINAL,
+                NOMBRE_TIENDA: (selectedLocal || {}).name,
+                NOMVENDEDOR: ((selectEmpleado || [])[0] || {}).NOMVENDEDOR
+            };
+    
+            
+            io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
+    
+            res.send('RECEPCION INSERT EXITOSO..!!');
+    
+        } else if ((empleadoList || {}).HORAS > 0) {
+    
+            await pool.query(`UPDATE TB_REGISTROEMPLEADOS SET
+                HORAIN ='${(empleadoList || {}).HORAIN}',
+                HORAOUT = '${(empleadoList || {}).HORAOUT}',
+                OUTPUT = 0,
+                HORAS = '${(empleadoList || {}).HORAS}',
+                NUMVENTAS = '${(empleadoList || {}).NUMVENTAS}',
+                CAJA = '${(empleadoList || {}).CAJA}' WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND ID_REG_EMPLEADO = ${((verifyEmpleado || [])[0] || {}).ID_REG_EMPLEADO};`);
+    
+            let response = {
+                FO: (empleadoList || {}).FO,
+                CODEMPLEADO: (empleadoList || {}).CODEMPLEADO,
+                DIA: (empleadoList || {}).DIA,
+                HORAIN: (empleadoList || {}).HORAIN,
+                HORAOUT: (empleadoList || {}).HORAOUT,
+                HORAS: (empleadoList || {}).HORAS,
+                INPUT: true,
+                OUTPUT: true,
+                VENTAS: (empleadoList || {}).VENTAS,
+                NUMVENTAS: (empleadoList || {}).NUMVENTAS,
+                CAJA: (empleadoList || {}).CAJA,
+                TERMINAL: (empleadoList || {}).TERMINAL,
+                NOMBRE_TIENDA: (empleadoList || {}).NOMBRE_TIENDA
+            };
+    
+            io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
+    
+            res.send('RECEPCION UPDATE EXITOSA..!!');
+        }
+
+    } else {
+        //REGISTRAR EN TABLA DE NOTIFICACIONES
+        dataVeriactionBDController.insertRegister()
+    }
 
     res.send('RECEPCION NO INSERT');
-
-/*
-    
-    let terminal = (empleadoList || {}).CAJA || "";
-
-    let tiendasList = [
-        { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@grupodavid.com' },
-        { code: '9A', name: 'VSBA JOCKEY', email: 'vsjockeyplaza@grupodavid.com' },
-        { code: 'PC', name: 'AEO JOCKEY', email: 'americaneaglejp@grupodavid.com' },
-        { code: 'PB', name: 'AEO ASIA', email: 'aeopopupasia@grupodavid.com' },
-        { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@grupodavid.com' },
-        { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@grupodavid.com' },
-        { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@grupodavid.com' },
-        { code: '7C', name: 'BBW SAN MIGUEL', email: 'bbwsanmiguel@grupodavid.com' },
-        { code: '9C', name: 'VS SAN MIGUEL', email: 'vssanmiguel@grupodavid.com' },
-        { code: '7D', name: 'BBW SALAVERRY', email: 'bbwsalaverry@grupodavid.com' },
-        { code: '9I', name: 'VS SALAVERRY', email: 'vssalaverry@grupodavid.com' },
-        { code: '9G', name: 'VS MALL DEL SUR', email: 'vsmalldelsur@grupodavid.com' },
-        { code: '9H', name: 'VS PURUCHUCO', email: 'vspuruchuco@grupodavid.com' },
-        { code: '9M', name: 'VS ECOMMERCE', email: 'vsecommpe@grupodavid.com' },
-        { code: '7F', name: 'BBW ECOMMERCE', email: 'bbwecommperu@grupodavid.com' },
-        { code: 'PA', name: 'AEO ECOMMERCE', email: 'aeecompe@grupodavid.com' },
-        { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@grupodavid.com' },
-        { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@grupodavid.com' },
-        { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@grupodavid.com' },
-        { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
-    ];
-
-    let codigoTienda = terminal.slice(0, 2);
-
-    if (terminal.slice(2, 3) == 7 && terminal.slice(0, 2) == '7A') {
-        codigoTienda = (empleadoList || {}).CAJA;
-    }
-
-    let selectedLocal = tiendasList.find((data) => data.code == codigoTienda);
-
-    let [verifyEmpleado] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND CAST(DIA AS DATE) BETWEEN '2023-05-03' AND '2023-05-03' ORDER BY ID_REG_EMPLEADO DESC LIMIT 1`);
-    let [selectEmpleado] = await pool.query(`SELECT * FROM TB_VENDEDORES WHERE CODVENDEDOR = ${(empleadoList || {}).CODEMPLEADO};`);
-
-    console.log("selectedLocal", selectedLocal);
-    console.log("codigoTienda", codigoTienda);
-
-    if ((empleadoList || {}).HORAS == 0 || ((verifyEmpleado || [])[0] || {}).HORAS > 0) {
-        let isInput = true;
-        let isOutput = (empleadoList || {}).HORAS == 0 ? false : true;
-        let dia = new Date((empleadoList || {}).DIA);
-        let diaFormat = `${dia.getFullYear()}-${(dia.getMonth() < 10 ? '0' + dia.getMonth() : dia.getDay())}-${(dia.getDay() < 10 ? '0' + dia.getDay() : dia.getDay())}`;
-        await pool.query(`INSERT INTO TB_REGISTROEMPLEADOS(FO,CODEMPLEADO,DIA,HORAIN,HORAOUT,INPUT,OUTPUT,HORAS,VENTAS,NUMVENTAS,Z,CAJA,HORASNORMAL,HORASEXTRA,COSTEHORA,COSTEHORAEXTRA,CODMOTIVO,CODMOTIVOENTRADA,TERMINAL,NOMBRE_TIENDA)
-        VALUES(${(empleadoList || {}).FO},
-        '${(empleadoList || {}).CODEMPLEADO}',
-        '${diaFormat}',
-        '${(empleadoList || {}).HORAIN}',
-        '${(empleadoList || {}).HORAOUT}',
-        ${isInput},
-        ${isOutput},
-        '${(empleadoList || {}).HORAS}',
-        '${(empleadoList || {}).VENTAS}',
-        '${(empleadoList || {}).NUMVENTAS}',
-        '${(empleadoList || {}).Z}',
-        '${(empleadoList || {}).CAJA}',
-        '${(empleadoList || {}).HORASNORMAL}',
-        '${(empleadoList || {}).HORASEXTRA}',
-        '${(empleadoList || {}).COSTEHORA}',
-        '${(empleadoList || {}).COSTEHORAEXTRA}',
-        '${(empleadoList || {}).CODMOTIVO}',
-        '${(empleadoList || {}).CODMOTIVOENTRADA}',
-        '${(empleadoList || {}).TERMINAL}',
-        '${(selectedLocal || {}).name}');`);
-
-        //let [registroAsistenciaList] = await pool.query(`SELECT * FROM TB_REGISTROEMPLEADOS WHERE DIA = '2023-05-03';`);
-
-        let response = {
-            FO: (empleadoList || {}).FO,
-            CODEMPLEADO: (empleadoList || {}).CODEMPLEADO,
-            DIA: (empleadoList || {}).DIA,
-            HORAIN: (empleadoList || {}).HORAIN,
-            HORAOUT: (empleadoList || {}).HORAOUT,
-            HORAS: (empleadoList || {}).HORAS,
-            INPUT: isInput,
-            OUTPUT: isOutput,
-            VENTAS: (empleadoList || {}).VENTAS,
-            NUMVENTAS: (empleadoList || {}).NUMVENTAS,
-            CAJA: (empleadoList || {}).CAJA,
-            TERMINAL: (empleadoList || {}).TERMINAL,
-            NOMBRE_TIENDA: (selectedLocal || {}).name,
-            NOMVENDEDOR: ((selectEmpleado || [])[0] || {}).NOMVENDEDOR
-        };
-
-        console.log("sendControlAsistencia", response);
-        io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
-
-        res.send('RECEPCION INSERT EXITOSO..!!');
-
-    } else if ((empleadoList || {}).HORAS > 0) {
-
-        console.log("empleadoList", empleadoList);
-
-        await pool.query(`UPDATE TB_REGISTROEMPLEADOS SET
-            HORAIN ='${(empleadoList || {}).HORAIN}',
-            HORAOUT = '${(empleadoList || {}).HORAOUT}',
-            OUTPUT = 0,
-            HORAS = '${(empleadoList || {}).HORAS}',
-            NUMVENTAS = '${(empleadoList || {}).NUMVENTAS}',
-            CAJA = '${(empleadoList || {}).CAJA}' WHERE CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND ID_REG_EMPLEADO = ${((verifyEmpleado || [])[0] || {}).ID_REG_EMPLEADO};`);
-
-        let response = {
-            FO: (empleadoList || {}).FO,
-            CODEMPLEADO: (empleadoList || {}).CODEMPLEADO,
-            DIA: (empleadoList || {}).DIA,
-            HORAIN: (empleadoList || {}).HORAIN,
-            HORAOUT: (empleadoList || {}).HORAOUT,
-            HORAS: (empleadoList || {}).HORAS,
-            INPUT: true,
-            OUTPUT: true,
-            VENTAS: (empleadoList || {}).VENTAS,
-            NUMVENTAS: (empleadoList || {}).NUMVENTAS,
-            CAJA: (empleadoList || {}).CAJA,
-            TERMINAL: (empleadoList || {}).TERMINAL,
-            NOMBRE_TIENDA: (empleadoList || {}).NOMBRE_TIENDA
-        };
-
-        io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
-
-        res.send('RECEPCION UPDATE EXITOSA..!!');
-    }
-
-    res.send('RECEPCION NO INSERT');*/
 });
 
 io.use(function (socket, next) {
