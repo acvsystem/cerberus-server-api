@@ -1,4 +1,5 @@
 
+import { prop } from '../const/defaultResponse.js';
 
 export const onRegister = async (req, res) => {
     let objNewRegister = req.body;
@@ -7,6 +8,8 @@ export const onRegister = async (req, res) => {
 
 export const onRegisterPostulante = async (req, res) => {
     let dataPostulante = ((req || {}).body || [])[0] || {};
+    console.log(dataPostulante);
+   /* 
     let datosPersonales = (dataPostulante || {}).datos_personales || {};
     let nroDocumento = (datosPersonales || {}).num_documento || "";
     let existRegister = await actionBDController.verificationRegister('TB_FICHA_EMPLEADO', `NUM_DOCUMENTO = '${nroDocumento}'`);
@@ -24,16 +27,13 @@ export const onRegisterPostulante = async (req, res) => {
         '${(datosPersonales || {}).direccion}',
         '${(datosPersonales || {}).referencia}',
         '${(datosPersonales || {}).email}',
-        '${(datosPersonales || {}).email}',//*/
+        '${(datosPersonales || {}).email}',
         '${(datosPersonales || {}).tipo_pension}',
         '${(datosPersonales || {}).contacto_emergengia}',
         '${(datosPersonales || {}).numero_emergencia}'`;
 
         await actionBDController.insertRegister("TB_FICHA_EMPLEADO", cadenaColumn, cadenaData);
-    } else {
+    } */
 
-
-    }
-
-
+    res.json(prop.success.default);
 }
