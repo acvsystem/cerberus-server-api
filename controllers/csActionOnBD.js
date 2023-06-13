@@ -14,6 +14,13 @@ class clsActionBD {
         return true;
     }
 
+    async execQuery(query) {
+
+        let rs = await pool.query(query);
+
+        return rs;
+    }
+
 }
 
 const actionBDController = new clsActionBD;
