@@ -4,7 +4,7 @@ import actionBDController from './csActionOnBD.js';
 
 export const onRegister = async (req, res) => {
     let objNewRegister = req.body;
-    console.log(objNewRegister);
+    //console.log(objNewRegister);
 }
 
 export const onRegisterPostulante = async (req, res) => {
