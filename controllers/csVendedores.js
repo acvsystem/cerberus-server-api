@@ -47,7 +47,7 @@ export const onRegisterPostulante = async (req, res) => {
     console.log(existRegister);
     console.log(tipoExcution);
     console.log(cadenaFichaEmpleado);
-    console.log(`EXEC SP_CRUD_FICHA_EMPLEADO('${tipoExcution}',${cadenaFichaEmpleado})`);
+    console.log(`CALL SP_CRUD_FICHA_EMPLEADO('${tipoExcution}',${cadenaFichaEmpleado})`);
     await actionBDController.execQuery(`EXEC SP_CRUD_FICHA_EMPLEADO('${tipoExcution}',${cadenaFichaEmpleado})`);
 /*
     expLaboralList.filter((el) => {
