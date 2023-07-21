@@ -18,7 +18,7 @@ export const onRegisterPostulante = async (req, res) => {
 
     let cadenaFichaEmpleado = `'${(datosPersonales || {}).ap_paterno}',
     '${(datosPersonales || {}).ap_materno}',
-    '${(datosPersonales || {}).nombres}'
+    '${(datosPersonales || {}).nombres}',
     '${(datosPersonales || {}).fec_nacimiento}',
     '${(datosPersonales || {}).pais_nacimiento}',
     '${(datosPersonales || {}).tipo_documento}',
