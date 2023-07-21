@@ -45,7 +45,8 @@ export const onRegisterPostulante = async (req, res) => {
 
     let existRegister = await actionBDController.verificationRegister('TB_FICHA_EMPLEADO', `KEY_FICHA = '${idPostulante}'`);
     let tipoExcution = !existRegister ? 'I' : 'U';
-
+    console.log(existRegister);
+/*
     await actionBDController.execQuery(`EXEC SP_CRUD_FICHA_EMPLEADO(${tipoExcution},${cadenaFichaEmpleado})`);
 
     expLaboralList.filter((el) => {
@@ -61,7 +62,7 @@ export const onRegisterPostulante = async (req, res) => {
     });
 
     await actionBDController.execQuery(`EXEC SP_CRUD_DATOS_SALUD_ANTECEDENTES(${tipoExcution},${saludAntecedentes})`);
-
+*/
 
     res.json(prop.success.default);
 }
