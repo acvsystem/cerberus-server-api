@@ -16,7 +16,7 @@ export const onRegisterPostulante = async (req, res) => {
     let forAcademicaList = (dataPostulante || {}).formacion_academica || [];
     let derHabienteList = (dataPostulante || {}).derecho_habiente || [];
 
-    let cadenaFichaEmpleado = `'${(datosPersonales || {}).ap_paterno}',
+    let cadenaFichaEmpleado = `'${idPostulante}','${(datosPersonales || {}).ap_paterno}',
     '${(datosPersonales || {}).ap_materno}',
     '${(datosPersonales || {}).nombres}',
     '${(datosPersonales || {}).fec_nacimiento}',
