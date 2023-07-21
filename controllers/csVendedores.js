@@ -31,8 +31,7 @@ export const onRegisterPostulante = async (req, res) => {
     '${(datosPersonales || {}).nro_celular}',
     '${(datosPersonales || {}).tipo_pension}',
     '${(datosPersonales || {}).contacto_emergengia}',
-    '${(datosPersonales || {}).numero_emergencia}',
-    '${(datosPersonales || {}).distrito}'`;
+    '${(datosPersonales || {}).numero_emergencia}'`;
 
     let saludAntecedentes = `'${idPostulante}',
     ${derHabienteList.alergias},
@@ -48,8 +47,8 @@ export const onRegisterPostulante = async (req, res) => {
     console.log(existRegister);
     console.log(tipoExcution);
     console.log(cadenaFichaEmpleado);
-    await actionBDController.execQuery(`EXEC SP_CRUD_FICHA_EMPLEADO(${tipoExcution},${cadenaFichaEmpleado})`);
-/*
+   /* await actionBDController.execQuery(`EXEC SP_CRUD_FICHA_EMPLEADO(${tipoExcution},${cadenaFichaEmpleado})`);
+
     expLaboralList.filter((el) => {
         actionBDController.execQuery(`EXEC SP_CRUD_EXP_LABORAL_FICHA_EMPLEADO(${tipoExcution},'${idPostulante}','${el.empresa}','${el.puesto}','${el.desde}','${el.culmino}','${el.culmino}')`);
     });
