@@ -10,7 +10,7 @@ export const onRegister = async (req, res) => {
 export const onRegisterPostulante = async (req, res) => {
     let dataPostulante = ((req || {}).body || [])[0] || {};
     let idPostulante = (dataPostulante || {}).id;
-    
+    console.log(dataPostulante);
     let datosPersonales = (dataPostulante || {}).datos_personales || {};
     let expLaboralList = (dataPostulante || {}).experiencia_laboral || [];
     let forAcademicaList = (dataPostulante || {}).formacion_academica || [];
