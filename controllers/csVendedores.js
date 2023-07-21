@@ -43,7 +43,6 @@ export const onRegisterPostulante = async (req, res) => {
     ${derHabienteList.antecedentes_judiciales},
     ${derHabienteList.antecedentes_penales}`;
 
-
     let existRegister = await actionBDController.verificationRegister('TB_FICHA_EMPLEADO', `KEY_FICHA = '${idPostulante}'`);
     let tipoExcution = !existRegister ? 'I' : 'U';
 
