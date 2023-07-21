@@ -44,7 +44,8 @@ export const onRegisterPostulante = async (req, res) => {
     ${derHabienteList.antecedentes_penales}`;
 
     let existRegister = await actionBDController.verificationRegister('TB_FICHA_EMPLEADO', `KEY_FICHA = '${idPostulante}'`);
-    let tipoExcution = !existRegister ? 'I' : 'U';
+    let tipoExcution = !existRegister.length ? 'I' : 'U';
+    console.log(existRegister);
     console.log(tipoExcution);
     console.log(cadenaFichaEmpleado);
     await actionBDController.execQuery(`EXEC SP_CRUD_FICHA_EMPLEADO(${tipoExcution},${cadenaFichaEmpleado})`);
