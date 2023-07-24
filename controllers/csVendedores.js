@@ -52,7 +52,7 @@ export const onRegisterPostulante = async (req, res) => {
     expLaboralList.filter((el) => {
         actionBDController.execQuery(`CALL SP_CRUD_EXP_LABORAL_FICHA_EMPLEADO(${tipoExcution},'${idPostulante}','${el.empresa}','${el.puesto}','${el.desde}','${el.culmino}','${el.culmino}')`);
     });
-
+/*
     forAcademicaList.filter((fa) => {
         actionBDController.execQuery(`CALL SP_CRUD_FORM_ACADEMICA(${tipoExcution},'${idPostulante}',${fa.tipo},'${fa.ctrEstudio}','${fa.carrera}','${fa.estado}')`);
     });
@@ -62,7 +62,7 @@ export const onRegisterPostulante = async (req, res) => {
     });
 
     await actionBDController.execQuery(`CALL SP_CRUD_DATOS_SALUD_ANTECEDENTES(${tipoExcution},${saludAntecedentes})`);
-
+*/
 
     res.json(prop.success.default);
 }
