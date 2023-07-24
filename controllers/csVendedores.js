@@ -10,7 +10,6 @@ export const onRegister = async (req, res) => {
 export const onRegisterPostulante = async (req, res) => {
     let dataPostulante = ((req || {}).body || [])[0] || {};
     let idPostulante = (dataPostulante || {}).id;
-    console.log(dataPostulante);
     let datosPersonales = (dataPostulante || {}).datos_personales || {};
     let expLaboralList = (dataPostulante || {}).experiencia_laboral || [];
     let forAcademicaList = (dataPostulante || {}).formacion_academica || [];
@@ -47,23 +46,23 @@ export const onRegisterPostulante = async (req, res) => {
     console.log(existRegister);
     console.log(tipoExcution);
     console.log(cadenaFichaEmpleado);
-    console.log(`CALL SP_CRUD_FICHA_EMPLEADO('${tipoExcution}',${cadenaFichaEmpleado})`);
+
     await actionBDController.execQuery(`CALL SP_CRUD_FICHA_EMPLEADO('${tipoExcution}',${cadenaFichaEmpleado})`);
-/*
+
     expLaboralList.filter((el) => {
-        actionBDController.execQuery(`EXEC SP_CRUD_EXP_LABORAL_FICHA_EMPLEADO(${tipoExcution},'${idPostulante}','${el.empresa}','${el.puesto}','${el.desde}','${el.culmino}','${el.culmino}')`);
+        actionBDController.execQuery(`CALL SP_CRUD_EXP_LABORAL_FICHA_EMPLEADO(${tipoExcution},'${idPostulante}','${el.empresa}','${el.puesto}','${el.desde}','${el.culmino}','${el.culmino}')`);
     });
 
     forAcademicaList.filter((fa) => {
-        actionBDController.execQuery(`EXEC SP_CRUD_FORM_ACADEMICA(${tipoExcution},'${idPostulante}',V_TIPO_ESTUDIO VARCHAR(10),'${fa.ctrEstudio}','${fa.carrera}','${fa.estado}')`);
+        actionBDController.execQuery(`CALL SP_CRUD_FORM_ACADEMICA(${tipoExcution},'${idPostulante}',${fa.tipo},'${fa.ctrEstudio}','${fa.carrera}','${fa.estado}')`);
     });
 
     derHabienteList.filter((dh) => {
-        actionBDController.execQuery(`EXEC SP_CRUD_DATOS_HABIENTES(${tipoExcution},'${idPostulante}',${dh.nombres},${dh.parentesco},${dh.edad},${dh.sexo},${dh.tipodoc},${dh.nrodoc},V_FECH_NAC VARCHAR(20),V_OCUPACION VARCHAR(300))`);
+        actionBDController.execQuery(`CALL SP_CRUD_DATOS_HABIENTES(${tipoExcution},'${idPostulante}',${dh.nombres},${dh.parentesco},${dh.edad},${dh.sexo},${dh.tipodoc},${dh.nrodoc},${dh.fchnac},${dh.ocupacion})`);
     });
 
-    await actionBDController.execQuery(`EXEC SP_CRUD_DATOS_SALUD_ANTECEDENTES(${tipoExcution},${saludAntecedentes})`);
-*/
+    await actionBDController.execQuery(`CALL SP_CRUD_DATOS_SALUD_ANTECEDENTES(${tipoExcution},${saludAntecedentes})`);
+
 
     res.json(prop.success.default);
 }
