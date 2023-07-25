@@ -49,8 +49,8 @@ export const onRegisterPostulante = async (req, res) => {
     if (expLaboralList.length) {
         let exist = await actionBDController.verificationRegister('TB_EXP_LABORAL_FICHA_EMPLEADO', `KEY_FICHA = '${idPostulante}'`);
         console.log(exist);
-        if (exist) {
-            await actionBDController.execQuery(`DELETE FROM TB_EXP_LABORAL_FICHA_EMPLEADO WHERE KEY_FICHA = '${KEY_FICHA}'`);
+        if (exist.length) {
+            await actionBDController.execQuery(`DELETE FROM TB_EXP_LABORAL_FICHA_EMPLEADO WHERE KEY_FICHA = '${idPostulante}'`);
         }
     }
 
