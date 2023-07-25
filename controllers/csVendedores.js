@@ -43,12 +43,12 @@ export const onRegisterPostulante = async (req, res) => {
 
     let existRegister = await actionBDController.verificationRegister('TB_FICHA_EMPLEADO', `KEY_FICHA = '${idPostulante}'`);
     let tipoExcution = !existRegister.length ? 'I' : 'U';
-    console.log(expLaboralList);
 
     await actionBDController.execQuery(`CALL SP_CRUD_FICHA_EMPLEADO('${tipoExcution}',${cadenaFichaEmpleado})`);
 
     if (expLaboralList.length) {
         let exist = await actionBDController.verificationRegister('TB_EXP_LABORAL_FICHA_EMPLEADO', `KEY_FICHA = '${idPostulante}'`);
+        console.log(exist);
         if (exist) {
             await actionBDController.execQuery(`DELETE FROM TB_EXP_LABORAL_FICHA_EMPLEADO WHERE KEY_FICHA = '${KEY_FICHA}'`);
         }
