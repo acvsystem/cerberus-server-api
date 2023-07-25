@@ -77,7 +77,7 @@ export const onRegisterPostulante = async (req, res) => {
         await actionBDController.execQuery(`CALL SP_CRUD_DATOS_HABIENTES('I','${idPostulante}','${dh.nombres}','${dh.parentesco}','${dh.edad}','${dh.sexo}','${dh.tipodoc}','${dh.nrodoc}','${dh.fchnac}','${dh.ocupacion}')`);
     });
 
-
+    console.log(datosSaludList);
     if (datosSaludList.length) {
         let existDSA = await actionBDController.verificationRegister('TB_DATOS_SALUD_ANTECEDENTES', `KEY_FICHA = '${idPostulante}'`);
         console.log(`CALL SP_CRUD_DATOS_SALUD_ANTECEDENTES(${(existDSA.length) ? 'U' : 'I'},${saludAntecedentes})`);
