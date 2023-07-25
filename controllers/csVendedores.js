@@ -33,13 +33,13 @@ export const onRegisterPostulante = async (req, res) => {
     '${(datosPersonales || {}).numero_emergencia}'`;
 
     let saludAntecedentes = `'${idPostulante}',
-    ${derHabienteList.alergias},
-    ${derHabienteList.enfermedad},
-    ${derHabienteList.medicamento},
-    ${derHabienteList.grupo_sanguineo},
-    ${derHabienteList.antecedentes_penales},
-    ${derHabienteList.antecedentes_judiciales},
-    ${derHabienteList.antecedentes_penales}`;
+    '${derHabienteList.alergias}',
+    '${derHabienteList.enfermedad}',
+    '${derHabienteList.medicamento}',
+    '${derHabienteList.grupo_sanguineo}',
+    '${derHabienteList.antecedentes_penales}',
+    '${derHabienteList.antecedentes_judiciales}',
+    '${derHabienteList.antecedentes_penales}'`;
 
     let existRegister = await actionBDController.verificationRegister('TB_FICHA_EMPLEADO', `KEY_FICHA = '${idPostulante}'`);
     let tipoExcution = !existRegister.length ? 'I' : 'U';
