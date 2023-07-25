@@ -46,28 +46,22 @@ export const onRegisterPostulante = async (req, res) => {
 
     await actionBDController.execQuery(`CALL SP_CRUD_FICHA_EMPLEADO('${tipoExcution}',${cadenaFichaEmpleado})`);
 
-    if (expLaboralList.length) {
-        let exist = await actionBDController.verificationRegister('TB_EXP_LABORAL_FICHA_EMPLEADO', `KEY_FICHA = '${idPostulante}'`);
+    let existLFE = await actionBDController.verificationRegister('TB_EXP_LABORAL_FICHA_EMPLEADO', `KEY_FICHA = '${idPostulante}'`);
 
-        if (exist.length) {
-            await actionBDController.execQuery(`DELETE FROM TB_EXP_LABORAL_FICHA_EMPLEADO WHERE KEY_FICHA = '${idPostulante}'`);
-        }
+    if (existLFE.length) {
+        await actionBDController.execQuery(`DELETE FROM TB_EXP_LABORAL_FICHA_EMPLEADO WHERE KEY_FICHA = '${idPostulante}'`);
     }
 
-    if (forAcademicaList.length) {
-        let exist = await actionBDController.verificationRegister('TB_FORM_ACADEMICA', `KEY_FICHA = '${idPostulante}'`);
+    let existFA = await actionBDController.verificationRegister('TB_FORM_ACADEMICA', `KEY_FICHA = '${idPostulante}'`);
 
-        if (exist.length) {
-            await actionBDController.execQuery(`DELETE FROM TB_FORM_ACADEMICA WHERE KEY_FICHA = '${idPostulante}'`);
-        }
+    if (existFA.length) {
+        await actionBDController.execQuery(`DELETE FROM TB_FORM_ACADEMICA WHERE KEY_FICHA = '${idPostulante}'`);
     }
 
-    if (derHabienteList.length) {
-        let exist = await actionBDController.verificationRegister('TB_DATOS_HABIENTES', `KEY_FICHA = '${idPostulante}'`);
+    let existDH = await actionBDController.verificationRegister('TB_DATOS_HABIENTES', `KEY_FICHA = '${idPostulante}'`);
 
-        if (exist.length) {
-            await actionBDController.execQuery(`DELETE FROM TB_DATOS_HABIENTES WHERE KEY_FICHA = '${idPostulante}'`);
-        }
+    if (existDH.length) {
+        await actionBDController.execQuery(`DELETE FROM TB_DATOS_HABIENTES WHERE KEY_FICHA = '${idPostulante}'`);
     }
 
     (expLaboralList || []).filter(async (el) => {
