@@ -14,7 +14,8 @@ export const onRegisterPostulante = async (req, res) => {
     let expLaboralList = (dataPostulante || {}).experiencia_laboral || [];
     let forAcademicaList = (dataPostulante || {}).formacion_academica || [];
     let derHabienteList = (dataPostulante || {}).derecho_habiente || [];
-
+    let datosSaludList = (dataPostulante || {}).datos_salud || [];
+    
     let cadenaFichaEmpleado = `'${idPostulante}','${(datosPersonales || {}).ap_paterno}',
     '${(datosPersonales || {}).ap_materno}',
     '${(datosPersonales || {}).nombres}',
@@ -33,13 +34,13 @@ export const onRegisterPostulante = async (req, res) => {
     '${(datosPersonales || {}).numero_emergencia}'`;
 
     let saludAntecedentes = `'${idPostulante}',
-    '${derHabienteList.alergias}',
-    '${derHabienteList.enfermedad}',
-    '${derHabienteList.medicamento}',
-    '${derHabienteList.grupo_sanguineo}',
-    '${derHabienteList.antecedentes_penales}',
-    '${derHabienteList.antecedentes_judiciales}',
-    '${derHabienteList.antecedentes_penales}'`;
+    '${datosSaludList.alergias}',
+    '${datosSaludList.enfermedad}',
+    '${datosSaludList.medicamento}',
+    '${datosSaludList.grupo_sanguineo}',
+    '${datosSaludList.antecedentes_penales}',
+    '${datosSaludList.antecedentes_judiciales}',
+    '${datosSaludList.antecedentes_penales}'`;
 
     let existRegister = await actionBDController.verificationRegister('TB_FICHA_EMPLEADO', `KEY_FICHA = '${idPostulante}'`);
     let tipoExcution = !existRegister.length ? 'I' : 'U';
@@ -77,7 +78,7 @@ export const onRegisterPostulante = async (req, res) => {
     });
 
 
-    if (derHabienteList.length) {
+    if (datosSaludList.length) {
         let existDSA = await actionBDController.verificationRegister('TB_DATOS_SALUD_ANTECEDENTES', `KEY_FICHA = '${idPostulante}'`);
         console.log(`CALL SP_CRUD_DATOS_SALUD_ANTECEDENTES(${(existDSA.length) ? 'U' : 'I'},${saludAntecedentes})`);
         await actionBDController.execQuery(`CALL SP_CRUD_DATOS_SALUD_ANTECEDENTES(${(existDSA.length) ? 'U' : 'I'},${saludAntecedentes})`);
