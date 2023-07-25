@@ -48,20 +48,29 @@ export const onRegisterPostulante = async (req, res) => {
 
     if (expLaboralList.length) {
         let exist = await actionBDController.verificationRegister('TB_EXP_LABORAL_FICHA_EMPLEADO', `KEY_FICHA = '${idPostulante}'`);
-        console.log(exist);
+
         if (exist.length) {
             await actionBDController.execQuery(`DELETE FROM TB_EXP_LABORAL_FICHA_EMPLEADO WHERE KEY_FICHA = '${idPostulante}'`);
+        }
+    }
+
+    if (forAcademicaList.length) {
+        let exist = await actionBDController.verificationRegister('TB_FORM_ACADEMICA', `KEY_FICHA = '${idPostulante}'`);
+
+        if (exist.length) {
+            await actionBDController.execQuery(`DELETE FROM TB_FORM_ACADEMICA WHERE KEY_FICHA = '${idPostulante}'`);
         }
     }
 
     (expLaboralList || []).filter(async (el) => {
         await actionBDController.execQuery(`CALL SP_CRUD_EXP_LABORAL_FICHA_EMPLEADO('I','${idPostulante}','${el.empresa}','${el.puesto}','${el.desde}','${el.culmino}','${el.culmino}')`);
     });
+
+    (forAcademicaList || []).filter(async (fa) => {
+        await actionBDController.execQuery(`CALL SP_CRUD_FORM_ACADEMICA('I','${idPostulante}',${fa.tipo},'${fa.ctrEstudio}','${fa.carrera}','${fa.estado}')`);
+    });
+
     /*
-        forAcademicaList.filter((fa) => {
-            actionBDController.execQuery(`CALL SP_CRUD_FORM_ACADEMICA(${tipoExcution},'${idPostulante}',${fa.tipo},'${fa.ctrEstudio}','${fa.carrera}','${fa.estado}')`);
-        });
-    
         derHabienteList.filter((dh) => {
             actionBDController.execQuery(`CALL SP_CRUD_DATOS_HABIENTES(${tipoExcution},'${idPostulante}',${dh.nombres},${dh.parentesco},${dh.edad},${dh.sexo},${dh.tipodoc},${dh.nrodoc},${dh.fchnac},${dh.ocupacion})`);
         });
