@@ -67,7 +67,7 @@ export const onRegisterPostulante = async (req, res) => {
     });
 
     (forAcademicaList || []).filter(async (fa) => {
-        await actionBDController.execQuery(`CALL SP_CRUD_FORM_ACADEMICA('I','${idPostulante}',${fa.tipo},'${fa.ctrEstudio}','${fa.carrera}','${fa.estado}')`);
+        await actionBDController.execQuery(`CALL SP_CRUD_FORM_ACADEMICA('I','${idPostulante}','${fa.tipo}','${fa.ctrEstudio}','${fa.carrera}','${fa.estado}')`);
     });
 
     /*
