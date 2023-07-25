@@ -76,9 +76,9 @@ export const onRegisterPostulante = async (req, res) => {
         await actionBDController.execQuery(`CALL SP_CRUD_DATOS_HABIENTES('I','${idPostulante}','${dh.nombres}','${dh.parentesco}','${dh.edad}','${dh.sexo}','${dh.tipodoc}','${dh.nrodoc}','${dh.fchnac}','${dh.ocupacion}')`);
     });
 
-    /*
+    if (derHabienteList.length) {
         await actionBDController.execQuery(`CALL SP_CRUD_DATOS_SALUD_ANTECEDENTES(${tipoExcution},${saludAntecedentes})`);
-    */
+    }
 
     res.json(prop.success.default);
 }
