@@ -8,6 +8,7 @@ import CryptoJS from 'crypto-js';
 import { prop } from '../keys.js';
 
 router.post('/login', Login);
+router.post('/create/user', CreateNewUser);
 
 router.get('/create/hash/agente', (req, res) => {
 
