@@ -43,14 +43,11 @@ export const onRegisterPostulante = async (req, res) => {
 
     let existRegister = await actionBDController.verificationRegister('TB_FICHA_EMPLEADO', `KEY_FICHA = '${idPostulante}'`);
     let tipoExcution = !existRegister.length ? 'I' : 'U';
-    console.log(existRegister);
-    console.log(tipoExcution);
-    console.log(cadenaFichaEmpleado);
+    console.log(expLaboralList);
 
     await actionBDController.execQuery(`CALL SP_CRUD_FICHA_EMPLEADO('${tipoExcution}',${cadenaFichaEmpleado})`);
     
-    expLaboralList.filter(async (el) => {
-        console.log(el);
+    (expLaboralList || []).filter(async (el) => {
         await  actionBDController.execQuery(`CALL SP_CRUD_EXP_LABORAL_FICHA_EMPLEADO('${tipoExcution}','${idPostulante}','${el.empresa}','${el.puesto}','${el.desde}','${el.culmino}','${el.culmino}')`);
     });
 /*
