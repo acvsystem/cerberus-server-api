@@ -48,9 +48,10 @@ export const onRegisterPostulante = async (req, res) => {
     console.log(cadenaFichaEmpleado);
 
     await actionBDController.execQuery(`CALL SP_CRUD_FICHA_EMPLEADO('${tipoExcution}',${cadenaFichaEmpleado})`);
-
-    expLaboralList.filter((el) => {
-        actionBDController.execQuery(`CALL SP_CRUD_EXP_LABORAL_FICHA_EMPLEADO(${tipoExcution},'${idPostulante}','${el.empresa}','${el.puesto}','${el.desde}','${el.culmino}','${el.culmino}')`);
+    
+    expLaboralList.filter(async (el) => {
+        console.log(el);
+        await  actionBDController.execQuery(`CALL SP_CRUD_EXP_LABORAL_FICHA_EMPLEADO('${tipoExcution}','${idPostulante}','${el.empresa}','${el.puesto}','${el.desde}','${el.culmino}','${el.culmino}')`);
     });
 /*
     forAcademicaList.filter((fa) => {
