@@ -37,7 +37,7 @@ export const onPostulanteList = async (req, res) => {
                     },
                     "experiencia_laboral": [],
                     "formacion_academica": [],
-                    "derecho_habiente" : [],
+                    "derecho_habiente": [],
                     "datos_salud": {
                         "alergias": datosSaludList[0].ALERGIAS,
                         "enfermedad": datosSaludList[0].ENFERMEDAD,
@@ -49,54 +49,53 @@ export const onPostulanteList = async (req, res) => {
                     }
                 }
             );
-        });
-    });
 
-
-    await (forAcademicaList || []).filter((fa) => {
-        return new Promise((resolve, reject) => {
-            let index = dataResponse.findIndex((dt) => dt.id == (fa || {}).KEY_FICHA);
-            dataResponse[index].experiencia_laboral.push(
-                {
-                    "empresa": (fa || {}).NOMBRE_EMPRESA,
-                    "puesto": (fa || {}).PUESTO,
-                    "desde": (fa || {}).FECH_INICIO,
-                    "culmino": (fa || {}).FECH_FIN,
-                    "motivo": (fa || {}).MOTIVO_CESE
+            await(forAcademicaList || []).filter((fa) => {
+                if (fa.KEY_FICHA == (dp || {}).KEY_FICHA) {
+                    let index = dataResponse.findIndex((dt) => dt.id == (fa || {}).KEY_FICHA);
+                    dataResponse[index].experiencia_laboral.push(
+                        {
+                            "empresa": (fa || {}).NOMBRE_EMPRESA,
+                            "puesto": (fa || {}).PUESTO,
+                            "desde": (fa || {}).FECH_INICIO,
+                            "culmino": (fa || {}).FECH_FIN,
+                            "motivo": (fa || {}).MOTIVO_CESE
+                        }
+                    );
                 }
-            );
-        });
-    });
+            });
 
-    await (expLaboralList || []).filter((ell) => {
-        return new Promise((resolve, reject) => {
-            let index = dataResponse.findIndex((dt) => dt.id == (ell || {}).KEY_FICHA);
-            dataResponse[index].formacion_academica.push(
-                {
-                    "ctrEstudio": (ell || {}).CENTRO_ESTUDIO,
-                    "carrera": (ell || {}).CARRERA,
-                    "estado": (ell || {}).ESTADO,
-                    "tipo": (ell || {}).TIPO_ESTUDIO
+            await(expLaboralList || []).filter((ell) => {
+                if (fa.KEY_FICHA == (dp || {}).KEY_FICHA) {
+                    let index = dataResponse.findIndex((dt) => dt.id == (ell || {}).KEY_FICHA);
+                    dataResponse[index].formacion_academica.push(
+                        {
+                            "ctrEstudio": (ell || {}).CENTRO_ESTUDIO,
+                            "carrera": (ell || {}).CARRERA,
+                            "estado": (ell || {}).ESTADO,
+                            "tipo": (ell || {}).TIPO_ESTUDIO
+                        }
+                    );
                 }
-            );
-        });
-    });
+            });
 
-    await (derHabienteList || []).filter((da) => {
-        return new Promise((resolve, reject) => {
-            let index = dataResponse.findIndex((dt) => dt.id == (da || {}).KEY_FICHA);
-            dataResponse[index].derecho_habiente.push(
-                {
-                    "nombres": (da || {}).AP_NOM,
-                    "parentesco": (da || {}).PARENTESCO,
-                    "edad": (da || {}).EDAD,
-                    "sexo": (da || {}).SEXO,
-                    "tipodoc": (da || {}).TIPO_DOCUMENTO,
-                    "nrodoc": (da || {}).NUM_DOCUMENTO,
-                    "fchnac": (da || {}).FECH_NAC,
-                    "ocupacion": (da || {}).OCUPACION
+            await(derHabienteList || []).filter((da) => {
+                if (fa.KEY_FICHA == (dp || {}).KEY_FICHA) {
+                    let index = dataResponse.findIndex((dt) => dt.id == (da || {}).KEY_FICHA);
+                    dataResponse[index].derecho_habiente.push(
+                        {
+                            "nombres": (da || {}).AP_NOM,
+                            "parentesco": (da || {}).PARENTESCO,
+                            "edad": (da || {}).EDAD,
+                            "sexo": (da || {}).SEXO,
+                            "tipodoc": (da || {}).TIPO_DOCUMENTO,
+                            "nrodoc": (da || {}).NUM_DOCUMENTO,
+                            "fchnac": (da || {}).FECH_NAC,
+                            "ocupacion": (da || {}).OCUPACION
+                        }
+                    );
                 }
-            );
+            });
         });
     });
 
