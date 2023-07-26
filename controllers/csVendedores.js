@@ -53,7 +53,7 @@ export const onPostulanteList = async (req, res) => {
             (forAcademicaList || []).filter((fa) => {
                 if (fa.KEY_FICHA == (dp || {}).KEY_FICHA) {
                     let index = dataResponse.findIndex((dt) => dt.id == (fa || {}).KEY_FICHA);
-                    dataResponse[index].experiencia_laboral.push(
+                    dataResponse[index].formacion_academica.push(
                         {
                             "ctrEstudio": (fa || {}).CENTRO_ESTUDIO,
                             "carrera": (fa || {}).CARRERA,
@@ -67,7 +67,7 @@ export const onPostulanteList = async (req, res) => {
             (expLaboralList || []).filter((ell) => {
                 if (ell.KEY_FICHA == (dp || {}).KEY_FICHA) {
                     let index = dataResponse.findIndex((dt) => dt.id == (ell || {}).KEY_FICHA);
-                    dataResponse[index].formacion_academica.push(
+                    dataResponse[index].experiencia_laboral.push(
                         {
                             "empresa": (ell || {}).NOMBRE_EMPRESA,
                             "puesto": (ell || {}).PUESTO,
