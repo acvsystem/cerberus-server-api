@@ -10,13 +10,57 @@ export const onPostulanteList = async (req, res) => {
     let [derHabienteList] = await pool.query(`SELECT * FROM TB_DATOS_HABIENTES;`);
     let [datosSaludList] = await pool.query(`SELECT * FROM TB_DATOS_SALUD_ANTECEDENTES;`);
 
-    console.log(datosPersonales);
-    console.log(expLaboralList);
-    console.log(forAcademicaList);
-    console.log(derHabienteList);
-    console.log(datosSaludList);
+    let dataResponse = [];
 
-    let dataResponse = [
+    await (datosPersonales || []).filter((dp) => {
+        return new Promise((resolve, reject) => {
+            dataResponse.push(
+                {
+                    "id": (dp || {}).KEY_FICHA,
+                    "datos_personales": {
+                        "nombres": (dp || {}).FC_NOMBRES,
+                        "ap_paterno": (dp || {}).AP_PATERNO,
+                        "ap_materno": (dp || {}).AP_MATERNO,
+                        "nro_celular": (dp || {}).FC_CELULAR,
+                        "fec_nacimiento": (dp || {}).FECH_NAC,
+                        "pais_nacimiento": (dp || {}).PAIS_NACIMIENTO,
+                        "tipo_documento": (dp || {}).TIPO_DOCUMENTO,
+                        "num_documento": (dp || {}).NUM_DOCUMENTO,
+                        "sexo": (dp || {}).SEXO,
+                        "estado_civil": (dp || {}).ESTADO_CIVIL,
+                        "direccion": (dp || {}).FC_DOMICILIO,
+                        "referencia": (dp || {}).REFERENCIA,
+                        "email": (dp || {}).CORREO_ELECTRONICO,
+                        "tipo_pension": (dp || {}).REGIMEN_PENSIONARIO,
+                        "contacto_emergengia": (dp || {}).NOMBRE_CONTACT_EMERGENCIA,
+                        "numero_emergencia": (dp || {}).NUM_CONTACT_EMERGENCIA
+                    },
+                    "experiencia_laboral": []
+                }
+            );
+        });
+    });
+
+    console.log(datosPersonales);
+   /* expLaboralList.filter((el) => {
+        return new Promise((resolve, reject) => {
+            dataResponse.push(
+                {
+                    "experiencia_laboral": {
+                        "empresa",
+                        "puesto",
+                        "desde",
+                        "culmino",
+                        "culmino"
+                    },
+                }
+            );
+        });
+    });
+*/
+
+
+    dataResponse = [
         {
             "id": "47162396723232",
             "datos_personales": {
