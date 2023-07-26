@@ -41,7 +41,7 @@ export const onPostulanteList = async (req, res) => {
         });
     });
 
-    console.log(datosPersonales);
+    console.log(dataResponse);
    /* expLaboralList.filter((el) => {
         return new Promise((resolve, reject) => {
             dataResponse.push(
