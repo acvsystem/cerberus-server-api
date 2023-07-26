@@ -53,15 +53,15 @@ export const onPostulanteList = async (req, res) => {
             (forAcademicaList || []).filter((fa) => {
                 if (fa.KEY_FICHA == (dp || {}).KEY_FICHA) {
                     let index = dataResponse.findIndex((dt) => dt.id == (fa || {}).KEY_FICHA);
-                    dataResponse[index].experiencia_laboral.push(
-                        {
-                            "empresa": (fa || {}).NOMBRE_EMPRESA,
-                            "puesto": (fa || {}).PUESTO,
-                            "desde": (fa || {}).FECH_INICIO,
-                            "culmino": (fa || {}).FECH_FIN,
-                            "motivo": (fa || {}).MOTIVO_CESE
-                        }
-                    );
+                    let data = [];
+                    data.push({
+                        "empresa": (fa || {}).NOMBRE_EMPRESA,
+                        "puesto": (fa || {}).PUESTO,
+                        "desde": (fa || {}).FECH_INICIO,
+                        "culmino": (fa || {}).FECH_FIN,
+                        "motivo": (fa || {}).MOTIVO_CESE
+                    });
+                    dataResponse[index].experiencia_laboral = data;
                 }
             });
 
