@@ -53,30 +53,30 @@ export const onPostulanteList = async (req, res) => {
     });
 
 
-    await (forAcademicaList || []).filter((el) => {
+    await (forAcademicaList || []).filter((fa) => {
         return new Promise((resolve, reject) => {
-            let index = dataResponse.findIndex((dt) => dt.id == (el || {}).KEY_FICHA);
+            let index = dataResponse.findIndex((dt) => dt.id == (fa || {}).KEY_FICHA);
             dataResponse[index].experiencia_laboral.push(
                 {
-                    "empresa": (el || {}).NOMBRE_EMPRESA,
-                    "puesto": (el || {}).PUESTO,
-                    "desde": (el || {}).FECH_INICIO,
-                    "culmino": (el || {}).FECH_FIN,
-                    "motivo": (el || {}).MOTIVO_CESE
+                    "empresa": (fa || {}).NOMBRE_EMPRESA,
+                    "puesto": (fa || {}).PUESTO,
+                    "desde": (fa || {}).FECH_INICIO,
+                    "culmino": (fa || {}).FECH_FIN,
+                    "motivo": (fa || {}).MOTIVO_CESE
                 }
             );
         });
     });
 
-    await (expLaboralList || []).filter((el) => {
+    await (expLaboralList || []).filter((ell) => {
         return new Promise((resolve, reject) => {
-            let index = dataResponse.findIndex((dt) => dt.id == (el || {}).KEY_FICHA);
+            let index = dataResponse.findIndex((dt) => dt.id == (ell || {}).KEY_FICHA);
             dataResponse[index].formacion_academica.push(
                 {
-                    "ctrEstudio": (el || {}).CENTRO_ESTUDIO,
-                    "carrera": (el || {}).CARRERA,
-                    "estado": (el || {}).ESTADO,
-                    "tipo": (el || {}).TIPO_ESTUDIO
+                    "ctrEstudio": (ell || {}).CENTRO_ESTUDIO,
+                    "carrera": (ell || {}).CARRERA,
+                    "estado": (ell || {}).ESTADO,
+                    "tipo": (ell || {}).TIPO_ESTUDIO
                 }
             );
         });
@@ -84,7 +84,7 @@ export const onPostulanteList = async (req, res) => {
 
     await (derHabienteList || []).filter((da) => {
         return new Promise((resolve, reject) => {
-            let index = dataResponse.findIndex((dt) => dt.id == (el || {}).KEY_FICHA);
+            let index = dataResponse.findIndex((dt) => dt.id == (da || {}).KEY_FICHA);
             dataResponse[index].derecho_habiente.push(
                 {
                     "nombres": (da || {}).AP_NOM,
