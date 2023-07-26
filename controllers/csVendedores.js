@@ -5,7 +5,7 @@ import actionBDController from './csActionOnBD.js';
 export const onPostulanteList = async (req, res) => {
     let datosPersonales = await actionBDController.execQuery(`SELECT * FROM TB_FICHA_EMPLEADO;`);
     let expLaboralList = await actionBDController.execQuery(`SELECT * FROM TB_EXP_LABORAL_FICHA_EMPLEADO;`);
-    let forAcademicaList = await actionBDController.execQuery(`SELECT * FROM TB_FORM_ACADEMIA;`);
+    let forAcademicaList = await actionBDController.execQuery(`SELECT * FROM TB_FORM_ACADEMICA;`);
     let derHabienteList = await actionBDController.execQuery(`SELECT * FROM TB_DATOS_HABIENTES;`);
     let datosSaludList = await actionBDController.execQuery(`SELECT * FROM TB_DATOS_SALUD_ANTECEDENTES;`);
 
