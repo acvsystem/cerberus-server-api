@@ -51,16 +51,14 @@ export const onPostulanteList = async (req, res) => {
             );
 
             (forAcademicaList || []).filter((fa) => {
-                console.log(fa);
                 if (fa.KEY_FICHA == (dp || {}).KEY_FICHA) {
                     let index = dataResponse.findIndex((dt) => dt.id == (fa || {}).KEY_FICHA);
                     dataResponse[index].experiencia_laboral.push(
                         {
-                            "empresa": (fa || {}).NOMBRE_EMPRESA,
-                            "puesto": (fa || {}).PUESTO,
-                            "desde": (fa || {}).FECH_INICIO,
-                            "culmino": (fa || {}).FECH_FIN,
-                            "motivo": (fa || {}).MOTIVO_CESE
+                            "ctrEstudio": (fa || {}).CENTRO_ESTUDIO,
+                            "carrera": (fa || {}).CARRERA,
+                            "estado": (fa || {}).ESTADO,
+                            "tipo": (fa || {}).TIPO_ESTUDIO
                         }
                     );
                 }
@@ -71,10 +69,11 @@ export const onPostulanteList = async (req, res) => {
                     let index = dataResponse.findIndex((dt) => dt.id == (ell || {}).KEY_FICHA);
                     dataResponse[index].formacion_academica.push(
                         {
-                            "ctrEstudio": (ell || {}).CENTRO_ESTUDIO,
-                            "carrera": (ell || {}).CARRERA,
-                            "estado": (ell || {}).ESTADO,
-                            "tipo": (ell || {}).TIPO_ESTUDIO
+                            "empresa": (ell || {}).NOMBRE_EMPRESA,
+                            "puesto": (ell || {}).PUESTO,
+                            "desde": (ell || {}).FECH_INICIO,
+                            "culmino": (ell || {}).FECH_FIN,
+                            "motivo": (ell || {}).MOTIVO_CESE
                         }
                     );
                 }
