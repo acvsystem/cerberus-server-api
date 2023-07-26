@@ -35,17 +35,27 @@ export const onPostulanteList = async (req, res) => {
                         "contacto_emergengia": (dp || {}).NOMBRE_CONTACT_EMERGENCIA,
                         "numero_emergencia": (dp || {}).NUM_CONTACT_EMERGENCIA
                     },
-                    "experiencia_laboral": []
+                    "experiencia_laboral": [],
+                    "formacion_academica": [],
+                    "derecho_habiente" : [],
+                    "datos_salud": {
+                        "alergias": datosSaludList[0].ALERGIAS,
+                        "enfermedad": datosSaludList[0].ENFERMEDAD,
+                        "medicamento": datosSaludList[0].MEDICAMENTOS,
+                        "grupo_sanguineo": datosSaludList[0].GRUPO_SANGUINEO,
+                        "antecedentes_policiales": datosSaludList[0].ANT_POLICIALES,
+                        "antecedentes_judiciales": datosSaludList[0].ANT_JUDICIALES,
+                        "antecedentes_penales": datosSaludList[0].ANT_PENALES
+                    }
                 }
             );
         });
     });
 
 
-    await expLaboralList.filter((el) => {
+    await (forAcademicaList || []).filter((el) => {
         return new Promise((resolve, reject) => {
             let index = dataResponse.findIndex((dt) => dt.id == (el || {}).KEY_FICHA);
-            console.log((el || {}).KEY_FICHA);
             dataResponse[index].experiencia_laboral.push(
                 {
                     "empresa": (el || {}).NOMBRE_EMPRESA,
@@ -58,64 +68,40 @@ export const onPostulanteList = async (req, res) => {
         });
     });
 
+    await (expLaboralList || []).filter((el) => {
+        return new Promise((resolve, reject) => {
+            let index = dataResponse.findIndex((dt) => dt.id == (el || {}).KEY_FICHA);
+            dataResponse[index].formacion_academica.push(
+                {
+                    "ctrEstudio": (el || {}).CENTRO_ESTUDIO,
+                    "carrera": (el || {}).CARRERA,
+                    "estado": (el || {}).ESTADO,
+                    "tipo": (el || {}).TIPO_ESTUDIO
+                }
+            );
+        });
+    });
+
+    await (derHabienteList || []).filter((da) => {
+        return new Promise((resolve, reject) => {
+            let index = dataResponse.findIndex((dt) => dt.id == (el || {}).KEY_FICHA);
+            dataResponse[index].derecho_habiente.push(
+                {
+                    "nombres": (da || {}).AP_NOM,
+                    "parentesco": (da || {}).PARENTESCO,
+                    "edad": (da || {}).EDAD,
+                    "sexo": (da || {}).SEXO,
+                    "tipodoc": (da || {}).TIPO_DOCUMENTO,
+                    "nrodoc": (da || {}).NUM_DOCUMENTO,
+                    "fchnac": (da || {}).FECH_NAC,
+                    "ocupacion": (da || {}).OCUPACION
+                }
+            );
+        });
+    });
+
     console.log(dataResponse);
 
-
-/*
-    dataResponse = [
-        {
-            "id": "47162396723232",
-            "datos_personales": {
-                "nombres": "asdasd",
-                "ap_paterno": "asdadas",
-                "ap_materno": "asdadasd",
-                "nro_celular": "123123",
-                "fec_nacimiento": "2023-07-21",
-                "pais_nacimiento": "Andorra",
-                "tipo_documento": "DNI",
-                "num_documento": "47162396723232",
-                "sexo": "Hombre",
-                "estado_civil": "Solera(o)",
-                "direccion": "222ddddsadasddsfs",
-                "referencia": "zxczxcz",
-                "email": "zxczxczx",
-                "tipo_pension": "Cuento con AFP",
-                "contacto_emergengia": "zxczxczeqweqw",
-                "numero_emergencia": "1213"
-            },
-            "experiencia_laboral": [],
-            "formacion_academica": [
-                {
-                    "ctrEstudio": "asdasd",
-                    "carrera": "asdasd",
-                    "estado": "Completo",
-                    "tipo": "Tecnica"
-                }
-            ],
-            "derecho_habiente": [
-                {
-                    "nombres": "asdasd",
-                    "parentesco": "asdasd",
-                    "edad": "12",
-                    "sexo": "Hombre",
-                    "tipodoc": "DNI",
-                    "nrodoc": "121231231",
-                    "fchnac": "2023-07-11",
-                    "ocupacion": "asdasdasd"
-                }
-            ],
-            "datos_salud": {
-                "alergias": "asdasd",
-                "enfermedad": "asdasdasdasd",
-                "medicamento": "asdasdasd",
-                "grupo_sanguineo": "asdasdasd",
-                "antecedentes_policiales": "Si",
-                "antecedentes_judiciales": "Si",
-                "antecedentes_penales": "Si"
-            }
-        }
-    ];
-*/
     let response = [
         {
             data: dataResponse,
