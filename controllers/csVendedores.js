@@ -41,20 +41,18 @@ export const onPostulanteList = async (req, res) => {
         });
     });
 
-   
+
     await expLaboralList.filter((el) => {
         return new Promise((resolve, reject) => {
             let index = dataResponse.findIndex((dt) => dt.id == (el || {}).KEY_FICHA);
-            console.log(index);
+            console.log((el || {}).KEY_FICHA);
             dataResponse[index].experiencia_laboral.push(
                 {
-                    "experiencia_laboral": {
-                        "empresa": (el || {}).NOMBRE_EMPRESA,
-                        "puesto": (el || {}).PUESTO,
-                        "desde": (el || {}).FECH_INICIO,
-                        "culmino": (el || {}).FECH_FIN,
-                        "motivo": (el || {}).MOTIVO_CESE
-                    },
+                    "empresa": (el || {}).NOMBRE_EMPRESA,
+                    "puesto": (el || {}).PUESTO,
+                    "desde": (el || {}).FECH_INICIO,
+                    "culmino": (el || {}).FECH_FIN,
+                    "motivo": (el || {}).MOTIVO_CESE
                 }
             );
         });
