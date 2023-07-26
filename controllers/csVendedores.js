@@ -50,7 +50,7 @@ export const onPostulanteList = async (req, res) => {
                 }
             );
 
-            await(forAcademicaList || []).filter((fa) => {
+            (forAcademicaList || []).filter((fa) => {
                 if (fa.KEY_FICHA == (dp || {}).KEY_FICHA) {
                     let index = dataResponse.findIndex((dt) => dt.id == (fa || {}).KEY_FICHA);
                     dataResponse[index].experiencia_laboral.push(
@@ -65,7 +65,7 @@ export const onPostulanteList = async (req, res) => {
                 }
             });
 
-            await(expLaboralList || []).filter((ell) => {
+            (expLaboralList || []).filter((ell) => {
                 if (fa.KEY_FICHA == (dp || {}).KEY_FICHA) {
                     let index = dataResponse.findIndex((dt) => dt.id == (ell || {}).KEY_FICHA);
                     dataResponse[index].formacion_academica.push(
@@ -79,7 +79,7 @@ export const onPostulanteList = async (req, res) => {
                 }
             });
 
-            await(derHabienteList || []).filter((da) => {
+            (derHabienteList || []).filter((da) => {
                 if (fa.KEY_FICHA == (dp || {}).KEY_FICHA) {
                     let index = dataResponse.findIndex((dt) => dt.id == (da || {}).KEY_FICHA);
                     dataResponse[index].derecho_habiente.push(
