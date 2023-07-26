@@ -51,18 +51,18 @@ export const onPostulanteList = async (req, res) => {
             );
 
             (forAcademicaList || []).filter((fa) => {
+                console.log(fa);
                 if (fa.KEY_FICHA == (dp || {}).KEY_FICHA) {
                     let index = dataResponse.findIndex((dt) => dt.id == (fa || {}).KEY_FICHA);
-                    let data = [];
-                    data.push({
-                        "empresa": (fa || {}).NOMBRE_EMPRESA,
-                        "puesto": (fa || {}).PUESTO,
-                        "desde": (fa || {}).FECH_INICIO,
-                        "culmino": (fa || {}).FECH_FIN,
-                        "motivo": (fa || {}).MOTIVO_CESE
-                    });
-                    dataResponse[index].experiencia_laboral = data;
-                    console.log(data);
+                    dataResponse[index].experiencia_laboral.push(
+                        {
+                            "empresa": (fa || {}).NOMBRE_EMPRESA,
+                            "puesto": (fa || {}).PUESTO,
+                            "desde": (fa || {}).FECH_INICIO,
+                            "culmino": (fa || {}).FECH_FIN,
+                            "motivo": (fa || {}).MOTIVO_CESE
+                        }
+                    );
                 }
             });
 
@@ -100,7 +100,7 @@ export const onPostulanteList = async (req, res) => {
         });
     });
 
-
+    console.log(dataResponse);
 
     let response = [
         {
