@@ -2,9 +2,81 @@
 import { prop } from '../const/defaultResponse.js';
 import actionBDController from './csActionOnBD.js';
 
-export const onRegister = async (req, res) => {
-    let objNewRegister = req.body;
-    //console.log(objNewRegister);
+export const onPostulanteList = async (req, res) => {
+    let datosPersonales = await actionBDController.execQuery(`SELECT * FROM TB_FICHA_EMPLEADO;`);
+    let expLaboralList = await actionBDController.execQuery(`SELECT * FROM TB_EXP_LABORAL_FICHA_EMPLEADO;`);
+    let forAcademicaList = await actionBDController.execQuery(`SELECT * FROM TB_FORM_ACADEMIA;`);
+    let derHabienteList = await actionBDController.execQuery(`SELECT * FROM TB_DATOS_HABIENTES;`);
+    let datosSaludList = await actionBDController.execQuery(`SELECT * FROM TB_DATOS_SALUD_ANTECEDENTES;`);
+
+    console.log(datosPersonales);
+    console.log(expLaboralList);
+    console.log(forAcademicaList);
+    console.log(derHabienteList);
+    console.log(datosSaludList);
+
+    let dataResponse = [
+        {
+            "id": "47162396723232",
+            "datos_personales": {
+                "nombres": "asdasd",
+                "ap_paterno": "asdadas",
+                "ap_materno": "asdadasd",
+                "nro_celular": "123123",
+                "fec_nacimiento": "2023-07-21",
+                "pais_nacimiento": "Andorra",
+                "tipo_documento": "DNI",
+                "num_documento": "47162396723232",
+                "sexo": "Hombre",
+                "estado_civil": "Solera(o)",
+                "direccion": "222ddddsadasddsfs",
+                "referencia": "zxczxcz",
+                "email": "zxczxczx",
+                "tipo_pension": "Cuento con AFP",
+                "contacto_emergengia": "zxczxczeqweqw",
+                "numero_emergencia": "1213"
+            },
+            "experiencia_laboral": [],
+            "formacion_academica": [
+                {
+                    "ctrEstudio": "asdasd",
+                    "carrera": "asdasd",
+                    "estado": "Completo",
+                    "tipo": "Tecnica"
+                }
+            ],
+            "derecho_habiente": [
+                {
+                    "nombres": "asdasd",
+                    "parentesco": "asdasd",
+                    "edad": "12",
+                    "sexo": "Hombre",
+                    "tipodoc": "DNI",
+                    "nrodoc": "121231231",
+                    "fchnac": "2023-07-11",
+                    "ocupacion": "asdasdasd"
+                }
+            ],
+            "datos_salud": {
+                "alergias": "asdasd",
+                "enfermedad": "asdasdasdasd",
+                "medicamento": "asdasdasd",
+                "grupo_sanguineo": "asdasdasd",
+                "antecedentes_policiales": "Si",
+                "antecedentes_judiciales": "Si",
+                "antecedentes_penales": "Si"
+            }
+        }
+    ];
+
+    let response = [
+        {
+            data: dataResponse,
+            status: prop.success.default
+        }
+    ];
+
+    res.json(response);
 }
 
 export const onRegisterPostulante = async (req, res) => {
@@ -15,7 +87,7 @@ export const onRegisterPostulante = async (req, res) => {
     let forAcademicaList = (dataPostulante || {}).formacion_academica || [];
     let derHabienteList = (dataPostulante || {}).derecho_habiente || [];
     let datosSaludList = (dataPostulante || {}).datos_salud || [];
-    
+
     let cadenaFichaEmpleado = `'${idPostulante}','${(datosPersonales || {}).ap_paterno}',
     '${(datosPersonales || {}).ap_materno}',
     '${(datosPersonales || {}).nombres}',
@@ -77,7 +149,7 @@ export const onRegisterPostulante = async (req, res) => {
         await actionBDController.execQuery(`CALL SP_CRUD_DATOS_HABIENTES('I','${idPostulante}','${dh.nombres}','${dh.parentesco}','${dh.edad}','${dh.sexo}','${dh.tipodoc}','${dh.nrodoc}','${dh.fchnac}','${dh.ocupacion}')`);
     });
 
-    
+
     if (Object.keys(datosSaludList).length) {
         let existDSA = await actionBDController.verificationRegister('TB_DATOS_SALUD_ANTECEDENTES', `KEY_FICHA = '${idPostulante}'`);
         console.log(`CALL SP_CRUD_DATOS_SALUD_ANTECEDENTES('${(existDSA.length) ? 'U' : 'I'}',${saludAntecedentes})`);
