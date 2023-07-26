@@ -62,6 +62,7 @@ export const onPostulanteList = async (req, res) => {
                         "motivo": (fa || {}).MOTIVO_CESE
                     });
                     dataResponse[index].experiencia_laboral = data;
+                    console.log(data);
                 }
             });
 
@@ -99,7 +100,7 @@ export const onPostulanteList = async (req, res) => {
         });
     });
 
-    console.log(dataResponse);
+
 
     let response = [
         {
