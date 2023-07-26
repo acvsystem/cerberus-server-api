@@ -61,7 +61,7 @@ export const onPostulanteList = async (req, res) => {
     console.log(dataResponse);
 
 
-
+/*
     dataResponse = [
         {
             "id": "47162396723232",
@@ -115,7 +115,7 @@ export const onPostulanteList = async (req, res) => {
             }
         }
     ];
-
+*/
     let response = [
         {
             data: dataResponse,
