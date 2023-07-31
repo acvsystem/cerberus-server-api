@@ -5,7 +5,7 @@ import { prop } from '../keys.js';
 class clsToken {
 
     createToken(usuario, nivelUser) {
-        let privateKey = prop.keyCrypt || 'fgpbr';
+        let privateKey = prop.keyCrypt;
         let option = {
             issuer: 'cerberus.server',
             audience: `${nivelUser}`
@@ -16,8 +16,8 @@ class clsToken {
     }
 
     verificationToken(token) {
-        console.log(token);
-        return Jwt.verify(`${token}`, 'C3rB3rvSFL@@' || 'fgpbr', function (err, decoded) {
+        console.log("keyCrypt", prop.keyCrypt);
+        return Jwt.verify(`${token}`, prop.keyCrypt, function (err, decoded) {
             console.log(err);
             if (err) {
                 return { isValid: false, decoded: decoded };
