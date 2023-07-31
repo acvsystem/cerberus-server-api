@@ -81,7 +81,7 @@ export const createAccessPostulant = async (req, res) => {
 }
 
 export const validationAccessPostulant = async (req, res) => {
-    const auth_token = req.header('Authorization') || "";
+    const auth_token = ((req || {}).body || {}).token || "";
     const payload = tokenController.verificationToken(auth_token);
     const tokenDecode = payload;
     console.log(tokenDecode);
