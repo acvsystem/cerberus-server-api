@@ -1,6 +1,7 @@
 import { pool } from '../conections/conexMysql.js';
 import { prop } from '../const/defaultResponse.js';
 import tokenController from './csToken.js';
+import Jwt from 'jsonwebtoken';
 
 export const Login = async (req, res) => {
     let objLogin = req.body;
@@ -38,7 +39,7 @@ export const CreateNewUser = async (req, res) => {
     let newRegister = (req || {}).body || {};
     let headers = (req || {}).headers;
     let validToken = tokenController.verificationToken((headers || {}).authorization);
-    
+
     let [nivel] = await pool.query(`SELECT * FROM TB_NIVEL_ACCESS WHERE NM_NIVEL='${((validToken || {}).decoded || {}).aud}'`);
 
     await pool.query(`INSERT INTO TB_LOGIN(DESC_USUARIO,PASSWORD,FK_ID_NVL_ACCESS)
@@ -54,6 +55,21 @@ export const CreateNewUser = async (req, res) => {
     } else {
         res.json(prop.error.default);
     }
+}
 
+export const createAccessPostulant = async (req, res) => {
+    const auth_token = req.header('Authorization') || "";
+    const payload = tokenController.verificationToken(auth_token);
+    const tokenDecode = payload;
 
+    let privateKey = prop.keyCrypt || 'fgpbr';
+    let option = {
+        expiresIn: '10800s',
+        issuer: 'cerberus.server',
+        audience: `${tokenDecode.aud}`
+    };
+    
+    console.log("createToken", option);
+    const token = Jwt.sign({ id: `${tokenDecode.aud}` }, privateKey, option);
+    res.json(`http://159.65.226.239:5000/postulante/${token}`);
 }

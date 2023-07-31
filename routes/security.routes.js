@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-import { Login, CreateNewUser } from '../controllers/csSecurity.js';
+import { Login, CreateNewUser, createAccessPostulant } from '../controllers/csSecurity.js';
 import tokenController from '../controllers/csToken.js';
 import path from 'path';
 import { pathDownload } from '../const/routesDownload.js';
@@ -9,6 +9,7 @@ import { prop } from '../keys.js';
 
 router.post('/login', Login);
 router.post('/create/user', CreateNewUser);
+router.get('/create/access/postulante', createAccessPostulant);
 
 router.get('/create/hash/agente', (req, res) => {
 
@@ -35,7 +36,7 @@ router.get('/download', (req, res) => {
 
     let token = req.header('Authorization');
     let hash = req.header('hash');
-    
+
     if (hash) {
         var bytes = CryptoJS.AES.decrypt(hash, prop.keyCryptHash);
         var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8)) || {};
