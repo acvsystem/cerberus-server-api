@@ -1,5 +1,6 @@
 import { pool } from '../conections/conexMysql.js';
-import { prop } from '../const/defaultResponse.js';
+import { propResponse } from '../const/defaultResponse.js';
+import { prop } from '../keys.js';
 import tokenController from './csToken.js';
 import Jwt from 'jsonwebtoken';
 
@@ -30,7 +31,7 @@ export const Login = async (req, res) => {
 
         res.header('Authorization', token).json(parseResponse);
     } else {
-        res.json(prop.error.login);
+        res.json(propResponse.error.login);
     }
 }
 
@@ -51,9 +52,9 @@ export const CreateNewUser = async (req, res) => {
         await pool.query(`INSERT INTO TB_PROFILE_USER(NOMBRE,FK_ID_LOGIN)
         VALUES('${newRegister.nombreProfile} ${newRegister.apellidoProfile}',${id_new_user[0].ID_LOGIN})`);
 
-        res.json(prop.success.default);
+        res.json(propResponse.success.default);
     } else {
-        res.json(prop.error.default);
+        res.json(propResponse.error.default);
     }
 }
 
@@ -73,7 +74,7 @@ export const createAccessPostulant = async (req, res) => {
         const token = Jwt.sign({ id: (option || {}).audience }, `${privateKey}`, option);
         res.json(`http://localhost:4200/postulante/${token}`);
     } else {
-        res.status(401).send(prop.error.default);
+        res.status(401).send(propResponse.error.default);
     }
 
 }
@@ -85,7 +86,7 @@ export const validationAccessPostulant = async (req, res) => {
     if ((tokenDecode || {}).isValid) {
         res.header('Authorization', auth_token).json(prop.success.default);
     } else {
-        res.status(401).send(prop.error.default);
+        res.status(401).send(propResponse.error.default);
     }
 
 
