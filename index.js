@@ -114,6 +114,8 @@ app.post('/control-asistencia', async (req, res) => {
     let dataEmpleado = ((dataICG || {}).DATA_EMPLEADO || [])[0] || {};
     let dataAsistencia = ((dataICG || {}).DATA_IN_OUT || [])[0] || {};
 
+    res.send('RECEPCION NO INSERT');
+
     let verifiedData = await actionBDController.verificationRegister('TB_VENDEDORES', `DNI = '${(dataEmpleado || {}).DNI}'`);
 
     if ((verifiedData || []).length) {
@@ -245,7 +247,7 @@ app.post('/control-asistencia', async (req, res) => {
        // dataVeriactionBDController.insertRegister()
     }
 
-    res.send('RECEPCION NO INSERT');
+    //res.send('RECEPCION NO INSERT');
 });
 
 io.use(function (socket, next) {
