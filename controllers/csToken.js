@@ -16,7 +16,7 @@ class clsToken {
     }
 
     verificationToken(token) {
-        console.log("keyCrypt", prop.keyCrypt);
+        console.log("verificationToken", prop.keyCrypt);
         return Jwt.verify(`${token}`, prop.keyCrypt, function (err, decoded) {
             console.log(err);
             if (err) {

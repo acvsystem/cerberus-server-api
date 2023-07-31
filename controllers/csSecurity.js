@@ -63,18 +63,15 @@ export const createAccessPostulant = async (req, res) => {
     let tokenDecode = payload;
 
     if ((tokenDecode || {}).isValid) {
-        let privateKey = prop.keyCrypt || 'fgpbr';
+        let privateKey = prop.keyCrypt;
         let option = {
             expiresIn: '10800s',
             issuer: 'cerberus.server',
             audience: `${((tokenDecode || {}).decoded || {}).aud}`
         };
-
-        console.log("createToken", option);
-        console.log("payload", tokenDecode);
-        console.log("keyCrypt", prop.keyCrypt);
-        const token = Jwt.sign({ id: (option || {}).audience }, prop.keyCrypt, option);
-        res.json(`http://159.65.226.239:5000/postulante/${token}`);
+        console.log("createAccessPostulant", privateKey);
+        const token = Jwt.sign({ id: (option || {}).audience }, privateKey, option);
+        res.json(`http://localhost:4200/postulante/${token}`);
     } else {
         res.status(401).send(prop.error.default);
     }
@@ -85,8 +82,6 @@ export const validationAccessPostulant = async (req, res) => {
     const auth_token = ((req || {}).body || {}).token || "";
     const payload = tokenController.verificationToken(auth_token);
     const tokenDecode = payload;
-    console.log(payload);
-    console.log(auth_token);
     if ((tokenDecode || {}).isValid) {
         res.header('Authorization', auth_token).json(prop.success.default);
     } else {
