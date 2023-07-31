@@ -10,7 +10,7 @@ import { prop } from '../keys.js';
 router.post('/login', Login);
 router.post('/create/user', CreateNewUser);
 router.get('/create/access/postulante', createAccessPostulant);
-router.get('/validation/access/postulante', validationAccessPostulant);
+router.post('/validation/access/postulante', validationAccessPostulant);
 
 router.get('/create/hash/agente', (req, res) => {
 
