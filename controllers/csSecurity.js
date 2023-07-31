@@ -85,6 +85,11 @@ export const validationAccessPostulant = async (req, res) => {
     const payload = tokenController.verificationToken(auth_token);
     const tokenDecode = payload;
     console.log(tokenDecode);
-    res.header('Authorization', auth_token).json(prop.success.default);
+    if ((tokenDecode || {}).isValid) {
+        res.header('Authorization', auth_token).json(prop.success.default);
+    } else {
+        res.status(401).send(prop.error.default);
+    }
+
 
 }
