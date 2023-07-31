@@ -112,7 +112,7 @@ app.post('/control-asistencia', async (req, res) => {
     let dataEmpleado = ((dataICG || {}).DATA_EMPLEADO || [])[0] || {};
     let dataAsistencia = ((dataICG || {}).DATA_IN_OUT || [])[0] || {};
 
-    let verifiedData = await actionBDController.verificationRegister('EXAMPLE_TABLE', `DNI = '${(dataEmpleado || {}).DNI}'`);
+    let verifiedData = await actionBDController.verificationRegister('TB_VENDEDORES', `DNI = '${(dataEmpleado || {}).DNI}'`);
 
     if ((verifiedData || []).length) {
         //REGISTRAR EN TABLA DE ASISTENCIA
