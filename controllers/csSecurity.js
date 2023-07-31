@@ -68,8 +68,16 @@ export const createAccessPostulant = async (req, res) => {
         issuer: 'cerberus.server',
         audience: `${tokenDecode.aud}`
     };
-    
+
     console.log("createToken", option);
     const token = Jwt.sign({ id: `${tokenDecode.aud}` }, privateKey, option);
     res.json(`http://159.65.226.239:5000/postulante/${token}`);
+}
+
+export const validationAccessPostulant = async (req, res) => {
+    const auth_token = req.header('Authorization') || "";
+    const payload = tokenController.verificationToken(auth_token);
+    const tokenDecode = payload;
+    console.log(tokenDecode);
+
 }
