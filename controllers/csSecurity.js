@@ -65,6 +65,7 @@ export const createAccessPostulant = async (req, res) => {
     if ((tokenDecode || {}).isValid) {
         let privateKey = prop.keyCrypt || 'fgpbr';
         let option = {
+            expiresIn: '10800s',
             issuer: 'cerberus.server',
             audience: `${((tokenDecode || {}).decoded || {}).aud}`
         };
