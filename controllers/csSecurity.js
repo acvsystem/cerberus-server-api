@@ -62,7 +62,7 @@ export const createAccessPostulant = async (req, res) => {
     const payload = tokenController.verificationToken(auth_token);
     let tokenDecode = payload;
 
-    if ((tokenDecode || {}).tokenDecode) {
+    if (((tokenDecode || {}).tokenDecode || {}).isValid) {
         let privateKey = prop.keyCrypt || 'fgpbr';
         let option = {
             expiresIn: '10800s',
