@@ -65,12 +65,13 @@ export const createAccessPostulant = async (req, res) => {
 
     if ((tokenDecode || {}).isValid) {
         let privateKey = prop.keyCrypt;
+        console.log("verificationToken", `${privateKey}`);
         let option = {
             expiresIn: '10800s',
             issuer: 'cerberus.server',
             audience: `${((tokenDecode || {}).decoded || {}).aud}`
         };
-        console.log("createAccessPostulant", privateKey);
+        console.log("createAccessPostulant", prop);
         const token = Jwt.sign({ id: (option || {}).audience }, `${privateKey}`, option);
         res.json(`http://localhost:4200/postulante/${token}`);
     } else {
