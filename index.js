@@ -84,6 +84,8 @@ function emitVerificationDoc() {
 
 app.post('/control-asistencia', async (req, res) => {
 
+    console.log("control-asistencia",req);
+
     let dataICG = {
         COD_ICG: '500010',
         DATA_EMPLEADO: [
@@ -116,7 +118,7 @@ app.post('/control-asistencia', async (req, res) => {
 
     if ((verifiedData || []).length) {
         //REGISTRAR EN TABLA DE ASISTENCIA
-        let terminal = (dataAsistencia || {}).CAJA || "";
+ /*       let terminal = (dataAsistencia || {}).CAJA || "";
 
         let codigoTienda = terminal.slice(0, 2);
 
@@ -156,7 +158,7 @@ app.post('/control-asistencia', async (req, res) => {
         let [selectEmpleado] = await actionBDController.verificationRegister("TB_VENDEDORES",`CODVENDEDOR = ${(empleadoList || {}).CODEMPLEADO}`);
 
         res.send('RECEPCION NO INSERT');
-/*
+
         if ((empleadoList || {}).HORAS == 0 || ((verifyEmpleado || [])[0] || {}).HORAS > 0) {
             let isInput = true;
             let isOutput = (empleadoList || {}).HORAS == 0 ? false : true;
