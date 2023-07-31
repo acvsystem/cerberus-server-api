@@ -152,9 +152,11 @@ app.post('/control-asistencia', async (req, res) => {
         let newDate = new Date();
         let diaFormat = `${newDate.getFullYear()}-${(newDate.getMonth() < 10 ? '0' + newDate.getMonth() : newDate.getDay())}-${(newDate.getDay() < 10 ? '0' + newDate.getDay() : newDate.getDay())}`;
 
-        let [verifyEmpleado] = await actionBDController.verificationRegister("TB_REGISTROEMPLEADOS",`CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND CAST(DIA AS DATE) BETWEEN '${diaFormat}' AND '${diaFormat}' ORDER BY ID_REG_EMPLEADO DESC LIMIT 1`);
+        let [verifyEmpleado] = await actionBDController.verificationRegister("TB_REG_MARCACION_IN_OUT",`CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND CAST(DIA AS DATE) BETWEEN '${diaFormat}' AND '${diaFormat}' ORDER BY ID_REG_EMPLEADO DESC LIMIT 1`);
         let [selectEmpleado] = await actionBDController.verificationRegister("TB_VENDEDORES",`CODVENDEDOR = ${(empleadoList || {}).CODEMPLEADO}`);
 
+        res.send('RECEPCION NO INSERT');
+/*
         if ((empleadoList || {}).HORAS == 0 || ((verifyEmpleado || [])[0] || {}).HORAS > 0) {
             let isInput = true;
             let isOutput = (empleadoList || {}).HORAS == 0 ? false : true;
@@ -235,7 +237,7 @@ app.post('/control-asistencia', async (req, res) => {
     
             res.send('RECEPCION UPDATE EXITOSA..!!');
         }
-
+*/
     } else {
         //REGISTRAR EN TABLA DE NOTIFICACIONES
         dataVeriactionBDController.insertRegister()
