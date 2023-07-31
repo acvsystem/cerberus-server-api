@@ -70,7 +70,7 @@ export const createAccessPostulant = async (req, res) => {
             audience: `${((tokenDecode || {}).decoded || {}).aud}`
         };
         console.log("createAccessPostulant", privateKey);
-        const token = Jwt.sign({ id: (option || {}).audience }, privateKey, option);
+        const token = Jwt.sign({ id: (option || {}).audience }, `${privateKey}`, option);
         res.json(`http://localhost:4200/postulante/${token}`);
     } else {
         res.status(401).send(prop.error.default);

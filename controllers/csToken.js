@@ -11,13 +11,14 @@ class clsToken {
             audience: `${nivelUser}`
         };
         console.log("createToken", option);
-        const token = Jwt.sign({ id: usuario }, privateKey, option);
+        const token = Jwt.sign({ id: usuario }, `${privateKey}`, option);
         return token;
     }
 
     verificationToken(token) {
-        console.log("verificationToken", prop.keyCrypt);
-        return Jwt.verify(`${token}`, prop.keyCrypt, function (err, decoded) {
+        let privateKey = prop.keyCrypt;
+        console.log("verificationToken", `${privateKey}`);
+        return Jwt.verify(`${token}`, `${privateKey}`, function (err, decoded) {
             console.log(err);
             if (err) {
                 return { isValid: false, decoded: decoded };
