@@ -60,7 +60,7 @@ export const CreateNewUser = async (req, res) => {
 export const createAccessPostulant = async (req, res) => {
     const auth_token = req.header('Authorization') || "";
     const payload = tokenController.verificationToken(auth_token);
-    const tokenDecode = payload;
+    let tokenDecode = payload;
 
     let privateKey = prop.keyCrypt || 'fgpbr';
     let option = {
@@ -69,7 +69,7 @@ export const createAccessPostulant = async (req, res) => {
         audience: `${tokenDecode.aud}`
     };
 
-    console.log("createToken", payload);
+    console.log("createToken", option);
     const token = Jwt.sign({ id: `${tokenDecode.aud}` }, privateKey, option);
     res.json(`http://159.65.226.239:5000/postulante/${token}`);
 }
