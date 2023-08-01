@@ -245,7 +245,7 @@ io.use(function (socket, next) {
         }
     }
 
-    io.on('reporteAssitencia', (data) => {
+    socket.on('reporteAssitencia', (data) => {
         console.log("reporteAssitencia", data);
     });
 
