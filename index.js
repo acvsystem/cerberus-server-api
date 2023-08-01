@@ -89,7 +89,7 @@ app.post('/control-asistencia', async (req, res) => {
     let dataEmpleado = ((dataTrigger || {}).DATA_EMPLEADO || [])[0] || {};
     let dataAsistencia = ((dataTrigger || {}).DATA_IN_OUT || [])[0] || {};
 
-    console.log("control-asistencia", (((req || []).body || [])[0] || {}));
+    console.log("dataEmpleado", Object.keys(dataEmpleado));
 
 
     let verifiedData = await actionBDController.verificationRegister('TB_VENDEDORES', `DNI = '${(dataEmpleado || {}).DNI}'`);
@@ -200,7 +200,6 @@ app.post('/control-asistencia', async (req, res) => {
     } else {
         //REGISTRAR EN TABLA DE NOTIFICACIONES
         // dataVeriactionBDController.insertRegister()
-        res.send('RECEPCION NO INSERT');
     }
 
     res.send('RECEPCION NO INSERT');
