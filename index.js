@@ -128,7 +128,9 @@ app.post('/control-asistencia', async (req, res) => {
         ];
 
         let selectedLocal = tiendasList.find((data) => data.code == codigoTienda);
-        var serverDateStr = serverDate.toLocaleString("pe-PE", {
+        serverDate = new Date();
+
+        let serverDateStr = serverDate.toLocaleString("pe-PE", {
             year: 'numeric',
             month: 'numeric',
             day: 'numeric',
