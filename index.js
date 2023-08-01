@@ -132,8 +132,8 @@ app.post('/control-asistencia', async (req, res) => {
         let newDate = new Date();
         let diaFormat = `${newDate.getFullYear()}-${(newDate.getMonth() < 10 ? '0' + newDate.getMonth() : newDate.getDay())}-${(newDate.getDay() < 10 ? '0' + newDate.getDay() : newDate.getDay())}`;
 
-        let [verifyEmpleado] = await actionBDController.verificationRegister("TB_REG_MARCACION_IN_OUT", `CODEMPLEADO = ${(empleadoList || {}).CODEMPLEADO} AND CAST(DIA AS DATE) BETWEEN '${diaFormat}' AND '${diaFormat}' ORDER BY ID_REG_EMPLEADO DESC LIMIT 1`);
-        let [selectEmpleado] = await actionBDController.verificationRegister("TB_VENDEDORES", `DNI = ${(empleadoList || {}).DNI}`);
+        let [verifyEmpleado] = await actionBDController.verificationRegister("TB_REG_MARCACION_IN_OUT", `CODEMPLEADO = ${(dataTrigger || {}).COD_ICG} AND CAST(DIA AS DATE) BETWEEN '${diaFormat}' AND '${diaFormat}' ORDER BY ID_REG_EMPLEADO DESC LIMIT 1`);
+        let [selectEmpleado] = await actionBDController.verificationRegister("TB_VENDEDORES", `DNI = ${(dataEmpleado || {}).DNI}`);
 
 
         if ((dataAsistencia || {}).HORAS == 0 || ((verifyEmpleado || [])[0] || {}).HORAS > 0) {
@@ -143,10 +143,10 @@ app.post('/control-asistencia', async (req, res) => {
             let diaFormat = `${dia.getFullYear()}-${(dia.getMonth() < 10 ? '0' + dia.getMonth() : dia.getDay())}-${(dia.getDay() < 10 ? '0' + dia.getDay() : dia.getDay())}`;
 
             await pool.query(`INSERT INTO TB_REG_MARCACION_IN_OUT(DNI,DIA,HORAIN,HORAOUT,INPUT,OUTPUT,HORAS,VENTAS,NUMVENTAS,CAJA,TERMINAL,NOMBRE_TIENDA)
-                   VALUES(${(dataAsistencia || {}).DNI},${(dataAsistencia || {}).DIA},${(dataAsistencia || {}).HORAIN},${(dataAsistencia || {}).HORAOUT},${isInput},${isOutput},${(dataAsistencia || {}).HORAS},${(dataAsistencia || {}).VENTAS},${(dataAsistencia || {}).NUMVENTAS},${(dataAsistencia || {}).CAJA},"",${(selectedLocal || {}).name});`);
+                   VALUES(${(dataEmpleado || {}).DNI},${(dataAsistencia || {}).DIA},${(dataAsistencia || {}).HORAIN},${(dataAsistencia || {}).HORAOUT},${isInput},${isOutput},${(dataAsistencia || {}).HORAS},${(dataAsistencia || {}).VENTAS},${(dataAsistencia || {}).NUMVENTAS},${(dataAsistencia || {}).CAJA},"",${(selectedLocal || {}).name});`);
 
             let response = {
-                DNI: (dataAsistencia || {}).DNI,
+                DNI: (dataEmpleado || {}).DNI,
                 DIA: (dataAsistencia || {}).DIA,
                 HORAIN: (dataAsistencia || {}).HORAIN,
                 HORAOUT: (dataAsistencia || {}).HORAOUT,
@@ -173,10 +173,10 @@ app.post('/control-asistencia', async (req, res) => {
                        OUTPUT = 0,
                        HORAS = '${(dataAsistencia || {}).HORAS}',
                        NUMVENTAS = '${(dataAsistencia || {}).NUMVENTAS}',
-                       CAJA = '${(dataAsistencia || {}).CAJA}' WHERE DNI = ${(dataAsistencia || {}).DNI} AND ID_REG_IN_OUT = ${((verifyEmpleado || [])[0] || {}).ID_REG_IN_OUT};`);
+                       CAJA = '${(dataAsistencia || {}).CAJA}' WHERE DNI = ${(dataEmpleado || {}).DNI} AND ID_REG_IN_OUT = ${((verifyEmpleado || [])[0] || {}).ID_REG_IN_OUT};`);
 
             let response = {
-                DNI: (dataAsistencia || {}).DNI,
+                DNI: (dataEmpleado || {}).DNI,
                 DIA: (dataAsistencia || {}).DIA,
                 HORAIN: (dataAsistencia || {}).HORAIN,
                 HORAOUT: (dataAsistencia || {}).HORAOUT,
@@ -188,7 +188,7 @@ app.post('/control-asistencia', async (req, res) => {
                 CAJA: (dataAsistencia || {}).CAJA,
                 TERMINAL: "",
                 NOMBRE_TIENDA: (selectedLocal || {}).name,
-                CODEMPLEADO: (selectedLocal || {}).COD_ICG,
+                CODEMPLEADO: (dataTrigger || {}).COD_ICG,
             };
 
             io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
