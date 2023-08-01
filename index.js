@@ -130,7 +130,7 @@ app.post('/control-asistencia', async (req, res) => {
         let selectedLocal = tiendasList.find((data) => data.code == codigoTienda);
         let newDate = new Date();
         console.log("newDate", newDate);
-        let diaFormat = `${newDate.getFullYear()}-${(newDate.getMonth() < 10 ? '0' + (newDate.getMonth() + 1) : newDate.getDay())}-${(newDate.getDay() < 10 ? '0' + newDate.getDay() : newDate.getDay())}`;
+        let diaFormat = `${newDate.getFullYear()}-${((newDate.getMonth() + 1) < 10 ? '0' + (newDate.getMonth() + 1) : (newDate.getDay() - 1))}-${((newDate.getDay() - 1) < 10 ? '0' + (newDate.getDay() - 1) : (newDate.getDay() - 1))}`;
 
         let [verifyEmpleado] = await actionBDController.verificationRegister("TB_REG_MARCACION_IN_OUT", `DNI = '${(dataEmpleado || {}).DNI}' AND CAST(DIA AS DATE) BETWEEN '${diaFormat}' AND '${diaFormat}' ORDER BY ID_REG_IN_OUT DESC LIMIT 1`);
         let [selectEmpleado] = await actionBDController.verificationRegister("TB_VENDEDORES", `DNI = ${(dataEmpleado || {}).DNI}`);
@@ -141,8 +141,6 @@ app.post('/control-asistencia', async (req, res) => {
             let isInput = true;
             let isOutput = (dataAsistencia || {}).HORAS == 0 ? false : true;
             let dia = new Date((dataAsistencia || {}).DIA);
-            let diaFormat = `${dia.getFullYear()}-${(dia.getMonth() < 10 ? '0' + dia.getMonth() : dia.getDay())}-${(dia.getDay() < 10 ? '0' + dia.getDay() : dia.getDay())}`;
-
             await pool.query(`INSERT INTO TB_REG_MARCACION_IN_OUT(DNI,DIA,HORAIN,HORAOUT,INPUT,OUTPUT,HORAS,VENTAS,NUMVENTAS,CAJA,TERMINAL,NOMBRE_TIENDA)
                    VALUES('${(dataEmpleado || {}).DNI}','${(dataAsistencia || {}).DIA}','${(dataAsistencia || {}).HORAIN}','${(dataAsistencia || {}).HORAOUT}',${isInput},${isOutput},'${(dataAsistencia || {}).HORAS}',${(dataAsistencia || {}).VENTAS},${(dataAsistencia || {}).NUMVENTAS},'${(dataAsistencia || {}).CAJA}',"",'${(selectedLocal || {}).name}');`);
 
