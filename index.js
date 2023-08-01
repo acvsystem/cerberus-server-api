@@ -94,7 +94,7 @@ app.post('/control-asistencia', async (req, res) => {
 
     let verifiedData = await actionBDController.verificationRegister('TB_VENDEDORES', `DNI = '${(dataEmpleado || {}).DNI}'`);
 
-    if ((verifiedData || []).length && Object.keys(dataEmpleado).length && Object.keys(dataAsistencia).length) {
+    if ((verifiedData || []).length && Object.values(dataAsistencia).length) {
         //REGISTRAR EN TABLA DE ASISTENCIA
         let terminal = (dataAsistencia || {}).CAJA || "";
 
