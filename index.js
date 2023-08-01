@@ -129,9 +129,7 @@ app.post('/control-asistencia', async (req, res) => {
 
         let selectedLocal = tiendasList.find((data) => data.code == codigoTienda);
         let newDate = new Date();
-        newDate.toLocaleDateString('es-PE', {
-            timeZone: "America/Lima"
-        });
+        console.log("newDate", newDate);
         let diaFormat = `${newDate.getFullYear()}-${(newDate.getMonth() < 10 ? '0' + newDate.getMonth() : newDate.getDay())}-${(newDate.getDay() < 10 ? '0' + newDate.getDay() : newDate.getDay())}`;
 
         let [verifyEmpleado] = await actionBDController.verificationRegister("TB_REG_MARCACION_IN_OUT", `DNI = '${(dataEmpleado || {}).DNI}' AND CAST(DIA AS DATE) BETWEEN '${diaFormat}' AND '${diaFormat}' ORDER BY ID_REG_IN_OUT DESC LIMIT 1`);
