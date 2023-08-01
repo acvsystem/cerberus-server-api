@@ -17,6 +17,7 @@ import * as cron from 'node-cron';
 import templateHtmlController from './template/csTemplatesHtml.js';
 import recursosHumanosRoutes from './routes/recursosHumanos.routes.js';
 import actionBDController from './controllers/csActionOnBD.js';
+import { prop as defaultResponse } from './const/defaultResponse.js';
 
 const app = express();
 const httpServer = createServer(app);
@@ -88,7 +89,7 @@ app.get('/control-asistencia', async (req, res) => {
     let dataRecept = ((req || {}).query || {});
     io.emit('searchAsistencia', (dataRecept || {}).centroCosto, (dataRecept || {}).fechInicio, (dataRecept || {}).fechFin);
 
-    res.send('PETICION REALIZADA');
+    res.json(defaultResponse.success.default);
 });
 
 io.use(function (socket, next) {
