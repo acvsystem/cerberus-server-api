@@ -85,130 +85,14 @@ function emitVerificationDoc() {
 
 
 app.get('/control-asistencia', async (req, res) => {
-    io.emit('searchAsistencia', 'BBWW', '2023-07-01', '2023-07-05');
-    /*
-        let dataTrigger = (((req || []).body || [])[0] || {});
-    
-        let dataEmpleado = ((dataTrigger || {}).DATA_EMPLEADO || [])[0] || {};
-        let dataAsistencia = ((dataTrigger || {}).DATA_IN_OUT || [])[0] || {};
-    
-        console.log("dataEmpleado", dataTrigger);
-    
-        let verifiedData = await actionBDController.verificationRegister('TB_VENDEDORES', `DNI = '${(dataEmpleado || {}).DNI}'`);
-    
-        if ((verifiedData || []).length) {
-            //REGISTRAR EN TABLA DE ASISTENCIA
-            let terminal = (dataAsistencia || {}).CAJA || "";
-    
-            let codigoTienda = terminal.slice(0, 2);
-    
-            if (terminal.slice(2, 3) == 7 && terminal.slice(0, 2) == '7A') {
-                codigoTienda = (dataAsistencia || {}).CAJA;
-            }
-    
-            let tiendasList = [
-                { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@grupodavid.com' },
-                { code: '9A', name: 'VSBA JOCKEY', email: 'vsjockeyplaza@grupodavid.com' },
-                { code: 'PC', name: 'AEO JOCKEY', email: 'americaneaglejp@grupodavid.com' },
-                { code: 'PB', name: 'AEO ASIA', email: 'aeopopupasia@grupodavid.com' },
-                { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@grupodavid.com' },
-                { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@grupodavid.com' },
-                { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@grupodavid.com' },
-                { code: '7C', name: 'BBW SAN MIGUEL', email: 'bbwsanmiguel@grupodavid.com' },
-                { code: '9C', name: 'VS SAN MIGUEL', email: 'vssanmiguel@grupodavid.com' },
-                { code: '7D', name: 'BBW SALAVERRY', email: 'bbwsalaverry@grupodavid.com' },
-                { code: '9I', name: 'VS SALAVERRY', email: 'vssalaverry@grupodavid.com' },
-                { code: '9G', name: 'VS MALL DEL SUR', email: 'vsmalldelsur@grupodavid.com' },
-                { code: '9H', name: 'VS PURUCHUCO', email: 'vspuruchuco@grupodavid.com' },
-                { code: '9M', name: 'VS ECOMMERCE', email: 'vsecommpe@grupodavid.com' },
-                { code: '7F', name: 'BBW ECOMMERCE', email: 'bbwecommperu@grupodavid.com' },
-                { code: 'PA', name: 'AEO ECOMMERCE', email: 'aeecompe@grupodavid.com' },
-                { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@grupodavid.com' },
-                { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@grupodavid.com' },
-                { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@grupodavid.com' },
-                { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
-            ];
-    
-            let selectedLocal = tiendasList.find((data) => data.code == codigoTienda);
-            let newDate = new Date();
-    
-            let diaFormat = `${newDate.getFullYear()}-${((newDate.getMonth() + 1) < 10 ? '0' + (newDate.getMonth() + 1) : (newDate.getDay() - 1))}-${((newDate.getDay() - 1) < 10 ? '0' + (newDate.getDay() - 1) : (newDate.getDay() - 1))}`;
-    
-            let [verifyEmpleado] = await actionBDController.verificationRegister("TB_REG_MARCACION_IN_OUT", `DNI = '${(dataEmpleado || {}).DNI}' AND CAST(DIA AS DATE) BETWEEN '${diaFormat}' AND '${diaFormat}' ORDER BY ID_REG_IN_OUT DESC LIMIT 1`);
-            let [selectEmpleado] = await actionBDController.verificationRegister("TB_VENDEDORES", `DNI = ${(dataEmpleado || {}).DNI}`);
-    
-            console.log("verifyEmpleado", verifyEmpleado);
-    
-            let isInput = true;
-            let isOutput = (dataAsistencia || {}).HORAS == 0 ? false : true;
-    
-            if ((dataAsistencia || {}).HORAS == 0 || (verifyEmpleado || {}).HORAS > 0) {
-    
-                let dia = new Date((dataAsistencia || {}).DIA);
-                await pool.query(`INSERT INTO TB_REG_MARCACION_IN_OUT(DNI,DIA,HORAIN,HORAOUT,INPUT,OUTPUT,HORAS,VENTAS,NUMVENTAS,CAJA,TERMINAL,NOMBRE_TIENDA)
-                       VALUES('${(dataEmpleado || {}).DNI}','${(dataAsistencia || {}).DIA}','${(dataAsistencia || {}).HORAIN}','${(dataAsistencia || {}).HORAOUT}',${isInput},${isOutput},'${(dataAsistencia || {}).HORAS}',${(dataAsistencia || {}).VENTAS},${(dataAsistencia || {}).NUMVENTAS},'${(dataAsistencia || {}).CAJA}',"",'${(selectedLocal || {}).name}');`);
-    
-                let response = {
-                    DNI: (dataEmpleado || {}).DNI,
-                    DIA: (dataAsistencia || {}).DIA,
-                    HORAIN: (dataAsistencia || {}).HORAIN,
-                    HORAOUT: (dataAsistencia || {}).HORAOUT,
-                    HORAS: (dataAsistencia || {}).HORAS,
-                    INPUT: isInput,
-                    OUTPUT: isOutput,
-                    VENTAS: (dataAsistencia || {}).VENTAS,
-                    NUMVENTAS: (dataAsistencia || {}).NUMVENTAS,
-                    CAJA: (dataAsistencia || {}).CAJA,
-                    TERMINAL: "",
-                    NOMBRE_TIENDA: (selectedLocal || {}).name,
-                    CODEMPLEADO: (dataTrigger || {}).COD_ICG,
-                };
-    
-                io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
-    
-                res.send('RECEPCION INSERT EXITOSO..!!');
-    
-            } else if ((dataAsistencia || {}).HORAS > 0 && Object.keys(verifyEmpleado).length) {
-    
-                await pool.query(`UPDATE TB_REG_MARCACION_IN_OUT SET
-                           HORAIN ='${(dataAsistencia || {}).HORAIN}',
-                           HORAOUT = '${(dataAsistencia || {}).HORAOUT}',
-                           OUTPUT = ${isOutput},
-                           HORAS = '${(dataAsistencia || {}).HORAS}',
-                           NUMVENTAS = '${(dataAsistencia || {}).NUMVENTAS}',
-                           CAJA = '${(dataAsistencia || {}).CAJA}' WHERE DNI = '${(dataEmpleado || {}).DNI}' AND ID_REG_IN_OUT = ${(verifyEmpleado || {}).ID_REG_IN_OUT};`);
-    
-                let response = {
-                    DNI: (dataEmpleado || {}).DNI,
-                    DIA: (dataAsistencia || {}).DIA,
-                    HORAIN: (dataAsistencia || {}).HORAIN,
-                    HORAOUT: (dataAsistencia || {}).HORAOUT,
-                    HORAS: (dataAsistencia || {}).HORAS,
-                    INPUT: isInput,
-                    OUTPUT: isOutput,
-                    VENTAS: (dataAsistencia || {}).VENTAS,
-                    NUMVENTAS: (dataAsistencia || {}).NUMVENTAS,
-                    CAJA: (dataAsistencia || {}).CAJA,
-                    TERMINAL: "",
-                    NOMBRE_TIENDA: (selectedLocal || {}).name,
-                    CODEMPLEADO: (dataTrigger || {}).COD_ICG,
-                };
-    
-                io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
-    
-                res.send('RECEPCION UPDATE EXITOSA..!!');
-            }
-    
-        } else {
-            //REGISTRAR EN TABLA DE NOTIFICACIONES
-            // dataVeriactionBDController.insertRegister()
-        }
-    */
-    res.send('RECEPCION NO INSERT');
+    let dataRecept = ((req || {}).query || {});
+    io.emit('searchAsistencia', (dataRecept || {}).centroCosto, (dataRecept || {}).fechInicio, (dataRecept || {}).fechFIN);
+
+    res.send('PETICION REALIZADA');
 });
 
 io.use(function (socket, next) {
-  
+
     let token = socket.handshake.query.token;
     let hash = socket.handshake.headers.hash;
 
