@@ -130,12 +130,12 @@ app.post('/control-asistencia', async (req, res) => {
         let selectedLocal = tiendasList.find((data) => data.code == codigoTienda);
         let newDate = new Date();
         console.log("newDate", newDate);
-        let diaFormat = `${newDate.getFullYear()}-${(newDate.getMonth() < 10 ? '0' + newDate.getMonth() : newDate.getDay())}-${(newDate.getDay() < 10 ? '0' + newDate.getDay() : newDate.getDay())}`;
+        let diaFormat = `${newDate.getFullYear()}-${(newDate.getMonth() < 10 ? '0' + (newDate.getMonth() + 1) : newDate.getDay())}-${(newDate.getDay() < 10 ? '0' + newDate.getDay() : newDate.getDay())}`;
 
-        let [verifyEmpleado] = await actionBDController.verificationRegister("TB_REG_MARCACION_IN_OUT", `DNI = '${(dataEmpleado || {}).DNI}' AND CAST(DIA AS DATE) BETWEEN '${newDate}' AND '${newDate}' ORDER BY ID_REG_IN_OUT DESC LIMIT 1`);
+        let [verifyEmpleado] = await actionBDController.verificationRegister("TB_REG_MARCACION_IN_OUT", `DNI = '${(dataEmpleado || {}).DNI}' AND CAST(DIA AS DATE) BETWEEN '${diaFormat}' AND '${diaFormat}' ORDER BY ID_REG_IN_OUT DESC LIMIT 1`);
         let [selectEmpleado] = await actionBDController.verificationRegister("TB_VENDEDORES", `DNI = ${(dataEmpleado || {}).DNI}`);
 
-        console.log(`DNI = '${(dataEmpleado || {}).DNI}' AND CAST(DIA AS DATE) BETWEEN '${newDate}' AND '${newDate}' ORDER BY ID_REG_IN_OUT DESC LIMIT 1`);
+        console.log(`DNI = '${(dataEmpleado || {}).DNI}' AND CAST(DIA AS DATE) BETWEEN '${diaFormat}' AND '${diaFormat}' ORDER BY ID_REG_IN_OUT DESC LIMIT 1`);
 
         if ((dataAsistencia || {}).HORAS == 0 || ((verifyEmpleado || [])[0] || {}).HORAS > 0) {
             let isInput = true;
