@@ -136,10 +136,12 @@ app.post('/control-asistencia', async (req, res) => {
         let [selectEmpleado] = await actionBDController.verificationRegister("TB_VENDEDORES", `DNI = ${(dataEmpleado || {}).DNI}`);
 
         console.log("verifyEmpleado", verifyEmpleado);
+        
+        let isInput = true;
+        let isOutput = (dataAsistencia || {}).HORAS == 0 ? false : true;
 
         if ((dataAsistencia || {}).HORAS == 0 || (verifyEmpleado || {}).HORAS > 0) {
-            let isInput = true;
-            let isOutput = (dataAsistencia || {}).HORAS == 0 ? false : true;
+
             let dia = new Date((dataAsistencia || {}).DIA);
             await pool.query(`INSERT INTO TB_REG_MARCACION_IN_OUT(DNI,DIA,HORAIN,HORAOUT,INPUT,OUTPUT,HORAS,VENTAS,NUMVENTAS,CAJA,TERMINAL,NOMBRE_TIENDA)
                    VALUES('${(dataEmpleado || {}).DNI}','${(dataAsistencia || {}).DIA}','${(dataAsistencia || {}).HORAIN}','${(dataAsistencia || {}).HORAOUT}',${isInput},${isOutput},'${(dataAsistencia || {}).HORAS}',${(dataAsistencia || {}).VENTAS},${(dataAsistencia || {}).NUMVENTAS},'${(dataAsistencia || {}).CAJA}',"",'${(selectedLocal || {}).name}');`);
