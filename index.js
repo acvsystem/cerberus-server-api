@@ -137,7 +137,7 @@ app.post('/control-asistencia', async (req, res) => {
 
         console.log("verifyEmpleado", verifyEmpleado);
 
-        if ((dataAsistencia || {}).HORAS == 0 || ((verifyEmpleado || [])[0] || {}).HORAS > 0) {
+        if ((dataAsistencia || {}).HORAS == 0 || (verifyEmpleado || {}).HORAS > 0) {
             let isInput = true;
             let isOutput = (dataAsistencia || {}).HORAS == 0 ? false : true;
             let dia = new Date((dataAsistencia || {}).DIA);
@@ -164,7 +164,7 @@ app.post('/control-asistencia', async (req, res) => {
 
             res.send('RECEPCION INSERT EXITOSO..!!');
 
-        } else if ((dataAsistencia || {}).HORAS > 0 && (verifyEmpleado || []).length) {
+        } else if ((dataAsistencia || {}).HORAS > 0 && Object.keys(verifyEmpleado).length) {
 
             await pool.query(`UPDATE TB_REG_MARCACION_IN_OUT SET
                        HORAIN ='${(dataAsistencia || {}).HORAIN}',
@@ -172,7 +172,7 @@ app.post('/control-asistencia', async (req, res) => {
                        OUTPUT = 0,
                        HORAS = '${(dataAsistencia || {}).HORAS}',
                        NUMVENTAS = '${(dataAsistencia || {}).NUMVENTAS}',
-                       CAJA = '${(dataAsistencia || {}).CAJA}' WHERE DNI = '${(dataEmpleado || {}).DNI}' AND ID_REG_IN_OUT = ${((verifyEmpleado || [])[0] || {}).ID_REG_IN_OUT};`);
+                       CAJA = '${(dataAsistencia || {}).CAJA}' WHERE DNI = '${(dataEmpleado || {}).DNI}' AND ID_REG_IN_OUT = ${(verifyEmpleado || {}).ID_REG_IN_OUT};`);
 
             let response = {
                 DNI: (dataEmpleado || {}).DNI,
