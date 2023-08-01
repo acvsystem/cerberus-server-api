@@ -94,7 +94,7 @@ app.post('/control-asistencia', async (req, res) => {
 
     let verifiedData = await actionBDController.verificationRegister('TB_VENDEDORES', `DNI = '${(dataEmpleado || {}).DNI}'`);
 
-    if ((verifiedData || []).length) {
+    if ((verifiedData || []).length && Object.keys(dataEmpleado).length && Object.keys(dataAsistencia).length) {
         //REGISTRAR EN TABLA DE ASISTENCIA
         let terminal = (dataAsistencia || {}).CAJA || "";
 
@@ -129,7 +129,7 @@ app.post('/control-asistencia', async (req, res) => {
 
         let selectedLocal = tiendasList.find((data) => data.code == codigoTienda);
         let newDate = new Date();
-        console.log("newDate", newDate);
+
         let diaFormat = `${newDate.getFullYear()}-${((newDate.getMonth() + 1) < 10 ? '0' + (newDate.getMonth() + 1) : (newDate.getDay() - 1))}-${((newDate.getDay() - 1) < 10 ? '0' + (newDate.getDay() - 1) : (newDate.getDay() - 1))}`;
 
         let [verifyEmpleado] = await actionBDController.verificationRegister("TB_REG_MARCACION_IN_OUT", `DNI = '${(dataEmpleado || {}).DNI}' AND CAST(DIA AS DATE) BETWEEN '${diaFormat}' AND '${diaFormat}' ORDER BY ID_REG_IN_OUT DESC LIMIT 1`);
