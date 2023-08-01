@@ -89,12 +89,11 @@ app.post('/control-asistencia', async (req, res) => {
     let dataEmpleado = ((dataTrigger || {}).DATA_EMPLEADO || [])[0] || {};
     let dataAsistencia = ((dataTrigger || {}).DATA_IN_OUT || [])[0] || {};
 
-    console.log("dataEmpleado", dataEmpleado);
-    console.log("dataAsistencia", dataAsistencia);
+    console.log("dataEmpleado", dataTrigger);
 
     let verifiedData = await actionBDController.verificationRegister('TB_VENDEDORES', `DNI = '${(dataEmpleado || {}).DNI}'`);
 
-    if ((verifiedData || []).length && Object.values(dataAsistencia).length) {
+    if ((verifiedData || []).length) {
         //REGISTRAR EN TABLA DE ASISTENCIA
         let terminal = (dataAsistencia || {}).CAJA || "";
 
