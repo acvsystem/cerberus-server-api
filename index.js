@@ -82,7 +82,7 @@ function emitVerificationDoc() {
     io.emit('consultingToFront', 'emitVerificationDoc');
 }
 
-socket.on('reporteAssitencia', (data) => {
+io.on('reporteAssitencia', (data) => {
     console.log("reporteAssitencia", data);
 });
 
@@ -210,6 +210,7 @@ app.get('/control-asistencia', async (req, res) => {
 });
 
 io.use(function (socket, next) {
+  
     let token = socket.handshake.query.token;
     let hash = socket.handshake.headers.hash;
 
