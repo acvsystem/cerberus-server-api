@@ -86,7 +86,7 @@ function emitVerificationDoc() {
 
 app.get('/control-asistencia', async (req, res) => {
     let dataRecept = ((req || {}).query || {});
-    io.emit('searchAsistencia', (dataRecept || {}).centroCosto, (dataRecept || {}).fechInicio, (dataRecept || {}).fechFIN);
+    io.emit('searchAsistencia', (dataRecept || {}).centroCosto, (dataRecept || {}).fechInicio, (dataRecept || {}).fechFin);
 
     res.send('PETICION REALIZADA');
 });
