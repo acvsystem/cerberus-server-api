@@ -135,7 +135,7 @@ app.post('/control-asistencia', async (req, res) => {
         let [verifyEmpleado] = await actionBDController.verificationRegister("TB_REG_MARCACION_IN_OUT", `DNI = '${(dataEmpleado || {}).DNI}' AND CAST(DIA AS DATE) BETWEEN '${diaFormat}' AND '${diaFormat}' ORDER BY ID_REG_IN_OUT DESC LIMIT 1`);
         let [selectEmpleado] = await actionBDController.verificationRegister("TB_VENDEDORES", `DNI = ${(dataEmpleado || {}).DNI}`);
 
-        console.log(verifyEmpleado);
+        console.log(`DNI = '${(dataEmpleado || {}).DNI}' AND CAST(DIA AS DATE) BETWEEN '${diaFormat}' AND '${diaFormat}' ORDER BY ID_REG_IN_OUT DESC LIMIT 1`);
 
         if ((dataAsistencia || {}).HORAS == 0 || ((verifyEmpleado || [])[0] || {}).HORAS > 0) {
             let isInput = true;
