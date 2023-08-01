@@ -130,7 +130,8 @@ app.post('/control-asistencia', async (req, res) => {
         let selectedLocal = tiendasList.find((data) => data.code == codigoTienda);
 
         let newDate = new Date();
-        let diaFormat = `${newDate.getFullYear()}-${(newDate.getMonth() < 10 ? '0' + newDate.getMonth() +1 : newDate.getDay() -1)}-${(newDate.getDay() < 10 ? '0' + newDate.getDay() -1 : newDate.getDay() -1 )}`;
+        newDate.toLocaleDateString('es-ES');
+        let diaFormat = `${newDate.getFullYear()}-${(newDate.getMonth() < 10 ? '0' + newDate.getMonth() : newDate.getDay())}-${(newDate.getDay() < 10 ? '0' + newDate.getDay() : newDate.getDay())}`;
 
         let [verifyEmpleado] = await actionBDController.verificationRegister("TB_REG_MARCACION_IN_OUT", `DNI = '${(dataEmpleado || {}).DNI}' AND CAST(DIA AS DATE) BETWEEN '${diaFormat}' AND '${diaFormat}' ORDER BY ID_REG_IN_OUT DESC LIMIT 1`);
         let [selectEmpleado] = await actionBDController.verificationRegister("TB_VENDEDORES", `DNI = ${(dataEmpleado || {}).DNI}`);
