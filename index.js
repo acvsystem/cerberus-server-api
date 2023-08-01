@@ -87,7 +87,7 @@ app.post('/control-asistencia', async (req, res) => {
     let dataTrigger = (((req || []).body || [])[0] || {});
 
     let dataEmpleado = ((dataTrigger || {}).DATA_EMPLEADO || [])[0] || {};
-    let dataAsistencia = ((dataTrigger || {}).DATA_IN_OUT || [])[0] || {}; 
+    let dataAsistencia = ((dataTrigger || {}).DATA_IN_OUT || [])[0] || {};
 
     console.log("control-asistencia", (((req || []).body || [])[0] || {}));
 
@@ -130,7 +130,7 @@ app.post('/control-asistencia', async (req, res) => {
         let selectedLocal = tiendasList.find((data) => data.code == codigoTienda);
 
         let newDate = new Date();
-        let diaFormat = `${newDate.getFullYear()}-${(newDate.getMonth() < 10 ? '0' + newDate.getMonth() : newDate.getDay())}-${(newDate.getDay() < 10 ? '0' + newDate.getDay() : newDate.getDay())}`;
+        let diaFormat = `${newDate.getFullYear()}-${(newDate.getMonth() < 10 ? '0' + newDate.getMonth() +1 : newDate.getDay() -1)}-${(newDate.getDay() < 10 ? '0' + newDate.getDay() -1 : newDate.getDay() -1 )}`;
 
         let [verifyEmpleado] = await actionBDController.verificationRegister("TB_REG_MARCACION_IN_OUT", `DNI = '${(dataEmpleado || {}).DNI}' AND CAST(DIA AS DATE) BETWEEN '${diaFormat}' AND '${diaFormat}' ORDER BY ID_REG_IN_OUT DESC LIMIT 1`);
         let [selectEmpleado] = await actionBDController.verificationRegister("TB_VENDEDORES", `DNI = ${(dataEmpleado || {}).DNI}`);
@@ -166,7 +166,7 @@ app.post('/control-asistencia', async (req, res) => {
 
             res.send('RECEPCION INSERT EXITOSO..!!');
 
-        } else if ((dataAsistencia || {}).HORAS > 0) {
+        } else if ((dataAsistencia || {}).HORAS > 0 && (verifyEmpleado || []).length) {
 
             await pool.query(`UPDATE TB_REG_MARCACION_IN_OUT SET
                        HORAIN ='${(dataAsistencia || {}).HORAIN}',
