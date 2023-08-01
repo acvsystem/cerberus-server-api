@@ -200,6 +200,7 @@ app.post('/control-asistencia', async (req, res) => {
     } else {
         //REGISTRAR EN TABLA DE NOTIFICACIONES
         // dataVeriactionBDController.insertRegister()
+        res.send('RECEPCION NO INSERT');
     }
 
     res.send('RECEPCION NO INSERT');
