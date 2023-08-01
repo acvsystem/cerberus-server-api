@@ -129,7 +129,7 @@ app.post('/control-asistencia', async (req, res) => {
 
         let selectedLocal = tiendasList.find((data) => data.code == codigoTienda);
         let newDate = new Date();
-        newDate.date.toLocaleTimeString("es-PE", {
+        newDate.date.toLocaleString("es-PE", {
             timeZone: "America/Lima"
         });
         let diaFormat = `${newDate.getFullYear()}-${(newDate.getMonth() < 10 ? '0' + newDate.getMonth() : newDate.getDay())}-${(newDate.getDay() < 10 ? '0' + newDate.getDay() : newDate.getDay())}`;
