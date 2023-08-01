@@ -143,7 +143,7 @@ app.post('/control-asistencia', async (req, res) => {
             let diaFormat = `${dia.getFullYear()}-${(dia.getMonth() < 10 ? '0' + dia.getMonth() : dia.getDay())}-${(dia.getDay() < 10 ? '0' + dia.getDay() : dia.getDay())}`;
 
             await pool.query(`INSERT INTO TB_REG_MARCACION_IN_OUT(DNI,DIA,HORAIN,HORAOUT,INPUT,OUTPUT,HORAS,VENTAS,NUMVENTAS,CAJA,TERMINAL,NOMBRE_TIENDA)
-                   VALUES(${(dataEmpleado || {}).DNI},${(dataAsistencia || {}).DIA},${(dataAsistencia || {}).HORAIN},${(dataAsistencia || {}).HORAOUT},${isInput},${isOutput},${(dataAsistencia || {}).HORAS},${(dataAsistencia || {}).VENTAS},${(dataAsistencia || {}).NUMVENTAS},${(dataAsistencia || {}).CAJA},"",${(selectedLocal || {}).name});`);
+                   VALUES('${(dataEmpleado || {}).DNI}','${(dataAsistencia || {}).DIA}','${(dataAsistencia || {}).HORAIN}','${(dataAsistencia || {}).HORAOUT}',${isInput},${isOutput},'${(dataAsistencia || {}).HORAS}',${(dataAsistencia || {}).VENTAS},${(dataAsistencia || {}).NUMVENTAS},'${(dataAsistencia || {}).CAJA}',"",'${(selectedLocal || {}).name}');`);
 
             let response = {
                 DNI: (dataEmpleado || {}).DNI,
@@ -173,7 +173,7 @@ app.post('/control-asistencia', async (req, res) => {
                        OUTPUT = 0,
                        HORAS = '${(dataAsistencia || {}).HORAS}',
                        NUMVENTAS = '${(dataAsistencia || {}).NUMVENTAS}',
-                       CAJA = '${(dataAsistencia || {}).CAJA}' WHERE DNI = ${(dataEmpleado || {}).DNI} AND ID_REG_IN_OUT = ${((verifyEmpleado || [])[0] || {}).ID_REG_IN_OUT};`);
+                       CAJA = '${(dataAsistencia || {}).CAJA}' WHERE DNI = '${(dataEmpleado || {}).DNI}' AND ID_REG_IN_OUT = ${((verifyEmpleado || [])[0] || {}).ID_REG_IN_OUT};`);
 
             let response = {
                 DNI: (dataEmpleado || {}).DNI,
