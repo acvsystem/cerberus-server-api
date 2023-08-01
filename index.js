@@ -82,9 +82,7 @@ function emitVerificationDoc() {
     io.emit('consultingToFront', 'emitVerificationDoc');
 }
 
-io.on('reporteAssitencia', (data) => {
-    console.log("reporteAssitencia", data);
-});
+
 
 app.get('/control-asistencia', async (req, res) => {
     io.emit('searchAsistencia', 'BBWW', '2023-07-01', '2023-07-05');
@@ -246,6 +244,10 @@ io.use(function (socket, next) {
             agenteList.push({ id: socket.id, code: codeTerminal });
         }
     }
+
+    io.on('reporteAssitencia', (data) => {
+        console.log("reporteAssitencia", data);
+    });
 
     if (codeQuery == 'app') {
         console.log('app', socket.id);
