@@ -245,8 +245,9 @@ io.use(function (socket, next) {
         }
     }
 
-    socket.on('reporteAssitencia', (data) => {
-        console.log("reporteAssitencia", data);
+    socket.on('reporteAssitencia', (response) => {
+        console.log("reporteAssitencia", response);
+        io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
     });
 
     if (codeQuery == 'app') {
