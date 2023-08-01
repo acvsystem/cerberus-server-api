@@ -89,8 +89,8 @@ app.post('/control-asistencia', async (req, res) => {
     let dataEmpleado = ((dataTrigger || {}).DATA_EMPLEADO || [])[0] || {};
     let dataAsistencia = ((dataTrigger || {}).DATA_IN_OUT || [])[0] || {};
 
-    console.log("dataEmpleado", Object.keys(dataEmpleado));
-
+    console.log("dataEmpleado", dataEmpleado);
+    console.log("dataAsistencia", dataAsistencia);
 
     let verifiedData = await actionBDController.verificationRegister('TB_VENDEDORES', `DNI = '${(dataEmpleado || {}).DNI}'`);
 
