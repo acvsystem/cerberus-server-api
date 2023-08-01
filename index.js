@@ -136,7 +136,7 @@ app.post('/control-asistencia', async (req, res) => {
         let [selectEmpleado] = await actionBDController.verificationRegister("TB_VENDEDORES", `DNI = ${(dataEmpleado || {}).DNI}`);
 
         console.log("verifyEmpleado", verifyEmpleado);
-        
+
         let isInput = true;
         let isOutput = (dataAsistencia || {}).HORAS == 0 ? false : true;
 
@@ -171,7 +171,7 @@ app.post('/control-asistencia', async (req, res) => {
             await pool.query(`UPDATE TB_REG_MARCACION_IN_OUT SET
                        HORAIN ='${(dataAsistencia || {}).HORAIN}',
                        HORAOUT = '${(dataAsistencia || {}).HORAOUT}',
-                       OUTPUT = 0,
+                       OUTPUT = ${isOutput},
                        HORAS = '${(dataAsistencia || {}).HORAS}',
                        NUMVENTAS = '${(dataAsistencia || {}).NUMVENTAS}',
                        CAJA = '${(dataAsistencia || {}).CAJA}' WHERE DNI = '${(dataEmpleado || {}).DNI}' AND ID_REG_IN_OUT = ${(verifyEmpleado || {}).ID_REG_IN_OUT};`);
