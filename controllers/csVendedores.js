@@ -211,7 +211,7 @@ export const onRegisterPostulante = async (req, res) => {
 
 export const onCambioEstadoPostulante = async (req, res) => {
     let dataEstado = ((req || {}).body || [])[0] || {};
-
+    console.log(dataEstado);
    await actionBDController.execQuery(`UPDATE TB_ESTADO_POSTULANTE SET ESTADO='${(dataEstado || {}).estado}',TIENDA='${(dataEstado || {}).tienda}' WHERE DNI = '${(dataEstado || {}).dni}';`);
 
    res.json(prop.success.default);
