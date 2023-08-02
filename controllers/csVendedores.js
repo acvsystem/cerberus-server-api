@@ -34,7 +34,8 @@ export const onPostulanteList = async (req, res) => {
                         "email": (dp || {}).CORREO_ELECTRONICO,
                         "tipo_pension": (dp || {}).REGIMEN_PENSIONARIO,
                         "contacto_emergengia": (dp || {}).NOMBRE_CONTACT_EMERGENCIA,
-                        "numero_emergencia": (dp || {}).NUM_CONTACT_EMERGENCIA
+                        "numero_emergencia": (dp || {}).NUM_CONTACT_EMERGENCIA,
+                        "estado": ""
                     },
                     "experiencia_laboral": [],
                     "formacion_academica": [],
@@ -47,8 +48,7 @@ export const onPostulanteList = async (req, res) => {
                         "antecedentes_policiales": datosSaludList[0].ANT_POLICIALES,
                         "antecedentes_judiciales": datosSaludList[0].ANT_JUDICIALES,
                         "antecedentes_penales": datosSaludList[0].ANT_PENALES
-                    },
-                    "estado": ""
+                    }
                 }
             );
 
@@ -102,7 +102,7 @@ export const onPostulanteList = async (req, res) => {
             (estadoPostulanteList || []).filter((std) => {
                 if (std.DNI == (dp || {}).KEY_FICHA) {
                     let index = dataResponse.findIndex((dt) => dt.id == (std || {}).DNI);
-                    dataResponse[index].estado = (std || {}).ESTADO;
+                    dataResponse[index].datos_personales.estado = (std || {}).ESTADO;
                 }
             });
 
