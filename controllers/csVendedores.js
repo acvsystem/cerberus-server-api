@@ -9,6 +9,7 @@ export const onPostulanteList = async (req, res) => {
     let [forAcademicaList] = await pool.query(`SELECT * FROM TB_FORM_ACADEMICA;`);
     let [derHabienteList] = await pool.query(`SELECT * FROM TB_DATOS_HABIENTES;`);
     let [datosSaludList] = await pool.query(`SELECT * FROM TB_DATOS_SALUD_ANTECEDENTES;`);
+    let [estadoPostulanteList] = await pool.query(`SELECT * FROM TB_ESTADO_POSTULANTE;`);
 
     let dataResponse = [];
 
@@ -46,7 +47,8 @@ export const onPostulanteList = async (req, res) => {
                         "antecedentes_policiales": datosSaludList[0].ANT_POLICIALES,
                         "antecedentes_judiciales": datosSaludList[0].ANT_JUDICIALES,
                         "antecedentes_penales": datosSaludList[0].ANT_PENALES
-                    }
+                    },
+                    "estado": []
                 }
             );
 
@@ -96,6 +98,19 @@ export const onPostulanteList = async (req, res) => {
                     );
                 }
             });
+
+            (estadoPostulanteList || []).filter((std) => {
+                if (std.DNI == (dp || {}).KEY_FICHA) {
+                    let index = dataResponse.findIndex((dt) => dt.id == (std || {}).DNI);
+                    dataResponse[index].estado.push(
+                        {
+                            "estado": (std || {}).ESTADO
+                        }
+                    );
+                }
+            });
+
+
         });
     });
 
@@ -150,6 +165,12 @@ export const onRegisterPostulante = async (req, res) => {
     let tipoExcution = !existRegister.length ? 'I' : 'U';
 
     await actionBDController.execQuery(`CALL SP_CRUD_FICHA_EMPLEADO('${tipoExcution}',${cadenaFichaEmpleado})`);
+
+    let existEstado = await actionBDController.verificationRegister('TB_ESTADO_POSTULANTE', `DNI = '${idPostulante}'`);
+
+    if (!existEstado.length) {
+        actionBDController.execQuery(`INSERT INTO TB_ESTADO_POSTULANTE(DNI,ESTADO,TIENDA)VALUES('${idPostulante}','PENDIENTE','')`);
+    }
 
     let existLFE = await actionBDController.verificationRegister('TB_EXP_LABORAL_FICHA_EMPLEADO', `KEY_FICHA = '${idPostulante}'`);
 
