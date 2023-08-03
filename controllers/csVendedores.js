@@ -226,7 +226,7 @@ export const onRegisterPostulante = async (req, res) => {
         FEC_NAC,
         PAIS_NAC,
         TIENDA_ASIGNADO,
-        SALARIO_BASE FLOAT,
+        SALARIO_BASE,
         FEC_INGRESO)VALUES(
             "",
             "",
@@ -291,7 +291,7 @@ export const onCambioEstadoPostulante = async (req, res) => {
         FEC_NAC,
         PAIS_NAC,
         TIENDA_ASIGNADO,
-        SALARIO_BASE FLOAT,
+        SALARIO_BASE,
         FEC_INGRESO)VALUES(
             "",
             "",
