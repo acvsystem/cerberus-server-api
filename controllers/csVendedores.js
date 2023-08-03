@@ -260,6 +260,12 @@ export const onRegisterPostulante = async (req, res) => {
         WHERE NRO_DOC = '${(dataEstado || {}).dni}';`);
     }
 
+    let existSTD = await actionBDController.verificationRegister('TB_ESTADO_POSTULANTE', `DNI = '${idPostulante}';`);
+
+    if (!existSTD.length) {
+        await actionBDController.execQuery(`INSERT INTO TB_ESTADO_POSTULANTE(DNI,ESTADO,TIENDA)VALUES('${(dataEstado || {}).dni}','PENDIENTE','SIN ASIGNAR');`);
+    }
+
     res.json(prop.success.default);
 }
 
@@ -270,12 +276,21 @@ export const onCambioEstadoPostulante = async (req, res) => {
     await actionBDController.execQuery(`UPDATE TB_ESTADO_POSTULANTE SET ESTADO='${(dataEstado || {}).estado}',TIENDA='${(dataEstado || {}).tienda}' WHERE DNI = '${(dataEstado || {}).dni}';`);
     let [estadoPostulanteList] = await pool.query(`SELECT * FROM TB_ESTADO_POSTULANTE WHERE DNI = '${(dataEstado || {}).dni}';`);
 
+    let existSTD = await actionBDController.verificationRegister('TB_ESTADO_POSTULANTE', `DNI = '${(dataEstado || {}).dni}';`);
+
+    if (!existSTD.length) {
+        await actionBDController.execQuery(`INSERT INTO TB_ESTADO_POSTULANTE(DNI,ESTADO,TIENDA)VALUES('${(dataEstado || {}).dni}','${(dataEstado || {}).estado}','${(dataEstado || {}).tienda}');`);
+    } else {
+        await actionBDController.execQuery(`UPDATE TB_ESTADO_POSTULANTE SET ESTADO = '${(dataEstado || {}).estado}',TIENDA ='${(dataEstado || {}).tienda}');`);
+    }
+
+
     let existEMP = await actionBDController.verificationRegister('TB_EMPLEADO', `NRO_DOC = '${(dataEstado || {}).dni}';`);
 
     if (!existEMP.length) {
         let [datosPersonales] = await pool.query(`SELECT * FROM TB_FICHA_EMPLEADO  WHERE KEY_FICHA = '${(dataEstado || {}).dni}';`);
         let dp = (datosPersonales || [])[0] || {};
-        console.log(dp);
+
         await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
         CODIGO_ICG,
         CODIGO_EJB,
