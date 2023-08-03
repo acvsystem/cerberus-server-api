@@ -35,7 +35,8 @@ export const onPostulanteList = async (req, res) => {
                         "tipo_pension": (dp || {}).REGIMEN_PENSIONARIO,
                         "contacto_emergengia": (dp || {}).NOMBRE_CONTACT_EMERGENCIA,
                         "numero_emergencia": (dp || {}).NUM_CONTACT_EMERGENCIA,
-                        "estado": ""
+                        "estado": "",
+                        "tienda": ""
                     },
                     "experiencia_laboral": [],
                     "formacion_academica": [],
@@ -103,6 +104,7 @@ export const onPostulanteList = async (req, res) => {
                 if (std.DNI == (dp || {}).KEY_FICHA) {
                     let index = dataResponse.findIndex((dt) => dt.id == (std || {}).DNI);
                     dataResponse[index].datos_personales.estado = (std || {}).ESTADO;
+                    dataResponse[index].datos_personales.tienda = (std || {}).TIENDA;
                 }
             });
 
