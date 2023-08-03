@@ -242,7 +242,7 @@ export const onRegisterPostulante = async (req, res) => {
             '${(datosPersonales || {}).fec_nacimiento}',
             '${(datosPersonales || {}).pais_nacimiento}',
             "",
-            0,
+            0.0,
             ""
         );`);
     } else {
@@ -275,7 +275,7 @@ export const onCambioEstadoPostulante = async (req, res) => {
     if (!existEMP.length) {
         let [datosPersonales] = await pool.query(`SELECT * FROM TB_FICHA_EMPLEADO  WHERE KEY_FICHA = '${(dataEstado || {}).dni}';`);
         let dp = (datosPersonales || [])[0] || {};
-
+        console.log(dp);
         await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
         CODIGO_ICG,
         CODIGO_EJB,
