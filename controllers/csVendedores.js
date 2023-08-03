@@ -212,7 +212,15 @@ export const onRegisterPostulante = async (req, res) => {
 export const onCambioEstadoPostulante = async (req, res) => {
     let dataEstado = (req || {}).body;
     console.log(dataEstado);
-   await actionBDController.execQuery(`UPDATE TB_ESTADO_POSTULANTE SET ESTADO='${(dataEstado || {}).estado}',TIENDA='${(dataEstado || {}).tienda}' WHERE DNI = '${(dataEstado || {}).dni}';`);
+    await actionBDController.execQuery(`UPDATE TB_ESTADO_POSTULANTE SET ESTADO='${(dataEstado || {}).estado}',TIENDA='${(dataEstado || {}).tienda}' WHERE DNI = '${(dataEstado || {}).dni}';`);
+    let [estadoPostulanteList] = await pool.query(`SELECT * FROM TB_ESTADO_POSTULANTE WHERE DNI = '${(dataEstado || {}).dni}';`);
+    
+    let response = [
+        {
+            data: estadoPostulanteList,
+            status: prop.success.default
+        }
+    ];
 
-   res.json(prop.success.default);
+    res.json(response);
 }
