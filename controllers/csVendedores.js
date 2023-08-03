@@ -307,7 +307,7 @@ export const onCambioEstadoPostulante = async (req, res) => {
             '${dp.FECH_NAC}',
             '${dp.PAIS_NACIMIENTO}',
             '${(dataEstado || {}).tienda || ""}',
-            0,
+            0.0,
             ""
         );`);
     } else {
