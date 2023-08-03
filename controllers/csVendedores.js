@@ -274,7 +274,6 @@ export const onCambioEstadoPostulante = async (req, res) => {
     let dataEstado = (req || {}).body;
 
     await actionBDController.execQuery(`UPDATE TB_ESTADO_POSTULANTE SET ESTADO='${(dataEstado || {}).estado}',TIENDA='${(dataEstado || {}).tienda}' WHERE DNI = '${(dataEstado || {}).dni}';`);
-    let [estadoPostulanteList] = await pool.query(`SELECT * FROM TB_ESTADO_POSTULANTE WHERE DNI = '${(dataEstado || {}).dni}';`);
 
     let existSTD = await actionBDController.verificationRegister('TB_ESTADO_POSTULANTE', `DNI = '${(dataEstado || {}).dni}';`);
 
@@ -329,7 +328,8 @@ export const onCambioEstadoPostulante = async (req, res) => {
         await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO ='${(dataEstado || {}).tienda || ""}',ESTADO_EMP = '${(dataEstado || {}).estado || "PENDIENTE"}'  WHERE NRO_DOC = '${(dataEstado || {}).dni}';`);
     }
 
-
+    let [estadoPostulanteList] = await pool.query(`SELECT * FROM TB_ESTADO_POSTULANTE WHERE DNI = '${(dataEstado || {}).dni}';`);
+    
     let response = [
         {
             data: (estadoPostulanteList || [])[0] || [],
