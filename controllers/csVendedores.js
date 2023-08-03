@@ -281,7 +281,7 @@ export const onCambioEstadoPostulante = async (req, res) => {
     if (!existSTD.length) {
         await actionBDController.execQuery(`INSERT INTO TB_ESTADO_POSTULANTE(DNI,ESTADO,TIENDA)VALUES('${(dataEstado || {}).dni}','${(dataEstado || {}).estado}','${(dataEstado || {}).tienda}');`);
     } else {
-        await actionBDController.execQuery(`UPDATE TB_ESTADO_POSTULANTE SET ESTADO = '${(dataEstado || {}).estado}',TIENDA ='${(dataEstado || {}).tienda}');`);
+        await actionBDController.execQuery(`UPDATE TB_ESTADO_POSTULANTE SET ESTADO = '${(dataEstado || {}).estado}',TIENDA ='${(dataEstado || {}).tienda}' WHERE DNI = '${(dataEstado || {}).dni}';`);
     }
 
 
