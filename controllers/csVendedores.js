@@ -3,6 +3,20 @@ import { prop } from '../const/defaultResponse.js';
 import actionBDController from './csActionOnBD.js';
 import { pool } from '../conections/conexMysql.js';
 
+
+export const onEmpleadoList = async (req, res) => {
+    let [datosPersonales] = await pool.query(`SELECT * FROM TB_EMPLEADO;`);
+
+    let response = [
+        {
+            data: datosPersonales,
+            status: prop.success.default
+        }
+    ];
+
+    res.json(response);
+};
+
 export const onPostulanteList = async (req, res) => {
     let [datosPersonales] = await pool.query(`SELECT * FROM TB_FICHA_EMPLEADO;`);
     let [expLaboralList] = await pool.query(`SELECT * FROM TB_EXP_LABORAL_FICHA_EMPLEADO;`);
@@ -329,7 +343,7 @@ export const onCambioEstadoPostulante = async (req, res) => {
     }
 
     let [estadoPostulanteList] = await pool.query(`SELECT * FROM TB_ESTADO_POSTULANTE WHERE DNI = '${(dataEstado || {}).dni}';`);
-    
+
     let response = [
         {
             data: (estadoPostulanteList || [])[0] || [],
