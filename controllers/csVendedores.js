@@ -207,6 +207,59 @@ export const onRegisterPostulante = async (req, res) => {
         await actionBDController.execQuery(`CALL SP_CRUD_DATOS_SALUD_ANTECEDENTES('${(existDSA.length) ? 'U' : 'I'}',${saludAntecedentes})`);
     }
 
+    let existEMP = await actionBDController.verificationRegister('TB_EMPLEADO', `NRO_DOC = '${idPostulante}';`);
+
+    if (!existEMP.length) {
+
+        await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
+        CODIGO_ICG,
+        CODIGO_EJB,
+        AP_PATERNO,
+        AP_MATERNO,
+        NOM_EMPLEADO,
+        ESTADO_EMP,
+        ESTADO_CIVIL,
+        TIPO_DOC,
+        NRO_DOC,
+        TLF_EMP,
+        EMAIL_EMP,
+        FEC_NAC,
+        PAIS_NAC,
+        TIENDA_ASIGNADO,
+        SALARIO_BASE FLOAT,
+        FEC_INGRESO)VALUES(
+            "",
+            "",
+            '${(datosPersonales || {}).ap_paterno}',
+            '${(datosPersonales || {}).ap_materno}',
+            '${(datosPersonales || {}).nombres}',
+            '${"PENDIENTE"}',
+            '${(datosPersonales || {}).estado_civil}',
+            '${(datosPersonales || {}).tipo_documento}',
+            '${(datosPersonales || {}).num_documento}',
+            '${(datosPersonales || {}).nro_celular}',
+            '${(datosPersonales || {}).email}',
+            '${(datosPersonales || {}).fec_nacimiento}',
+            '${(datosPersonales || {}).pais_nacimiento}',
+            "",
+            "",
+            ""
+        );`);
+    } else {
+        await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET 
+        AP_PATERNO = '${(datosPersonales || {}).ap_paterno}',
+        AP_MATERNO = '${(datosPersonales || {}).ap_materno}',
+        NOM_EMPLEADO = '${(datosPersonales || {}).nombres}',
+        ESTADO_CIVIL = '${(datosPersonales || {}).estado_civil}',
+        TIPO_DOC = '${(datosPersonales || {}).tipo_documento}',
+        NRO_DOC = '${(datosPersonales || {}).num_documento}',
+        TLF_EMP = '${(datosPersonales || {}).nro_celular}',
+        EMAIL_EMP = '${(datosPersonales || {}).email}',
+        FEC_NAC = '${(datosPersonales || {}).fec_nacimiento}',
+        PAIS_NAC = '${(datosPersonales || {}).pais_nacimiento}',
+        WHERE NRO_DOC = '${(dataEstado || {}).dni}';`);
+    }
+
     res.json(prop.success.default);
 }
 
@@ -216,7 +269,52 @@ export const onCambioEstadoPostulante = async (req, res) => {
 
     await actionBDController.execQuery(`UPDATE TB_ESTADO_POSTULANTE SET ESTADO='${(dataEstado || {}).estado}',TIENDA='${(dataEstado || {}).tienda}' WHERE DNI = '${(dataEstado || {}).dni}';`);
     let [estadoPostulanteList] = await pool.query(`SELECT * FROM TB_ESTADO_POSTULANTE WHERE DNI = '${(dataEstado || {}).dni}';`);
-    
+
+    let existEMP = await actionBDController.verificationRegister('TB_EMPLEADO', `NRO_DOC = '${(dataEstado || {}).dni}';`);
+
+    if (!existEMP.length) {
+        let [datosPersonales] = await pool.query(`SELECT * FROM TB_FICHA_EMPLEADO  WHERE KEY_FICHA = '${(dataEstado || {}).dni}';`);
+        let dp = (datosPersonales || [])[0] || {};
+
+        await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
+        CODIGO_ICG,
+        CODIGO_EJB,
+        AP_PATERNO,
+        AP_MATERNO,
+        NOM_EMPLEADO,
+        ESTADO_EMP,
+        ESTADO_CIVIL,
+        TIPO_DOC,
+        NRO_DOC,
+        TLF_EMP,
+        EMAIL_EMP,
+        FEC_NAC,
+        PAIS_NAC,
+        TIENDA_ASIGNADO,
+        SALARIO_BASE FLOAT,
+        FEC_INGRESO)VALUES(
+            "",
+            "",
+            '${dp.AP_PATERNO}',
+            '${dp.AP_MATERNO}',
+            '${dp.FC_NOMBRES}',
+            '${(dataEstado || {}).estado || "PENDIENTE"}',
+            '${dp.ESTADO_CIVIL}',
+            '${dp.TIPO_DOCUMENTO}',
+            '${dp.NUM_DOCUMENTO}',
+            '${dp.FC_CELULAR}',
+            '${dp.CORREO_ELECTRONICO}',
+            '${dp.FECH_NAC}',
+            '${dp.PAIS_NACIMIENTO}',
+            '${(dataEstado || {}).tienda || ""}',
+            "",
+            ""
+        );`);
+    } else {
+        await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO ='${(dataEstado || {}).tienda || ""}',ESTADO_EMP = '${(dataEstado || {}).estado || "PENDIENTE"}'  WHERE NRO_DOC = '${(dataEstado || {}).dni}';`);
+    }
+
+
     let response = [
         {
             data: (estadoPostulanteList || [])[0] || [],
