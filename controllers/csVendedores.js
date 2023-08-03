@@ -242,7 +242,7 @@ export const onRegisterPostulante = async (req, res) => {
             '${(datosPersonales || {}).fec_nacimiento}',
             '${(datosPersonales || {}).pais_nacimiento}',
             "",
-            "",
+            0,
             ""
         );`);
     } else {
@@ -307,7 +307,7 @@ export const onCambioEstadoPostulante = async (req, res) => {
             '${dp.FECH_NAC}',
             '${dp.PAIS_NACIMIENTO}',
             '${(dataEstado || {}).tienda || ""}',
-            "",
+            0,
             ""
         );`);
     } else {
