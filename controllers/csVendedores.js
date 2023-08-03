@@ -214,7 +214,7 @@ export const onCambioEstadoPostulante = async (req, res) => {
     console.log(dataEstado);
     await actionBDController.execQuery(`UPDATE TB_ESTADO_POSTULANTE SET ESTADO='${(dataEstado || {}).estado}',TIENDA='${(dataEstado || {}).tienda}' WHERE DNI = '${(dataEstado || {}).dni}';`);
     let [estadoPostulanteList] = await pool.query(`SELECT * FROM TB_ESTADO_POSTULANTE WHERE DNI = '${(dataEstado || {}).dni}';`);
-    
+    console.log(estadoPostulanteList);
     let response = [
         {
             data: estadoPostulanteList,
