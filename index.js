@@ -87,11 +87,7 @@ app.post('/control-asistencia', async (req, res) => {
     let dataRecept = ((req || {}).body || [])[0];
     let dateList = (dataRecept || []).dateList || [];
 
-    (dateList || []).filter((date) => {
-        console.log("/control-asistencia", date);
-    });
-
-    io.emit('searchAsistencia', (dataRecept || {}).centroCosto, (dataRecept || {}).fechInicio, (dataRecept || {}).fechFin);
+    io.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList);
 
     res.json(defaultResponse.success.default);
 });
@@ -135,7 +131,7 @@ io.use(function (socket, next) {
     }
 
     socket.on('reporteAssitencia', (response) => {
-        console.log("reporteAssitencia", response);
+        
         io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
     });
 
