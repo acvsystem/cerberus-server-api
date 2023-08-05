@@ -83,10 +83,14 @@ function emitVerificationDoc() {
     io.emit('consultingToFront', 'emitVerificationDoc');
 }
 
+app.post('/control-asistencia', async (req, res) => {
+    let dataRecept = ((req || {}).body || [])[0];
+    let dateList = (dataRecept || []).dateList || [];
 
+    (dateList || []).filter((date) => {
+        console.log("/control-asistencia", date);
+    });
 
-app.get('/control-asistencia', async (req, res) => {
-    let dataRecept = ((req || {}).query || {});
     io.emit('searchAsistencia', (dataRecept || {}).centroCosto, (dataRecept || {}).fechInicio, (dataRecept || {}).fechFin);
 
     res.json(defaultResponse.success.default);
