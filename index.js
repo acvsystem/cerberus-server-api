@@ -131,7 +131,7 @@ io.use(function (socket, next) {
     }
 
     socket.on('reporteAssitencia', (response) => {
-
+        
         io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
     });
 
@@ -146,7 +146,7 @@ io.use(function (socket, next) {
 
     //EMITE DESDE EL SERVIDOR
     socket.on('verifyDocument', async (resData) => {
-        if (socket.decoded.aud == 'SERVER') {
+     if (socket.decoded.aud == 'SERVER') {
             let listSessionConnect = await facturacionController.verificacionDocumentos(resData);
             socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
         }
@@ -163,6 +163,7 @@ io.use(function (socket, next) {
     //EMITE DESDE EL FRONT
     socket.on('comunicationFront', (data) => {
         if (socket.decoded.aud == 'ADMINISTRADOR') {
+            console.log("comunicationFront",socket.decoded.aud);
             socket.broadcast.emit("consultingToFront", 'ready');
         }
     });
@@ -175,7 +176,7 @@ io.use(function (socket, next) {
     });
 
     socket.on('conexion:serverICG', (data) => {
-        socket.to(`${listClient.id}`).emit("conexion:serverICG:send", data);
+        socket.broadcast.emit("conexion:serverICG:send", data);
     });
 
     socket.on('disconnect', async () => {
@@ -196,7 +197,7 @@ io.use(function (socket, next) {
     });
 
     socket.on('status:serverSUNAT', (data) => {
-        socket.emit("status:serverSUNAT:send", data);
+        socket.broadcast.emit("status:serverSUNAT:send", data);
     });
 
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
