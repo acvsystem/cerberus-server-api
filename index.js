@@ -175,7 +175,7 @@ io.use(function (socket, next) {
     });
 
     socket.on('conexion:serverICG', (data) => {
-        socket.emit("conexion:serverICG:send", data);
+        socket.to(`${listClient.id}`).emit("conexion:serverICG:send", data);
     });
 
     socket.on('disconnect', async () => {
