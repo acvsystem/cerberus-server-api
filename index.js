@@ -131,7 +131,7 @@ io.use(function (socket, next) {
     }
 
     socket.on('reporteAssitencia', (response) => {
-        
+
         io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
     });
 
@@ -175,7 +175,7 @@ io.use(function (socket, next) {
     });
 
     socket.on('conexion:serverICG', (data) => {
-        socket.broadcast.emit("conexion:serverICG:send", data);
+        socket.emit("conexion:serverICG:send", data);
     });
 
     socket.on('disconnect', async () => {
@@ -196,7 +196,7 @@ io.use(function (socket, next) {
     });
 
     socket.on('status:serverSUNAT', (data) => {
-        socket.broadcast.emit("status:serverSUNAT:send", data);
+        socket.emit("status:serverSUNAT:send", data);
     });
 
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
