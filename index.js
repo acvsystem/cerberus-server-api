@@ -168,7 +168,6 @@ io.use(function (socket, next) {
     });
 
     socket.on('update:file:FrontAgent', (data) => {
-        console.log(socket.decoded.aud);
         if (socket.decoded.aud == 'ADMINISTRADOR') {
             socket.broadcast.emit("update_file_Agente", data);
         }
