@@ -206,7 +206,7 @@ io.use(function (socket, next) {
         socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
     } else {
         if (codeTerminal == "SRVFACT") {
-            console.log('SERVIDOR', codeTerminal);
+           
             emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
                 .catch(error => res.send(error));
         }
