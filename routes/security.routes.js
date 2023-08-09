@@ -12,16 +12,17 @@ router.post('/create/user', CreateNewUser);
 router.get('/create/access/postulante', createAccessPostulant);
 router.post('/validation/access/postulante', validationAccessPostulant);
 
-router.get('/create/hash/agente', (req, res) => {
+router.post('/create/hash/agente', (req, res) => {
 
     const token = req.header('Authorization') || "";
-
+    let body = (req || {}).body || {};
+    console.log(body);
     let resValidation = tokenController.verificationToken(token);
 
     if ((resValidation || {}).isValid) {
         let data = {
-            user: "PYTHON",
-            nivel: "AGENTE"
+            user: "DUNAMIS",
+            nivel: (body || {}).nivel
         };
 
         const hash = CryptoJS.AES.encrypt(JSON.stringify(data), prop.keyCryptHash).toString();
