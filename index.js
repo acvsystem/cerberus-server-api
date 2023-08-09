@@ -163,7 +163,6 @@ io.use(function (socket, next) {
     //EMITE DESDE EL FRONT
     socket.on('comunicationFront', (data) => {
         if (socket.decoded.aud == 'ADMINISTRADOR') {
-            console.log("comunicationFront",socket.decoded.aud);
             socket.broadcast.emit("consultingToFront", 'ready');
         }
     });
