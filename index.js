@@ -87,10 +87,15 @@ app.post('/control-asistencia', async (req, res) => {
     let dataRecept = ((req || {}).body || [])[0];
     let dateList = (dataRecept || []).dateList || [];
 
-    io.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList);
+    if (dateList.length) {
+        io.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList);
+    } else {
+        io.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2);
+    }
 
     res.json(defaultResponse.success.default);
 });
+
 
 io.use(function (socket, next) {
 
@@ -131,7 +136,7 @@ io.use(function (socket, next) {
     }
 
     socket.on('reporteAssitencia', (response) => {
-        
+
         io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
     });
 
@@ -146,7 +151,7 @@ io.use(function (socket, next) {
 
     //EMITE DESDE EL SERVIDOR
     socket.on('verifyDocument', async (resData) => {
-     if (socket.decoded.aud == 'SERVER') {
+        if (socket.decoded.aud == 'SERVER') {
             let listSessionConnect = await facturacionController.verificacionDocumentos(resData);
             socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
         }
@@ -206,7 +211,7 @@ io.use(function (socket, next) {
         socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
     } else {
         if (codeTerminal == "SRVFACT") {
-           
+
             emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
                 .catch(error => res.send(error));
         }
