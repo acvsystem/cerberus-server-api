@@ -127,7 +127,7 @@ io.use(function (socket, next) {
     const userId = socket.id;
 
     socket.join(userId);
-    
+
     if (socket.decoded.aud == 'AGENTE') {
         let indexAgente = (agenteList || []).findIndex((data, i) => (data || {}).code == codeTerminal);
 
@@ -150,7 +150,7 @@ io.use(function (socket, next) {
     socket.on('reporteAssitencia', async (response) => {
 
         
-        console.log("reporteAssitencia ",userId);
+        console.log("reporteAssitencia ",response);
         socket.to(`${userId}`).emit("sendControlAsistencia", response);
     });
 
