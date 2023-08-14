@@ -145,8 +145,7 @@ io.use(function (socket, next) {
     }
 
     socket.on('reporteAssitencia', (response) => {
-        listClient.id = socket.id;
-        console.log(listClient);
+        console.log("reporteAssitencia ",listClient);
         io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
     });
 
