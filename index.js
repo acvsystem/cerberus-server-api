@@ -146,7 +146,7 @@ io.use(function (socket, next) {
 
     socket.on('reporteAssitencia', (response) => {
         console.log("reporteAssitencia ",listClient);
-        io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
+        socket.broadcast.emit("sendControlAsistencia", response);
     });
 
     //EMITE DESDE EL SERVIDOR
