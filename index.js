@@ -150,7 +150,7 @@ io.use(function (socket, next) {
         socket.join(userId);
         
         console.log("reporteAssitencia ",userId);
-        socket.to(userId).emit("sendControlAsistencia", response);
+        socket.to(`${userId}`).emit("sendControlAsistencia", response);
     });
 
     //EMITE DESDE EL SERVIDOR
