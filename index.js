@@ -144,9 +144,13 @@ io.use(function (socket, next) {
         socket.emit("sendNotificationSunat", documentList);
     }
 
-    socket.on('reporteAssitencia', (response) => {
-        console.log("reporteAssitencia ",listClient);
-        socket.broadcast.emit("sendControlAsistencia", response);
+    socket.on('reporteAssitencia', async (response) => {
+        const userId = await fetchUserId(socket);
+
+        socket.join(userId);
+        
+        console.log("reporteAssitencia ",userId);
+        socket.to(userId).emit("sendControlAsistencia", response);
     });
 
     //EMITE DESDE EL SERVIDOR
