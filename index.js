@@ -148,10 +148,10 @@ io.use(function (socket, next) {
     }
 
     socket.on('reporteAssitencia', async (response) => {
+        let socketID = (response || {}).socketID;
 
-
-        console.log("reporteAssitencia ", response);
-        socket.to(`${userId}`).emit("sendControlAsistencia", response);
+        console.log("reporteAssitencia ", socketID);
+        socket.to(`${socketID}`).emit("sendControlAsistencia", response);
     });
 
     //EMITE DESDE EL SERVIDOR
@@ -185,7 +185,6 @@ io.use(function (socket, next) {
         if (dateList.length) {
             io.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList);
         } else {
-            console.log("emitRRHH", (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socket.id);
             io.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socket.id);
         }
     });
