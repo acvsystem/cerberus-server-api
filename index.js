@@ -172,24 +172,19 @@ io.use(function (socket, next) {
 
     //EMITE DESDE EL FRONT
     socket.on('comunicationFront', (data) => {
-        let dataRecept = data[0];
-        let dateList = (dataRecept || []).dateList || [];
-
-        if (dateList.length) {
-            io.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList);
-        } else {
-            io.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socket.id);
+        if (socket.decoded.aud == 'ADMINISTRADOR') {
+            socket.broadcast.emit("consultingToFront", 'ready');
         }
     });
 
     socket.on('emitRRHH', (data) => {
-        let dataRecept = (data|| [])[0];
+        let dataRecept = data[0];
         let dateList = (dataRecept || []).dateList || [];
 
         if (dateList.length) {
-            io.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList);
+            socket.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList);
         } else {
-            io.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socket.id);
+            socket.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socket.id);
         }
     });
 
