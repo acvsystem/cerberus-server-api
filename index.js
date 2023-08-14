@@ -178,13 +178,14 @@ io.use(function (socket, next) {
     });
 
     socket.on('emitRRHH', (data) => {
-        console.log("emitRRHH", data);
+        
         let dataRecept = data[0];
         let dateList = (dataRecept || []).dateList || [];
 
         if (dateList.length) {
             socket.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList);
         } else {
+            console.log("emitRRHH", (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socket.id);
             socket.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socket.id);
         }
     });
