@@ -90,7 +90,7 @@ app.post('/control-asistencia', async (req, res) => {
     if (dateList.length) {
         io.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList);
     } else {
-        io.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socketID);
+        io.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socket.id);
     }
 
     res.json(defaultResponse.success.default);
