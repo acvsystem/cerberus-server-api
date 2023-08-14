@@ -135,11 +135,6 @@ io.use(function (socket, next) {
         }
     }
 
-    socket.on('reporteAssitencia', (response) => {
-
-        io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
-    });
-
     if (codeQuery == 'app') {
         console.log('app', socket.id);
         listClient.id = socket.id;
@@ -148,6 +143,12 @@ io.use(function (socket, next) {
         let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
         socket.emit("sendNotificationSunat", documentList);
     }
+
+    socket.on('reporteAssitencia', (response) => {
+        listClient.id = socket.id;
+        console.log(listClient);
+        io.to(`${listClient.id}`).emit("sendControlAsistencia", response);
+    });
 
     //EMITE DESDE EL SERVIDOR
     socket.on('verifyDocument', async (resData) => {
