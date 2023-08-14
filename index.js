@@ -83,6 +83,20 @@ function emitVerificationDoc() {
     io.emit('consultingToFront', 'emitVerificationDoc');
 }
 
+app.post('/control-asistencia', async (req, res) => {
+    let dataRecept = ((req || {}).body || [])[0];
+    let dateList = (dataRecept || []).dateList || [];
+
+    if (dateList.length) {
+        io.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList);
+    } else {
+        io.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socket.id);
+    }
+
+    res.json(defaultResponse.success.default);
+});
+
+
 io.use(function (socket, next) {
 
     let token = socket.handshake.query.token;
@@ -113,19 +127,6 @@ io.use(function (socket, next) {
     const userId = socket.id;
 
     socket.join(userId);
-
-    app.post('/control-asistencia', async (req, res) => {
-        let dataRecept = ((req || {}).body || [])[0];
-        let dateList = (dataRecept || []).dateList || [];
-    
-        if (dateList.length) {
-            socket.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList);
-        } else {
-            socket.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socket.id);
-        }
-    
-        res.json(defaultResponse.success.default);
-    });
 
     if (socket.decoded.aud == 'AGENTE') {
         let indexAgente = (agenteList || []).findIndex((data, i) => (data || {}).code == codeTerminal);
@@ -171,8 +172,24 @@ io.use(function (socket, next) {
 
     //EMITE DESDE EL FRONT
     socket.on('comunicationFront', (data) => {
-        if (socket.decoded.aud == 'ADMINISTRADOR') {
-            socket.broadcast.emit("consultingToFront", 'ready');
+        let dataRecept = data[0];
+        let dateList = (dataRecept || []).dateList || [];
+
+        if (dateList.length) {
+            io.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList);
+        } else {
+            io.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socket.id);
+        }
+    });
+
+    socket.on('emitRRHH', (data) => {
+        let dataRecept = (data|| [])[0];
+        let dateList = (dataRecept || []).dateList || [];
+
+        if (dateList.length) {
+            io.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList);
+        } else {
+            io.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socket.id);
         }
     });
 
