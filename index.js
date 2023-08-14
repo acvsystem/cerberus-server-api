@@ -145,7 +145,7 @@ io.use(function (socket, next) {
     }
 
     socket.on('reporteAssitencia', async (response) => {
-        const userId = await fetchUserId(socket);
+        const userId = socket.id;
 
         socket.join(userId);
         
