@@ -124,7 +124,10 @@ io.use(function (socket, next) {
     let codeQuery = socket.handshake.query.code;
     let codeTerminal = socket.handshake.headers.code;
     let isIcg = socket.handshake.headers.icg;
+    const userId = socket.id;
 
+    socket.join(userId);
+    
     if (socket.decoded.aud == 'AGENTE') {
         let indexAgente = (agenteList || []).findIndex((data, i) => (data || {}).code == codeTerminal);
 
@@ -145,9 +148,7 @@ io.use(function (socket, next) {
     }
 
     socket.on('reporteAssitencia', async (response) => {
-        const userId = socket.id;
 
-        socket.join(userId);
         
         console.log("reporteAssitencia ",userId);
         socket.to(`${userId}`).emit("sendControlAsistencia", response);
