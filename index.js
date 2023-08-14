@@ -183,10 +183,10 @@ io.use(function (socket, next) {
         let dateList = (dataRecept || []).dateList || [];
 
         if (dateList.length) {
-            socket.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList);
+            io.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList);
         } else {
             console.log("emitRRHH", (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socket.id);
-            socket.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socket.id);
+            io.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socket.id);
         }
     });
 
