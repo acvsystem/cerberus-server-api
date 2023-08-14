@@ -90,7 +90,7 @@ app.post('/control-asistencia', async (req, res) => {
     if (dateList.length) {
         io.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList);
     } else {
-        io.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2);
+        io.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socketID);
     }
 
     res.json(defaultResponse.success.default);
@@ -149,8 +149,8 @@ io.use(function (socket, next) {
 
     socket.on('reporteAssitencia', async (response) => {
 
-        
-        console.log("reporteAssitencia ",response);
+
+        console.log("reporteAssitencia ", response);
         socket.to(`${userId}`).emit("sendControlAsistencia", response);
     });
 
