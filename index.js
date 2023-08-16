@@ -183,7 +183,7 @@ io.use(function (socket, next) {
         let dateList = (dataRecept || []).dateList || [];
 
         if (dateList.length) {
-            io.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList);
+            io.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList, socket.id);
         } else {
             io.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socket.id);
         }
