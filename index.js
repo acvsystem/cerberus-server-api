@@ -148,9 +148,93 @@ io.use(function (socket, next) {
     }
 
     socket.on('reporteAssitencia', async (response) => {
+        let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
         let socketID = (response || {}).socketID;
+        let dataAsistensList = (response || {}).serverData;
+        let isReportForDay = (response || {}).isReportForDay;
+        let isReportTotal = (response || {}).isReportTotal;
 
-        console.log("reporteAssitencia ", socketID);
+        let documentListAdd = [];
+        let reportData = [];
+
+        (empleadoList || []).filter((emp) => {
+            let hrWorking = 0;
+            let nroTransacciones = 0;
+            let costoVentas = 0;
+
+            (dataAsistensList || []).filter((asits) => {
+                let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${(emp || {}).AP_MATERNO} ${(emp || {}).NOM_EMPLEADO}`;
+                let hExcedente = 0;
+                let hFaltante = 0;
+
+                if (emp.NRO_DOC == asits.nroDocumento) {
+                    hrWorking += emp.hrWorking;
+                    nroTransacciones += emp.nroVentas;
+
+                    if (hrWorking > 8) {
+                        hExcedente += hrWorking % 8;
+                    }
+
+                    if (hrWorking < 8) {
+                        hFaltante += 8 - hrWorking;
+                    }
+
+                    costoVentas += emp.Ventas;
+
+                    let index = -1;
+
+                    if (isReportForDay) {
+                        index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento && report.FECHA == asits.dia);
+                    }
+
+                    if (isReportTotal) {
+                        index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento);
+                    }
+
+                    if (index != -1) {
+                        let RegisterAddList = {};
+                        let itemReport = {};
+                        let hora_1 = parseInt(reportData[index]['hsb'].split(":")[0]) * 60 + parseInt(reportData[index]['hsb'].split(":")[1]);
+                        let hora_2 = parseInt(asits.hrIn.split(":")[0]) * 60 + parseInt(asits.hrIn.split(":")[1]);
+
+
+                        if (isReportForDay) {
+                            ((reportData || [])[index] || {})['hib'] = asits.hrIn;
+                            ((reportData || [])[index] || {})['hSalida'] = asits.hrOut;
+                            ((reportData || [])[index] || {})['nroVentas'] = nroVentas.toFixed(2);
+                            ((reportData || [])[index] || {})['ventas'] = ventas.toFixed(2);
+                            ((reportData || [])[index] || {})['hBrake'] = (hora_2 - hora_1) / 60;
+
+                            RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento && register.fecha == (asits || {}).dia);
+
+                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': emp.nroDocumento, 'fecha': emp.dia, 'hIngreso': emp.hrIn, 'hsb': emp.hrOut, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBrake': 0 };
+                        }
+
+                        ((reportData || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
+                        ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(hExcedente.toFixed(2)));
+                        ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hFaltante.toFixed(2)));
+
+                        if (isReportTotal) {
+                            RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
+
+                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': emp.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
+                        }
+
+                        if (!RegisterAddList.length) {
+                            reportData.push(itemReport);
+                        }
+
+                    }
+
+                }
+            });
+
+        });
+
+
+
+
+
         socket.to(`${socketID}`).emit("sendControlAsistencia", response);
     });
 
@@ -177,17 +261,28 @@ io.use(function (socket, next) {
         }
     });
 
-    socket.on('emitRRHH', (data) => {
-        
-        let dataRecept = data[0];
+    socket.on('emitRRHH', (request) => {
+
+        let dataRequest = (request || [])[0] || {};
+        let isReportForDay = (dataRequest || {}).isReportForDay;
+        let isReportTotal = (dataRequest || {}).isReportTotal;
+        let isReportMtDate = (dataRequest || {}).isReportMtDate;
+        let isReporRgDate = (dataRequest || {}).isReporRgDate;
         let dateList = (dataRecept || []).dateList || [];
 
-        if (dateList.length) {
-            console.log((dataRecept || {}).centroCosto, dateList, socket.id);
-            io.emit('searchAsistencia', (dataRecept || {}).centroCosto, dateList, socket.id);
-        } else {
-            io.emit('searchAsistenciaMes', (dataRecept || {}).centroCosto, (dataRecept || {}).date_1, (dataRecept || {}).date_2, socket.id);
-        }
+        let confConsulting = [
+            {
+                "socket": (socket || {}).id,
+                "isReportForDay": isReportForDay,
+                "isReportTotal": isReportTotal,
+                "isReportMtDate": isReportMtDate,
+                "isReporRgDate": isReporRgDate,
+                "centroCosto": (dataRecept || {}).centroCosto,
+                "dateList": dateList
+            }
+        ];
+
+        io.emit('searchAsistencia', confConsulting);
     });
 
     socket.on('update:file:FrontAgent', (data) => {
