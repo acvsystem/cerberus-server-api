@@ -148,7 +148,7 @@ io.use(function (socket, next) {
     }
 
     socket.on('reporteAssitencia', async (response) => {
-        let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
+       /* let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
         let socketID = (response || {}).socketID;
         let dataAsistensList = (response || {}).serverData;
         let isReportForDay = (response || {}).isReportForDay;
@@ -230,10 +230,7 @@ io.use(function (socket, next) {
             });
 
         });
-
-
-
-
+*/
 
         socket.to(`${socketID}`).emit("sendControlAsistencia", response);
     });
