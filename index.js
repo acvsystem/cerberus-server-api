@@ -161,19 +161,16 @@ io.use(function (socket, next) {
         let reportData = [];
 
         (empleadoList || []).filter((emp) => {
-            
-
+            let hrWorking = 0;
+            let nroTransacciones = 0;
+            let costoVentas = 0;
+            let hExcedente = 0;
+            let hFaltante = 0;
 
             (dataAsistensList || []).filter((asits) => {
                 let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${(emp || {}).AP_MATERNO} ${(emp || {}).NOM_EMPLEADO}`;
-                let hExcedente = 0;
-                let hFaltante = 0;
-                let hrWorking = 0;
-                let nroTransacciones = 0;
-                let costoVentas = 0;
-                
-                if (emp.NRO_DOC == asits.nroDocumento) {
 
+                if (emp.NRO_DOC == asits.nroDocumento) {
                     hrWorking += asits.hrWorking;
                     nroTransacciones += asits.nroVentas;
 
@@ -223,12 +220,17 @@ io.use(function (socket, next) {
                       /*  if (isReportTotal) {
                             RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
                             itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
-                        }
+                        }*/
+
+                        hExcedente = 0;
+                        hFaltante = 0;
+                        hrWorking = 0;
+                        nroTransacciones = 0;
+                        costoVentas = 0;
 
                         if (!RegisterAddList.length) {
                             reportData.push(itemReport);
                         }
-                        */
                     }
 
                 }
