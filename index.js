@@ -152,11 +152,11 @@ io.use(function (socket, next) {
         let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
         let configurationList = ((response || {}).configuration || {})[0] || {};
         let socketID = (configurationList || {}).socket;
-        console.log((response || {}).serverData);
-        let dataAsistensList = (response || {}).serverData;
+
+        let dataAsistensList = JSON.parse((response || {}).serverData);
         let isReportForDay = (configurationList || {}).isReportForDay;
         let isReportTotal = (configurationList || {}).isReportTotal;
-
+console.log(dataAsistensList);
         let documentListAdd = [];
         let reportData = [];
 
