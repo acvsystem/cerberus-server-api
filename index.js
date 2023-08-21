@@ -229,7 +229,7 @@ io.use(function (socket, next) {
 
                     } else {
                         let RegisterAddList = {};
-                        
+                        let itemReport = {};
                         if (isReportForDay) {
                             RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento && register.fecha == (asits || {}).dia);
                             itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': emp.nroDocumento, 'fecha': emp.dia, 'hIngreso': emp.hrIn, 'hsb': emp.hrOut, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBrake': 0 };
