@@ -209,9 +209,9 @@ io.use(function (socket, next) {
                             ((reportData || [])[index] || {})['ventas'] = costoVentas.toFixed(2);
                             ((reportData || [])[index] || {})['hBrake'] = (hora_2 - hora_1) / 60;
 
-                            RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento && register.fecha == (asits || {}).dia);
+                            RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
 
-                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'fecha': asits.dia, 'hIngreso': asits.hrIn, 'hsb': asits.hrOut, 'hib': 0, 'hSalida': '', 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBrake': 0 };
+                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'fecha': asits.dia, 'hIngreso': asits.hrIn, 'hsb': asits.hrOut, 'hib': asits.hrIn, 'hSalida': asits.hrOut, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBrake': 0 };
                            
                         }
 
