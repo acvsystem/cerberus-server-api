@@ -205,8 +205,8 @@ io.use(function (socket, next) {
                         if (isReportForDay) {
                             ((reportData || [])[index] || {})['hib'] = asits.hrIn;
                             ((reportData || [])[index] || {})['hSalida'] = asits.hrOut;
-                            ((reportData || [])[index] || {})['nroVentas'] = nroVentas.toFixed(2);
-                            ((reportData || [])[index] || {})['ventas'] = ventas.toFixed(2);
+                            ((reportData || [])[index] || {})['nroVentas'] = nroTransacciones.toFixed(2);
+                            ((reportData || [])[index] || {})['ventas'] = costoVentas.toFixed(2);
                             ((reportData || [])[index] || {})['hBrake'] = (hora_2 - hora_1) / 60;
 
                             RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento && register.fecha == (asits || {}).dia);
