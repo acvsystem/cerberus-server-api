@@ -187,7 +187,8 @@ io.use(function (socket, next) {
                     let index = -1;
 
                     if (isReportForDay) {
-                        index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento && report.FECHA == asits.dia);
+                        index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento && report.fecha == asits.dia);
+                        console.log(index);
                     }
 
                     if (isReportTotal) {
