@@ -187,12 +187,7 @@ io.use(function (socket, next) {
                     let index = -1;
 
                     if (isReportForDay) {
-                        index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento);
-                        console.log(index);
-                    }
-
-                    if (isReportTotal) {
-                        index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento);
+                        index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento && report.fecha == (asits || {}).dia);
                     }
 
                     if (index != -1) {
@@ -202,18 +197,12 @@ io.use(function (socket, next) {
                         let hora_2 = parseInt(asits.hrIn.split(":")[0]) * 60 + parseInt(asits.hrIn.split(":")[1]);
 
 
-                        if (isReportForDay) {
-                            ((reportData || [])[index] || {})['hib'] = asits.hrIn;
-                            ((reportData || [])[index] || {})['hSalida'] = asits.hrOut;
-                            ((reportData || [])[index] || {})['nroVentas'] = nroTransacciones.toFixed(2);
-                            ((reportData || [])[index] || {})['ventas'] = costoVentas.toFixed(2);
-                            ((reportData || [])[index] || {})['hBrake'] = (hora_2 - hora_1) / 60;
+                        ((reportData || [])[index] || {})['hib'] = asits.hrIn;
+                        ((reportData || [])[index] || {})['hSalida'] = asits.hrOut;
+                        ((reportData || [])[index] || {})['nroVentas'] = nroTransacciones.toFixed(2);
+                        ((reportData || [])[index] || {})['ventas'] = costoVentas.toFixed(2);
+                        ((reportData || [])[index] || {})['hBrake'] = (hora_2 - hora_1) / 60;
 
-                            RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
-
-                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'fecha': asits.dia, 'hIngreso': asits.hrIn, 'hsb': asits.hrOut, 'hib': asits.hrIn, 'hSalida': asits.hrOut, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBrake': 0 };
-                           
-                        }
 
                         ((reportData || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
                         ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(hExcedente.toFixed(2)));
@@ -221,8 +210,6 @@ io.use(function (socket, next) {
 
                         if (isReportTotal) {
                             RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
-
-                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
                         }
 
                         if (!RegisterAddList.length) {
