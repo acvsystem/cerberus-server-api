@@ -227,6 +227,21 @@ io.use(function (socket, next) {
                             reportData.push(itemReport);
                         }
 
+                    } else {
+                        if (isReportForDay) {
+                            RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento && register.fecha == (asits || {}).dia);
+                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': emp.nroDocumento, 'fecha': emp.dia, 'hIngreso': emp.hrIn, 'hsb': emp.hrOut, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBrake': 0 };
+                        }
+
+                        
+                        if (isReportTotal) {
+                            RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
+                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': emp.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
+                        }
+
+                        if (!RegisterAddList.length) {
+                            reportData.push(itemReport);
+                        }
                     }
 
                 }
@@ -234,7 +249,7 @@ io.use(function (socket, next) {
 
         });
 
-        console.log(empleadoList);
+        console.log(reportData);
         socket.to(`${socketID}`).emit("sendControlAsistencia", reportData);
     });
 
