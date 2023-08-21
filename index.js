@@ -148,14 +148,14 @@ io.use(function (socket, next) {
     }
 
     socket.on('reporteAssitencia', async (response) => {
-        
-        let configurationList = (response || {}).configuration[0];
-        console.log(configurationList);
-       /* let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
-        let socketID = (response || {}).socketID;
+
+        let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
+        let configurationList = ((response || {}).configuration || {})[0] || {};
+        let socketID = (configurationList || {}).socket;
+
         let dataAsistensList = (response || {}).serverData;
-        let isReportForDay = (response || {}).isReportForDay;
-        let isReportTotal = (response || {}).isReportTotal;
+        let isReportForDay = (configurationList || {}).isReportForDay;
+        let isReportTotal = (configurationList || {}).isReportTotal;
 
         let documentListAdd = [];
         let reportData = [];
@@ -233,9 +233,9 @@ io.use(function (socket, next) {
             });
 
         });
-*/
 
-        socket.to(`${socketID}`).emit("sendControlAsistencia", response);
+
+        socket.to(`${socketID}`).emit("sendControlAsistencia", reportData);
     });
 
     //EMITE DESDE EL SERVIDOR
@@ -325,8 +325,8 @@ io.use(function (socket, next) {
     } else {
         if (codeTerminal == "SRVFACT") {
 
-          /*  emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
-                .catch(error => res.send(error));*/
+            /*  emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
+                  .catch(error => res.send(error));*/
         }
     }
 
