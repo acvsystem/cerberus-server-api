@@ -156,7 +156,7 @@ io.use(function (socket, next) {
         let dataAsistensList = JSON.parse((response || {}).serverData);
         let isReportForDay = (configurationList || {}).isReportForDay;
         let isReportTotal = (configurationList || {}).isReportTotal;
-console.log(dataAsistensList);
+
         let documentListAdd = [];
         let reportData = [];
 
@@ -234,7 +234,7 @@ console.log(dataAsistensList);
 
         });
 
-
+        console.log(empleadoList);
         socket.to(`${socketID}`).emit("sendControlAsistencia", reportData);
     });
 
