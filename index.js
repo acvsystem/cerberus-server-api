@@ -171,8 +171,8 @@ io.use(function (socket, next) {
                 let hFaltante = 0;
 
                 if (emp.NRO_DOC == asits.nroDocumento) {
-                    hrWorking += emp.hrWorking;
-                    nroTransacciones += emp.nroVentas;
+                    hrWorking += asits.hrWorking;
+                    nroTransacciones += asits.nroVentas;
 
                     if (hrWorking > 8) {
                         hExcedente += hrWorking % 8;
@@ -210,7 +210,7 @@ io.use(function (socket, next) {
 
                             RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento && register.fecha == (asits || {}).dia);
 
-                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': emp.nroDocumento, 'fecha': emp.dia, 'hIngreso': emp.hrIn, 'hsb': emp.hrOut, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBrake': 0 };
+                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'fecha': asits.dia, 'hIngreso': asits.hrIn, 'hsb': asits.hrOut, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBrake': 0 };
                         }
 
                         ((reportData || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
@@ -220,7 +220,7 @@ io.use(function (socket, next) {
                         if (isReportTotal) {
                             RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
 
-                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': emp.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
+                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
                         }
 
                         if (!RegisterAddList.length) {
