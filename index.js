@@ -148,6 +148,7 @@ io.use(function (socket, next) {
     }
 
     socket.on('reporteAssitencia', async (response) => {
+        let socketID = (response || {}).socket;
        /* let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
         let socketID = (response || {}).socketID;
         let dataAsistensList = (response || {}).serverData;
