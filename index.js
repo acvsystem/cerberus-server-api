@@ -220,11 +220,12 @@ io.use(function (socket, next) {
                       /*  if (isReportTotal) {
                             RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
                             itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
-                        }*/
+                        }
 
                         if (!RegisterAddList.length) {
                             reportData.push(itemReport);
                         }
+                        */
                     }
 
                 }
