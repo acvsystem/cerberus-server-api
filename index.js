@@ -161,16 +161,19 @@ io.use(function (socket, next) {
         let reportData = [];
 
         (empleadoList || []).filter((emp) => {
-            let hrWorking = 0;
-            let nroTransacciones = 0;
-            let costoVentas = 0;
+            
+
 
             (dataAsistensList || []).filter((asits) => {
                 let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${(emp || {}).AP_MATERNO} ${(emp || {}).NOM_EMPLEADO}`;
                 let hExcedente = 0;
                 let hFaltante = 0;
-
+                let hrWorking = 0;
+                let nroTransacciones = 0;
+                let costoVentas = 0;
+                
                 if (emp.NRO_DOC == asits.nroDocumento) {
+
                     hrWorking += asits.hrWorking;
                     nroTransacciones += asits.nroVentas;
 
