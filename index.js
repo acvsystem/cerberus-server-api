@@ -265,7 +265,7 @@ io.use(function (socket, next) {
         let isReportTotal = (dataRequest || {}).isReportTotal;
         let isReportMtDate = (dataRequest || {}).isReportMtDate;
         let isReporRgDate = (dataRequest || {}).isReporRgDate;
-        let dateList = (dataRecept || []).dateList || [];
+        let dateList = (dataRequest || []).dateList || [];
 
         let confConsulting = [
             {
@@ -274,7 +274,7 @@ io.use(function (socket, next) {
                 "isReportTotal": isReportTotal,
                 "isReportMtDate": isReportMtDate,
                 "isReporRgDate": isReporRgDate,
-                "centroCosto": (dataRecept || {}).centroCosto,
+                "centroCosto": (dataRequest || {}).centroCosto,
                 "dateList": dateList
             }
         ];
