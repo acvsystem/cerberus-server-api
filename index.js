@@ -191,8 +191,6 @@ io.use(function (socket, next) {
                     }
 
                     if (index != -1) {
-                        let RegisterAddList = {};
-                        let itemReport = {};
                         let hora_1 = parseInt(reportData[index]['hsb'].split(":")[0]) * 60 + parseInt(reportData[index]['hsb'].split(":")[1]);
                         let hora_2 = parseInt(asits.hrIn.split(":")[0]) * 60 + parseInt(asits.hrIn.split(":")[1]);
 
@@ -206,7 +204,7 @@ io.use(function (socket, next) {
                         ((reportData || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
                         ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(hExcedente.toFixed(2)));
                         ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hFaltante.toFixed(2)));
-                        
+
 
                     } else {
                         let RegisterAddList = {};
@@ -219,10 +217,10 @@ io.use(function (socket, next) {
                         }
 
 
-                        if (isReportTotal) {
+                      /*  if (isReportTotal) {
                             RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
                             itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
-                        }
+                        }*/
 
                         if (!RegisterAddList.length) {
                             reportData.push(itemReport);
