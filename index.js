@@ -203,18 +203,10 @@ io.use(function (socket, next) {
                         ((reportData || [])[index] || {})['ventas'] = costoVentas.toFixed(2);
                         ((reportData || [])[index] || {})['hBrake'] = (hora_2 - hora_1) / 60;
 
-
                         ((reportData || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
                         ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(hExcedente.toFixed(2)));
                         ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hFaltante.toFixed(2)));
-
-                        if (isReportTotal) {
-                            RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
-                        }
-
-                        if (!RegisterAddList.length) {
-                            reportData.push(itemReport);
-                        }
+                        
 
                     } else {
                         let RegisterAddList = {};
