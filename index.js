@@ -322,8 +322,8 @@ io.use(function (socket, next) {
     } else {
         if (codeTerminal == "SRVFACT") {
 
-            emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
-                .catch(error => res.send(error));
+          /*  emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
+                .catch(error => res.send(error));*/
         }
     }
 
