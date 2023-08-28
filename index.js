@@ -173,8 +173,10 @@ io.use(function (socket, next) {
                 let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${(emp || {}).AP_MATERNO} ${(emp || {}).NOM_EMPLEADO}`;
 
                 if (emp.NRO_DOC == asits.nroDocumento) {
-                    console.log(asits.nroDocumento, asits.hrWorking, hrWorking);
+
                     hrWorking += asits.hrWorking;
+                    console.log(asits.nroDocumento, asits.hrWorking, hrWorking);
+                    
                     nroTransacciones += asits.nroVentas;
 
                     if (hrWorking > 8) {
