@@ -174,8 +174,8 @@ io.use(function (socket, next) {
 
                 if (emp.NRO_DOC == asits.nroDocumento) {
 
-                    hrWorking += asits.hrWorking;
-                    console.log(asits.nroDocumento, asits.hrWorking, hrWorking);
+                    hrWorking = hrWorking + Math.round(parseFloat(asits.hrWorking.toFixed(2)));
+                    console.log(asits.nroDocumento, Math.round(parseFloat(asits.hrWorking.toFixed(2))), Math.round(parseFloat(hrWorking.toFixed(2))));
                     
                     nroTransacciones += asits.nroVentas;
 
