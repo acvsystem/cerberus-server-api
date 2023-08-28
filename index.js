@@ -160,12 +160,14 @@ io.use(function (socket, next) {
         let documentListAdd = [];
         let reportData = [];
 
+        let hrWorking = 0;
+        let nroTransacciones = 0;
+        let costoVentas = 0;
+        let hExcedente = 0;
+        let hFaltante = 0;
+
         (empleadoList || []).filter((emp) => {
-            let hrWorking = 0;
-            let nroTransacciones = 0;
-            let costoVentas = 0;
-            let hExcedente = 0;
-            let hFaltante = 0;
+
 
             (dataAsistensList || []).filter((asits) => {
                 let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${(emp || {}).AP_MATERNO} ${(emp || {}).NOM_EMPLEADO}`;
@@ -234,6 +236,12 @@ io.use(function (socket, next) {
                         }
                     }
 
+                } else {
+                    hrWorking = 0;
+                    nroTransacciones = 0;
+                    costoVentas = 0;
+                    hExcedente = 0;
+                    hFaltante = 0;
                 }
             });
 
