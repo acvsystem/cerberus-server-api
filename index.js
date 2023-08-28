@@ -161,7 +161,7 @@ io.use(function (socket, next) {
         let reportData = [];
 
         (empleadoList || []).filter((emp) => {
-            let hrWorking = 0;
+            let hrWorking;
             let nroTransacciones = 0;
             let costoVentas = 0;
             let hExcedente = 0;
