@@ -227,12 +227,7 @@ io.use(function (socket, next) {
                               itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
                           }*/
 
-                        hExcedente = 0;
-                        hFaltante = 0;
-                        hrWorking = 0;
-                        nroTransacciones = 0;
-                        costoVentas = 0;
-
+                    
                         if (!RegisterAddList.length) {
                             reportData.push(itemReport);
                         }
