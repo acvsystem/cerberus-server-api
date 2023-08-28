@@ -161,7 +161,7 @@ io.use(function (socket, next) {
         let reportData = [];
 
         (empleadoList || []).filter((emp) => {
-            let hrWorking;
+            let hrWorking = 0;
             let nroTransacciones = 0;
             let costoVentas = 0;
             let hExcedente = 0;
@@ -171,6 +171,7 @@ io.use(function (socket, next) {
                 let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${(emp || {}).AP_MATERNO} ${(emp || {}).NOM_EMPLEADO}`;
 
                 if (emp.NRO_DOC == asits.nroDocumento) {
+                    console.log(asits.nroDocumento, asits.hrWorking, hrWorking);
                     hrWorking += asits.hrWorking;
                     nroTransacciones += asits.nroVentas;
 
@@ -217,10 +218,10 @@ io.use(function (socket, next) {
                         }
 
 
-                      /*  if (isReportTotal) {
-                            RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
-                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
-                        }*/
+                        /*  if (isReportTotal) {
+                              RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
+                              itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
+                          }*/
 
                         hExcedente = 0;
                         hFaltante = 0;
