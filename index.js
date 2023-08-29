@@ -149,7 +149,8 @@ io.use(function (socket, next) {
     }
 
     socket.on('reporteAssitencia', async (response) => {
-
+        console.log("reporteAssitencia", response);
+        
         let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
         let configurationList = ((response || {}).configuration || {})[0] || {};
         let socketID = (configurationList || {}).socket;
@@ -160,7 +161,7 @@ io.use(function (socket, next) {
         let isReportMtDate = (configurationList || {}).isReportMtDate;
         let documentListAdd = [];
         let reportData = [];
-        console.log(dataAsistensList);
+
 
 
         (empleadoList || []).filter((emp) => {
@@ -292,7 +293,7 @@ io.use(function (socket, next) {
             }
         ];
 
-        console.log("emitRRHH",confConsulting);
+        console.log("emitRRHH", confConsulting);
 
         io.emit('searchAsistencia', confConsulting);
     });
