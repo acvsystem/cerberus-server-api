@@ -292,6 +292,8 @@ io.use(function (socket, next) {
             }
         ];
 
+        console.log("emitRRHH",confConsulting);
+
         io.emit('searchAsistencia', confConsulting);
     });
 
