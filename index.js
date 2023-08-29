@@ -160,7 +160,7 @@ io.use(function (socket, next) {
         let isReportMtDate = (configurationList || {}).isReportMtDate;
         let documentListAdd = [];
         let reportData = [];
-
+        console.log(dataAsistensList);
 
 
         (empleadoList || []).filter((emp) => {
