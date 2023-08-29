@@ -47,7 +47,7 @@ app.use('/settings', async (req, res, next) => {
 }, configurationRoutes);
 
 app.use('/rrhh', async (req, res, next) => {
-    const token = req.header('Authorization') || "";
+    /*const token = req.header('Authorization') || "";
 
     let resValidation = tokenController.verificationToken(token);
 
@@ -55,7 +55,8 @@ app.use('/rrhh', async (req, res, next) => {
         next()
     } else {
         return res.status(401).json('Access denied');
-    }
+    }*/
+    next()
 }, recursosHumanosRoutes);
 
 app.use('/frontRetail', frontRetailRoutes);
