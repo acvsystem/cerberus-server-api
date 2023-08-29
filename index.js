@@ -150,7 +150,7 @@ io.use(function (socket, next) {
 
     socket.on('reporteAssitencia', async (response) => {
         console.log("reporteAssitencia", response);
-        
+
         let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
         let configurationList = ((response || {}).configuration || {})[0] || {};
         let socketID = (configurationList || {}).socket;
@@ -209,8 +209,6 @@ io.use(function (socket, next) {
 
                         ((reportData || [])[index] || {})['hib'] = asits.hrIn;
                         ((reportData || [])[index] || {})['hSalida'] = asits.hrOut;
-                        ((reportData || [])[index] || {})['nroVentas'] = nroTransacciones.toFixed(2);
-                        ((reportData || [])[index] || {})['ventas'] = costoVentas.toFixed(2);
                         ((reportData || [])[index] || {})['hBrake'] = (hora_2 - hora_1) / 60;
 
                         ((reportData || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
