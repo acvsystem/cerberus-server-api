@@ -139,7 +139,7 @@ export const onPostulanteList = async (req, res) => {
 }
 
 export const onRegisterPostulante = async (req, res) => {
-    
+
     let dataPostulante = ((req || {}).body || [])[0] || {};
     console.log(dataPostulante);
     let idPostulante = (dataPostulante || {}).id;
@@ -204,18 +204,23 @@ export const onRegisterPostulante = async (req, res) => {
         await actionBDController.execQuery(`DELETE FROM TB_DATOS_HABIENTES WHERE KEY_FICHA = '${idPostulante}'`);
     }
 
-    (expLaboralList || []).filter(async (el) => {
-        await actionBDController.execQuery(`CALL SP_CRUD_EXP_LABORAL_FICHA_EMPLEADO('I','${idPostulante}','${el.empresa}','${el.puesto}','${el.desde}','${el.culmino}','${el.culmino}')`);
-    });
+    if ((expLaboralList || []).length) {
+        (expLaboralList || []).filter(async (el) => {
+            await actionBDController.execQuery(`CALL SP_CRUD_EXP_LABORAL_FICHA_EMPLEADO('I','${idPostulante}','${el.empresa}','${el.puesto}','${el.desde}','${el.culmino}','${el.culmino}')`);
+        });
+    }
 
-    (forAcademicaList || []).filter(async (fa) => {
-        await actionBDController.execQuery(`CALL SP_CRUD_FORM_ACADEMICA('I','${idPostulante}','${fa.tipo}','${fa.ctrEstudio}','${fa.carrera}','${fa.estado}')`);
-    });
+    if ((forAcademicaList || []).length) {
+        (forAcademicaList || []).filter(async (fa) => {
+            await actionBDController.execQuery(`CALL SP_CRUD_FORM_ACADEMICA('I','${idPostulante}','${fa.tipo}','${fa.ctrEstudio}','${fa.carrera}','${fa.estado}')`);
+        });
+    }
 
-    (derHabienteList || []).filter(async (dh) => {
-        await actionBDController.execQuery(`CALL SP_CRUD_DATOS_HABIENTES('I','${idPostulante}','${dh.nombres}','${dh.parentesco}','${dh.edad}','${dh.sexo}','${dh.tipodoc}','${dh.nrodoc}','${dh.fchnac}','${dh.ocupacion}')`);
-    });
-
+    if ((derHabienteList || []).length) {
+        (derHabienteList || []).filter(async (dh) => {
+            await actionBDController.execQuery(`CALL SP_CRUD_DATOS_HABIENTES('I','${idPostulante}','${dh.nombres}','${dh.parentesco}','${dh.edad}','${dh.sexo}','${dh.tipodoc}','${dh.nrodoc}','${dh.fchnac}','${dh.ocupacion}')`);
+        });
+    }
 
     if (Object.keys(datosSaludList).length) {
         let existDSA = await actionBDController.verificationRegister('TB_DATOS_SALUD_ANTECEDENTES', `KEY_FICHA = '${idPostulante}'`);
