@@ -175,6 +175,16 @@ io.use(function (socket, next) {
 
                 if (emp.NRO_DOC == asits.nroDocumento) {
 
+                    let index = -1;
+
+                    if (isReportForDay) {
+                        index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento && report.fecha == (asits || {}).dia);
+                    }
+
+                    if (index != -1) {
+                        hrWorking = 0;
+                    }
+
                     hrWorking += Math.round(parseFloat(asits.hrWorking.toFixed(2)));
 
                     nroTransacciones += asits.nroVentas;
@@ -189,11 +199,6 @@ io.use(function (socket, next) {
 
                     costoVentas += emp.Ventas;
 
-                    let index = -1;
-
-                    if (isReportForDay) {
-                        index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento && report.fecha == (asits || {}).dia);
-                    }
 
                     if (index != -1) {
                         let hora_1 = parseInt(reportData[index]['hsb'].split(":")[0]) * 60 + parseInt(reportData[index]['hsb'].split(":")[1]);
