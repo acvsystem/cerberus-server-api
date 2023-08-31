@@ -158,7 +158,6 @@ io.use(function (socket, next) {
         let dataAsistensList = JSON.parse((response || {}).serverData);
         let isReportForDay = (configurationList || {}).isReportForDay;
         let isReportTotal = (configurationList || {}).isReportTotal;
-        let isReportMtDate = (configurationList || {}).isReportMtDate;
         let documentListAdd = [];
         let reportData = [];
 
@@ -168,7 +167,6 @@ io.use(function (socket, next) {
 
             let hrWorking = 0;
             let nroTransacciones = 0;
-            let costoVentas = 0;
             let hExcedente = 0;
             let hFaltante = 0;
 
@@ -199,9 +197,6 @@ io.use(function (socket, next) {
                         hFaltante += 8 - hrWorking;
                     }
 
-                    costoVentas += emp.Ventas;
-
-
                     if (index != -1) {
                         let hora_1 = parseInt(reportData[index]['hsb'].split(":")[0]) * 60 + parseInt(reportData[index]['hsb'].split(":")[1]);
                         let hora_2 = parseInt(asits.hrIn.split(":")[0]) * 60 + parseInt(asits.hrIn.split(":")[1]);
@@ -220,17 +215,17 @@ io.use(function (socket, next) {
                         let RegisterAddList = {};
                         let itemReport = {};
 
-                        if (isReportForDay || isReportMtDate) {
+                        if (isReportForDay) {
                             RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento && register.fecha == (asits || {}).dia);
                             (documentListAdd || []).push({ dni: emp.nroDocumento, fecha: (emp || {}).dia });
                             itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'fecha': asits.dia, 'hIngreso': asits.hrIn, 'hsb': asits.hrOut, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBreak': 0 };
                         }
 
 
-                        /*  if (isReportTotal) {
-                              RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
-                              itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
-                          }*/
+                        if (isReportTotal) {
+                            RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
+                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
+                        }
 
 
                         if (!RegisterAddList.length) {
