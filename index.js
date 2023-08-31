@@ -221,10 +221,20 @@ io.use(function (socket, next) {
                             itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'fecha': asits.dia, 'hIngreso': asits.hrIn, 'hsb': asits.hrOut, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBreak': 0 };
                         }
 
-
                         if (isReportTotal) {
-                            RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
-                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
+
+                            let addedEmp = documentosListAdded.filter((added) => added.dni == asits.nroDocumento);
+
+                            if (emp.NRO_DOC == asits.nroDocumento && !addedEmp.length) {
+
+                                let asist = (this.dateCalendarList || []).indexOf((asits || {}).dia);
+
+                                (documentosListAdded || []).push({ dni: asits.nroDocumento, fecha: (asits || {}).dia });
+                                if (asist !== -1 || (this.searchFecInicio.length && this.searchFecFin.length)) {
+                                    RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
+                                    itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
+                                }
+                            }
                         }
 
 
