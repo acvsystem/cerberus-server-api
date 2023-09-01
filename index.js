@@ -197,7 +197,7 @@ io.use(function (socket, next) {
                         hFaltante += 8 - hrWorking;
                     }
 
-                    if (index != -1) {
+                    if (index != -1 && isReportForDay) {
                         let hora_1 = parseInt(reportData[index]['hsb'].split(":")[0]) * 60 + parseInt(reportData[index]['hsb'].split(":")[1]);
                         let hora_2 = parseInt(asits.hrIn.split(":")[0]) * 60 + parseInt(asits.hrIn.split(":")[1]);
 
@@ -237,7 +237,6 @@ io.use(function (socket, next) {
                                 }
                             }
                         }
-
 
                         if (!RegisterAddList.length) {
                             reportData.push(itemReport);
