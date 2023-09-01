@@ -158,6 +158,7 @@ io.use(function (socket, next) {
         let dataAsistensList = JSON.parse((response || {}).serverData);
         let isReportForDay = (configurationList || {}).isReportForDay;
         let isReportTotal = (configurationList || {}).isReportTotal;
+        let dateList = (configurationList || {}).dateList;
         let documentListAdd = [];
         let reportData = [];
 
@@ -240,11 +241,25 @@ io.use(function (socket, next) {
                         let documentListAdd = [];
                         let itemReport = {};
 
+                        var fecha_1 = dateList[0];
+                        var fecha_2 = dateList[1];
+
+                        var x = new Date(fecha_1);
+                        var y = new Date(fecha_2);
+
+                        // segundos = milisegundos/1000
+                        // minutos = segundos/60
+                        // horas = minutos/60
+                        // Días = horas/24
+
+                        const diffInDays = Math.floor((x - y) / (1000 * 60 * 60 * 24));
+                        console.log(diffInDays);
+
                         index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento);
 
                         if (index != -1) {
                             ((reportData || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
-                            ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(hExcedente.toFixed(2)));
+                            ((reportData || [])[index] || {})['hExcedente'] = ((reportData || [])[index] || {})['hTrabajadas'] - diffInDays;
                             ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hFaltante.toFixed(2)));
                         }
 
