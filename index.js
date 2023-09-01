@@ -183,9 +183,7 @@ io.use(function (socket, next) {
                         index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento && report.fecha == (asits || {}).dia);
                     }
 
-
-
-                    if (index != -1) {
+                    if (index != -1 && isReportForDay) {
                         hrWorking = 0;
                     }
 
