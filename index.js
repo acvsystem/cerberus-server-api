@@ -250,16 +250,10 @@ io.use(function (socket, next) {
                             ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hFaltante.toFixed(2)));
                         }
 
-                        let indexAdd = (documentosListAdded || []).findIndex((doc) => doc.dni == asits.nroDocumento && doc.fecha == (asits || {}).dia);
-
-                        if (emp.NRO_DOC == asits.nroDocumento && indexAdd == -1) {
-
-                            (documentosListAdded || []).push({ dni: asits.nroDocumento, fecha: (asits || {}).dia });
-
+                        if (emp.NRO_DOC == asits.nroDocumento && index == -1) {
                             itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
                             console.log("isReportTotal", itemReport);
                             reportData.push(itemReport);
-
                         }
                     }
 
