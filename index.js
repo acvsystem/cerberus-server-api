@@ -212,34 +212,40 @@ io.use(function (socket, next) {
 
 
                     } else {
-                        let RegisterAddList = {};
-                        let itemReport = {};
-
                         if (isReportForDay) {
+                            let RegisterAddList = {};
+                            let itemReport = {};
+
+
                             RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento && register.fecha == (asits || {}).dia);
                             (documentListAdd || []).push({ dni: emp.nroDocumento, fecha: (emp || {}).dia });
                             itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'fecha': asits.dia, 'hIngreso': asits.hrIn, 'hsb': asits.hrOut, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBreak': 0 };
-                        }
 
-                        if (isReportTotal) {
-                            let dateCalendarList = [];
 
-                            let addedEmp = documentosListAdded.filter((added) => added.dni == asits.nroDocumento);
-
-                            if (emp.NRO_DOC == asits.nroDocumento && !addedEmp.length) {
-
-                                let asist = (dateCalendarList || []).indexOf((asits || {}).dia);
-
-                                (documentosListAdded || []).push({ dni: asits.nroDocumento, fecha: (asits || {}).dia });
-                                if (asist !== -1) {
-                                    RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
-                                    itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
-                                }
+                            if (!RegisterAddList.length) {
+                                reportData.push(itemReport);
                             }
                         }
+                    }
 
-                        if (!RegisterAddList.length) {
-                            reportData.push(itemReport);
+
+                    if (isReportTotal) {
+                        let dateCalendarList = [];
+
+                        let addedEmp = documentosListAdded.filter((added) => added.dni == asits.nroDocumento);
+
+                        if (emp.NRO_DOC == asits.nroDocumento && !addedEmp.length) {
+
+                            let asist = (dateCalendarList || []).indexOf((asits || {}).dia);
+
+                            (documentosListAdded || []).push({ dni: asits.nroDocumento, fecha: (asits || {}).dia });
+                            if (asist !== -1) {
+                                RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
+                                itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
+                                console.log("isReportTotal", itemReport);
+                                reportData.push(itemReport);
+                            }
+
                         }
                     }
 
@@ -341,8 +347,8 @@ io.use(function (socket, next) {
     } else {
         if (codeTerminal == "SRVFACT") {
 
-             /* emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
-                  .catch(error => res.send(error));*/
+            /* emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
+                 .catch(error => res.send(error));*/
         }
     }
 
@@ -436,8 +442,8 @@ io.use(function (socket, next) {
 
                 await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET ENVIO_EMAIL ='true' WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
 
-               /* emailController.sendEmail([(selectedLocal || {}).email || '', 'johnnygermano@grupodavid.com'], `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
-                    .catch(error => res.send(error));*/
+                /* emailController.sendEmail([(selectedLocal || {}).email || '', 'johnnygermano@grupodavid.com'], `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
+                     .catch(error => res.send(error));*/
             }
         }
 
