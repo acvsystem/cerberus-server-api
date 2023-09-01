@@ -252,7 +252,7 @@ io.use(function (socket, next) {
 
                         let indexAdd = (documentosListAdded || []).findIndex((doc) => doc.dni == asits.nroDocumento && doc.fecha == (asits || {}).dia);
 
-                        if (emp.NRO_DOC == asits.nroDocumento && !indexAdd) {
+                        if (emp.NRO_DOC == asits.nroDocumento && indexAdd == -1) {
 
                             (documentosListAdded || []).push({ dni: asits.nroDocumento, fecha: (asits || {}).dia });
 
