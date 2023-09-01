@@ -184,9 +184,7 @@ io.use(function (socket, next) {
                         index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento && report.fecha == (asits || {}).dia);
                     }
 
-                    if (index != -1) {
-                        hrWorking = 0;
-                    }
+                
 
                     hrWorking += Math.round(parseFloat(asits.hrWorking.toFixed(2)));
 
@@ -241,19 +239,10 @@ io.use(function (socket, next) {
                         let documentListAdd = [];
                         let itemReport = {};
 
-                        var fecha_1 = dateList[0];
-                        var fecha_2 = dateList[1];
+                        var fecha_1 = new Date(dateList[0]);
+                        var fecha_2 = new Date(dateList[1]);
 
-                        var x = new Date(fecha_1);
-                        var y = new Date(fecha_2);
-
-                        // segundos = milisegundos/1000
-                        // minutos = segundos/60
-                        // horas = minutos/60
-                        // Días = horas/24
-
-                        const diffInDays = Math.floor((y - x) / (1000 * 60 * 60 * 24));
-                        console.log(diffInDays);
+                        const diffInDays = Math.floor((fecha_2 - fecha_1) / (1000 * 60 * 60 * 24));
 
                         index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento);
 
