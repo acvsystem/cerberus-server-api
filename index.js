@@ -247,7 +247,7 @@ io.use(function (socket, next) {
 
                             ((reportData || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
 
-                            let hexc = ((reportData || [])[index] || {})['hTrabajadas'] > 8 ? ((reportData || [])[index] || {})['hTrabajadas'] % 8 : 0;
+                            let hexc = ((reportData || [])[index] || {})['hTrabajadas'] > 8 ? ((reportData || [])[index] || {})['hTrabajadas'] : 0;
                             let hfalt = ((reportData || [])[index] || {})['hFaltantes'] < 8 ? 8 - ((reportData || [])[index] || {})['hFaltantes'] : 0;
 
                             ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(hexc));
