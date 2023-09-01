@@ -191,7 +191,7 @@ io.use(function (socket, next) {
 
                     nroTransacciones += asits.nroVentas;
 
-                    if (hrWorking > 8) {
+                    if (Math.round(parseFloat(hrWorking.toFixed(2))) > 8) {
                         hExcedente += hrWorking % 8;
                     }
 
@@ -244,7 +244,7 @@ io.use(function (socket, next) {
 
                         if (index != -1) {
                             ((reportData || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
-                            ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(hrWorking % 8));
+                            ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(hExcedente.toFixed(2)));
                             ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hFaltante.toFixed(2)));
                         }
 
