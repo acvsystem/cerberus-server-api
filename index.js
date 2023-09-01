@@ -238,7 +238,8 @@ io.use(function (socket, next) {
                     
                     if (isReportTotal) {
                         let dateCalendarList = [];
-
+                        let documentosListAdded = [];
+                        
                         let addedEmp = documentosListAdded.filter((added) => added.dni == asits.nroDocumento);
                         console.log("addedEmp",addedEmp);
                         if (index != -1) {
