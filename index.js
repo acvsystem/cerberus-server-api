@@ -241,7 +241,8 @@ io.use(function (socket, next) {
                         let documentosListAdded = [];
                         let RegisterAddList = [];
                         let documentListAdd = [];
-                        
+                        let itemReport = {};
+
                         let addedEmp = documentosListAdded.filter((added) => added.dni == asits.nroDocumento);
                         console.log("addedEmp",addedEmp);
 
