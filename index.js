@@ -161,7 +161,7 @@ io.use(function (socket, next) {
         let documentListAdd = [];
         let reportData = [];
 
-
+        console.log("isReportTotal",isReportTotal);
 
         (empleadoList || []).filter((emp) => {
 
@@ -233,7 +233,7 @@ io.use(function (socket, next) {
 
                         }
                     }
-                    console.log("isReportTotal",isReportTotal);
+                    
                     if (isReportTotal) {
                         let dateCalendarList = [];
 
