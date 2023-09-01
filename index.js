@@ -252,7 +252,7 @@ io.use(function (socket, next) {
                         // horas = minutos/60
                         // Días = horas/24
 
-                        const diffInDays = Math.floor((x - y) / (1000 * 60 * 60 * 24));
+                        const diffInDays = Math.floor((y - x) / (1000 * 60 * 60 * 24));
                         console.log(diffInDays);
 
                         index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento);
