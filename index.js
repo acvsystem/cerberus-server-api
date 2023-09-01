@@ -250,7 +250,7 @@ io.use(function (socket, next) {
                             ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hFaltante.toFixed(2)));
                         }
 
-                        indexAdd = (documentosListAdded || []).findIndex((doc) => doc.dni == asits.nroDocumento && doc.fecha == (asits || {}).dia);
+                        let indexAdd = (documentosListAdded || []).findIndex((doc) => doc.dni == asits.nroDocumento && doc.fecha == (asits || {}).dia);
 
                         if (emp.NRO_DOC == asits.nroDocumento && !indexAdd) {
 
