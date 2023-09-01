@@ -239,9 +239,10 @@ io.use(function (socket, next) {
                     if (isReportTotal) {
                         let dateCalendarList = [];
                         let documentosListAdded = [];
-                        
+
                         let addedEmp = documentosListAdded.filter((added) => added.dni == asits.nroDocumento);
                         console.log("addedEmp",addedEmp);
+
                         if (index != -1) {
                             ((reportData || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
                             ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(hExcedente.toFixed(2)));
@@ -253,7 +254,8 @@ io.use(function (socket, next) {
                             let asist = (dateCalendarList || []).indexOf((asits || {}).dia);
 
                             (documentosListAdded || []).push({ dni: asits.nroDocumento, fecha: (asits || {}).dia });
-                            if (asist !== -1) {
+
+                            if (asist == -1) {
                                 RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
                                 itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
                                 console.log("isReportTotal", itemReport);
