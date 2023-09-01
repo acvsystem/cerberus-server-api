@@ -185,6 +185,8 @@ io.use(function (socket, next) {
 
                         if (index == -1) {
                             hrWorking = 0;
+                            hExcedente = 0;
+                            hFaltante = 0;
                         }
                     }
 
