@@ -259,7 +259,7 @@ io.use(function (socket, next) {
 
                         if (index != -1) {
                             ((reportData || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
-                            ((reportData || [])[index] || {})['hExcedente'] = ((reportData || [])[index] || {})['hTrabajadas'] - diffInDays;
+                            ((reportData || [])[index] || {})['hExcedente'] = ((reportData || [])[index] || {})['hTrabajadas'] - (diffInDays * 8);
                             ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hFaltante.toFixed(2)));
                         }
 
