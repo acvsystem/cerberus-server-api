@@ -183,7 +183,7 @@ io.use(function (socket, next) {
                         index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento && report.fecha == (asits || {}).dia);
                     }
 
-                    if (index != -1 && isReportForDay) {
+                    if (index != -1) {
                         hrWorking = 0;
                     }
 
@@ -243,15 +243,9 @@ io.use(function (socket, next) {
                         index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento);
 
                         if (index != -1) {
-
-
                             ((reportData || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
-
-                            let hexc = ((reportData || [])[index] || {})['hTrabajadas'] > 8 ? ((reportData || [])[index] || {})['hTrabajadas'] : 0;
-                            let hfalt = ((reportData || [])[index] || {})['hFaltantes'] < 8 ? 8 - ((reportData || [])[index] || {})['hFaltantes'] : 0;
-
-                            ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(hexc));
-                            ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hfalt));
+                            ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(hExcedente.toFixed(2)));
+                            ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hFaltante.toFixed(2)));
                         }
 
                         if (emp.NRO_DOC == asits.nroDocumento && index == -1) {
