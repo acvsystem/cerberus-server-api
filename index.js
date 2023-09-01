@@ -260,7 +260,7 @@ io.use(function (socket, next) {
                         if (index != -1) {
                             ((reportData || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
                             ((reportData || [])[index] || {})['hExcedente'] = ((reportData || [])[index] || {})['hTrabajadas'] - (diffInDays * 8);
-                            ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hFaltante.toFixed(2)));
+                            ((reportData || [])[index] || {})['hFaltantes'] = (diffInDays * 8) - ((reportData || [])[index] || {})['hTrabajadas'];
                         }
 
                         if (emp.NRO_DOC == asits.nroDocumento && index == -1) {
