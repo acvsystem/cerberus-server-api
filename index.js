@@ -222,15 +222,16 @@ io.use(function (socket, next) {
                         }
 
                         if (isReportTotal) {
+                            let dateCalendarList = [];
 
                             let addedEmp = documentosListAdded.filter((added) => added.dni == asits.nroDocumento);
 
                             if (emp.NRO_DOC == asits.nroDocumento && !addedEmp.length) {
 
-                                let asist = (this.dateCalendarList || []).indexOf((asits || {}).dia);
+                                let asist = (dateCalendarList || []).indexOf((asits || {}).dia);
 
                                 (documentosListAdded || []).push({ dni: asits.nroDocumento, fecha: (asits || {}).dia });
-                                if (asist !== -1 || (this.searchFecInicio.length && this.searchFecFin.length)) {
+                                if (asist !== -1) {
                                     RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
                                     itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
                                 }
