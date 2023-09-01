@@ -243,9 +243,15 @@ io.use(function (socket, next) {
                         index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento);
 
                         if (index != -1) {
+
+
                             ((reportData || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
-                            ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(((reportData || [])[index] || {})['hTrabajadas'] % 8));
-                            ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hFaltante.toFixed(2)));
+
+                            let hexc = ((reportData || [])[index] || {})['hTrabajadas'] > 8 ? ((reportData || [])[index] || {})['hTrabajadas'] % 8 : 0;
+                            let hfalt = ((reportData || [])[index] || {})['hFaltantes'] < 8 ? 8 - ((reportData || [])[index] || {})['hFaltantes'] : 0;
+
+                            ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(hexc));
+                            ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hfalt));
                         }
 
                         if (emp.NRO_DOC == asits.nroDocumento && index == -1) {
