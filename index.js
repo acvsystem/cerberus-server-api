@@ -161,7 +161,7 @@ io.use(function (socket, next) {
         let documentListAdd = [];
         let reportData = [];
 
-     
+
 
         (empleadoList || []).filter((emp) => {
 
@@ -169,10 +169,10 @@ io.use(function (socket, next) {
             let nroTransacciones = 0;
             let hExcedente = 0;
             let hFaltante = 0;
-           
+
 
             (dataAsistensList || []).filter((asits) => {
-                
+
                 let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${(emp || {}).AP_MATERNO} ${(emp || {}).NOM_EMPLEADO}`;
 
                 if (emp.NRO_DOC == asits.nroDocumento) {
@@ -183,9 +183,7 @@ io.use(function (socket, next) {
                         index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento && report.fecha == (asits || {}).dia);
                     }
 
-                    if (isReportTotal) {
-                        index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento);
-                    }
+
 
                     if (index != -1) {
                         hrWorking = 0;
@@ -235,7 +233,8 @@ io.use(function (socket, next) {
 
                         }
                     }
-                    
+
+
                     if (isReportTotal) {
                         let dateCalendarList = [];
                         let documentosListAdded = [];
@@ -243,8 +242,7 @@ io.use(function (socket, next) {
                         let documentListAdd = [];
                         let itemReport = {};
 
-                        let addedEmp = documentosListAdded.filter((added) => added.dni == asits.nroDocumento);
-                        console.log("addedEmp",addedEmp);
+                        index = (reportData || []).findIndex((report) => report.documento == asits.nroDocumento);
 
                         if (index != -1) {
                             ((reportData || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
@@ -252,18 +250,15 @@ io.use(function (socket, next) {
                             ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hFaltante.toFixed(2)));
                         }
 
-                        if (emp.NRO_DOC == asits.nroDocumento && !addedEmp.length) {
+                        indexAdd = (documentosListAdded || []).findIndex((doc) => doc.dni == asits.nroDocumento && doc.fecha == (asits || {}).dia);
 
-                            let asist = (dateCalendarList || []).indexOf((asits || {}).dia);
+                        if (emp.NRO_DOC == asits.nroDocumento && !indexAdd) {
 
                             (documentosListAdded || []).push({ dni: asits.nroDocumento, fecha: (asits || {}).dia });
 
-                            if (asist == -1) {
-                                RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento);
-                                itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
-                                console.log("isReportTotal", itemReport);
-                                reportData.push(itemReport);
-                            }
+                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))) };
+                            console.log("isReportTotal", itemReport);
+                            reportData.push(itemReport);
 
                         }
                     }
