@@ -233,7 +233,7 @@ io.use(function (socket, next) {
 
                         }
                     }
-
+                    console.log("isReportTotal",isReportTotal);
                     if (isReportTotal) {
                         let dateCalendarList = [];
 
