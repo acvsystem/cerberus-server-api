@@ -161,7 +161,7 @@ io.use(function (socket, next) {
         let documentListAdd = [];
         let reportData = [];
 
-        console.log("isReportTotal",isReportTotal);
+     
 
         (empleadoList || []).filter((emp) => {
 
@@ -169,8 +169,10 @@ io.use(function (socket, next) {
             let nroTransacciones = 0;
             let hExcedente = 0;
             let hFaltante = 0;
+            console.log("empleadoList",emp);
 
             (dataAsistensList || []).filter((asits) => {
+                console.log("dataAsistensList",asits);
                 let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${(emp || {}).AP_MATERNO} ${(emp || {}).NOM_EMPLEADO}`;
 
                 if (emp.NRO_DOC == asits.nroDocumento) {
