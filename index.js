@@ -208,13 +208,18 @@ io.use(function (socket, next) {
                             let hora_2 = parseInt(asits.hrIn.split(":")[0]) * 60 + parseInt(asits.hrIn.split(":")[1]);
 
 
+
                             ((reportData || [])[index] || {})['hib'] = asits.hrIn;
                             ((reportData || [])[index] || {})['hSalida'] = asits.hrOut;
                             ((reportData || [])[index] || {})['hBreak'] = (hora_2 - hora_1) / 60;
 
                             ((reportData || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
-                            ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(hExcedente.toFixed(2)));
-                            ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hFaltante.toFixed(2)));
+
+                            let fexc = ((reportData || [])[index] || {})['hTrabajadas'] > 8 ? ((reportData || [])[index] || {})['hTrabajadas'] - 8 : 0;
+                            let hfalt = ((reportData || [])[index] || {})['hTrabajadas'] < 8 ? 8 - ((reportData || [])[index] || {})['hTrabajadas'] : 0;
+
+                            ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(fexc.toFixed(2)));
+                            ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hfalt.toFixed(2)));
 
 
                         } else {
