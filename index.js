@@ -230,7 +230,7 @@ io.use(function (socket, next) {
 
                             RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento && register.fecha == (asits || {}).dia);
                             (documentListAdd || []).push({ dni: emp.nroDocumento, fecha: (emp || {}).dia });
-                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'fecha': asits.dia, 'hIngreso': asits.hrIn, 'hsb': asits.hrOut, 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBreak': 0 };
+                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'fecha': asits.dia, 'hIngreso': asits.hrIn, 'hsb': asits.hrOut, 'hib': '', 'hSalida': '', 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBreak': 0 };
 
 
                             if (!RegisterAddList.length) {
