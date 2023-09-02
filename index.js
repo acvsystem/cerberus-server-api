@@ -211,7 +211,7 @@ io.use(function (socket, next) {
 
                             ((reportData || [])[index] || {})['hib'] = asits.hrIn;
                             ((reportData || [])[index] || {})['hSalida'] = asits.hrOut;
-                            ((reportData || [])[index] || {})['hBreak'] = Math.round(parseFloat((hora_1 - hora_2) / 60));
+                            ((reportData || [])[index] || {})['hBreak'] = Math.round(parseFloat((hora_2 - hora_1) / 60));
 
                             ((reportData || [])[index] || {})['hTrabajadas'] = Math.round(parseFloat(hrWorking.toFixed(2)));
 
