@@ -47,7 +47,6 @@ app.use('/settings', async (req, res, next) => {
 }, configurationRoutes);
 
 app.use('/rrhh', async (req, res, next) => {
-    console.log("rrhh",req);
     const token = req.header('Authorization') || "";
 
     let resValidation = tokenController.verificationToken(token);
