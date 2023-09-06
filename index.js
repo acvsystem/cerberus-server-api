@@ -284,10 +284,10 @@ io.use(function (socket, next) {
 
     //EMITE DESDE EL SERVIDOR
     socket.on('verifyDocument', async (resData) => {
-        /*   if (socket.decoded.aud == 'SERVER') {
+           if (socket.decoded.aud == 'SERVER') {
                let listSessionConnect = await facturacionController.verificacionDocumentos(resData);
                socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
-           }*/
+           }
     });
 
     //EMITE DESDE EL AGENTE PY
