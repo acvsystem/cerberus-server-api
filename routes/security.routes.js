@@ -66,18 +66,8 @@ router.get('/download', (req, res) => {
         }
 
         var fileLocation = path.join('./', file);
+        res.download(fileLocation, file);
 
-        let array = [pathDownload.path.plugin_doc_configuration, pathDownload.path.plugin_doc_plugin_conf, pathDownload.path.plugin_doc_plugin, pathDownload.path.plugin_doc_plugin_conf_e];
-
-        if (((resValidation || {}).decoded || {}).aud == "SUNAT") {
-            array.filter((route) => {
-                res.download(fileLocation, route);
-            });
-        }
-
-        if (((resValidation || {}).decoded || {}).aud != "SUNAT") {
-            res.download(fileLocation, file);
-        }
 
     } else {
         return res.status(401).json('Access denied');
