@@ -56,7 +56,7 @@ app.use('/rrhh', async (req, res, next) => {
     } else {
         return res.status(401).json('Access denied');
     }
-   
+
 }, recursosHumanosRoutes);
 
 app.use('/frontRetail', frontRetailRoutes);
@@ -284,10 +284,10 @@ io.use(function (socket, next) {
 
     //EMITE DESDE EL SERVIDOR
     socket.on('verifyDocument', async (resData) => {
-           if (socket.decoded.aud == 'SERVER') {
-               let listSessionConnect = await facturacionController.verificacionDocumentos(resData);
-               socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
-           }
+        if (socket.decoded.aud == 'SERVER') {
+            let listSessionConnect = await facturacionController.verificacionDocumentos(resData);
+            socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
+        }
     });
 
     //EMITE DESDE EL AGENTE PY
@@ -331,10 +331,29 @@ io.use(function (socket, next) {
         io.emit('searchAsistencia', confConsulting);
     });
 
-    socket.on('update:file:FrontAgent', (data) => {
+    socket.on('update:file:FrontAgent', (hash) => {
+        let configurationList = {
+            socket: (socket || {}).id,
+            hash: hash
+        };
+
         if (socket.decoded.aud == 'ADMINISTRADOR') {
-            socket.broadcast.emit("update_file_Agente", data);
+            socket.broadcast.emit("update_file_Agente", configurationList);
         }
+    });
+
+    socket.on('update:file:response', (response) => {
+        console.log(response);
+        let socketID = (response || {}).socket;
+        let status = (response || {}).status;
+        let serie = (response || {}).serie;
+
+        let statusList = {
+            serie: serie,
+            status: status
+        };
+
+        socket.to(`${socketID}`).emit("update:file:status", statusList);
     });
 
     socket.on('conexion:serverICG', (data) => {
