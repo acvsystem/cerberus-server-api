@@ -331,10 +331,11 @@ io.use(function (socket, next) {
         io.emit('searchAsistencia', confConsulting);
     });
 
-    socket.on('update:file:FrontAgent', (hash) => {
+    socket.on('update:file:FrontAgent', (body) => {
         let configurationList = {
             socket: (socket || {}).id,
-            hash: hash
+            hash: body.hash,
+            fileName: body.fileName
         };
 
         if (socket.decoded.aud == 'ADMINISTRADOR') {

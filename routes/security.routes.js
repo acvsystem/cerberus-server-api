@@ -61,8 +61,8 @@ router.get('/download', (req, res) => {
             file = pathDownload.path.pluginSunat;
         }
 
-        if (((resValidation || {}).decoded || {}).aud == "VERIFICACION DOCUMENTO") {
-            file = pathDownload.path.pluginDocument_p;
+        if (((resValidation || {}).decoded || {}).aud == "DOCUMENTO") {
+            file = pathDownload.path.pluginDocument;
         }
 
         var fileLocation = path.join('./', file);
