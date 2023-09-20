@@ -346,7 +346,11 @@ export const onCambioEstadoPostulante = async (req, res) => {
             ""
         );`);
     } else {
-        await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO ='${(dataEstado || {}).tienda || ""}',ESTADO_EMP = '${(dataEstado || {}).estado || "PENDIENTE"}'  WHERE NRO_DOC = '${(dataEstado || {}).dni}';`);
+        if ((dataEstado || {}).estado == "PENDIENTE" || (dataEstado || {}).estado == "") {
+            await actionBDController.execQuery(`DELETE FROM TB_EMPLEADO WHERE NRO_DOC = '${(dataEstado || {}).dni}';`);
+        } else {
+            await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO ='${(dataEstado || {}).tienda || ""}',ESTADO_EMP = '${(dataEstado || {}).estado || "PENDIENTE"}'  WHERE NRO_DOC = '${(dataEstado || {}).dni}';`);
+        }
     }
 
     let [estadoPostulanteList] = await pool.query(`SELECT * FROM TB_ESTADO_POSTULANTE WHERE DNI = '${(dataEstado || {}).dni}';`);
