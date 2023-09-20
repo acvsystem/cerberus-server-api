@@ -291,7 +291,7 @@ export const onRegisterPostulante = async (req, res) => {
 }
 
 export const onRegisterEmployee = async (req, res) => {
-     let dataEmployee = (req || {}).body[0]; 
+    let dataEmployee = (req || {}).body[0];
     console.log(dataEmployee);
     await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
         CODIGO_ICG,
@@ -327,6 +327,14 @@ export const onRegisterEmployee = async (req, res) => {
             0.0,
             ""
         );`);
+
+    let response = [
+        {
+            status: prop.success.default
+        }
+    ];
+
+    res.json(response);
 }
 
 export const onCambioEstadoPostulante = async (req, res) => {
