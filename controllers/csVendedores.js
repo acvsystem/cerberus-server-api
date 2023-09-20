@@ -290,6 +290,44 @@ export const onRegisterPostulante = async (req, res) => {
     res.json(prop.success.default);
 }
 
+export const onRegisterEmployee = async (req, res) => {
+     let dataEmployee = (req || {}).body[0]; 
+    console.log(dataEmployee);
+    await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
+        CODIGO_ICG,
+        CODIGO_EJB,
+        AP_PATERNO,
+        AP_MATERNO,
+        NOM_EMPLEADO,
+        ESTADO_EMP,
+        ESTADO_CIVIL,
+        TIPO_DOC,
+        NRO_DOC,
+        TLF_EMP,
+        EMAIL_EMP,
+        FEC_NAC,
+        PAIS_NAC,
+        TIENDA_ASIGNADO,
+        SALARIO_BASE,
+        FEC_INGRESO)VALUES(
+            "",
+            "",
+            '${dataEmployee.AP_PATERNO}',
+            '${dataEmployee.AP_MATERNO}',
+            '${dataEmployee.FC_NOMBRES}',
+            'ACEPTADO',
+            '${dataEmployee.ESTADO_CIVIL}',
+            '${dataEmployee.TIPO_DOCUMENTO}',
+            '${dataEmployee.NUM_DOCUMENTO}',
+            '${dataEmployee.FC_CELULAR}',
+            '${dataEmployee.CORREO_ELECTONICO}',
+            '${dataEmployee.FECH_NAC}',
+            '${dataEmployee.PAIS_NACIMIENTO}',
+            '${dataEmployee.TIENDA_ASIGNADO}',
+            0.0,
+            ""
+        );`);
+}
 
 export const onCambioEstadoPostulante = async (req, res) => {
     let dataEstado = (req || {}).body;
