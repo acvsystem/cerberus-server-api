@@ -19,7 +19,7 @@ export const Login = async (req, res) => {
         const [menuUser] = await pool.query(`SELECT NAME_MENU,RUTE_PAGE FROM TB_PROFILE_USER 
             INNER JOIN TB_LOGIN ON TB_LOGIN.ID_LOGIN = TB_PROFILE_USER.FK_ID_LOGIN 
             INNER JOIN TB_NIVEL_ACCESS ON TB_NIVEL_ACCESS.ID_NVL_ACCESS = TB_LOGIN.FK_ID_NVL_ACCESS
-            INNER JOIN TB_MENU_SISTEMA ON TB_MENU_SISTEMA.FK_ID_LOGIN_MENU = TB_LOGIN.ID_LOGIN WHERE TB_NIVEL_ACCESS.ID_NVL_ACCESS = ${((dataUser || [])[0] || {}).ID_NVL_ACCESS} AND TB_LOGIN.ID_LOGIN = ${((dataUser || [])[0] || {}).NM_NIVEL};`);
+            INNER JOIN TB_MENU_SISTEMA ON TB_MENU_SISTEMA.FK_ID_LOGIN_MENU = TB_LOGIN.ID_LOGIN WHERE TB_NIVEL_ACCESS.ID_NVL_ACCESS = ${((dataUser || [])[0] || {}).ID_NVL_ACCESS};`);
 
         const token = tokenController.createToken(usuario, nivelUser);
 
