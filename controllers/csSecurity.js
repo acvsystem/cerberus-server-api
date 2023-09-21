@@ -16,7 +16,7 @@ export const Login = async (req, res) => {
     let nivelUser = ((dataUser || [])[0] || {}).NM_NIVEL;
     console.log(objLogin);
     if (dataUser.length > 0) {
-        const [menuUser] = await pool.query(`SELECT * FROM TB_MENU_SISTEMA WHERE FK_ID_NVL_ACCESS = = ${((dataUser || [])[0] || {}).ID_NVL_ACCESS};`);
+        const [menuUser] = await pool.query(`SELECT * FROM TB_MENU_SISTEMA WHERE FK_ID_NVL_ACCESS = ${((dataUser || [])[0] || {}).ID_NVL_ACCESS};`);
 
         const token = tokenController.createToken(usuario, nivelUser);
 
