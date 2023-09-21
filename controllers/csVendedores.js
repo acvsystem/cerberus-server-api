@@ -290,6 +290,21 @@ export const onRegisterPostulante = async (req, res) => {
     res.json(prop.success.default);
 }
 
+export const onDeleteEmployee = async (req, res) => {
+    let nroDocumento = ((req || {}).body || {}).nroDocumento;
+    if (nroDocumento >= 8) {
+        await actionBDController.execQuery(`DELETE FROM TB_EMPLEADO WHERE NRO_DOC = '${nroDocumento}';`);
+    }
+
+    let response = [
+        {
+            status: prop.success.default
+        }
+    ];
+
+    res.json(response); 
+}
+
 export const onRegisterEmployee = async (req, res) => {
     let dataEmployee = (req || {}).body[0];
     console.log(dataEmployee);
