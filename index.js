@@ -163,7 +163,7 @@ io.use(function (socket, next) {
         let reportData = [];
 
 
-        console.log("dataAsistensList",dataAsistensList);
+     
         (empleadoList || []).filter((emp) => {
 
             let hrWorking = 0;
@@ -177,7 +177,10 @@ io.use(function (socket, next) {
                 let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${(emp || {}).AP_MATERNO} ${(emp || {}).NOM_EMPLEADO}`;
 
                 if (emp.NRO_DOC == asits.nroDocumento) {
-
+                    if(asits.nroDocumento == "73122605"){
+                        console.log("dataAsistensList",dataAsistensList);
+                    }
+                
                     let index = -1;
 
                     if (isReportForDay) {
