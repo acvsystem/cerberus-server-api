@@ -149,7 +149,7 @@ io.use(function (socket, next) {
     }
 
     socket.on('reporteAssitencia', async (response) => {
-        console.log("reporteAssitencia", response);
+   
 
         let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
         let configurationList = ((response || {}).configuration || {})[0] || {};
@@ -329,7 +329,7 @@ io.use(function (socket, next) {
             }
         ];
 
-        console.log("emitRRHH", confConsulting);
+ 
 
         io.emit('searchAsistencia', confConsulting);
     });
@@ -347,7 +347,7 @@ io.use(function (socket, next) {
     });
 
     socket.on('update:file:response', (response) => {
-        console.log(response);
+       
         let socketID = (response || {}).socket;
         let status = (response || {}).status;
         let serie = (response || {}).serie;
