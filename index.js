@@ -163,7 +163,7 @@ io.use(function (socket, next) {
         let reportData = [];
 
 
-        console.log("empleadoList",empleadoList);
+        console.log("dataAsistensList",dataAsistensList);
         (empleadoList || []).filter((emp) => {
 
             let hrWorking = 0;
