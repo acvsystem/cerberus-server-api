@@ -326,7 +326,7 @@ export const onRegisterEmployee = async (req, res) => {
         SALARIO_BASE,
         FEC_INGRESO)VALUES(
             "",
-            "",
+            ${dataEmployee.CODIGO_EJB},
             '${dataEmployee.AP_PATERNO}',
             '${dataEmployee.AP_MATERNO}',
             '${dataEmployee.FC_NOMBRES}',
