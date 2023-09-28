@@ -302,46 +302,64 @@ export const onDeleteEmployee = async (req, res) => {
         }
     ];
 
-    res.json(response); 
+    res.json(response);
 }
 
 export const onRegisterEmployee = async (req, res) => {
     let dataEmployee = (req || {}).body[0];
-    console.log(dataEmployee);
-    await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
-        CODIGO_ICG,
-        CODIGO_EJB,
-        AP_PATERNO,
-        AP_MATERNO,
-        NOM_EMPLEADO,
-        ESTADO_EMP,
-        ESTADO_CIVIL,
-        TIPO_DOC,
-        NRO_DOC,
-        TLF_EMP,
-        EMAIL_EMP,
-        FEC_NAC,
-        PAIS_NAC,
-        TIENDA_ASIGNADO,
-        SALARIO_BASE,
-        FEC_INGRESO)VALUES(
-            "",
-            '${dataEmployee.CODIGO_EJB}',
-            '${dataEmployee.AP_PATERNO}',
-            '${dataEmployee.AP_MATERNO}',
-            '${dataEmployee.FC_NOMBRES}',
-            'ACEPTADO',
-            '${dataEmployee.ESTADO_CIVIL}',
-            '${dataEmployee.TIPO_DOCUMENTO}',
-            '${dataEmployee.NUM_DOCUMENTO}',
-            '${dataEmployee.FC_CELULAR}',
-            '${dataEmployee.CORREO_ELECTONICO}',
-            '${dataEmployee.FECH_NAC}',
-            '${dataEmployee.PAIS_NACIMIENTO}',
-            '${dataEmployee.TIENDA_ASIGNADO}',
-            0.0,
-            ""
-        );`);
+    let existSTD = await actionBDController.verificationRegister('TB_EMPLEADO', `NRO_DOC = '${dataEmployee.NUM_DOCUMENTO}';`);
+
+    if (!existSTD) {
+        await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
+            CODIGO_ICG,
+            CODIGO_EJB,
+            AP_PATERNO,
+            AP_MATERNO,
+            NOM_EMPLEADO,
+            ESTADO_EMP,
+            ESTADO_CIVIL,
+            TIPO_DOC,
+            NRO_DOC,
+            TLF_EMP,
+            EMAIL_EMP,
+            FEC_NAC,
+            PAIS_NAC,
+            TIENDA_ASIGNADO,
+            SALARIO_BASE,
+            FEC_INGRESO)VALUES(
+                "",
+                '${dataEmployee.CODIGO_EJB}',
+                '${dataEmployee.AP_PATERNO}',
+                '${dataEmployee.AP_MATERNO}',
+                '${dataEmployee.FC_NOMBRES}',
+                'ACEPTADO',
+                '${dataEmployee.ESTADO_CIVIL}',
+                '${dataEmployee.TIPO_DOCUMENTO}',
+                '${dataEmployee.NUM_DOCUMENTO}',
+                '${dataEmployee.FC_CELULAR}',
+                '${dataEmployee.CORREO_ELECTONICO}',
+                '${dataEmployee.FECH_NAC}',
+                '${dataEmployee.PAIS_NACIMIENTO}',
+                '${dataEmployee.TIENDA_ASIGNADO}',
+                0.0,
+                ""
+            );`);
+    } else {
+        await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET CODIGO_ICG,
+        CODIGO_EJB = '${dataEmployee.CODIGO_EJB}',
+        AP_PATERNO = '${dataEmployee.AP_PATERNO}',
+        AP_MATERNO = '${dataEmployee.AP_MATERNO}',
+        NOM_EMPLEAD = '${dataEmployee.FC_NOMBRES}',
+        ESTADO_CIVIL = '${dataEmployee.ESTADO_CIVIL}',
+        TIPO_DOC = '${dataEmployee.TIPO_DOCUMENTO}',
+        NRO_DOC = '${dataEmployee.NUM_DOCUMENTO}',
+        TLF_EMP = '${dataEmployee.FC_CELULAR}',
+        EMAIL_EMP = '${dataEmployee.CORREO_ELECTONICO}',
+        PAIS_NAC = '${dataEmployee.PAIS_NACIMIENTO}',
+        TIENDA_ASIG = '${dataEmployee.TIENDA_ASIGNADO}' WHERE NRO_DOC = '${dataEmployee.NUM_DOCUMENTO}';`);
+    }
+
+
 
     let response = [
         {
