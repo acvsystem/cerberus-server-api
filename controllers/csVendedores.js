@@ -349,14 +349,14 @@ export const onRegisterEmployee = async (req, res) => {
         CODIGO_EJB = '${dataEmployee.CODIGO_EJB}',
         AP_PATERNO = '${dataEmployee.AP_PATERNO}',
         AP_MATERNO = '${dataEmployee.AP_MATERNO}',
-        NOM_EMPLEAD = '${dataEmployee.FC_NOMBRES}',
+        NOM_EMPLEADO = '${dataEmployee.FC_NOMBRES}',
         ESTADO_CIVIL = '${dataEmployee.ESTADO_CIVIL}',
         TIPO_DOC = '${dataEmployee.TIPO_DOCUMENTO}',
         NRO_DOC = '${dataEmployee.NUM_DOCUMENTO}',
         TLF_EMP = '${dataEmployee.FC_CELULAR}',
         EMAIL_EMP = '${dataEmployee.CORREO_ELECTONICO}',
         PAIS_NAC = '${dataEmployee.PAIS_NACIMIENTO}',
-        TIENDA_ASIG = '${dataEmployee.TIENDA_ASIGNADO}' WHERE NRO_DOC = '${dataEmployee.NUM_DOCUMENTO}';`);
+        TIENDA_ASIGNADO = '${dataEmployee.TIENDA_ASIGNADO}' WHERE NRO_DOC = '${dataEmployee.NUM_DOCUMENTO}';`);
     }
 
 
