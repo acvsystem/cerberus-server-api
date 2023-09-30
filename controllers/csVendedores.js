@@ -345,7 +345,7 @@ export const onRegisterEmployee = async (req, res) => {
                 ""
             );`);
     } else {
-        await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET CODIGO_ICG,
+        await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET
         CODIGO_EJB = '${dataEmployee.CODIGO_EJB}',
         AP_PATERNO = '${dataEmployee.AP_PATERNO}',
         AP_MATERNO = '${dataEmployee.AP_MATERNO}',
