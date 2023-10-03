@@ -278,13 +278,13 @@ export const onRegisterPostulante = async (req, res) => {
         EMAIL_EMP = '${(datosPersonales || {}).email}',
         FEC_NAC = '${(datosPersonales || {}).fec_nacimiento}',
         PAIS_NAC = '${(datosPersonales || {}).pais_nacimiento}',
-        WHERE NRO_DOC = '${(dataEstado || {}).dni}';`);
+        WHERE NRO_DOC = '${idPostulante}';`);
     }
 
     let existSTD = await actionBDController.verificationRegister('TB_ESTADO_POSTULANTE', `DNI = '${idPostulante}';`);
 
     if (!existSTD.length) {
-        await actionBDController.execQuery(`INSERT INTO TB_ESTADO_POSTULANTE(DNI,ESTADO,TIENDA)VALUES('${(dataEstado || {}).dni}','PENDIENTE','SIN ASIGNAR');`);
+        await actionBDController.execQuery(`INSERT INTO TB_ESTADO_POSTULANTE(DNI,ESTADO,TIENDA)VALUES('${idPostulante}','PENDIENTE','SIN ASIGNAR');`);
     }
 
     res.json(prop.success.default);
@@ -371,7 +371,7 @@ export const onRegisterEmployee = async (req, res) => {
 }
 
 export const onCambioEstadoPostulante = async (req, res) => {
-    let dataEstado = (req || {}).body;
+    let dataEstado = (req || {}).body || {};
 
     await actionBDController.execQuery(`UPDATE TB_ESTADO_POSTULANTE SET ESTADO='${(dataEstado || {}).estado}',TIENDA='${(dataEstado || {}).tienda}' WHERE DNI = '${(dataEstado || {}).dni}';`);
 
