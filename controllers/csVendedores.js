@@ -277,7 +277,7 @@ export const onRegisterPostulante = async (req, res) => {
         TLF_EMP = '${(datosPersonales || {}).nro_celular}',
         EMAIL_EMP = '${(datosPersonales || {}).email}',
         FEC_NAC = '${(datosPersonales || {}).fec_nacimiento}',
-        PAIS_NAC = '${(datosPersonales || {}).pais_nacimiento}',
+        PAIS_NAC = '${(datosPersonales || {}).pais_nacimiento}'
         WHERE NRO_DOC = '${idPostulante}';`);
     }
 
