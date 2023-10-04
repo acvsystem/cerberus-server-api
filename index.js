@@ -170,7 +170,7 @@ io.use(function (socket, next) {
             let nroTransacciones = 0;
             let hExcedente = 0;
             let hFaltante = 0;
-            let test = dataAsistensList.find((dt) => dt.nroDocumento == "76435214");
+            let test = dataAsistensList.filter((dt) => dt.nroDocumento == "76435214");
             console.log(test);
 
             (dataAsistensList || []).filter((asits) => {
