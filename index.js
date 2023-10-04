@@ -165,7 +165,7 @@ io.use(function (socket, next) {
 
         let test = dataAsistensList.filter((dt) => dt.nroDocumento == "76435214");
         console.log(test);
-        
+
         (empleadoList || []).filter((emp) => {
 
             let hrWorking = 0;
@@ -222,7 +222,6 @@ io.use(function (socket, next) {
                             ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(fexc.toFixed(2)));
                             ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hfalt.toFixed(2)));
 
-
                             ((reportData || [])[index] || {})['data'].push(asits);
 
                         } else {
@@ -237,7 +236,9 @@ io.use(function (socket, next) {
 
 
                             if (!RegisterAddList.length) {
+                                ((itemReport || []).Data || []).push(asits);
                                 reportData.push(itemReport);
+
                             }
 
                         }
