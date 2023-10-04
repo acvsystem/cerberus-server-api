@@ -192,7 +192,8 @@ io.use(function (socket, next) {
             (dataAsistensList || []).filter(async (asits) => {
 
                 let c_costo = (tiendasList || {}).filter((tienda) => (tienda || {}).code == (asits || {}).caja);
-
+                console.log(c_costo);
+                
                 if ((emp || {}).TIENDA_ASIGNADO != (c_costo || {}).name) {
                     await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO = '${(c_costo || {}).name}';`);
                 }
