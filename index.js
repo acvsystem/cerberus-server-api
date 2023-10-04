@@ -194,11 +194,11 @@ io.use(function (socket, next) {
                 let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${(emp || {}).AP_MATERNO} ${(emp || {}).NOM_EMPLEADO}`;
 
                 if (emp.NRO_DOC == asits.nroDocumento) {
-                    
-                    let serie = (asits || {}).caja.slice(0, 2)
+
+                    let serie = (asits || {}).caja.slice(0, 2);
 
                     let c_costo = (tiendasList || {}).filter((tienda) => {
-    
+
                         if ((tienda || {}).code == serie && serie != '7A') {
                             return tienda;
                         } else {
@@ -211,9 +211,9 @@ io.use(function (socket, next) {
                             }
                         }
                     });
-    
+
                     if ((emp || {}).TIENDA_ASIGNADO != (c_costo || {}).name) {
-                        console.log(emp.NOM_EMPLEADO, (c_costo || {}).name);
+                        console.log(emp.NOM_EMPLEADO, serie, (c_costo || {}).name);
                         // await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO = '${(c_costo || {}).name}';`);
                     }
 
