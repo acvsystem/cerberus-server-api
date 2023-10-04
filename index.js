@@ -191,33 +191,31 @@ io.use(function (socket, next) {
 
             (dataAsistensList || []).filter(async (asits) => {
 
-                let serie = (asits || {}).caja.slice(0, 2)
-
-                let c_costo = (tiendasList || {}).filter((tienda) => {
-
-                    if ((tienda || {}).code == serie && serie != '7A') {
-                        return tienda;
-                    } else {
-                        if ((asits || {}).caja == '7A7') {
-                            return tienda;
-                        } else {
-                            if (serie == '7A') {
-                                return tienda;
-                            }
-                        }
-                    }
-                });
-
-                console.log(c_costo);
-
-                if ((emp || {}).TIENDA_ASIGNADO != (c_costo || {}).name) {
-                    console.log(emp.NOM_EMPLEADO, (c_costo || {}).name);
-                    // await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO = '${(c_costo || {}).name}';`);
-                }
-
                 let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${(emp || {}).AP_MATERNO} ${(emp || {}).NOM_EMPLEADO}`;
 
                 if (emp.NRO_DOC == asits.nroDocumento) {
+                    
+                    let serie = (asits || {}).caja.slice(0, 2)
+
+                    let c_costo = (tiendasList || {}).filter((tienda) => {
+    
+                        if ((tienda || {}).code == serie && serie != '7A') {
+                            return tienda;
+                        } else {
+                            if ((asits || {}).caja == '7A7') {
+                                return tienda;
+                            } else {
+                                if (serie == '7A') {
+                                    return tienda;
+                                }
+                            }
+                        }
+                    });
+    
+                    if ((emp || {}).TIENDA_ASIGNADO != (c_costo || {}).name) {
+                        console.log(emp.NOM_EMPLEADO, (c_costo || {}).name);
+                        // await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO = '${(c_costo || {}).name}';`);
+                    }
 
                     let index = -1;
 
