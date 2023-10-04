@@ -220,7 +220,10 @@ io.use(function (socket, next) {
 
                             ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(fexc.toFixed(2)));
                             ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hfalt.toFixed(2)));
-                            console.log(asits);
+                            if(nroDocumento == "76435214"){
+                                console.log(asits);
+                            }
+                           
                             ((reportData || [])[index] || {})['data'].push(asits);
 
                         } else {
