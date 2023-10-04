@@ -182,21 +182,20 @@ io.use(function (socket, next) {
         let documentListAdd = [];
         let reportData = [];
 
-        (empleadoList || []).filter(async (emp) => {
-
-            let c_costo = (tiendasList || {}).filter((tienda) => (tienda || {}).code == (emp || {}).caja);
-
-            if ((emp || {}).TIENDA_ASIGNADO != (c_costo || {}).name) {
-                await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO = '${(c_costo || {}).name}';`);
-            }
+        (empleadoList || []).filter((emp) => {
 
             let hrWorking = 0;
             let nroTransacciones = 0;
             let hExcedente = 0;
             let hFaltante = 0;
 
-            (dataAsistensList || []).filter((asits) => {
+            (dataAsistensList || []).filter(async (asits) => {
 
+                let c_costo = (tiendasList || {}).filter((tienda) => (tienda || {}).code == (asits || {}).caja);
+
+                if ((emp || {}).TIENDA_ASIGNADO != (c_costo || {}).name) {
+                    await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO = '${(c_costo || {}).name}';`);
+                }
 
                 let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${(emp || {}).AP_MATERNO} ${(emp || {}).NOM_EMPLEADO}`;
 
