@@ -149,7 +149,7 @@ io.use(function (socket, next) {
     }
 
     socket.on('reporteAssitencia', async (response) => {
-   
+
 
         let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
         let configurationList = ((response || {}).configuration || {})[0] || {};
@@ -163,21 +163,23 @@ io.use(function (socket, next) {
         let reportData = [];
 
 
-     
+
         (empleadoList || []).filter((emp) => {
 
             let hrWorking = 0;
             let nroTransacciones = 0;
             let hExcedente = 0;
             let hFaltante = 0;
-
+            let test = dataAsistensList.find(() => asits.nroDocumento == "76435214");
+            console.log(test);
 
             (dataAsistensList || []).filter((asits) => {
+
 
                 let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${(emp || {}).AP_MATERNO} ${(emp || {}).NOM_EMPLEADO}`;
 
                 if (emp.NRO_DOC == asits.nroDocumento) {
-                
+
                     let index = -1;
 
                     if (isReportForDay) {
@@ -208,7 +210,6 @@ io.use(function (socket, next) {
                             let hora_2 = parseInt(asits.hrIn.split(":")[0]) * 60 + parseInt(asits.hrIn.split(":")[1]);
 
 
-
                             ((reportData || [])[index] || {})['hib'] = asits.hrIn;
                             ((reportData || [])[index] || {})['hSalida'] = asits.hrOut;
                             ((reportData || [])[index] || {})['hBreak'] = Math.round(parseFloat((hora_2 - hora_1) / 60));
@@ -220,10 +221,8 @@ io.use(function (socket, next) {
 
                             ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(fexc.toFixed(2)));
                             ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hfalt.toFixed(2)));
-                            if(asits.nroDocumento == "76435214"){
-                                console.log(asits);
-                            }
-                           
+
+
                             ((reportData || [])[index] || {})['data'].push(asits);
 
                         } else {
@@ -330,7 +329,7 @@ io.use(function (socket, next) {
             }
         ];
 
- 
+
 
         io.emit('searchAsistencia', confConsulting);
     });
@@ -348,7 +347,7 @@ io.use(function (socket, next) {
     });
 
     socket.on('update:file:response', (response) => {
-       
+
         let socketID = (response || {}).socket;
         let status = (response || {}).status;
         let serie = (response || {}).serie;
