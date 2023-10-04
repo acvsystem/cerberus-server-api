@@ -147,7 +147,8 @@ io.use(function (socket, next) {
     }
 
     socket.on('reporteAssitencia', async (response) => {
-
+        let dataAsistensList = JSON.parse((response || {}).serverData);
+        
         let tiendasList = [
             { code: '7A', name: 'BBW JOCKEY' },
             { code: '9A', name: 'VSBA JOCKEY' },
@@ -211,7 +212,7 @@ io.use(function (socket, next) {
         let configurationList = ((response || {}).configuration || {})[0] || {};
         let socketID = (configurationList || {}).socket;
 
-        let dataAsistensList = JSON.parse((response || {}).serverData);
+        
         let isReportForDay = (configurationList || {}).isReportForDay;
         let isReportTotal = (configurationList || {}).isReportTotal;
         let dateList = (configurationList || {}).dateList;
