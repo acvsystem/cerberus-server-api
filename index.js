@@ -203,8 +203,6 @@ io.use(function (socket, next) {
                         if ((emp || {}).TIENDA_ASIGNADO != (res || {}).name) {
                             await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO = '${(res || {}).name}' WHERE NRO_DOC = '${asits.nroDocumento}';`);
                             return;
-                        } else {
-                            console.log(emp.NOM_EMPLEADO, serie, (res || {}).name);
                         }
                     });
                 }
