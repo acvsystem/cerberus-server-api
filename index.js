@@ -179,30 +179,34 @@ io.use(function (socket, next) {
             return (dataAsistensList || []).filter(async (asits) => {
                 let serie = (asits || {}).caja.slice(0, 2);
 
+                c_costo = new Promise((resolve, reject) => {
+                    (tiendasList || {}).filter((tienda) => {
 
-                (tiendasList || {}).filter((tienda) => {
-
-                    if ((tienda || {}).code == serie && serie != '7A') {
-                        return tienda;
-                    } else {
-                        if ((asits || {}).caja == '7A7') {
-                            return tienda;
+                        if ((tienda || {}).code == serie && serie != '7A') {
+                            resolve(tienda);
                         } else {
-                            if (serie == '7A') {
-                                return tienda;
+                            if ((asits || {}).caja == '7A7') {
+                                resolve(tienda);
+                            } else {
+                                if (serie == '7A') {
+                                    resolve(tienda);
+                                }
                             }
                         }
+                    });
+                });
+
+                return c_costo.then((res) => {
+                    if ((emp || {}).TIENDA_ASIGNADO != (res || {}).name) {
+                        console.log(emp.NOM_EMPLEADO, serie, (res || {}).name);
+                        // await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO = '${(c_costo || {}).name}';`);
+                        return;
                     }
                 });
 
-                if ((emp || {}).TIENDA_ASIGNADO != (res || {}).name) {
-                    console.log(emp.NOM_EMPLEADO, serie, (res || {}).name);
-                    // await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO = '${(c_costo || {}).name}';`);
-                    return;
-                }
             });
         });
-
+        console.log("INIT PROCESS");
         let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
         let configurationList = ((response || {}).configuration || {})[0] || {};
         let socketID = (configurationList || {}).socket;
