@@ -177,9 +177,6 @@ io.use(function (socket, next) {
                 let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${(emp || {}).AP_MATERNO} ${(emp || {}).NOM_EMPLEADO}`;
 
                 if (emp.NRO_DOC == asits.nroDocumento) {
-                    if(asits.nroDocumento == "73122605"){
-                        console.log("dataAsistensList",dataAsistensList);
-                    }
                 
                     let index = -1;
 
@@ -224,6 +221,7 @@ io.use(function (socket, next) {
                             ((reportData || [])[index] || {})['hExcedente'] = Math.round(parseFloat(fexc.toFixed(2)));
                             ((reportData || [])[index] || {})['hFaltantes'] = Math.round(parseFloat(hfalt.toFixed(2)));
 
+                            ((reportData || [])[index] || {})['data'].push(asits);
 
                         } else {
 
@@ -233,7 +231,7 @@ io.use(function (socket, next) {
 
                             RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento && register.fecha == (asits || {}).dia);
                             (documentListAdd || []).push({ dni: emp.nroDocumento, fecha: (emp || {}).dia });
-                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'fecha': asits.dia, 'hIngreso': asits.hrIn, 'hsb': asits.hrOut, 'hib': '', 'hSalida': '', 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBreak': 0 };
+                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'fecha': asits.dia, 'hIngreso': asits.hrIn, 'hsb': asits.hrOut, 'hib': '', 'hSalida': '', 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBreak': 0, data: [] };
 
 
                             if (!RegisterAddList.length) {
