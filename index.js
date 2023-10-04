@@ -209,7 +209,7 @@ io.use(function (socket, next) {
 
             });
         });
-        console.log("INIT PROCESS");
+      
         let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
         let configurationList = ((response || {}).configuration || {})[0] || {};
         let socketID = (configurationList || {}).socket;
