@@ -163,15 +163,15 @@ io.use(function (socket, next) {
         let reportData = [];
 
 
-
+        let test = dataAsistensList.filter((dt) => dt.nroDocumento == "76435214");
+        console.log(test);
+        
         (empleadoList || []).filter((emp) => {
 
             let hrWorking = 0;
             let nroTransacciones = 0;
             let hExcedente = 0;
             let hFaltante = 0;
-            let test = dataAsistensList.filter((dt) => dt.nroDocumento == "76435214");
-            console.log(test);
 
             (dataAsistensList || []).filter((asits) => {
 
