@@ -148,7 +148,7 @@ io.use(function (socket, next) {
 
     socket.on('reporteAssitencia', async (response) => {
         let dataAsistensList = JSON.parse((response || {}).serverData);
-        
+
         let tiendasList = [
             { code: '7A', name: 'BBW JOCKEY' },
             { code: '9A', name: 'VSBA JOCKEY' },
@@ -178,32 +178,35 @@ io.use(function (socket, next) {
         await (originEmpleadoList || []).filter((emp) => {
 
             return (dataAsistensList || []).filter(async (asits) => {
-                let serie = (asits || {}).caja.slice(0, 2);
 
-                c_costo = new Promise((resolve, reject) => {
-                    (tiendasList || {}).filter((tienda) => {
+                if (emp.NRO_DOC == asits.nroDocumento) {
+                    let serie = (asits || {}).caja.slice(0, 2);
 
-                        if ((tienda || {}).code == serie && serie != '7A') {
-                            resolve(tienda);
-                        } else {
-                            if ((asits || {}).caja == '7A7') {
+                    c_costo = new Promise((resolve, reject) => {
+                        (tiendasList || {}).filter((tienda) => {
+
+                            if ((tienda || {}).code == serie && serie != '7A') {
                                 resolve(tienda);
                             } else {
-                                if (serie == '7A') {
+                                if ((asits || {}).caja == '7A7') {
                                     resolve(tienda);
+                                } else {
+                                    if (serie == '7A') {
+                                        resolve(tienda);
+                                    }
                                 }
                             }
+                        });
+                    });
+
+                    return c_costo.then((res) => {
+                        if ((emp || {}).TIENDA_ASIGNADO != (res || {}).name) {
+                            console.log(emp.NOM_EMPLEADO, serie, (res || {}).name);
+                            // await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO = '${(c_costo || {}).name}';`);
+                            return;
                         }
                     });
-                });
-
-                return c_costo.then((res) => {
-                    if ((emp || {}).TIENDA_ASIGNADO != (res || {}).name) {
-                        console.log(emp.NOM_EMPLEADO, serie, (res || {}).name);
-                        // await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO = '${(c_costo || {}).name}';`);
-                        return;
-                    }
-                });
+                }
 
             });
         });
@@ -212,7 +215,7 @@ io.use(function (socket, next) {
         let configurationList = ((response || {}).configuration || {})[0] || {};
         let socketID = (configurationList || {}).socket;
 
-        
+
         let isReportForDay = (configurationList || {}).isReportForDay;
         let isReportTotal = (configurationList || {}).isReportTotal;
         let dateList = (configurationList || {}).dateList;
