@@ -127,8 +127,6 @@ io.use(function (socket, next) {
     let isIcg = socket.handshake.headers.icg;
     const userId = socket.id;
 
-    socket.join(userId);
-
     if (socket.decoded.aud == 'AGENTE') {
         let indexAgente = (agenteList || []).findIndex((data, i) => (data || {}).code == codeTerminal);
 
@@ -150,6 +148,28 @@ io.use(function (socket, next) {
 
     socket.on('reporteAssitencia', async (response) => {
 
+        let tiendasList = [
+            { code: '7A', name: 'BBW JOCKEY' },
+            { code: '9A', name: 'VSBA JOCKEY' },
+            { code: 'PC', name: 'AEO JOCKEY' },
+            { code: 'PB', name: 'AEO ASIA' },
+            { code: '7E', name: 'BBW LA RAMBLA' },
+            { code: '9D', name: 'VSBA LA RAMBLA' },
+            { code: '9B', name: 'VSBA PLAZA NORTE' },
+            { code: '7C', name: 'BBW SAN MIGUEL' },
+            { code: '9C', name: 'VSBA SAN MIGUEL' },
+            { code: '7D', name: 'BBW SALAVERRY' },
+            { code: '9I', name: 'VSBA SALAVERRY' },
+            { code: '9G', name: 'VSBA MALL DEL SUR' },
+            { code: '9H', name: 'VSBA PURUCHUCO' },
+            { code: '9M', name: 'VSBA ECOMMERCE' },
+            { code: '7F', name: 'BBW ECOMMERCE' },
+            { code: 'PA', name: 'AEO ECOMMERCE' },
+            { code: '9K', name: 'VSBA MEGA PLAZA' },
+            { code: '9L', name: 'VSBA MINKA' },
+            { code: '9F', name: 'VSFA JOCKEY PLAZA' },
+            { code: '7A7', name: 'BBW ASIA' }
+        ];
 
         let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
         let configurationList = ((response || {}).configuration || {})[0] || {};
@@ -162,11 +182,13 @@ io.use(function (socket, next) {
         let documentListAdd = [];
         let reportData = [];
 
+        (empleadoList || []).filter(async (emp) => {
 
-        let test = dataAsistensList.filter((dt) => dt.nroDocumento == "76435214");
-        console.log(test);
+            let c_costo = (tiendasList || {}).filter((tienda) => (tienda || {}).code == (emp || {}).caja);
 
-        (empleadoList || []).filter((emp) => {
+            if ((emp || {}).TIENDA_ASIGNADO != (c_costo || {}).name) {
+                await actionBDController.execQuery(`UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO = '${(c_costo || {}).name}';`);
+            }
 
             let hrWorking = 0;
             let nroTransacciones = 0;
@@ -209,7 +231,6 @@ io.use(function (socket, next) {
                             let hora_1 = parseInt(reportData[index]['hsb'].split(":")[0]) * 60 + parseInt(reportData[index]['hsb'].split(":")[1]);
                             let hora_2 = parseInt(asits.hrIn.split(":")[0]) * 60 + parseInt(asits.hrIn.split(":")[1]);
 
-
                             ((reportData || [])[index] || {})['hib'] = asits.hrIn;
                             ((reportData || [])[index] || {})['hSalida'] = asits.hrOut;
                             ((reportData || [])[index] || {})['hBreak'] = Math.round(parseFloat((hora_2 - hora_1) / 60));
@@ -230,11 +251,9 @@ io.use(function (socket, next) {
                             let RegisterAddList = {};
                             let itemReport = {};
 
-
                             RegisterAddList = (documentListAdd || []).filter((register) => register.dni == asits.nroDocumento && register.fecha == (asits || {}).dia);
                             (documentListAdd || []).push({ dni: emp.nroDocumento, fecha: (emp || {}).dia });
-                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento,'centro_costo':(emp || {}).TIENDA_ASIGNADO, 'fecha': asits.dia, 'hIngreso': asits.hrIn, 'hsb': asits.hrOut, 'hib': '', 'hSalida': '', 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBreak': 0, data: [asits], observacion: false };
-
+                            itemReport = { 'nomEmpleado': nombreEmpleado, 'documento': asits.nroDocumento, 'centro_costo': (emp || {}).TIENDA_ASIGNADO, 'fecha': asits.dia, 'hIngreso': asits.hrIn, 'hsb': asits.hrOut, 'hib': '', 'hSalida': '', 'hTrabajadas': Math.round(parseFloat(hrWorking.toFixed(2))), 'hExcedente': Math.round(parseFloat(hExcedente.toFixed(2))), 'hFaltantes': Math.round(parseFloat(hFaltante.toFixed(2))), 'hBreak': 0, data: [asits], observacion: false };
 
                             if (!RegisterAddList.length) {
                                 reportData.push(itemReport);
@@ -245,10 +264,6 @@ io.use(function (socket, next) {
 
 
                     if (isReportTotal) {
-                        let dateCalendarList = [];
-                        let documentosListAdded = [];
-                        let RegisterAddList = [];
-                        let documentListAdd = [];
                         let itemReport = {};
 
                         var fecha_1 = new Date(dateList[0]);
@@ -281,7 +296,6 @@ io.use(function (socket, next) {
 
         });
 
-        console.log(configurationList);
         socket.to(`${socketID}`).emit("sendControlAsistencia", reportData);
     });
 
