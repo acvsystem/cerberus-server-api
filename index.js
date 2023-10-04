@@ -197,7 +197,7 @@ io.use(function (socket, next) {
 
                     let serie = (asits || {}).caja.slice(0, 2);
 
-                    let c_costo = (tiendasList || {}).filter((tienda) => {
+                    let c_costo = await (tiendasList || {}).filter((tienda) => {
 
                         if ((tienda || {}).code == serie && serie != '7A') {
                             return tienda;
