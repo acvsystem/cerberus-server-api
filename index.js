@@ -315,6 +315,7 @@ io.use(function (socket, next) {
 
                             ((reportData || [])[index] || {})['hExcedente'] = hexc > -1 ? hexc : 0;
                             ((reportData || [])[index] || {})['hFaltantes'] = hfalt > -1 ? hfalt : 0;
+                            ((reportData || [])[index] || {})['data'].push(asits);
                         }
 
                         if (emp.NRO_DOC == asits.nroDocumento && index == -1) {
