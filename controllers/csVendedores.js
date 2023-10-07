@@ -294,6 +294,7 @@ export const onDeleteEmployee = async (req, res) => {
     let nroDocumento = ((req || {}).body || {}).nroDocumento;
     if (nroDocumento >= 8) {
         await actionBDController.execQuery(`DELETE FROM TB_EMPLEADO WHERE NRO_DOC = '${nroDocumento}';`);
+        await actionBDController.execQuery(`UPDATE TB_ESTADO_POSTULANTE SET ESTADO = 'PENDIENTE' WHERE DNI = '${nroDocumento}';`);
     }
 
     let response = [
