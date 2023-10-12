@@ -84,6 +84,19 @@ class clsConfiguration {
         res.json(response);
     }
 
+    onListPerfilUser = async (req, res) => {
+        let [dataList] = await pool.query(`SELECT * FROM TB_NIVEL_ACCESS;`);
+
+        let response =
+        {
+            data: dataList || [],
+            status: defaultResponse.success.default
+        };
+
+
+        res.json(response);
+    }
+
     onListMenuUser = async (req, res) => {
         let data = ((req || {}).body || []);
         let [dataMenuList] = await pool.query(`SELECT ID_MENU_DESC,DESCRIPTION_MENU FROM TB_MENU_SISTEMA 
