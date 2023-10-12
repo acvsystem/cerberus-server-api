@@ -8,7 +8,7 @@ router.post('/service/email/save', configurationController.saveSendEmail);
 router.get('/service/email/sendList', configurationController.onlistConfiguration);
 router.post('/service/email/sendTest', configurationController.sendTestEmail);
 router.post('/service/email/register', configurationController.sendLinkRegister);
-router.post('/service/lista/menu', configurationController.onListMenu);
+router.get('/service/lista/menu', configurationController.onListMenu);
 
 const configurationRoutes = router;
 export default configurationRoutes
