@@ -73,18 +73,18 @@ class clsConfiguration {
     onListMenu = async (req, res) => {
         let [dataMenuList] = await pool.query(`SELECT ID_MENU_DESC,DESCRIPTION_MENU FROM TB_ALL_MENU_DESCRIPTION;`);
 
-        let response = [
-            {
-                data: (dataMenuList || [])[0] || [],
-                status: defaultResponse.success.default
-            }
-        ];
-    
+        let response =
+        {
+            data: dataMenuList || [],
+            status: defaultResponse.success.default
+        };
+
+
         res.json(response);
     }
 
     sendTestEmail = async (req, res) => {
-        emailController.sendEmail('andrecanalesv@gmail.com', `CORREO DE PRUEBA METASPERU`, '', null, 'PRUEBA',null).then((response) => {
+        emailController.sendEmail('andrecanalesv@gmail.com', `CORREO DE PRUEBA METASPERU`, '', null, 'PRUEBA', null).then((response) => {
             res.json(response)
         }).catch(error => res.json(error));
     }
