@@ -71,7 +71,9 @@ class clsConfiguration {
     }
 
     onListMenu = async (req, res) => {
-        let [dataMenuList] = await pool.query(`SELECT ID_MENU_DESC,DESCRIPTION_MENU FROM TB_ALL_MENU_DESCRIPTION;`);
+        let data = ((req || {}).body || []);
+        let [dataMenuList] = await pool.query(`SELECT ID_MENU_DESC,DESCRIPTION_MENU FROM TB_MENU_SISTEMA 
+        INNER JOIN TB_ALL_MENU_DESCRIPTION ON TB_MENU_SISTEMA.FK_ID_MENU_DESC = TB_ALL_MENU_DESCRIPTION.ID_MENU_DESC WHERE TB_MENU_SISTEMA.FK_ID_NVL_ACCESS = ${data.ID_NVL_ACCESS};`);
 
         let response =
         {
