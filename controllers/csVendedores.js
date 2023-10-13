@@ -308,10 +308,11 @@ export const onDeleteEmployee = async (req, res) => {
 
 export const onRegisterEmployee = async (req, res) => {
     let dataEmployee = (req || {}).body[0];
-    console.log(dataEmployee);
+    
     let existSTD = await actionBDController.verificationRegister('TB_EMPLEADO', `NRO_DOC = '${dataEmployee.NUM_DOCUMENTO}';`);
     console.log(existSTD);
-    if (!existSTD) {
+    if (!existSTD.length) {
+        console.log(dataEmployee);
         await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
             CODIGO_ICG,
             CODIGO_EJB,
