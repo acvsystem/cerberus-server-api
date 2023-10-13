@@ -42,13 +42,13 @@ export const createMenuProfile = async (req, res) => {
     menuUser = (request || {}).menu || [];
 
     if (noOptionList.length) {
-        noOptionList.filter(async (op) => {
+       await noOptionList.filter(async (op) => {
             await pool.query(`DELETE FROM TB_MENU_SISTEMA WHERE FK_ID_NVL_ACCESS = ${idProfile};`);
         });
     }
 
     if (menuUser.length) {
-        menuUser.filter(async (op) => {
+        await menuUser.filter(async (op) => {
             await pool.query(`INSERT INTO TB_MENU_SISTEMA(FK_ID_MENU_DESC,FK_ID_NVL_ACCESS)VALUES(${op},${idProfile});`);
         });
     }
