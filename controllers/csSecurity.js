@@ -34,6 +34,26 @@ export const Login = async (req, res) => {
 
 export const createMenuProfile = async (req, res) => {
     let request = req.body;
+    let idProfile = (request || {}).idProfile;
+    let noOptionList = [];
+    let menuUser = [];
+
+    noOptionList = (request || {}).noOption || [];
+    menuUser = (request || {}).menu || [];
+
+    if (noOptionList.length) {
+        noOptionList.filter(async (op) => {
+            await pool.query(`DELETE FROM TB_MENU_SISTEMA WHERE FK_ID_MENU_DESC = ${op} AND FK_ID_NVL_ACCESS = ${idProfile};`);
+        });
+    }
+
+    if (menuUser.length) {
+        menuUser.filter(async (op) => {
+            await pool.query(`INSERT INTO TB_MENU_SISTEMA(FK_ID_MENU_DESC,FK_ID_NVL_ACCESS)VALUES(${op},${idProfile});`);
+        });
+    }
+
+
     console.log(request);
     res.json(defaultResponse.success.default);
 }
