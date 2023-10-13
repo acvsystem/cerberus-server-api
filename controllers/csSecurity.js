@@ -40,12 +40,8 @@ export const createMenuProfile = async (req, res) => {
 
     noOptionList = (request || {}).noOption || [];
     menuUser = (request || {}).menu || [];
-
-    if (noOptionList.length) {
-       await noOptionList.filter(async (op) => {
-            await pool.query(`DELETE FROM TB_MENU_SISTEMA WHERE FK_ID_NVL_ACCESS = ${idProfile};`);
-        });
-    }
+    
+    await pool.query(`DELETE FROM TB_MENU_SISTEMA WHERE FK_ID_NVL_ACCESS = ${idProfile};`);
 
     if (menuUser.length) {
         await menuUser.filter(async (op) => {
