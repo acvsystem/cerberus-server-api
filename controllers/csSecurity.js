@@ -32,6 +32,12 @@ export const Login = async (req, res) => {
     }
 }
 
+export const createMenuProfile = async (req, res) => {
+    let request = req.body;
+    console.log(request);
+    res.json(defaultResponse.success.default);
+}
+
 export const CreateNewUser = async (req, res) => {
 
     let newRegister = (req || {}).body || {};
