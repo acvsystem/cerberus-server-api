@@ -40,7 +40,7 @@ export const createMenuProfile = async (req, res) => {
 
     noOptionList = (request || {}).noOption || [];
     menuUser = (request || {}).menu || [];
-    
+
     await pool.query(`DELETE FROM TB_MENU_SISTEMA WHERE FK_ID_NVL_ACCESS = ${idProfile};`);
 
     if (menuUser.length) {
@@ -48,7 +48,6 @@ export const createMenuProfile = async (req, res) => {
             await pool.query(`INSERT INTO TB_MENU_SISTEMA(FK_ID_MENU_DESC,FK_ID_NVL_ACCESS)VALUES(${op},${idProfile});`);
         });
     }
-
 
     console.log(request);
     res.json(defaultResponse.success.default);
