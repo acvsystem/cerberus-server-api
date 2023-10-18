@@ -16,7 +16,7 @@ export const Login = async (req, res) => {
     let nivelUser = ((dataUser || [])[0] || {}).NM_NIVEL;
     console.log(objLogin);
     if (dataUser.length > 0) {
-        const [menuUser] = await pool.query(`SELECT ID_MENU_DESC,DESCRIPTION_MENU FROM TB_MENU_SISTEMA 
+        const [menuUser] = await pool.query(`SELECT * FROM TB_MENU_SISTEMA 
                                              INNER JOIN TB_ALL_MENU_DESCRIPTION ON TB_MENU_SISTEMA.FK_ID_MENU_DESC = TB_ALL_MENU_DESCRIPTION.ID_MENU_DESC
                                              WHERE TB_MENU_SISTEMA.FK_ID_NVL_ACCESS = ${((dataUser || [])[0] || {}).ID_NVL_ACCESS};`);
 
