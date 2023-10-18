@@ -17,7 +17,7 @@ export const Login = async (req, res) => {
     console.log(objLogin);
     if (dataUser.length > 0) {
         const [menuUser] = await pool.query(`SELECT * FROM TB_MENU_SISTEMA 
-                                             INNER JOIN TB_NIVEL_ACCESS.ID_NVL_ACCESS = TB_MENU_SISTEMA.FK_ID_NVL_ACCESS 
+                                             INNER JOIN TB_NIVEL_ACCESS ON TB_MENU_SISTEMA.FK_ID_NVL_ACCESS = TB_NIVEL_ACCESS.ID_NVL_ACCESS
                                              WHERE FK_ID_NVL_ACCESS = ${((dataUser || [])[0] || {}).ID_NVL_ACCESS};`);
 
         const token = tokenController.createToken(usuario, nivelUser);
