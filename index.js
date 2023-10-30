@@ -129,9 +129,9 @@ io.on('connection', async (socket) => {
         let arrDocumento = (((req || []).body || [])[0] || {});
         let tiendasList = [
             { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@grupodavid.com' },
-            { code: '9A', name: 'VSBA JOCKEY', email: 'vsjockeyplaza@grupodavid.com' },
+            { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@grupodavid.com' },
+            { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@grupodavid.com' },
             { code: 'PC', name: 'AEO JOCKEY', email: 'americaneaglejp@grupodavid.com' },
-            { code: 'PB', name: 'AEO ASIA', email: 'aeopopupasia@grupodavid.com' },
             { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@grupodavid.com' },
             { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@grupodavid.com' },
             { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@grupodavid.com' },
