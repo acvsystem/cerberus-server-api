@@ -10,9 +10,9 @@ class clsSessionSocket {
         if (data.length) {
             await pool.query(`INSERT INTO TB_TERMINAL_TIENDA(CODIGO_TERMINAL,DESCRIPCION,VERIFICACION,CANT_COMPROBANTES,ISONLINE)
             VALUES('${codigo}','${((data || [])[0] || {}).DESC_KEY_TERMINAL}',false,0,false)`);
-        }
 
-        return data;
+            return data;
+        }
     }
 
     async onEvalueIsExist(codigo) {
