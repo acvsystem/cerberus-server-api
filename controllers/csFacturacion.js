@@ -17,9 +17,8 @@ class clsFacturacion {
     async verificacionDocumentos(dataVerify) {
         let tiendasList = [
             { code: '7A', name: 'BBW JOCKEY' },
-            { code: '9A', name: 'VSBA JOCKEY' },
-            { code: 'PC', name: 'AEO JOCKEY' },
-            { code: 'PB', name: 'AEO ASIA' },
+            { code: '9N', name: 'VS MALL AVENTURA' },
+            { code: '7J', name: 'BBW MALL AVENTURA' },
             { code: '7E', name: 'BBW LA RAMBLA' },
             { code: '9D', name: 'VS LA RAMBLA' },
             { code: '9B', name: 'VS PLAZA NORTE' },
