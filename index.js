@@ -452,9 +452,9 @@ io.use(function (socket, next) {
         let arrDocumento = (((req || []).body || [])[0] || {});
         let tiendasList = [
             { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@grupodavid.com' },
-            { code: '9A', name: 'VSBA JOCKEY', email: 'vsjockeyplaza@grupodavid.com' },
+            { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@grupodavid.com' },
+            { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@grupodavid.com' },
             { code: 'PC', name: 'AEO JOCKEY', email: 'americaneaglejp@grupodavid.com' },
-            { code: 'PB', name: 'AEO ASIA', email: 'aeopopupasia@grupodavid.com' },
             { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@grupodavid.com' },
             { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@grupodavid.com' },
             { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@grupodavid.com' },
@@ -473,7 +473,7 @@ io.use(function (socket, next) {
             { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
         ];
 
-        if ((arrDocumento || {}).CODIGO_ERROR_SUNAT == 2800 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 1032) {
+        if ((arrDocumento || {}).CODIGO_ERROR_SUNAT == 2800 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 1032 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 2022) {
             let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
             let isEmailEnvio = ((verifyDocument || [])[0] || {}).ENVIO_EMAIL || 'false';
             console.log('verifyDocument', verifyDocument);
