@@ -12,6 +12,8 @@ class clsSessionSocket {
             VALUES('${codigo}','${((data || [])[0] || {}).DESC_KEY_TERMINAL}',false,0,false)`);
 
             return data;
+        }else{
+            
         }
     }
 
@@ -27,7 +29,7 @@ class clsSessionSocket {
             let isExistTerminal = await this.onEvalueIsExist(codigo);
             if (!isExistTerminal.length) {
                 await this.onNewTerminal(codigo);
-                this.connect(codigo);
+                await pool.query(`UPDATE TB_TERMINAL_TIENDA SET ISONLINE = true WHERE CODIGO_TERMINAL = '${codigo}'`);
             } else {
                 await pool.query(`UPDATE TB_TERMINAL_TIENDA SET ISONLINE = true WHERE CODIGO_TERMINAL = '${codigo}'`);
 
