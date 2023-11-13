@@ -207,6 +207,8 @@ io.use(function (socket, next) {
                             return;
                         }
                     });
+                }else{
+                    console.log("FALTAN EMPLEADO",emp);
                 }
 
             });
