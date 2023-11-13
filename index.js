@@ -156,6 +156,8 @@ io.use(function (socket, next) {
             { code: 'PB', name: 'AEO ASIA' },
             { code: '7E', name: 'BBW LA RAMBLA' },
             { code: '9D', name: 'VSBA LA RAMBLA' },
+            { code: '9N', name: 'VSBA MALL AVENTURA' },
+            { code: '7J', name: 'BBW MALL AVENTURA' },
             { code: '9B', name: 'VSBA PLAZA NORTE' },
             { code: '7C', name: 'BBW SAN MIGUEL' },
             { code: '9C', name: 'VSBA SAN MIGUEL' },
