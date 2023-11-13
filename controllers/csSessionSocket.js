@@ -22,12 +22,17 @@ class clsSessionSocket {
     }
 
     async connect(codigo) {
+        let count = 0;
         let listSession = [];
         if (codigo) {
             let isExistTerminal = await this.onEvalueIsExist(codigo);
             if (!isExistTerminal.length) {
-                await this.onNewTerminal(codigo);
-                this.connect(codigo);
+                
+                if(count <= 5){
+                    await this.onNewTerminal(codigo);
+                    this.connect(codigo);
+                }
+                
             } else {
                 await pool.query(`UPDATE TB_TERMINAL_TIENDA SET ISONLINE = true WHERE CODIGO_TERMINAL = '${codigo}'`);
 
