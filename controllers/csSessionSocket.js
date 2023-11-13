@@ -29,6 +29,7 @@ class clsSessionSocket {
             if (!isExistTerminal.length) {
                 
                 if(count <= 5){
+                    count =+ 1;
                     await this.onNewTerminal(codigo);
                     this.connect(codigo);
                 }
