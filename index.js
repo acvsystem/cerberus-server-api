@@ -218,7 +218,7 @@ await (originEmpleadoList).filter((doc)=>{
                         }
                     });
                 }else{
-                    console.log("FALTAN EMPLEADO",emp);
+                    
                 }
 
             });
