@@ -176,9 +176,19 @@ io.use(function (socket, next) {
 
         let [originEmpleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
         let c_costo;
+let listDocumentEmp = [];
 
+await (originEmpleadoList).filter((doc)=>{
+    listDocumentEmp.push(doc.NRO_DOC);
+});
+
+(dataAsistensList || []).filter(async (asits) => {
+    if(listDocumentEmp.indexOf(asits.nroDocumento) == -1){
+        console.log(asits);
+    }
+});
         await (originEmpleadoList || []).filter((emp) => {
-
+ 
             return (dataAsistensList || []).filter(async (asits) => {
 
                 if (emp.NRO_DOC == asits.nroDocumento) {
