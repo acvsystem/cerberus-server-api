@@ -4,7 +4,7 @@ import emailController from '../sendEmail.js';
 class clsSessionSocket {
 
     async onNewTerminal(codigo) {
-        console.log("onNewTerminal", codigo);
+        
         let [data] = await pool.query(`SELECT KEY_CODE,DESC_KEY_TERMINAL FROM TB_KEY_TERMINAL WHERE KEY_CODE = '${codigo}'`)
 
         if (data.length) {
