@@ -150,7 +150,7 @@ io.on('connection', async (socket) => {
             { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
         ];
 
-        if ((arrDocumento || {}).CODIGO_ERROR_SUNAT == 2800) {
+        if ((arrDocumento || {}).CODIGO_ERROR_SUNAT == 2800 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 1032 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 2022 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 1083) {
             let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
             let isEmailEnvio = ((verifyDocument || [])[0] || {}).ENVIO_EMAIL || 'false';
             console.log('verifyDocument', verifyDocument);
