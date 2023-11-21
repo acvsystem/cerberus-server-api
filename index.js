@@ -179,19 +179,24 @@ io.use(function (socket, next) {
     let socketID = (configurationList || {}).socket;
     let dataEmpServidor = JSON.parse((response || {}).serverData);
     let dataEmployee = [];
+    let [empleadoList] = await actionBDController.execQuery(
+      `SELECT * FROM TB_EMPLEADO;`
+    );
+
+    let listDocumentEmp = [];
+
+    await empleadoList.filter((doc) => {
+      listDocumentEmp.push(doc.NRO_DOC);
+    });
+
     const boolArray = await Promise.all(
       await (dataEmpServidor || []).filter(async (empSrv, i) => {
-
-        console.log('A',i);
         if (
           (empSrv || {}).nroDocumento != "" &&
           (empSrv || {}).nroDocumento != null
         ) {
-          let existEMP = await actionBDController.verificationRegister(
-            "TB_EMPLEADO",
-            `NRO_DOC = '${(empSrv || {}).nroDocumento}';`
-          );
-          console.log('B',i);
+          let existEMP = listDocumentEmp.indexOf(empSrv.DNI);
+
           if (!existEMP.length) {
             console.log(empSrv);
 
@@ -232,10 +237,10 @@ io.use(function (socket, next) {
                                           );`);*/
           }
         }
-console.log('C',i);
+        console.log(i);
         if (dataEmpServidor.length - 1 == i) {
-            socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
-          }
+          socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
+        }
       })
     );
   });
