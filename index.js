@@ -197,7 +197,7 @@ io.use(function (socket, next) {
         ) {
           let existEMP = listDocumentEmp.indexOf(empSrv.DNI);
 
-          if (!existEMP.length) {
+          if (existEMP = -1) {
             console.log(empSrv);
 
             dataEmployee.push(empSrv);
