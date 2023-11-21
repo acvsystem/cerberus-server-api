@@ -146,6 +146,14 @@ io.use(function (socket, next) {
         socket.emit("sendNotificationSunat", documentList);
     }
 
+    socket.on('emitRRHHEmpleados', (request) => {
+        io.emit('updateEmpleados');
+    });
+
+    socket.on('updReceptEmpleados', async (response) => {
+        socket.to(`${socketID}`).emit("sendUDPEmpleados", response);
+    });
+
     socket.on('reporteAssitencia', async (response) => {
         let dataAsistensList = JSON.parse((response || {}).serverData);
 
