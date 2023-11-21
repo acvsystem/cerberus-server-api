@@ -159,14 +159,16 @@ io.use(function (socket, next) {
         let configurationList = ((response || {}).configuration || {})[0] || {};
         let socketID = (configurationList || {}).socket;
         let dataEmpServidor = JSON.parse((response || {}).serverData);
+        let data = [];
         //let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
 
         (dataEmpServidor || []).filter(async (empSrv) => {
-            if((empSrv || {}).DNI != '' && (empSrv || {}).DNI != 'NULL'){
+            if((empSrv || {}).nroDocumento != '' && (empSrv || {}).nroDocumento != 'NULL'){
                 let existEMP = await actionBDController.verificationRegister('TB_EMPLEADO', `NRO_DOC = '${(empSrv || {}).DNI}';`);
             
                 if(!existEMP.length){
                     console.log(empSrv);
+                    data.push(empSrv);
                   /*  await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
                         CODIGO_ICG,
                         CODIGO_EJB,
