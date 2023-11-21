@@ -163,7 +163,7 @@ io.use(function (socket, next) {
         //let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
 
         await (dataEmpServidor || []).filter(async (empSrv) => {
-            if((empSrv || {}).nroDocumento != '' && (empSrv || {}).nroDocumento != 'null'){
+            if((empSrv || {}).nroDocumento != '' && (empSrv || {}).nroDocumento != null){
                 let existEMP = await actionBDController.verificationRegister('TB_EMPLEADO', `NRO_DOC = '${(empSrv || {}).nroDocumento}';`);
             
                 if(!existEMP.length){
