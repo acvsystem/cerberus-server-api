@@ -180,23 +180,23 @@ io.use(function (socket, next) {
     let dataEmpServidor = JSON.parse((response || {}).serverData);
     let dataEmployee = [];
     let dataResponse = [];
-    dataResponse = function (){
-        return new Promise((resolve, reject) => {(
-            dataEmpServidor || []).filter(async (empSrv, i) => {
-                if (
-                  (empSrv || {}).nroDocumento != "" &&
-                  (empSrv || {}).nroDocumento != null
-                ) {
-                  let existEMP = await actionBDController.verificationRegister(
-                    "TB_EMPLEADO",
-                    `NRO_DOC = '${(empSrv || {}).nroDocumento}';`
-                  );
-        
-                  if (!existEMP.length) {
-                    console.log(empSrv);
-        
-                    dataEmployee.push(empSrv);
-                    /*  await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
+    dataResponse = function () {
+      return new Promise((resolve, reject) => {
+        (dataEmpServidor || []).filter(async (empSrv, i) => {
+          if (
+            (empSrv || {}).nroDocumento != "" &&
+            (empSrv || {}).nroDocumento != null
+          ) {
+            let existEMP = await actionBDController.verificationRegister(
+              "TB_EMPLEADO",
+              `NRO_DOC = '${(empSrv || {}).nroDocumento}';`
+            );
+
+            if (!existEMP.length) {
+              console.log(empSrv);
+
+              dataEmployee.push(empSrv);
+              /*  await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
                                     CODIGO_ICG,
                                     CODIGO_EJB,
                                     AP_PATERNO,
@@ -230,16 +230,15 @@ io.use(function (socket, next) {
                                         0.0,
                                         ""
                                     );`);*/
-                  }
-                }
-        
-              })
-            }); 
-    }
+            }
+          }
+        });
+      });
+    };
 
-    dataResponse.then((data) => {
-      socket.to(`${socketID}`).emit("sendUDPEmpleados", data);
-    });
+    let dat = await dataResponse();
+
+    socket.to(`${socketID}`).emit("sendUDPEmpleados", dat);
   });
 
   socket.on("reporteAssitencia", async (response) => {
