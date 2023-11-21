@@ -180,65 +180,61 @@ io.use(function (socket, next) {
     let dataEmpServidor = JSON.parse((response || {}).serverData);
     let dataEmployee = [];
     let dataResponse = [];
-    dataResponse = function () {
-      return new Promise((resolve, reject) => {
-        (dataEmpServidor || []).filter(async (empSrv, i) => {
-          if (
-            (empSrv || {}).nroDocumento != "" &&
-            (empSrv || {}).nroDocumento != null
-          ) {
-            let existEMP = await actionBDController.verificationRegister(
-              "TB_EMPLEADO",
-              `NRO_DOC = '${(empSrv || {}).nroDocumento}';`
-            );
+    await Promise.all(
+      (dataEmpServidor || []).filter(async (empSrv, i) => {
+        if (
+          (empSrv || {}).nroDocumento != "" &&
+          (empSrv || {}).nroDocumento != null
+        ) {
+          let existEMP = await actionBDController.verificationRegister(
+            "TB_EMPLEADO",
+            `NRO_DOC = '${(empSrv || {}).nroDocumento}';`
+          );
 
-            if (!existEMP.length) {
-              console.log(empSrv);
+          if (!existEMP.length) {
+            console.log(empSrv);
 
-              dataEmployee.push(empSrv);
-              /*  await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
-                                    CODIGO_ICG,
-                                    CODIGO_EJB,
-                                    AP_PATERNO,
-                                    AP_MATERNO,
-                                    NOM_EMPLEADO,
-                                    ESTADO_EMP,
-                                    ESTADO_CIVIL,
-                                    TIPO_DOC,
-                                    NRO_DOC,
-                                    TLF_EMP,
-                                    EMAIL_EMP,
-                                    FEC_NAC,
-                                    PAIS_NAC,
-                                    TIENDA_ASIGNADO,
-                                    SALARIO_BASE,
-                                    FEC_INGRESO)VALUES(
-                                        "",
-                                        "",
-                                        '${dp.AP_PATERNO}',
-                                        '${dp.AP_MATERNO}',
-                                        '${dp.FC_NOMBRES}',
-                                        '${(dataEstado || {}).estado || "PENDIENTE"}',
-                                        '${dp.ESTADO_CIVIL}',
-                                        '${dp.TIPO_DOCUMENTO}',
-                                        '${dp.NUM_DOCUMENTO}',
-                                        '${dp.FC_CELULAR}',
-                                        '${dp.CORREO_ELECTONICO}',
-                                        '${dp.FECH_NAC}',
-                                        '${dp.PAIS_NACIMIENTO}',
-                                        '${(dataEstado || {}).tienda || ""}',
-                                        0.0,
-                                        ""
-                                    );`);*/
-            }
+            dataEmployee.push(empSrv);
+            /*  await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
+                                          CODIGO_ICG,
+                                          CODIGO_EJB,
+                                          AP_PATERNO,
+                                          AP_MATERNO,
+                                          NOM_EMPLEADO,
+                                          ESTADO_EMP,
+                                          ESTADO_CIVIL,
+                                          TIPO_DOC,
+                                          NRO_DOC,
+                                          TLF_EMP,
+                                          EMAIL_EMP,
+                                          FEC_NAC,
+                                          PAIS_NAC,
+                                          TIENDA_ASIGNADO,
+                                          SALARIO_BASE,
+                                          FEC_INGRESO)VALUES(
+                                              "",
+                                              "",
+                                              '${dp.AP_PATERNO}',
+                                              '${dp.AP_MATERNO}',
+                                              '${dp.FC_NOMBRES}',
+                                              '${(dataEstado || {}).estado || "PENDIENTE"}',
+                                              '${dp.ESTADO_CIVIL}',
+                                              '${dp.TIPO_DOCUMENTO}',
+                                              '${dp.NUM_DOCUMENTO}',
+                                              '${dp.FC_CELULAR}',
+                                              '${dp.CORREO_ELECTONICO}',
+                                              '${dp.FECH_NAC}',
+                                              '${dp.PAIS_NACIMIENTO}',
+                                              '${(dataEstado || {}).tienda || ""}',
+                                              0.0,
+                                              ""
+                                          );`);*/
           }
-        });
-      });
-    };
+        }
+      })
+    );
 
-    let dat = await dataResponse();
-
-    socket.to(`${socketID}`).emit("sendUDPEmpleados", dat);
+    socket.to(`${socketID}`).emit("sendUDPEmpleados", dataResponse);
   });
 
   socket.on("reporteAssitencia", async (response) => {
