@@ -162,7 +162,7 @@ io.use(function (socket, next) {
         let data = [];
         //let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
 
-        (dataEmpServidor || []).filter(async (empSrv) => {
+        await (dataEmpServidor || []).filter(async (empSrv) => {
             if((empSrv || {}).nroDocumento != '' && (empSrv || {}).nroDocumento != 'NULL'){
                 let existEMP = await actionBDController.verificationRegister('TB_EMPLEADO', `NRO_DOC = '${(empSrv || {}).DNI}';`);
             
@@ -204,6 +204,7 @@ io.use(function (socket, next) {
                             ""
                         );`);*/
                 }
+                
             }
 
         });
