@@ -236,6 +236,7 @@ io.use(function (socket, next) {
           return;
         }
       });
+      console.log(dataEmployee);
       resolve(dataEmployee);
     });
 
