@@ -194,6 +194,7 @@ io.use(function (socket, next) {
             console.log(empSrv);
 
             dataEmployee.push(empSrv);
+            console.log(i);
             /*  await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
                                           CODIGO_ICG,
                                           CODIGO_EJB,
@@ -231,7 +232,7 @@ io.use(function (socket, next) {
           }
         }
 
-        console.log(i);
+        
         if (dataEmpServidor.length - 1 == i) {
           socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
         }
