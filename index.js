@@ -179,21 +179,22 @@ io.use(function (socket, next) {
     let socketID = (configurationList || {}).socket;
     let dataEmpServidor = JSON.parse((response || {}).serverData);
     let dataEmployee = [];
-    (dataEmpServidor || []).filter( async (empSrv, i) => {
-      if (
-        (empSrv || {}).nroDocumento != "" &&
-        (empSrv || {}).nroDocumento != null
-      ) {
-        let existEMP = await actionBDController.verificationRegister(
-          "TB_EMPLEADO",
-          `NRO_DOC = '${(empSrv || {}).nroDocumento}';`
-        );
+    const boolArray = await Promise.all(
+      await (dataEmpServidor || []).filter(async (empSrv, i) => {
+        if (
+          (empSrv || {}).nroDocumento != "" &&
+          (empSrv || {}).nroDocumento != null
+        ) {
+          let existEMP = await actionBDController.verificationRegister(
+            "TB_EMPLEADO",
+            `NRO_DOC = '${(empSrv || {}).nroDocumento}';`
+          );
 
-        if (!existEMP.length) {
-          console.log(empSrv);
+          if (!existEMP.length) {
+            console.log(empSrv);
 
-          dataEmployee.push(empSrv);
-            /*await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
+            dataEmployee.push(empSrv);
+            /*  await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
                                           CODIGO_ICG,
                                           CODIGO_EJB,
                                           AP_PATERNO,
@@ -227,15 +228,14 @@ io.use(function (socket, next) {
                                               0.0,
                                               ""
                                           );`);*/
+          }
         }
-        console.log(dataEmpServidor.length - 1 , i);
+        
         if (dataEmpServidor.length - 1 == i) {
           socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
         }
-      }
-
-    });
-
+      })
+    );
   });
 
   socket.on("reporteAssitencia", async (response) => {
