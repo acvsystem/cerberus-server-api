@@ -231,8 +231,9 @@ io.use(function (socket, next) {
                                           );`);*/
           }
         }
-
+        console.log(dataEmpServidor.length -1,i);
         if(dataEmpServidor.length -1 == i){
+            console.log(dataResponse);
             return
         }
       })
