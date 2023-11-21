@@ -179,8 +179,8 @@ io.use(function (socket, next) {
     let socketID = (configurationList || {}).socket;
     let dataEmpServidor = JSON.parse((response || {}).serverData);
     let dataEmployee = [];
-    (dataEmpServidor || []).filter(async (empSrv, i) => {
-      if (
+    (dataEmpServidor || []).filter( (empSrv, i) => {
+    /*  if (
         (empSrv || {}).nroDocumento != "" &&
         (empSrv || {}).nroDocumento != null
       ) {
@@ -193,7 +193,7 @@ io.use(function (socket, next) {
           console.log(empSrv);
 
           dataEmployee.push(empSrv);
-          /*  await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
+            await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
                                           CODIGO_ICG,
                                           CODIGO_EJB,
                                           AP_PATERNO,
@@ -226,9 +226,9 @@ io.use(function (socket, next) {
                                               '${(dataEstado || {}).tienda || ""}',
                                               0.0,
                                               ""
-                                          );`);*/
+                                          );`);
         }
-      }
+      }*/
       console.log(dataEmpServidor.length - 1 , i);
       if (dataEmpServidor.length - 1 == i) {
         socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
