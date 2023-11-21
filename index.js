@@ -146,11 +146,19 @@ io.use(function (socket, next) {
         socket.emit("sendNotificationSunat", documentList);
     }
 
-    socket.on('emitRRHHEmpleados', (request) => {
-        io.emit('updateEmpleados');
+    socket.on('emitRRHHEmpleados', () => {
+        let confConsulting = [
+            {
+                "socket": (socket || {}).id
+            }
+        ];
+        io.emit('updateEmpleados',confConsulting);
     });
 
     socket.on('updReceptEmpleados', async (response) => {
+        let configurationList = ((response || {}).configuration || {})[0] || {};
+        let socketID = (configurationList || {}).socket;
+
         socket.to(`${socketID}`).emit("sendUDPEmpleados", response);
     });
 
