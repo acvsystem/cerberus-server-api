@@ -234,6 +234,7 @@ io.use(function (socket, next) {
         socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
       }
     });
+
   });
 
   socket.on("reporteAssitencia", async (response) => {
