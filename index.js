@@ -180,7 +180,7 @@ io.use(function (socket, next) {
     let dataEmpServidor = JSON.parse((response || {}).serverData);
     let dataEmployee = [];
     let dataResponse = [];
-    await Promise.all(
+    const boolArray = await Promise.all(
       (dataEmpServidor || []).filter(async (empSrv, i) => {
         if (
           (empSrv || {}).nroDocumento != "" &&
@@ -231,10 +231,14 @@ io.use(function (socket, next) {
                                           );`);*/
           }
         }
+
+        if(dataEmpServidor.length -1 == i){
+            return
+        }
       })
     );
 
-    socket.to(`${socketID}`).emit("sendUDPEmpleados", dataResponse);
+    socket.to(`${socketID}`).emit("sendUDPEmpleados", boolArray);
   });
 
   socket.on("reporteAssitencia", async (response) => {
