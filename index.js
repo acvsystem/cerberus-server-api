@@ -169,6 +169,7 @@ io.use(function (socket, next) {
                 if(!existEMP.length){
                     console.log(empSrv);
                     data.push(empSrv);
+                    return empSrv;
                   /*  await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
                         CODIGO_ICG,
                         CODIGO_EJB,
