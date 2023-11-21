@@ -180,7 +180,7 @@ io.use(function (socket, next) {
     let dataEmpServidor = JSON.parse((response || {}).serverData);
     let dataEmployee = [];
     let dataResponse = [];
-    dataResponse = new Promise(async (resolve, reject) => {
+    dataResponse = await new Promise(async (resolve, reject) => {
       await (dataEmpServidor || []).filter(async (empSrv, i) => {
         if (
           (empSrv || {}).nroDocumento != "" &&
@@ -233,10 +233,9 @@ io.use(function (socket, next) {
         }
 
         if (dataEmpServidor.length - 1 == i) {
-          return;
+          resolve(dataEmployee);
         }
       });
-      resolve(dataEmployee);
     });
 
     dataResponse.then((data) => {
