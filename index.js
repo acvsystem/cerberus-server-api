@@ -179,7 +179,6 @@ io.use(function (socket, next) {
     let socketID = (configurationList || {}).socket;
     let dataEmpServidor = JSON.parse((response || {}).serverData);
     let dataEmployee = [];
-    let dataResponse = [];
     const boolArray = await Promise.all(
      await (dataEmpServidor || []).filter(async (empSrv, i) => {
         if (
@@ -233,13 +232,13 @@ io.use(function (socket, next) {
         }
         console.log(dataEmpServidor.length -1,i);
         if(dataEmpServidor.length -1 == i){
-            console.log(dataResponse);
+            console.log(dataEmployee);
             return
         }
       })
     );
 
-    socket.to(`${socketID}`).emit("sendUDPEmpleados", dataResponse);
+    socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
   });
 
   socket.on("reporteAssitencia", async (response) => {
