@@ -230,7 +230,8 @@ io.use(function (socket, next) {
                                           );`);*/
           }
         }
-        console.log(dataEmpServidor.length - 1, i);
+
+        console.log(i);
         if (dataEmpServidor.length - 1 == i) {
           socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
         }
