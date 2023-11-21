@@ -181,11 +181,8 @@ io.use(function (socket, next) {
     let dataEmployee = [];
     const boolArray = await Promise.all(
       await (dataEmpServidor || []).filter(async (empSrv, i) => {
-        
-        if (dataEmpServidor.length - 1 == i) {
-            socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
-          }
 
+        console.log('A',i);
         if (
           (empSrv || {}).nroDocumento != "" &&
           (empSrv || {}).nroDocumento != null
@@ -194,12 +191,11 @@ io.use(function (socket, next) {
             "TB_EMPLEADO",
             `NRO_DOC = '${(empSrv || {}).nroDocumento}';`
           );
-
+          console.log('B',i);
           if (!existEMP.length) {
             console.log(empSrv);
 
             dataEmployee.push(empSrv);
-            console.log(i);
             /*  await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
                                           CODIGO_ICG,
                                           CODIGO_EJB,
@@ -236,9 +232,10 @@ io.use(function (socket, next) {
                                           );`);*/
           }
         }
-
-        
-
+console.log('C',i);
+        if (dataEmpServidor.length - 1 == i) {
+            socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
+          }
       })
     );
   });
