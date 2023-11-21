@@ -158,8 +158,55 @@ io.use(function (socket, next) {
     socket.on('updReceptEmpleados', async (response) => {
         let configurationList = ((response || {}).configuration || {})[0] || {};
         let socketID = (configurationList || {}).socket;
+        let dataEmpServidor = JSON.parse((response || {}).serverData);
+        //let [empleadoList] = await actionBDController.execQuery(`SELECT * FROM TB_EMPLEADO;`);
 
-        socket.to(`${socketID}`).emit("sendUDPEmpleados", response);
+        (dataEmpServidor || []).filter(async (empSrv) => {
+            if((empSrv || {}).DNI != '' && (empSrv || {}).DNI != 'NULL'){
+                let existEMP = await actionBDController.verificationRegister('TB_EMPLEADO', `NRO_DOC = '${(empSrv || {}).DNI}';`);
+            
+                if(!existEMP.length){
+                    console.log(empSrv);
+                  /*  await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
+                        CODIGO_ICG,
+                        CODIGO_EJB,
+                        AP_PATERNO,
+                        AP_MATERNO,
+                        NOM_EMPLEADO,
+                        ESTADO_EMP,
+                        ESTADO_CIVIL,
+                        TIPO_DOC,
+                        NRO_DOC,
+                        TLF_EMP,
+                        EMAIL_EMP,
+                        FEC_NAC,
+                        PAIS_NAC,
+                        TIENDA_ASIGNADO,
+                        SALARIO_BASE,
+                        FEC_INGRESO)VALUES(
+                            "",
+                            "",
+                            '${dp.AP_PATERNO}',
+                            '${dp.AP_MATERNO}',
+                            '${dp.FC_NOMBRES}',
+                            '${(dataEstado || {}).estado || "PENDIENTE"}',
+                            '${dp.ESTADO_CIVIL}',
+                            '${dp.TIPO_DOCUMENTO}',
+                            '${dp.NUM_DOCUMENTO}',
+                            '${dp.FC_CELULAR}',
+                            '${dp.CORREO_ELECTONICO}',
+                            '${dp.FECH_NAC}',
+                            '${dp.PAIS_NACIMIENTO}',
+                            '${(dataEstado || {}).tienda || ""}',
+                            0.0,
+                            ""
+                        );`);*/
+                }
+            }
+
+        });
+
+        socket.to(`${socketID}`).emit("sendUDPEmpleados", data);
     });
 
     socket.on('reporteAssitencia', async (response) => {
