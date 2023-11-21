@@ -181,7 +181,7 @@ io.use(function (socket, next) {
     let dataEmployee = [];
     let dataResponse = [];
     const boolArray = await Promise.all(
-      (dataEmpServidor || []).filter(async (empSrv, i) => {
+     await (dataEmpServidor || []).filter(async (empSrv, i) => {
         if (
           (empSrv || {}).nroDocumento != "" &&
           (empSrv || {}).nroDocumento != null
@@ -238,7 +238,7 @@ io.use(function (socket, next) {
       })
     );
 
-    socket.to(`${socketID}`).emit("sendUDPEmpleados", boolArray);
+    socket.to(`${socketID}`).emit("sendUDPEmpleados", dataResponse);
   });
 
   socket.on("reporteAssitencia", async (response) => {
