@@ -181,7 +181,7 @@ io.use(function (socket, next) {
     let dataEmployee = [];
     let dataResponse = [];
     dataResponse = await new Promise(async (resolve, reject) => {
-      await (dataEmpServidor || []).filter(async (empSrv, i) => {
+       (dataEmpServidor || []).filter(async (empSrv, i) => {
         if (
           (empSrv || {}).nroDocumento != "" &&
           (empSrv || {}).nroDocumento != null
@@ -232,11 +232,8 @@ io.use(function (socket, next) {
           }
         }
 
-        if (dataEmpServidor.length - 1 == i) {
-          return;
-        }
+        return;
       });
-      console.log(dataEmployee);
       resolve(dataEmployee);
     });
 
