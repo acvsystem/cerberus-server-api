@@ -233,9 +233,10 @@ io.use(function (socket, next) {
         }
 
         if (dataEmpServidor.length - 1 == i) {
-          resolve(dataEmployee);
+          return;
         }
       });
+      resolve(dataEmployee);
     });
 
     dataResponse.then((data) => {
