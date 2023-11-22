@@ -199,8 +199,9 @@ io.use(function (socket, next) {
         let existEMP = listDocumentEmp.indexOf(empSrv.DNI);
 
         if ((existEMP == -1)) {
-          console.log(listDocumentRegister);
+          
           listDocumentRegister.push(empSrv.DNI);
+          console.log(listDocumentRegister);
           dataEmployee.push(empSrv);
           /*  await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
                                           CODIGO_ICG,
