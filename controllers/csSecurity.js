@@ -94,7 +94,24 @@ export const createAccessPostulant = async (req, res) => {
         };
         console.log("createAccessPostulant", prop);
         const token = Jwt.sign({ id: (option || {}).audience }, `${privateKey}`, option);
-        
+        var request = require('request');
+        var options = {
+            'method': 'POST',
+            'url': `https://urlbae.com/api/url/add`,
+            'headers': {
+                'Authorization': 'Bearer b0e4b5f92b7334796e0af3ed4fabd3cd',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+            "url": `http://159.65.226.239:5000/postulante/${token}`
+        }),
+        };
+
+        request(options, function (error, response) {
+            if (error) throw new Error(error);
+            console.log(response.body);
+        });
+
         res.json(`http://159.65.226.239:5000/postulante/${token}`);
     } else {
         res.status(401).send(defaultResponse.error.default);
