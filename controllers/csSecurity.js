@@ -3,7 +3,7 @@ import { prop as defaultResponse } from '../const/defaultResponse.js';
 import { prop } from '../keys.js';
 import tokenController from './csToken.js';
 import Jwt from 'jsonwebtoken';
-
+import request from  'request';
 
 export const Login = async (req, res) => {
     let objLogin = req.body;
@@ -94,7 +94,7 @@ export const createAccessPostulant = async (req, res) => {
         };
         console.log("createAccessPostulant", prop);
         const token = Jwt.sign({ id: (option || {}).audience }, `${privateKey}`, option);
-        var request = require('request');
+       
         var options = {
             'method': 'POST',
             'url': `https://urlbae.com/api/url/add`,
