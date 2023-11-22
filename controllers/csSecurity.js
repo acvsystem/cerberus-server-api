@@ -3,7 +3,7 @@ import { prop as defaultResponse } from '../const/defaultResponse.js';
 import { prop } from '../keys.js';
 import tokenController from './csToken.js';
 import Jwt from 'jsonwebtoken';
-var request = require('request');
+
 
 export const Login = async (req, res) => {
     let objLogin = req.body;
@@ -95,19 +95,6 @@ export const createAccessPostulant = async (req, res) => {
         console.log("createAccessPostulant", prop);
         const token = Jwt.sign({ id: (option || {}).audience }, `${privateKey}`, option);
         
-        var options = {
-            'method': 'POST',
-            'url': `http://159.65.226.239:5000/postulante/${token}`,
-            'headers': {
-                'Authorization': 'Bearer b0e4b5f92b7334796e0af3ed4fabd3cd',
-                'Content-Type': 'application/json'
-            },
-            body: ''
-        };
-        request(options, function (error, response) {
-            if (error) throw new Error(error);
-            console.log(response.body);
-        });
         res.json(`http://159.65.226.239:5000/postulante/${token}`);
     } else {
         res.status(401).send(defaultResponse.error.default);
