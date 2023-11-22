@@ -190,7 +190,6 @@ io.use(function (socket, next) {
     });
 
     await (dataEmpServidor || []).filter(async (empSrv, i) => {
-
       if (
         (empSrv || {}).nroDocumento != "" &&
         (empSrv || {}).nroDocumento != null &&
@@ -198,12 +197,11 @@ io.use(function (socket, next) {
       ) {
         let existEMP = listDocumentEmp.indexOf(empSrv.nroDocumento);
 
-        if ((existEMP == -1)) {
-          
+        if (existEMP == -1) {
           listDocumentRegister.push(empSrv.nroDocumento);
-          
+
           dataEmployee.push(empSrv);
-          /*  await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
+          await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
                                           CODIGO_ICG,
                                           CODIGO_EJB,
                                           AP_PATERNO,
@@ -222,24 +220,24 @@ io.use(function (socket, next) {
                                           FEC_INGRESO)VALUES(
                                               "",
                                               "",
-                                              '${dp.AP_PATERNO}',
-                                              '${dp.AP_MATERNO}',
-                                              '${dp.FC_NOMBRES}',
-                                              '${(dataEstado || {}).estado || "PENDIENTE"}',
-                                              '${dp.ESTADO_CIVIL}',
-                                              '${dp.TIPO_DOCUMENTO}',
-                                              '${dp.NUM_DOCUMENTO}',
-                                              '${dp.FC_CELULAR}',
-                                              '${dp.CORREO_ELECTONICO}',
-                                              '${dp.FECH_NAC}',
-                                              '${dp.PAIS_NACIMIENTO}',
-                                              '${(dataEstado || {}).tienda || ""}',
+                                              '',
+                                              '',
+                                              '${empSrv.nombreCompleto}',
+                                              'ACEPTADO',
+                                              '',
+                                              '',
+                                              '${empSrv.nroDocumento}',
+                                              '${empSrv.mobil}',
+                                              '${empSrv.email}',
+                                              '${empSrv.fnacimiento}',
+                                              '',
+                                              '',
                                               0.0,
                                               ""
-                                          );`);*/
+                                          );`);
         }
       }
-    
+
       if (dataEmpServidor.length - 1 == i) {
         socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
       }
