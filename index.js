@@ -193,15 +193,14 @@ io.use(function (socket, next) {
 
       if (
         (empSrv || {}).nroDocumento != "" &&
-        (empSrv || {}).nroDocumento != null &&
-        listDocumentRegister.indexOf(empSrv.DNI) == -1
+        (empSrv || {}).nroDocumento != null
       ) {
-        let existEMP = listDocumentEmp.indexOf(empSrv.DNI);
+        let existEMP = listDocumentEmp.indexOf(empSrv.nroDocumento);
 
         if ((existEMP == -1)) {
           
-          listDocumentRegister.push(empSrv.DNI);
-          console.log(listDocumentRegister);
+          /*listDocumentRegister.push(empSrv.nroDocumento);
+          console.log(listDocumentRegister);*/
           dataEmployee.push(empSrv);
           /*  await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
                                           CODIGO_ICG,
