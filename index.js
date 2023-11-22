@@ -184,24 +184,25 @@ io.use(function (socket, next) {
     );
 
     let listDocumentEmp = [];
-
+    let listDocumentRegister = [];
     await empleadoList.filter((doc) => {
       listDocumentEmp.push(doc.NRO_DOC);
     });
 
-    const boolArray = await Promise.all(
-      await (dataEmpServidor || []).filter(async (empSrv, i) => {
-        if (
-          (empSrv || {}).nroDocumento != "" &&
-          (empSrv || {}).nroDocumento != null
-        ) {
-          let existEMP = listDocumentEmp.indexOf(empSrv.DNI);
+    await (dataEmpServidor || []).filter(async (empSrv, i) => {
 
-          if (existEMP = -1) {
-            console.log(empSrv);
+      if (
+        (empSrv || {}).nroDocumento != "" &&
+        (empSrv || {}).nroDocumento != null &&
+        listDocumentRegister.indexOf(empSrv.DNI) == -1
+      ) {
+        let existEMP = listDocumentEmp.indexOf(empSrv.DNI);
 
-            dataEmployee.push(empSrv);
-            /*  await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
+        if ((existEMP == -1)) {
+          console.log(empSrv);
+          listDocumentRegister.push(empSrv.DNI);
+          dataEmployee.push(empSrv);
+          /*  await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
                                           CODIGO_ICG,
                                           CODIGO_EJB,
                                           AP_PATERNO,
@@ -235,14 +236,13 @@ io.use(function (socket, next) {
                                               0.0,
                                               ""
                                           );`);*/
-          }
         }
-        console.log(i);
-        if (dataEmpServidor.length - 1 == i) {
-          socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
-        }
-      })
-    );
+      }
+    
+      if (dataEmpServidor.length - 1 == i) {
+        socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
+      }
+    });
   });
 
   socket.on("reporteAssitencia", async (response) => {
