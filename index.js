@@ -345,7 +345,7 @@ io.use(function (socket, next) {
         let nombreEmpleado = `${(emp || {}).AP_PATERNO || ""} ${
           (emp || {}).AP_MATERNO  || ""
         } ${(emp || {}).NOM_EMPLEADO  || ""}`;
-
+        console.log(nombreEmpleado);
         if (emp.NRO_DOC == asits.nroDocumento) {
           let index = -1;
 
