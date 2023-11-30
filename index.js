@@ -342,9 +342,9 @@ io.use(function (socket, next) {
       let hFaltante = 0;
 
       (dataAsistensList || []).filter(async (asits) => {
-        let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${
-          (emp || {}).AP_MATERNO
-        } ${(emp || {}).NOM_EMPLEADO}`;
+        let nombreEmpleado = `${(emp || {}).AP_PATERNO || ""} ${
+          (emp || {}).AP_MATERNO  || ""
+        } ${(emp || {}).NOM_EMPLEADO  || ""}`;
 
         if (emp.NRO_DOC == asits.nroDocumento) {
           let index = -1;
