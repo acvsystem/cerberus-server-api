@@ -277,6 +277,7 @@ io.use(function (socket, next) {
     );
     let c_costo;
     let listDocumentEmp = [];
+    let dataNoFound = [];
 
     await originEmpleadoList.filter((doc) => {
       listDocumentEmp.push(doc.NRO_DOC);
@@ -319,9 +320,29 @@ io.use(function (socket, next) {
             }
           });
         } else {
+          dataNoFound.push(asits);
         }
       });
     });
+
+    if ((dataNoFound || []).length) {
+      const workSheet = XLSX.utils.json_to_sheet(dataNoFound || []);
+      const workBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
+      const xlsFile = XLSX.write(workBook, {
+        bookType: "xlsx",
+        type: "buffer",
+      });
+      emailController
+        .sendEmail(
+          "itperu@grupodavid.com",
+          `REGISTROS FALTANTES`,
+          null,
+          xlsFile,
+          "fn - reporteAssitencia"
+        )
+        .catch((error) => res.send(error));
+    }
 
     let [empleadoList] = await actionBDController.execQuery(
       `SELECT * FROM TB_EMPLEADO;`
@@ -343,9 +364,9 @@ io.use(function (socket, next) {
 
       (dataAsistensList || []).filter(async (asits) => {
         let nombreEmpleado = `${(emp || {}).AP_PATERNO || ""} ${
-          (emp || {}).AP_MATERNO  || ""
-        } ${(emp || {}).NOM_EMPLEADO  || ""}`;
-        console.log(nombreEmpleado);
+          (emp || {}).AP_MATERNO || ""
+        } ${(emp || {}).NOM_EMPLEADO || ""}`;
+        
         if (emp.NRO_DOC == asits.nroDocumento) {
           let index = -1;
 
