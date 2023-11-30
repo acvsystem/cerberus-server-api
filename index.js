@@ -286,7 +286,7 @@ io.use(function (socket, next) {
 
     (dataAsistensList || []).filter(async (asits) => {
       if (listDocumentEmp.indexOf(asits.nroDocumento) == -1) {
-        console.log(asits);
+        //console.log(asits);
       }
     });
     await (originEmpleadoList || []).filter((emp) => {
