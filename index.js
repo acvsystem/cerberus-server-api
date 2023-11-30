@@ -18,6 +18,7 @@ import templateHtmlController from "./template/csTemplatesHtml.js";
 import recursosHumanosRoutes from "./routes/recursosHumanos.routes.js";
 import actionBDController from "./controllers/csActionOnBD.js";
 import { prop as defaultResponse } from "./const/defaultResponse.js";
+import * as XLSX from 'xlsx';
 
 const app = express();
 const httpServer = createServer(app);
