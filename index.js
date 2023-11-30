@@ -321,7 +321,7 @@ io.use(function (socket, next) {
             }
           });
         } else {
-          if(listNMFl.indexOf(sits.nombreCompleto) == -1){
+          if(listNMFl.indexOf(asits.nombreCompleto) == -1){
             listNMFl.push(asits.nombreCompleto);
             dataNoFound.push(asits);
           }
