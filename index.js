@@ -279,7 +279,7 @@ io.use(function (socket, next) {
     let c_costo;
     let listDocumentEmp = [];
     let dataNoFound = [];
-
+    let listNMFl = [];
     await originEmpleadoList.filter((doc) => {
       listDocumentEmp.push(doc.NRO_DOC);
     });
@@ -321,7 +321,10 @@ io.use(function (socket, next) {
             }
           });
         } else {
-          dataNoFound.push(asits);
+          if(listNMFl.indexOf(sits.nombreCompleto) == -1){
+            listNMFl.push(asits.nombreCompleto);
+            dataNoFound.push(asits);
+          }
         }
       });
     });
