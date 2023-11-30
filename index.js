@@ -280,6 +280,7 @@ io.use(function (socket, next) {
     let listDocumentEmp = [];
     let dataNoFound = [];
     let listNMFl = [];
+    let listNMEX = [];
     await originEmpleadoList.filter((doc) => {
       listDocumentEmp.push(doc.NRO_DOC);
     });
@@ -293,7 +294,7 @@ io.use(function (socket, next) {
       return (dataAsistensList || []).filter(async (asits) => {
         if (emp.NRO_DOC == asits.nroDocumento) {
           let serie = (asits || {}).caja.slice(0, 2);
-
+          listNMEX.push(asits.nombreCompleto);
           c_costo = new Promise((resolve, reject) => {
             (tiendasList || {}).filter((tienda) => {
               if ((tienda || {}).code == serie && serie != "7A") {
@@ -328,9 +329,16 @@ io.use(function (socket, next) {
         }
       });
     });
+    let orginDataNoFound = [];
 
-    if ((dataNoFound || []).length) {
-      const workSheet = XLSX.utils.json_to_sheet(dataNoFound || []);
+    dataNoFound.filter((nm)=>{
+      if(listNMEX.indexOf(nm.nroDocumento) == -1){
+        orginDataNoFound.push(nm);
+      }
+    });
+    
+    if ((orginDataNoFound || []).length) {
+      const workSheet = XLSX.utils.json_to_sheet(orginDataNoFound || []);
       const workBook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
       const xlsFile = XLSX.write(workBook, {
