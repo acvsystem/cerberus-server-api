@@ -331,7 +331,7 @@ io.use(function (socket, next) {
     });
     let orginDataNoFound = [];
 
-    dataNoFound.filter((nm)=>{
+    dataAsistensList.filter((nm)=>{
       if(nm.nombreCompleto != 'Compras Peru' && nm.nombreCompleto != 'GLOBAL' && nm.nombreCompleto != 'IT'){
         if(listNMEX.indexOf(nm.nombreCompleto) == -1){
           orginDataNoFound.push(nm);
@@ -353,7 +353,7 @@ io.use(function (socket, next) {
           `REGISTROS FALTANTES`,
           null,
           xlsFile,
-          "fn - reporteAssitencia"
+          "reporteAssitencia"
         )
         .catch((error) => res.send(error));
     }
