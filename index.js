@@ -535,7 +535,7 @@ io.use(function (socket, next) {
         }
       });
     });
-
+    console.log('sendControlAsistencia EMIT');
     socket.to(`${socketID}`).emit("sendControlAsistencia", reportData);
   });
 
