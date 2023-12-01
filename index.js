@@ -334,7 +334,7 @@ io.use(function (socket, next) {
     let orginDataNoFound = [];
 
     dataAsistensList.filter((nm)=>{
-      if(asits.nroDocumento == '061927953'){
+      if(nm.nroDocumento == '061927953'){
         console.log(nm)
         console.log(listNMEX);
       }
