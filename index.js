@@ -324,20 +324,13 @@ io.use(function (socket, next) {
             }
           });
         } else {
-          if(listNMFl.indexOf(asits.nombreCompleto) == -1){
             listNMFl.push(asits.nombreCompleto);
-            dataNoFound.push(asits);
-          }
         }
       });
     });
     let orginDataNoFound = [];
 
     dataAsistensList.filter((nm)=>{
-      if(nm.nroDocumento == '061927953'){
-        console.log(nm)
-        console.log(listNMEX);
-      }
       if(nm.nombreCompleto != 'Compras Peru' && nm.nombreCompleto != 'GLOBAL' && nm.nombreCompleto != 'IT'){
         if(listNMEX.indexOf(nm.nombreCompleto) == -1){
           orginDataNoFound.push(nm);
