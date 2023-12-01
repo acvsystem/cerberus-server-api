@@ -332,7 +332,7 @@ io.use(function (socket, next) {
     let orginDataNoFound = [];
 
     dataAsistensList.filter((nm)=>{
-      if(nm.nombreCompleto == 'BAYLON RIOS ALEJANDRA BRUNELA'){
+      if(nm.nombreCompleto == 'ALEJANDRA BRUNELA BAYLON RIOS'){
         console.log(nm);
       }
       if(nm.nombreCompleto != 'Compras Peru' && nm.nombreCompleto != 'GLOBAL' && nm.nombreCompleto != 'IT'){
