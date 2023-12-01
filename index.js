@@ -335,7 +335,7 @@ io.use(function (socket, next) {
 
     dataAsistensList.filter((nm)=>{
       if(asits.nroDocumento == '061927953'){
-        console.log(asits)
+        console.log(nm)
         console.log(listNMEX);
       }
       if(nm.nombreCompleto != 'Compras Peru' && nm.nombreCompleto != 'GLOBAL' && nm.nombreCompleto != 'IT'){
