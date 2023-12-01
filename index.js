@@ -292,6 +292,8 @@ io.use(function (socket, next) {
     });
     await (originEmpleadoList || []).filter((emp) => {
       return (dataAsistensList || []).filter(async (asits) => {
+
+
         if (emp.NRO_DOC == asits.nroDocumento) {
           let serie = (asits || {}).caja.slice(0, 2);
           listNMEX.push(asits.nombreCompleto);
@@ -332,6 +334,10 @@ io.use(function (socket, next) {
     let orginDataNoFound = [];
 
     dataAsistensList.filter((nm)=>{
+      if(asits.nroDocumento == '061927953'){
+        console.log(asits)
+        console.log(listNMEX);
+      }
       if(nm.nombreCompleto != 'Compras Peru' && nm.nombreCompleto != 'GLOBAL' && nm.nombreCompleto != 'IT'){
         if(listNMEX.indexOf(nm.nombreCompleto) == -1){
           orginDataNoFound.push(nm);
