@@ -246,7 +246,7 @@ io.use(function (socket, next) {
   });
 
   socket.on("reporteAssitencia", async (response) => {
-    console.log('reporteAssitencia response', JSON.parse((response || {}).serverData).length);
+
     let dataAsistensList = JSON.parse((response || {}).serverData);
 
     let tiendasList = [
@@ -332,6 +332,9 @@ io.use(function (socket, next) {
     let orginDataNoFound = [];
 
     dataAsistensList.filter((nm)=>{
+      if(nm.nombreCompleto == 'ALEJANDRA BRUNELA BAYLON RIOS'){
+        console.log(nm);
+      }
       if(nm.nombreCompleto != 'Compras Peru' && nm.nombreCompleto != 'GLOBAL' && nm.nombreCompleto != 'IT'){
         if(listNMEX.indexOf(nm.nombreCompleto) == -1){
           orginDataNoFound.push(nm);
