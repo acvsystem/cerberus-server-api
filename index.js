@@ -246,6 +246,7 @@ io.use(function (socket, next) {
   });
 
   socket.on("reporteAssitencia", async (response) => {
+    console.log('reporteAssitencia response', JSON.parse((response || {}).serverData).length);
     let dataAsistensList = JSON.parse((response || {}).serverData);
 
     let tiendasList = [
@@ -528,14 +529,13 @@ io.use(function (socket, next) {
                 data: [asits],
                 observacion: false,
               };
-              console.log("isReportTotal", itemReport);
               reportData.push(itemReport);
             }
           }
         }
       });
     });
-    console.log('sendControlAsistencia EMIT');
+    
     socket.to(`${socketID}`).emit("sendControlAsistencia", reportData);
   });
 
