@@ -174,7 +174,7 @@ io.use(function (socket, next) {
     ];
     io.emit("updateEmpleados", confConsulting);
   });
-
+/*
   socket.on("updReceptEmpleados", async (response) => {
     let configurationList = ((response || {}).configuration || {})[0] || {};
     let socketID = (configurationList || {}).socket;
@@ -244,7 +244,7 @@ io.use(function (socket, next) {
       }
     });
   });
-
+*/
 
   socket.on("reporteAssitencia", async (response) => {
     let dataAsistensList = JSON.parse((response || {}).serverData);
@@ -288,10 +288,11 @@ io.use(function (socket, next) {
 
     (dataAsistensList || []).filter(async (asits) => {
       if (listDocumentEmp.indexOf(asits.nroDocumento) == -1) {
-        console.log(asits);
-        listNMFl.push(asits.nroDocumento);
+        console.log({nom: asits.nombreCompleto, dni: asits.nroDocumento});
+        listNMFl.push({nom: asits.nombreCompleto, dni: asits.nroDocumento});
       }
     });
+
     await (originEmpleadoList || []).filter((emp) => {
       return (dataAsistensList || []).filter(async (asits) => {
         if (emp.NRO_DOC == asits.nroDocumento) {
@@ -328,7 +329,9 @@ io.use(function (socket, next) {
       });
     });
 
- /*   if ((listNMFl || []).length) {
+
+
+    if ((listNMFl || []).length) {
       const workSheet = XLSX.utils.json_to_sheet(listNMFl || []);
       const workBook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
@@ -345,7 +348,7 @@ io.use(function (socket, next) {
           "reporteAssitencia"
         )
         .catch((error) => res.send(error));
-    }*/
+    }
 
     let [empleadoList] = await actionBDController.execQuery(
       `SELECT * FROM TB_EMPLEADO;`
