@@ -172,14 +172,15 @@ io.use(function (socket, next) {
         socket: (socket || {}).id,
       },
     ];
-    io.emit("updateEmpleados", confConsulting);
+    io.emit("updateEmployee", confConsulting);
   });
-/*
+
   socket.on("updReceptEmpleados", async (response) => {
     let configurationList = ((response || {}).configuration || {})[0] || {};
     let socketID = (configurationList || {}).socket;
     let dataEmpServidor = JSON.parse((response || {}).serverData);
-    let dataEmployee = [];
+    socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmpServidor);
+   /* let dataEmployee = [];
     let [empleadoList] = await actionBDController.execQuery(
       `SELECT * FROM TB_EMPLEADO;`
     );
@@ -242,9 +243,9 @@ io.use(function (socket, next) {
       if (dataEmpServidor.length - 1 == i) {
         socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
       }
-    });
+    });*/
   });
-*/
+
 
   socket.on("reporteAssitencia", async (response) => {
     let dataAsistensList = JSON.parse((response || {}).serverData);
