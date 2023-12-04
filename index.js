@@ -18,7 +18,7 @@ import templateHtmlController from "./template/csTemplatesHtml.js";
 import recursosHumanosRoutes from "./routes/recursosHumanos.routes.js";
 import actionBDController from "./controllers/csActionOnBD.js";
 import { prop as defaultResponse } from "./const/defaultResponse.js";
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 
 const app = express();
 const httpServer = createServer(app);
@@ -246,7 +246,6 @@ io.use(function (socket, next) {
   });
 
   socket.on("reporteAssitencia", async (response) => {
-
     let dataAsistensList = JSON.parse((response || {}).serverData);
 
     let tiendasList = [
@@ -286,18 +285,10 @@ io.use(function (socket, next) {
       listDocumentEmp.push(doc.NRO_DOC);
     });
 
-    (dataAsistensList || []).filter(async (asits) => {
-      if (listDocumentEmp.indexOf(asits.nroDocumento) == -1) {
-        //console.log(asits);
-      }
-    });
     await (originEmpleadoList || []).filter((emp) => {
       return (dataAsistensList || []).filter(async (asits) => {
-
-
         if (emp.NRO_DOC == asits.nroDocumento) {
           let serie = (asits || {}).caja.slice(0, 2);
-          listNMEX.push(asits.nombreCompleto);
           c_costo = new Promise((resolve, reject) => {
             (tiendasList || {}).filter((tienda) => {
               if ((tienda || {}).code == serie && serie != "7A") {
@@ -325,25 +316,21 @@ io.use(function (socket, next) {
             }
           });
         } else {
-            listNMFl.push(asits.nombreCompleto);
+          let emp = listNMFl.filter(
+            (nm) => nm.nombreCompleto == asits.nombreCompleto
+          );
+          if (!emp.length) {
+            listNMFl.push({
+              nom: asits.nombreCompleto,
+              doc: asits.nroDocumento,
+            });
+          }
         }
       });
     });
-    let orginDataNoFound = [];
 
-    dataAsistensList.filter((nm)=>{
-      if(nm.nombreCompleto == 'ALEJANDRA BRUNELA BAYLON RIOS '){
-        console.log(nm);
-      }
-      if(nm.nombreCompleto != 'Compras Peru' && nm.nombreCompleto != 'GLOBAL' && nm.nombreCompleto != 'IT'){
-        if(listNMEX.indexOf(nm.nombreCompleto) == -1){
-          orginDataNoFound.push(nm);
-        }
-      }
-    });
-    
-    if ((orginDataNoFound || []).length) {
-      const workSheet = XLSX.utils.json_to_sheet(orginDataNoFound || []);
+    if ((listNMFl || []).length) {
+      const workSheet = XLSX.utils.json_to_sheet(listNMFl || []);
       const workBook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
       const xlsFile = XLSX.write(workBook, {
@@ -383,7 +370,7 @@ io.use(function (socket, next) {
         let nombreEmpleado = `${(emp || {}).AP_PATERNO || ""} ${
           (emp || {}).AP_MATERNO || ""
         } ${(emp || {}).NOM_EMPLEADO || ""}`;
-        
+
         if (emp.NRO_DOC == asits.nroDocumento) {
           let index = -1;
 
@@ -538,7 +525,7 @@ io.use(function (socket, next) {
         }
       });
     });
-    
+
     socket.to(`${socketID}`).emit("sendControlAsistencia", reportData);
   });
 
