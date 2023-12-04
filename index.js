@@ -284,9 +284,12 @@ io.use(function (socket, next) {
       listDocumentEmp.push(doc.NRO_DOC);
     });
 
+    let listNMFl = [];
+
     (dataAsistensList || []).filter(async (asits) => {
       if (listDocumentEmp.indexOf(asits.nroDocumento) == -1) {
         console.log(asits);
+        listNMFl.push(asits.nroDocumento);
       }
     });
     await (originEmpleadoList || []).filter((emp) => {
@@ -343,7 +346,7 @@ io.use(function (socket, next) {
         )
         .catch((error) => res.send(error));
     }
-    
+
     let [empleadoList] = await actionBDController.execQuery(
       `SELECT * FROM TB_EMPLEADO;`
     );
