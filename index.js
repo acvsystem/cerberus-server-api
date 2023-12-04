@@ -245,6 +245,7 @@ io.use(function (socket, next) {
     });
   });
 
+
   socket.on("reporteAssitencia", async (response) => {
     let dataAsistensList = JSON.parse((response || {}).serverData);
 
@@ -278,17 +279,21 @@ io.use(function (socket, next) {
     );
     let c_costo;
     let listDocumentEmp = [];
-    let dataNoFound = [];
-    let listNMFl = [];
-    let listNMEX = [];
+
     await originEmpleadoList.filter((doc) => {
       listDocumentEmp.push(doc.NRO_DOC);
     });
 
+    (dataAsistensList || []).filter(async (asits) => {
+      if (listDocumentEmp.indexOf(asits.nroDocumento) == -1) {
+        console.log(asits);
+      }
+    });
     await (originEmpleadoList || []).filter((emp) => {
       return (dataAsistensList || []).filter(async (asits) => {
         if (emp.NRO_DOC == asits.nroDocumento) {
           let serie = (asits || {}).caja.slice(0, 2);
+
           c_costo = new Promise((resolve, reject) => {
             (tiendasList || {}).filter((tienda) => {
               if ((tienda || {}).code == serie && serie != "7A") {
@@ -316,15 +321,6 @@ io.use(function (socket, next) {
             }
           });
         } else {
-          let emp = listNMFl.filter(
-            (nm) => nm.nombreCompleto == asits.nombreCompleto
-          );
-          if (!emp.length) {
-            listNMFl.push({
-              nom: asits.nombreCompleto,
-              doc: asits.nroDocumento,
-            });
-          }
         }
       });
     });
@@ -347,7 +343,7 @@ io.use(function (socket, next) {
         )
         .catch((error) => res.send(error));
     }
-
+    
     let [empleadoList] = await actionBDController.execQuery(
       `SELECT * FROM TB_EMPLEADO;`
     );
@@ -367,9 +363,9 @@ io.use(function (socket, next) {
       let hFaltante = 0;
 
       (dataAsistensList || []).filter(async (asits) => {
-        let nombreEmpleado = `${(emp || {}).AP_PATERNO || ""} ${
-          (emp || {}).AP_MATERNO || ""
-        } ${(emp || {}).NOM_EMPLEADO || ""}`;
+        let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${
+          (emp || {}).AP_MATERNO
+        } ${(emp || {}).NOM_EMPLEADO}`;
 
         if (emp.NRO_DOC == asits.nroDocumento) {
           let index = -1;
@@ -519,6 +515,7 @@ io.use(function (socket, next) {
                 data: [asits],
                 observacion: false,
               };
+              console.log("isReportTotal", itemReport);
               reportData.push(itemReport);
             }
           }
@@ -528,6 +525,8 @@ io.use(function (socket, next) {
 
     socket.to(`${socketID}`).emit("sendControlAsistencia", reportData);
   });
+  
+  
 
   //EMITE DESDE EL SERVIDOR
   socket.on("verifyDocument", async (resData) => {
