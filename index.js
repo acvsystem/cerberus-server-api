@@ -189,11 +189,10 @@ io.use(function (socket, next) {
     let listDocumentRegister = [];
     await empleadoList.filter((doc,i) => {
       return new Promise((resolve, reject) => {
+        listDocumentEmp.push(doc.NRO_DOC);
         if(empleadoList.length - 1 == i){
-          listDocumentEmp.push(doc.NRO_DOC);
           resolve(listDocumentEmp);
         }
-        
       });
     });
 
