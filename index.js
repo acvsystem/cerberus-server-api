@@ -195,7 +195,7 @@ io.use(function (socket, next) {
     await (dataEmpServidor || []).filter(async (empSrv, i) => {
       
       if(empSrv.STATUS == "VIG") {
-          /*let existEMP = listDocumentEmp.indexOf(empSrv.NUMDOC);
+          let existEMP = listDocumentEmp.indexOf(empSrv.NUMDOC);
 
           if (existEMP == -1) {
   
@@ -234,7 +234,7 @@ io.use(function (socket, next) {
                                                 0.0,
                                                 ""
                                             );`);
-          }*/
+          }
       } else {
         let existEMP = listDocumentEmp.indexOf(empSrv.NUMDOC);
         if(existEMP){
