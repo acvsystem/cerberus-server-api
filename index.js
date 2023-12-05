@@ -188,13 +188,13 @@ io.use(function (socket, next) {
 
     let listDocumentEmp = [];
     await empleadoList.filter((doc) => {
-      listDocumentEmp.push(doc.NRO_DOC);
+      listDocumentEmp.push(((doc ||{}).NRO_DOC).trim());
     });
 
     await (dataEmpServidor || []).filter(async (empSrv, i) => {
       
-      if(empSrv.STATUS == "VIG") {
-          let existEMP = listDocumentEmp.indexOf(empSrv.NUMDOC);
+      if((empSrv || {}).STATUS == "VIG") {
+          let existEMP = listDocumentEmp.indexOf(((empSrv ||{}).NUMDOC).trim());
 
           if (existEMP == -1) {
   
@@ -217,17 +217,17 @@ io.use(function (socket, next) {
                                             SALARIO_BASE,
                                             FEC_INGRESO)VALUES(
                                                 "",
-                                                '${empSrv.CODEJB}',
-                                                '${empSrv.APEPAT}',
-                                                '${empSrv.APEMAT}',
-                                                '${empSrv.NOMBRE}',
+                                                '${((empSrv ||{}).CODEJB || "").trim()}',
+                                                '${((empSrv ||{}).APEPAT || "")}',
+                                                '${((empSrv ||{}).APEMAT || "")}',
+                                                '${((empSrv ||{}).NOMBRE || "")}',
                                                 'ACEPTADO',
                                                 '',
                                                 '',
-                                                '${empSrv.NUMDOC}',
-                                                '${empSrv.TELEFO}',
-                                                '${empSrv.EMAIL}',
-                                                '${empSrv.FECNAC}',
+                                                '${((empSrv ||{}).NUMDOC || "").trim()}',
+                                                '${((empSrv ||{}).TELEFO || "").trim()}',
+                                                '${((empSrv ||{}).EMAIL || "").trim()}',
+                                                '${((empSrv ||{}).FECNAC || "").trim()}',
                                                 '',
                                                 '',
                                                 0.0,
@@ -235,9 +235,9 @@ io.use(function (socket, next) {
                                             );`);
           }
       } else {
-        let existEMP = listDocumentEmp.indexOf(empSrv.NUMDOC);
+        let existEMP = listDocumentEmp.indexOf(((empSrv || {}).NUMDOC).trim());
         if(existEMP){
-          await actionBDController.execQuery(`DELETE FROM TB_EMPLEADO WHERE NRO_DOC = '${empSrv.NUMDOC}';`);
+          await actionBDController.execQuery(`DELETE FROM TB_EMPLEADO WHERE NRO_DOC = '${((empSrv || {}).NUMDOC || "").trim()}';`);
         }
       }
       
@@ -298,7 +298,7 @@ io.use(function (socket, next) {
 
     await (originEmpleadoList || []).filter((emp) => {
       return (dataAsistensList || []).filter(async (asits) => {
-        console.log(emp);
+        
         if ((emp || {}).NRO_DOC == (asits ||{}).nroDocumento) {
           let serie = (asits || {}).caja.slice(0, 2);
           
