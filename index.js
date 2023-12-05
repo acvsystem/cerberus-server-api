@@ -291,7 +291,6 @@ io.use(function (socket, next) {
 
     (dataAsistensList || []).filter(async (asits) => {
       if ((listDocumentEmp || []).indexOf(asits.nroDocumento) == -1) {
-        console.log({nom: (asits || {}).nombreCompleto, dni: (asits || {}).nroDocumento});
         listNMFl.push({nom: (asits || {}).nombreCompleto, dni: (asits || {}).nroDocumento});
       }
     });
@@ -299,9 +298,10 @@ io.use(function (socket, next) {
 
     await (originEmpleadoList || []).filter((emp) => {
       return (dataAsistensList || []).filter(async (asits) => {
+        console.log(asits);
         if ((emp || {}).NRO_DOC == (asits ||{}).nroDocumento) {
           let serie = (asits || {}).caja.slice(0, 2);
-          console.log(serie);
+          
           c_costo = new Promise((resolve, reject) => {
             (tiendasList || {}).filter((tienda) => {
               if ((tienda || {}).code == serie && serie != "7A") {
@@ -335,7 +335,7 @@ io.use(function (socket, next) {
 
 
 
-    if ((listNMFl || []).length) {
+    /*if ((listNMFl || []).length) {
       const workSheet = XLSX.utils.json_to_sheet(listNMFl || []);
       const workBook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
@@ -352,7 +352,7 @@ io.use(function (socket, next) {
           "reporteAssitencia"
         )
         .catch((error) => res.send(error));
-    }
+    }*/
 
     let [empleadoList] = await actionBDController.execQuery(
       `SELECT * FROM TB_EMPLEADO;`
