@@ -295,13 +295,13 @@ io.use(function (socket, next) {
         listNMFl.push({nom: (asits || {}).nombreCompleto, dni: (asits || {}).nroDocumento});
       }
     });
-console.log(listNMFl.length);
+
 
     await (originEmpleadoList || []).filter((emp) => {
       return (dataAsistensList || []).filter(async (asits) => {
         if ((emp || {}).NRO_DOC == (asits ||{}).nroDocumento) {
           let serie = (asits || {}).caja.slice(0, 2);
-
+          console.log(serie);
           c_costo = new Promise((resolve, reject) => {
             (tiendasList || {}).filter((tienda) => {
               if ((tienda || {}).code == serie && serie != "7A") {
