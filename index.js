@@ -179,8 +179,8 @@ io.use(function (socket, next) {
     let configurationList = ((response || {}).configuration || {})[0] || {};
     let socketID = (configurationList || {}).socket;
     let dataEmpServidor = JSON.parse((response || {}).serverData);
-    socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmpServidor);
-   /* let dataEmployee = [];
+   // socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmpServidor);
+    let dataEmployee = [];
     let [empleadoList] = await actionBDController.execQuery(
       `SELECT * FROM TB_EMPLEADO;`
     );
@@ -192,58 +192,60 @@ io.use(function (socket, next) {
     });
 
     await (dataEmpServidor || []).filter(async (empSrv, i) => {
-      if (
-        (empSrv || {}).nroDocumento != "" &&
-        (empSrv || {}).nroDocumento != null &&
-        listDocumentRegister.indexOf(empSrv.nroDocumento) == -1
-      ) {
-        let existEMP = listDocumentEmp.indexOf(empSrv.nroDocumento);
 
-        if (existEMP == -1) {
-          listDocumentRegister.push(empSrv.nroDocumento);
+      if(empSrv.STATUS == "VIG") {
+        if(listDocumentRegister.indexOf(empSrv.NUMDOC) == -1){
+          let existEMP = listDocumentEmp.indexOf(empSrv.NUMDOC);
 
-          dataEmployee.push(empSrv);
-          await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
-                                          CODIGO_ICG,
-                                          CODIGO_EJB,
-                                          AP_PATERNO,
-                                          AP_MATERNO,
-                                          NOM_EMPLEADO,
-                                          ESTADO_EMP,
-                                          ESTADO_CIVIL,
-                                          TIPO_DOC,
-                                          NRO_DOC,
-                                          TLF_EMP,
-                                          EMAIL_EMP,
-                                          FEC_NAC,
-                                          PAIS_NAC,
-                                          TIENDA_ASIGNADO,
-                                          SALARIO_BASE,
-                                          FEC_INGRESO)VALUES(
-                                              "",
-                                              "",
-                                              '',
-                                              '',
-                                              '${empSrv.nombreCompleto}',
-                                              'ACEPTADO',
-                                              '',
-                                              '',
-                                              '${empSrv.nroDocumento}',
-                                              '${empSrv.mobil}',
-                                              '${empSrv.email}',
-                                              '${empSrv.fnacimiento}',
-                                              '',
-                                              '',
-                                              0.0,
-                                              ""
-                                          );`);
+          if (existEMP == -1) {
+            listDocumentRegister.push(empSrv.NUMDOC);
+  
+            dataEmployee.push(empSrv);
+            await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
+                                            CODIGO_ICG,
+                                            CODIGO_EJB,
+                                            AP_PATERNO,
+                                            AP_MATERNO,
+                                            NOM_EMPLEADO,
+                                            ESTADO_EMP,
+                                            ESTADO_CIVIL,
+                                            TIPO_DOC,
+                                            NRO_DOC,
+                                            TLF_EMP,
+                                            EMAIL_EMP,
+                                            FEC_NAC,
+                                            PAIS_NAC,
+                                            TIENDA_ASIGNADO,
+                                            SALARIO_BASE,
+                                            FEC_INGRESO)VALUES(
+                                                "",
+                                                '${empSrv.CODEJB}',
+                                                '${empSrv.APEPAT}',
+                                                '${empSrv.APEMAT}',
+                                                '${empSrv.NOMBRE}',
+                                                'ACEPTADO',
+                                                '',
+                                                '',
+                                                '${empSrv.NUMDOC}',
+                                                '${empSrv.TELEFO}',
+                                                '${empSrv.EMAIL}',
+                                                '${empSrv.FECNAC}',
+                                                '',
+                                                '',
+                                                0.0,
+                                                ""
+                                            );`);
+          }
         }
+      } else {
+        await actionBDController.execQuery(`DELETE FROM TB_EMPLEADO WHERE NRO_DOC = '${empSrv.NUMDOC}';`);
       }
-
-      if (dataEmpServidor.length - 1 == i) {
-        socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
-      }
-    });*/
+      
+    });
+    
+    if (dataEmployee.length) {
+      socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
+    }
   });
 
 
