@@ -190,7 +190,7 @@ io.use(function (socket, next) {
     await empleadoList.filter((doc,i) => {
       return new Promise((resolve, reject) => {
         listDocumentEmp.push(doc.NRO_DOC);
-        if(empleadoList.length - 1 == i){
+        if(empleadoList.length == listDocumentEmp.length){
           resolve(listDocumentEmp);
         }
       });
