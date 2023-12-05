@@ -192,7 +192,7 @@ io.use(function (socket, next) {
     });
     console.log(listDocumentEmp.length);
     console.log(dataEmpServidor.length);
-    await (dataEmpServidor || []).filter(async (empSrv, i) => {
+  /*  await (dataEmpServidor || []).filter(async (empSrv, i) => {
       
       if(empSrv.STATUS == "VIG") {
           let existEMP = listDocumentEmp.indexOf(empSrv.NUMDOC);
@@ -239,10 +239,10 @@ io.use(function (socket, next) {
         await actionBDController.execQuery(`DELETE FROM TB_EMPLEADO WHERE NRO_DOC = '${empSrv.NUMDOC}';`);
       }
       
-    });
+    });*/
 
-    if (dataEmployee.length) {
-      socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
+    if (dataEmpServidor.length) {
+      socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmpServidor);
     }
   });
 
