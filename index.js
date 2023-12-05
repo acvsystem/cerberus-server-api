@@ -191,14 +191,13 @@ io.use(function (socket, next) {
       listDocumentEmp.push(doc.NRO_DOC);
     });
     console.log(listDocumentEmp.length);
+    console.log(dataEmpServidor.length);
     await (dataEmpServidor || []).filter(async (empSrv, i) => {
-
+      
       if(empSrv.STATUS == "VIG") {
-        if(listDocumentRegister.indexOf(empSrv.NUMDOC) == -1){
           let existEMP = listDocumentEmp.indexOf(empSrv.NUMDOC);
 
           if (existEMP == -1) {
-            listDocumentRegister.push(empSrv.NUMDOC);
   
             dataEmployee.push(empSrv);
             await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
@@ -236,7 +235,6 @@ io.use(function (socket, next) {
                                                 ""
                                             );`);
           }
-        }
       } else {
         await actionBDController.execQuery(`DELETE FROM TB_EMPLEADO WHERE NRO_DOC = '${empSrv.NUMDOC}';`);
       }
