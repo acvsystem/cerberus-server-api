@@ -192,10 +192,10 @@ io.use(function (socket, next) {
     });
     console.log(listDocumentEmp.length);
     console.log(dataEmpServidor.length);
-  /*  await (dataEmpServidor || []).filter(async (empSrv, i) => {
+    await (dataEmpServidor || []).filter(async (empSrv, i) => {
       
       if(empSrv.STATUS == "VIG") {
-          let existEMP = listDocumentEmp.indexOf(empSrv.NUMDOC);
+          /*let existEMP = listDocumentEmp.indexOf(empSrv.NUMDOC);
 
           if (existEMP == -1) {
   
@@ -234,12 +234,15 @@ io.use(function (socket, next) {
                                                 0.0,
                                                 ""
                                             );`);
-          }
+          }*/
       } else {
-        await actionBDController.execQuery(`DELETE FROM TB_EMPLEADO WHERE NRO_DOC = '${empSrv.NUMDOC}';`);
+        let existEMP = listDocumentEmp.indexOf(empSrv.NUMDOC);
+        if(existEMP){
+          await actionBDController.execQuery(`DELETE FROM TB_EMPLEADO WHERE NRO_DOC = '${empSrv.NUMDOC}';`);
+        }
       }
       
-    });*/
+    });
 
     if (dataEmpServidor.length) {
       socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmpServidor);
