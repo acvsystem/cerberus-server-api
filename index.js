@@ -179,7 +179,7 @@ io.use(function (socket, next) {
     let configurationList = ((response || {}).configuration || {})[0] || {};
     let socketID = (configurationList || {}).socket;
     let dataEmpServidor = JSON.parse((response || {}).serverData);
-   // socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmpServidor);
+
     let dataEmployee = [];
     let [empleadoList] = await actionBDController.execQuery(
       `SELECT * FROM TB_EMPLEADO;`
@@ -187,19 +187,24 @@ io.use(function (socket, next) {
 
     let listDocumentEmp = [];
     let listDocumentRegister = [];
-    await empleadoList.filter((doc) => {
-      listDocumentEmp.push(doc.NRO_DOC);
+    await empleadoList.filter((doc,i) => {
+      return new Promise((resolve, reject) => {
+        if(empleadoList.length - 1 == i){
+          listDocumentEmp.push(doc.NRO_DOC);
+          resolve(listDocumentEmp);
+        }
+        
+      });
     });
 
     await (dataEmpServidor || []).filter(async (empSrv, i) => {
-
-      if(empSrv.STATUS == "VIG") {
-        if(listDocumentRegister.indexOf(empSrv.NUMDOC) == -1){
+      if (empSrv.STATUS == "VIG") {
+        if (listDocumentRegister.indexOf(empSrv.NUMDOC) == -1) {
           let existEMP = listDocumentEmp.indexOf(empSrv.NUMDOC);
 
           if (existEMP == -1) {
             listDocumentRegister.push(empSrv.NUMDOC);
-  
+
             dataEmployee.push(empSrv);
             await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
                                             CODIGO_ICG,
@@ -238,16 +243,16 @@ io.use(function (socket, next) {
           }
         }
       } else {
-        await actionBDController.execQuery(`DELETE FROM TB_EMPLEADO WHERE NRO_DOC = '${empSrv.NUMDOC}';`);
+        await actionBDController.execQuery(
+          `DELETE FROM TB_EMPLEADO WHERE NRO_DOC = '${empSrv.NUMDOC}';`
+        );
       }
-      
     });
-    
+
     if (dataEmployee.length) {
       socket.to(`${socketID}`).emit("sendUDPEmpleados", dataEmployee);
     }
   });
-
 
   socket.on("reporteAssitencia", async (response) => {
     let dataAsistensList = JSON.parse((response || {}).serverData);
@@ -291,8 +296,8 @@ io.use(function (socket, next) {
 
     (dataAsistensList || []).filter(async (asits) => {
       if (listDocumentEmp.indexOf(asits.nroDocumento) == -1) {
-        console.log({nom: asits.nombreCompleto, dni: asits.nroDocumento});
-        listNMFl.push({nom: asits.nombreCompleto, dni: asits.nroDocumento});
+        console.log({ nom: asits.nombreCompleto, dni: asits.nroDocumento });
+        listNMFl.push({ nom: asits.nombreCompleto, dni: asits.nroDocumento });
       }
     });
 
@@ -331,8 +336,6 @@ io.use(function (socket, next) {
         }
       });
     });
-
-
 
     if ((listNMFl || []).length) {
       const workSheet = XLSX.utils.json_to_sheet(listNMFl || []);
@@ -534,8 +537,6 @@ io.use(function (socket, next) {
 
     socket.to(`${socketID}`).emit("sendControlAsistencia", reportData);
   });
-  
-  
 
   //EMITE DESDE EL SERVIDOR
   socket.on("verifyDocument", async (resData) => {
