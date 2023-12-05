@@ -96,6 +96,7 @@ function emitVerificationDoc() {
 
 app.post("/control-asistencia", async (req, res) => {
   let dataRecept = ((req || {}).body || [])[0];
+
   let dateList = (dataRecept || []).dateList || [];
 
   if (dateList.length) {
@@ -186,12 +187,10 @@ io.use(function (socket, next) {
     );
 
     let listDocumentEmp = [];
-    let listDocumentRegister = [];
     await empleadoList.filter((doc) => {
       listDocumentEmp.push(doc.NRO_DOC);
     });
-    console.log(listDocumentEmp.length);
-    console.log(dataEmpServidor.length);
+
     await (dataEmpServidor || []).filter(async (empSrv, i) => {
       
       if(empSrv.STATUS == "VIG") {
@@ -583,7 +582,7 @@ io.use(function (socket, next) {
         dateList: dateList,
       },
     ];
-
+    console.log(confConsulting);
     io.emit("searchAsistencia", confConsulting);
   });
 
