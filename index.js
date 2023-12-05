@@ -288,7 +288,7 @@ io.use(function (socket, next) {
     });
 
     let listNMFl = [];
-
+    console.log(dataAsistensList);
     (dataAsistensList || []).filter(async (asits) => {
       if (listDocumentEmp.indexOf(asits.nroDocumento) == -1) {
         console.log({nom: asits.nombreCompleto, dni: asits.nroDocumento});
@@ -582,7 +582,7 @@ io.use(function (socket, next) {
         dateList: dateList,
       },
     ];
-    console.log(confConsulting);
+    
     io.emit("searchAsistencia", confConsulting);
   });
 
