@@ -190,7 +190,7 @@ io.use(function (socket, next) {
     await empleadoList.filter((doc) => {
       listDocumentEmp.push(((doc ||{}).NRO_DOC).trim());
     });
-
+console.log(dataEmpServidor);
     await (dataEmpServidor || []).filter(async (empSrv, i) => {
       
       if((empSrv || {}).STATUS == "VIG") {
