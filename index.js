@@ -284,21 +284,22 @@ io.use(function (socket, next) {
     let listDocumentEmp = [];
 
     await originEmpleadoList.filter((doc) => {
-      listDocumentEmp.push(doc.NRO_DOC);
+      (listDocumentEmp || []).push(doc.NRO_DOC);
     });
 
     let listNMFl = [];
-    console.log(dataAsistensList);
+
     (dataAsistensList || []).filter(async (asits) => {
-      if (listDocumentEmp.indexOf(asits.nroDocumento) == -1) {
-        console.log({nom: asits.nombreCompleto, dni: asits.nroDocumento});
-        listNMFl.push({nom: asits.nombreCompleto, dni: asits.nroDocumento});
+      if ((listDocumentEmp || []).indexOf(asits.nroDocumento) == -1) {
+        console.log({nom: (asits || {}).nombreCompleto, dni: (asits || {}).nroDocumento});
+        listNMFl.push({nom: (asits || {}).nombreCompleto, dni: (asits || {}).nroDocumento});
       }
     });
+console.log(listNMFl.length);
 
     await (originEmpleadoList || []).filter((emp) => {
       return (dataAsistensList || []).filter(async (asits) => {
-        if (emp.NRO_DOC == asits.nroDocumento) {
+        if ((emp || {}).NRO_DOC == (asits ||{}).nroDocumento) {
           let serie = (asits || {}).caja.slice(0, 2);
 
           c_costo = new Promise((resolve, reject) => {
@@ -322,7 +323,7 @@ io.use(function (socket, next) {
               await actionBDController.execQuery(
                 `UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO = '${
                   (res || {}).name
-                }' WHERE NRO_DOC = '${asits.nroDocumento}';`
+                }' WHERE NRO_DOC = '${(asits ||{}).nroDocumento}';`
               );
               return;
             }
