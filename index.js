@@ -298,7 +298,7 @@ io.use(function (socket, next) {
 
     await (originEmpleadoList || []).filter((emp) => {
       return (dataAsistensList || []).filter(async (asits) => {
-        console.log(asits);
+        console.log(emp);
         if ((emp || {}).NRO_DOC == (asits ||{}).nroDocumento) {
           let serie = (asits || {}).caja.slice(0, 2);
           
