@@ -251,7 +251,7 @@ console.log(dataEmpServidor);
 
   socket.on("reporteAssitencia", async (response) => {
     let dataAsistensList = JSON.parse((response || {}).serverData);
-    console.log(dataAsistensList);
+
     let tiendasList = [
       { code: "7A", name: "BBW JOCKEY" },
       { code: "9A", name: "VSBA JOCKEY" },
@@ -319,11 +319,15 @@ console.log(dataEmpServidor);
           });
 
           return c_costo.then(async (res) => {
+            if(((asits ||{}).nroDocumento || "").trim() == "44747671"){
+              console.log(asits);
+            }
+
             if ((emp || {}).TIENDA_ASIGNADO != (res || {}).name) {
               await actionBDController.execQuery(
                 `UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO = '${
                   (res || {}).name
-                }' WHERE NRO_DOC = '${(asits ||{}).nroDocumento}';`
+                }' WHERE NRO_DOC = '${((asits ||{}).nroDocumento || "").trim()}';`
               );
               return;
             }
