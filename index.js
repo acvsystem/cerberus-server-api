@@ -357,6 +357,7 @@ console.log(dataEmpServidor);
     let [empleadoList] = await actionBDController.execQuery(
       `SELECT * FROM TB_EMPLEADO;`
     );
+
     let configurationList = ((response || {}).configuration || {})[0] || {};
     let socketID = (configurationList || {}).socket;
 
@@ -365,7 +366,7 @@ console.log(dataEmpServidor);
     let dateList = (configurationList || {}).dateList;
     let documentListAdd = [];
     let reportData = [];
-
+console.log(dataAsistensList);
     (empleadoList || []).filter((emp) => {
       let hrWorking = 0;
       let nroTransacciones = 0;
