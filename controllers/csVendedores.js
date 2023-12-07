@@ -228,7 +228,7 @@ export const onRegisterPostulante = async (req, res) => {
         await actionBDController.execQuery(`CALL SP_CRUD_DATOS_SALUD_ANTECEDENTES('${(existDSA.length) ? 'U' : 'I'}',${saludAntecedentes})`);
     }
 
-    let existEMP = await actionBDController.verificationRegister('TB_EMPLEADO', `NRO_DOC = '${idPostulante}';`);
+   /* let existEMP = await actionBDController.verificationRegister('TB_EMPLEADO', `NRO_DOC = '${idPostulante}';`);
 
     if (!existEMP.length) {
 
@@ -280,7 +280,7 @@ export const onRegisterPostulante = async (req, res) => {
         PAIS_NAC = '${(datosPersonales || {}).pais_nacimiento}'
         WHERE NRO_DOC = '${idPostulante}';`);
     }
-
+*/
     let existSTD = await actionBDController.verificationRegister('TB_ESTADO_POSTULANTE', `DNI = '${idPostulante}';`);
 
     if (!existSTD.length) {
