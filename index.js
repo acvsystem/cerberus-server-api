@@ -251,7 +251,7 @@ console.log(dataEmpServidor);
 
   socket.on("reporteAssitencia", async (response) => {
     let dataAsistensList = JSON.parse((response || {}).serverData);
-
+    console.log(dataAsistensList);
     let tiendasList = [
       { code: "7A", name: "BBW JOCKEY" },
       { code: "9A", name: "VSBA JOCKEY" },
@@ -366,7 +366,7 @@ console.log(dataEmpServidor);
     let dateList = (configurationList || {}).dateList;
     let documentListAdd = [];
     let reportData = [];
-console.log(dataAsistensList);
+
     (empleadoList || []).filter((emp) => {
       let hrWorking = 0;
       let nroTransacciones = 0;
