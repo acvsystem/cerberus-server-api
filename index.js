@@ -319,7 +319,7 @@ console.log(dataEmpServidor);
           });
 
           return c_costo.then(async (res) => {
-            if(((asits ||{}).nroDocumento || "").trim() == "44747671"){
+            if(((asits ||{}).nroDocumento || "").trim() == "44265601"){
               console.log(asits);
             }
 
