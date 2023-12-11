@@ -138,6 +138,23 @@ class clsConfiguration {
         res.json(configuration)
     }
 
+    onDepartametosList  = async (req, res) => {
+        let [lista] = await pool.query(`SELECT * FROM TB_DEPARTAMENTOS_UBIGEO;`);
+        res.json(lista)
+    }
+
+    onProvinciasList  = async (req, res) => {
+        let dataRecept = ((req || {}).query || {});
+        let [lista] = await pool.query(`SELECT * FROM TB_PROVINCIAS_UBIGEO WHERE ID_DEPARTAMENTO='${(dataRecept || {}).id_departamento}';`);
+        res.json(lista)
+    }
+
+    onDistritoList  = async (req, res) => {
+        let dataRecept = ((req || {}).query || {});
+        let [lista] = await pool.query(`SELECT * FROM TB_DISTRITOS_UBIGEO WHERE ID_PROVINCIA ='${(dataRecept || {}).id_provincia}' AND ID_DEPARTAMENTO='${(data || {}).id_departamento}';`);
+        res.json(lista)
+    }
+
 }
 
 const configurationController = new clsConfiguration;

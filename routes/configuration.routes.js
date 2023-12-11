@@ -12,5 +12,9 @@ router.get('/service/lista/menu', configurationController.onListMenu);
 router.post('/service/lista/menu/user', configurationController.onListMenuUser);
 router.get('/service/lista/perfil/user', configurationController.onListPerfilUser);
 
+router.get('/service/lista/departamento', configurationController.onDepartametosList);
+router.get('/service/lista/provincia', configurationController.onProvinciasList);
+router.get('/service/lista/distrito', configurationController.onDistritoList);
+
 const configurationRoutes = router;
 export default configurationRoutes
