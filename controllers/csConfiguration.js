@@ -151,8 +151,7 @@ class clsConfiguration {
 
     onDistritoList  = async (req, res) => {
         let dataRecept = ((req || {}).query || {});
-        console.log(dataRecept);
-        let [lista] = await pool.query(`SELECT * FROM TB_DISTRITOS_UBIGEO WHERE ID_PROVINCIA ='${(dataRecept || {}).id_provincia}' AND ID_DEPARTAMENTO='${(data || {}).id_departamento}';`);
+        let [lista] = await pool.query(`SELECT * FROM TB_DISTRITOS_UBIGEO WHERE ID_PROVINCIA ='${(dataRecept || {}).id_provincia}' AND ID_DEPARTAMENTO='${(dataRecept || {}).id_departamento}';`);
         res.json(lista)
     }
 
