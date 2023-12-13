@@ -158,13 +158,21 @@ export const onRegisterPostulante = async (req, res) => {
     '${(datosPersonales || {}).num_documento}',
     '${(datosPersonales || {}).sexo}',
     '${(datosPersonales || {}).estado_civil}',
-    '${(datosPersonales || {}).direccion}',
     '${(datosPersonales || {}).referencia}',
     '${(datosPersonales || {}).email}',
     '${(datosPersonales || {}).nro_celular}',
     '${(datosPersonales || {}).tipo_pension}',
     '${(datosPersonales || {}).contacto_emergengia}',
-    '${(datosPersonales || {}).numero_emergencia}'`;
+    '${(datosPersonales || {}).numero_emergencia}',
+    '${(datosPersonales || {}).tipo_via}',
+    '${(datosPersonales || {}).nombre_via}',
+    '${(datosPersonales || {}).nro_domicilio}',
+    '${(datosPersonales || {}).nro_departamento}',
+    '${(datosPersonales || {}).ds_manzana}',
+    '${(datosPersonales || {}).ds_lote}',
+    '${(datosPersonales || {}).tipo_zona}',
+    '${(datosPersonales || {}).nombre_zona}',
+    '${(datosPersonales || {}).tipo_vivienda}'`;
 
     let saludAntecedentes = `'${idPostulante}',
     '${datosSaludList.alergias}',
