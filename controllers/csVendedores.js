@@ -141,7 +141,7 @@ export const onPostulanteList = async (req, res) => {
 export const onRegisterPostulante = async (req, res) => {
 
     let dataPostulante = ((req || {}).body || [])[0] || {};
-    console.log(dataPostulante);
+ 
     let idPostulante = (dataPostulante || {}).id;
     let datosPersonales = (dataPostulante || {}).datos_personales || {};
     let expLaboralList = (dataPostulante || {}).experiencia_laboral || [];
@@ -172,7 +172,10 @@ export const onRegisterPostulante = async (req, res) => {
     '${(datosPersonales || {}).ds_lote}',
     '${(datosPersonales || {}).tipo_zona}',
     '${(datosPersonales || {}).nombre_zona}',
-    '${(datosPersonales || {}).tipo_vivienda}'`;
+    '${(datosPersonales || {}).tipo_vivienda}',
+    '${(datosPersonales || {}).departamento_ubigeo}',
+    '${(datosPersonales || {}).provincia_ubigeo}',
+    '${(datosPersonales || {}).distrito_ubigeo}'`;
 
     let saludAntecedentes = `'${idPostulante}',
     '${datosSaludList.alergias}',
