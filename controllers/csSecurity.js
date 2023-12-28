@@ -133,7 +133,7 @@ export const createAccessPostulant = async (req, res) => {
     request(options, function (error, response) {
       if (error) throw new Error(error);
       console.log("createAccessPostulant",(((response || {}).body || {})));
-      urlAccess = JSON.parse(((response || {}).body || {}))["shorturl"] || `http://159.65.226.239:5000/postulante/${token}`;
+      urlAccess = JSON.parse(((response || {}).body || '{}'))["shorturl"] || `http://159.65.226.239:5000/postulante/${token}`;
       res.json(urlAccess);
     });
 
