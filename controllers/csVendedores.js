@@ -188,7 +188,7 @@ export const onRegisterPostulante = async (req, res) => {
 
     let existRegister = await actionBDController.verificationRegister('TB_FICHA_EMPLEADO', `KEY_FICHA = '${idPostulante}'`);
     let tipoExcution = !existRegister.length ? 'I' : 'U';
-
+    console.log(`CALL SP_CRUD_FICHA_EMPLEADO('${tipoExcution}',${cadenaFichaEmpleado})`);
     await actionBDController.execQuery(`CALL SP_CRUD_FICHA_EMPLEADO('${tipoExcution}',${cadenaFichaEmpleado})`);
 
     let existEstado = await actionBDController.verificationRegister('TB_ESTADO_POSTULANTE', `DNI = '${idPostulante}'`);
