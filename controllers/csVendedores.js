@@ -50,7 +50,20 @@ export const onPostulanteList = async (req, res) => {
                         "contacto_emergengia": (dp || {}).NOMBRE_CONTACT_EMERGENCIA,
                         "numero_emergencia": (dp || {}).NUM_CONTACT_EMERGENCIA,
                         "estado": "",
-                        "tienda": ""
+                        "tienda": "",
+                        "tipo_via" : (dp || {}).TIPO_VIA,
+                        "nombre_via" : (dp || {}).NOM_VIA,
+                        "nro_domicilio" : (dp || {}).NRO_DOMICILIO,
+                        "nro_departamento" : (dp || {}).NRO_DEPARTAMENTO,
+                        "desc_manzana" : (dp || {}).DESC_MANZANA,
+                        "desc_lote" : (dp || {}).DESC_LOTE,
+                        "tipo_zona" : (dp || {}).TIPO_ZONA,
+                        "nombre_zona" : (dp || {}).NOM_ZONA,
+                        "tipo_vivienda" : (dp || {}).TIPO_VIVIENDA,
+                        "departamento_ubigeo" : (dp || {}).DEPARTAMENTO_UBIGEO,
+                        "provincia_ubigeo" : (dp || {}).PROVINCIA_UBIGEO,
+                        "distrito_ubigeo" : (dp || {}).DISTRITO_UBIGEO
+
                     },
                     "experiencia_laboral": [],
                     "formacion_academica": [],
@@ -188,7 +201,7 @@ export const onRegisterPostulante = async (req, res) => {
 
     let existRegister = await actionBDController.verificationRegister('TB_FICHA_EMPLEADO', `KEY_FICHA = '${idPostulante}'`);
     let tipoExcution = !existRegister.length ? 'I' : 'U';
-    console.log(`CALL SP_CRUD_FICHA_EMPLEADO('${tipoExcution}',${cadenaFichaEmpleado})`);
+
     await actionBDController.execQuery(`CALL SP_CRUD_FICHA_EMPLEADO('${tipoExcution}',${cadenaFichaEmpleado})`);
 
     let existEstado = await actionBDController.verificationRegister('TB_ESTADO_POSTULANTE', `DNI = '${idPostulante}'`);
