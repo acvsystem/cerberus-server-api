@@ -33,25 +33,6 @@ app.use(
 app.use(bodyParser.json({ limit: "1000000mb" }));
 app.use(bodyParser.urlencoded({ limit: "1000000mb", extended: true }));
 
-const client = new ftp.Client()
-client.ftp.verbose = true
-try {
-  await client.access({
-    host: "190.117.53.189",
-    user: "metasFTP",
-    password: "METAS20600516885"
-  })
-  console.log(await client.list())
-}
-catch (err) {
-  var bodyHTML = templateHtmlController.errorFTP(err);
-
-  emailController.sendEmail(`itperu@grupodavid.com`, `CONEXION FTP BACKUP`, bodyHTML, null, null, 'ALERTA FTP SERVER').then((response) => {
-      console.log(response);
-  }).catch(error => console.log(error));
-}
-client.close()
-
 var listClient = { id: "" };
 var agenteList = [];
 

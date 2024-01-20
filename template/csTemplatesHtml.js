@@ -88,6 +88,7 @@ class clsTemplate {
         let dataDocument = data || {};
 
         let body = `<p>PROBLEMAS DE CONEXION FTP BACKUP.</p><br>
+        <p>VERIFIQUE LA IP PUBLICA O CONEXION DE INTERNET DE SU SERVIDOR.</p><br>
         ${dataDocument}`;
 
         return body;
