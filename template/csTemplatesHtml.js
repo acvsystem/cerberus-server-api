@@ -84,6 +84,15 @@ class clsTemplate {
         return body;
     }
 
+    errorFTP(data) {
+        let dataDocument = data || {};
+
+        let body = `<p>PROBLEMAS DE CONEXION FTP BACKUP.</p><br>
+        ${dataDocument}`;
+
+        return body;
+    }
+
 
 
 }

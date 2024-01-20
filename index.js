@@ -18,7 +18,7 @@ import templateHtmlController from "./template/csTemplatesHtml.js";
 import recursosHumanosRoutes from "./routes/recursosHumanos.routes.js";
 import actionBDController from "./controllers/csActionOnBD.js";
 import { prop as defaultResponse } from "./const/defaultResponse.js";
-import * as XLSX from "xlsx";
+import * as ftp from "basic-ftp"
 
 const app = express();
 const httpServer = createServer(app);
@@ -32,6 +32,25 @@ app.use(
 
 app.use(bodyParser.json({ limit: "1000000mb" }));
 app.use(bodyParser.urlencoded({ limit: "1000000mb", extended: true }));
+
+const client = new ftp.Client()
+client.ftp.verbose = true
+try {
+  await client.access({
+    host: "190.117.53.199",
+    user: "metasFTP",
+    password: "METAS20600516885"
+  })
+  console.log(await client.list())
+}
+catch (err) {
+  var bodyHTML = templateHtmlController.errorFTP(err);
+
+  emailController.sendEmail(`itperu@grupodavid.com`, `CONEXION FTP BACKUP`, bodyHTML, null, null, 'ALERTA FTP SERVER').then((response) => {
+      console.log(response);
+  }).catch(error => console.log(error));
+}
+client.close()
 
 var listClient = { id: "" };
 var agenteList = [];
@@ -71,6 +90,29 @@ app.use(
 
 app.use("/frontRetail", frontRetailRoutes);
 
+const task_ftp_backup = cron.schedule("00 09 * * *", async () => {
+  console.log("00 09");
+  const client = new ftp.Client()
+  client.ftp.verbose = true
+  try {
+    await client.access({
+      host: "190.117.53.199",
+      user: "metasFTP",
+      password: "METAS20600516885"
+    })
+    console.log(await client.list())
+  }
+  catch (err) {
+    var bodyHTML = templateHtmlController.errorFTP(err);
+
+    emailController.sendEmail(`itperu@grupodavid.com`, `CONEXION FTP BACKUP`, bodyHTML, null, null, 'ALERTA FTP SERVER').then((response) => {
+        console.log(response);
+    }).catch(error => console.log(error));
+  }
+  client.close()
+});
+
+
 const task_1 = cron.schedule("00 10 * * *", () => {
   console.log("00 10");
   emitVerificationDoc();
@@ -89,6 +131,7 @@ const task_3 = cron.schedule("00 19 * * *", () => {
 task_1.start();
 task_2.start();
 task_3.start();
+task_ftp_backup.start();
 
 function emitVerificationDoc() {
   io.emit("consultingToFront", "emitVerificationDoc");
