@@ -37,7 +37,7 @@ const client = new ftp.Client()
 client.ftp.verbose = true
 try {
   await client.access({
-    host: "190.117.53.199",
+    host: "190.117.53.189",
     user: "metasFTP",
     password: "METAS20600516885"
   })
