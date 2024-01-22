@@ -200,6 +200,24 @@ io.use(function (socket, next) {
     io.emit("updateEmployee", confConsulting);
   });
 
+  socket.on("emitScanNet", () => {
+    let confConsulting = [
+      {
+        socket: (socket || {}).id,
+      },
+    ];
+    io.emit("scanNetwork", confConsulting);
+  });
+
+  socket.on("resNetScan", (configurationList) => {
+    let socketID = (configurationList || {}).configuracion.socket;
+    let data = (configurationList || {}).data;
+    
+    io.to(`${socketID}`).emit("appResNetScan", data);
+  });
+
+
+
   socket.on("updReceptEmpleados", async (response) => {
     let configurationList = ((response || {}).configuration || {})[0] || {};
     let socketID = (configurationList || {}).socket;
