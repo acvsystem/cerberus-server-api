@@ -210,7 +210,7 @@ io.use(function (socket, next) {
   });
 
   socket.on("resNetScan", (configurationList) => {
-    let socketID = (configurationList || {}).configuracion.socket;
+    let socketID = (configurationList || {}).configuracion[0].socket;
     let data = (configurationList || {}).data;
     console.log(configurationList);
     io.to(`${socketID}`).emit("appResNetScan", data);
