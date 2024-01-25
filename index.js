@@ -76,12 +76,25 @@ io.use(function (socket, next) {
         }
     });
 
+    socket.on('resTransaction', (data) => {
+      if (socket.decoded.aud == 'AGENTE') {
+          let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
+          socket.broadcast.emit("dataTransaction", data, selectAgente.code);
+      }
+    });
+
     //EMITE DESDE EL FRONT
     socket.on('comunicationFront', (data) => {
         if (socket.decoded.aud == 'ADMINISTRADOR') {
             socket.broadcast.emit("consultingToFront", 'ready');
         }
     });
+
+    socket.on('emitTransaction', (data) => {
+      if (socket.decoded.aud == 'ADMINISTRADOR') {
+          socket.broadcast.emit("searchTransaction", 'ready');
+      }
+  });
 
     socket.on('conexion:serverICG', (data) => {
         socket.broadcast.emit("conexion:serverICG:send", data);
