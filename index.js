@@ -82,17 +82,15 @@ io.on('connection', async (socket) => {
     });
   
     socket.on('resTransaction', (data) => {
-      if (socket.decoded.aud == 'AGENTE') {
         console.log(data);
         let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
           socket.broadcast.emit("dataTransaction", data, codeTerminal);
-      }
+      
     });
 
     socket.on('emitTransaction', (data) => {
-        if (socket.decoded.aud == 'ADMINISTRADOR') {
             socket.broadcast.emit("searchTransaction", 'ready');
-        }
+        
     });
 
 
