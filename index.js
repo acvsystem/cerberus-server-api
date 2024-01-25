@@ -83,8 +83,15 @@ io.on('connection', async (socket) => {
 
   socket.on('resTransaction', (data) => {
     console.log(data);
-    let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
-    socket.to(`${listClient.id}`).emit("dataTransaction", data, codeTerminal);
+    let response = JSON.parse(data);
+    let body = [
+      {
+        code: codeTerminal,
+        transaciones: response[0]['remCount']
+      }
+    ];
+    
+    socket.to(`${listClient.id}`).emit("dataTransaction", body);
 
   });
 
