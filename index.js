@@ -84,7 +84,7 @@ io.on('connection', async (socket) => {
   socket.on('resTransaction', (data) => {
     console.log(data);
     let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
-    socket.broadcast.emit("dataTransaction", data, codeTerminal);
+    socket.to(`${listClient.id}`).emit("dataTransaction", data, codeTerminal);
 
   });
 
