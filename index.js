@@ -78,6 +78,7 @@ io.use(function (socket, next) {
 
     socket.on('resTransaction', (data) => {
       if (socket.decoded.aud == 'AGENTE') {
+        console.log(data);
           let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
           socket.broadcast.emit("dataTransaction", data, selectAgente.code);
       }
