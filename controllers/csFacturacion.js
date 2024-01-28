@@ -41,7 +41,8 @@ class clsFacturacion {
         var serverData = JSON.parse((dataVerify || {}).serverData);
         var frontData = JSON.parse((dataVerify || {}).frontData);
         var codigoFront = (dataVerify || {}).codigoFront;
-
+        console.log(codigoFront, dataNoFound);
+        
         (serverData || []).filter((data) => {
             var cpParse = (data || {}).cmpNumero.split('-');
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
@@ -58,7 +59,7 @@ class clsFacturacion {
             }
         });
 
-        console.log(codigoFront, dataNoFound);
+        
 
         let selectedLocal = tiendasList.find((data) => data.code == codigoFront);
         console.log(`${this.getDate()} - ${codigoFront} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
