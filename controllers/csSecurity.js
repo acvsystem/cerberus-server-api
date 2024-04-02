@@ -10,10 +10,8 @@ export const Login = async (req, res) => {
   let usuario = objLogin["usuario"].replace(/[^a-zA-Z-0-9 ]/g, "");
   let password = objLogin["password"];
   const [dataUser] =
-    await pool.query(`SELECT ID_LOGIN, NOMBRE, NM_NIVEL, ID_NVL_ACCESS FROM TB_PROFILE_USER 
-                                        INNER JOIN TB_LOGIN ON TB_LOGIN.ID_LOGIN = TB_PROFILE_USER.FK_ID_LOGIN 
-                                        INNER JOIN TB_NIVEL_ACCESS ON TB_NIVEL_ACCESS.ID_NVL_ACCESS = TB_LOGIN.FK_ID_NVL_ACCESS
-                                        WHERE DESC_USUARIO = '${usuario}' AND PASSWORD = '${password}'`);
+    await pool.query(`SELECT USUARIO,EMAIL,NOMBRE_ROL,ACTIVO FROM TB_USUARIO INNER JOIN TB_ROL_SISTEMA ON TB_USUARIO.ID_ROL_USUARIO = TB_ROL_SISTEMA.ID_ROL
+                      WHERE DESC_USUARIO = '${usuario}' AND PASSWORD = '${password}'`);
 
   let nivelUser = ((dataUser || [])[0] || {}).NM_NIVEL;
   console.log(objLogin);
