@@ -10,28 +10,32 @@ export const Login = async (req, res) => {
   let usuario = objLogin["usuario"].replace(/[^a-zA-Z-0-9 ]/g, "");
   let password = objLogin["password"];
   const [dataUser] =
-    await pool.query(`SELECT USUARIO,EMAIL,NOMBRE_ROL,ACTIVO FROM TB_USUARIO INNER JOIN TB_ROL_SISTEMA ON TB_USUARIO.ID_ROL_USUARIO = TB_ROL_SISTEMA.ID_ROL
+    await pool.query(`SELECT USUARIO,EMAIL,ID_ROL,NOMBRE_ROL,ACTIVO FROM TB_USUARIO INNER JOIN TB_ROL_SISTEMA ON TB_USUARIO.ID_ROL_USUARIO = TB_ROL_SISTEMA.ID_ROL
                       WHERE DESC_USUARIO = '${usuario}' AND PASSWORD = '${password}'`);
 
-  let nivelUser = ((dataUser || [])[0] || {}).NM_NIVEL;
-  console.log(objLogin);
+  let nivelUser = ((dataUser || [])[0] || {}).ID_ROL;
+  console.log(dataUser);
   if (dataUser.length > 0) {
-    const [menuUser] = await pool.query(`SELECT * FROM TB_MENU_SISTEMA 
-                                             INNER JOIN TB_ALL_MENU_DESCRIPTION ON TB_MENU_SISTEMA.FK_ID_MENU_DESC = TB_ALL_MENU_DESCRIPTION.ID_MENU_DESC
-                                             WHERE TB_MENU_SISTEMA.FK_ID_NVL_ACCESS = ${
-                                               ((dataUser || [])[0] || {})
-                                                 .ID_NVL_ACCESS
-                                             };`);
+    const [menu] = await pool.query(`SELECT NOMBRE_MENU,RUTA,ICO FROM TB_PERMISO_SISTEMA 
+                                             INNER JOIN TB_ROL_SISTEMA ON TB_PERMISO_SISTEMA.ID_ROL_PERMISO = TB_ROL_SISTEMA.ID_ROL
+                                             INNER JOIN TB_MENU_SISTEMA ON TB_PERMISO_SISTEMA.ID_MENU_PERMISO = TB_MENU_SISTEMA.ID_MENU
+                                             WHERE TB_PERMISO_SISTEMA.ID_ROL_PERMISO = ${nivelUser};`);
+
+    const [submenu] = await pool.query(`SELECT NOMBRE_SUBMENU FROM TB_SUBMENU_SISTEMA;`); 
+    
+    let arMenu = [];
+
+    console.log(menuUser);
 
     const token = tokenController.createToken(usuario, nivelUser);
-
+   
     let parseResponse = {
       auth: { token: token },
       profile: {
-        name: ((dataUser || [])[0] || {}).NOMBRE,
-        nivel: ((dataUser || [])[0] || {}).NM_NIVEL,
+        name: ((dataUser || [])[0] || {}).USUARIO,
+        nivel: ((dataUser || [])[0] || {}).NOMBRE_ROL,
       },
-      menu: menuUser,
+      menu: menu,
     };
 
     res.header("Authorization", token).json(parseResponse);
