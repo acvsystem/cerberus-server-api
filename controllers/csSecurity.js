@@ -11,7 +11,7 @@ export const Login = async (req, res) => {
   let password = objLogin["password"];
   const [dataUser] =
     await pool.query(`SELECT USUARIO,EMAIL,ID_ROL,NOMBRE_ROL,ACTIVO FROM TB_USUARIO INNER JOIN TB_ROL_SISTEMA ON TB_USUARIO.ID_ROL_USUARIO = TB_ROL_SISTEMA.ID_ROL
-                      WHERE DESC_USUARIO = '${usuario}' AND PASSWORD = '${password}'`);
+                      WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}'`);
 
   let nivelUser = ((dataUser || [])[0] || {}).ID_ROL;
   console.log(dataUser);
