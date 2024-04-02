@@ -25,7 +25,8 @@ export const Login = async (req, res) => {
     
     let arMenu = [];
 
-    console.log(menuUser);
+    console.log(menu);
+    console.log(submenu);
 
     const token = tokenController.createToken(usuario, nivelUser);
    
