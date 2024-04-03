@@ -54,7 +54,7 @@ class clsConfiguration {
 
     onlistConfiguration = async (req, res) => {
         let [dataServiceEmail] = await pool.query(`SELECT * FROM TB_CONFIGURACION_EMAIL;`);
-        let [dataListEmail] = await pool.query(`SELECT * FROM TB_EMAIL_TO WHERE FK_CONFIGURATION = '${dataServiceEmail[0].ID_CONFIGURATION}';`);
+        let [dataListEmail] = await pool.query(`SELECT * FROM TB_LISTA_EMAIL_ALERTA;`);
         let dataParse = {
             emailService: [{
                 email: dataServiceEmail[0].EMAIL,
