@@ -101,22 +101,19 @@ export const CreateNewUser = async (req, res) => {
   );
 
   let [nivel] = await pool.query(
-    `SELECT * FROM TB_NIVEL_ACCESS WHERE NM_NIVEL='${((validToken || {}).decoded || {}).aud
+    `SELECT * FROM TB_ROL_SISTEMA WHERE NOMBRE_ROL='${((validToken || {}).decoded || {}).aud
     }'`
   );
 
-  await pool.query(`INSERT INTO TB_LOGIN(DESC_USUARIO,PASSWORD,FK_ID_NVL_ACCESS)
-            VALUES('${newRegister.usuario}','${newRegister.password}',${((nivel || [])[0] || {}).ID_NVL_ACCESS
+  await pool.query(`INSERT INTO TB_USUARIO(USUARIO,PASSWORD,EMAIL,ID_ROL_USUARIO)
+            VALUES('${newRegister.usuario}','${newRegister.password}','${newRegister.mail}',${((nivel || [])[0] || {}).ID_ROL
     })`);
 
   const [id_new_user] = await pool.query(
-    `SELECT ID_LOGIN FROM TB_LOGIN WHERE DESC_USUARIO = '${newRegister.usuario}' AND PASSWORD = '${newRegister.password}'`
+    `SELECT ID_LOGIN FROM TB_USUARIO WHERE USUARIO = '${newRegister.usuario}' AND PASSWORD = '${newRegister.password}'`
   );
 
   if (id_new_user.length) {
-    await pool.query(`INSERT INTO TB_PROFILE_USER(NOMBRE,FK_ID_LOGIN)
-        VALUES('${newRegister.nombreProfile} ${newRegister.apellidoProfile}',${id_new_user[0].ID_LOGIN})`);
-
     res.json(defaultResponse.success.default);
   } else {
     res.json(defaultResponse.error.default);
