@@ -97,6 +97,27 @@ class clsConfiguration {
         res.json(response);
     }
 
+    onListRoles = async (req, res) => {
+        let [dataList] = await pool.query(`SELECT * FROM TB_ROL_SISTEMA;`);
+        let rolesList = [];
+        (dataList || []).filter((rol) => {
+            (rolesList || []).push(
+                {
+                    nom_rol: (rol || {}).NOMBRE_ROL || ""
+                }
+            );
+        });
+
+        let response =
+        {
+            data: rolesList || [],
+            status: defaultResponse.success.default
+        };
+
+
+        res.json(response);
+    }
+
     onListMenuUser = async (req, res) => {
         let data = ((req || {}).body || []);
         let [dataMenuList] = await pool.query(`SELECT ID_MENU_DESC,DESCRIPTION_MENU FROM TB_MENU_SISTEMA 
@@ -138,18 +159,18 @@ class clsConfiguration {
         res.json(configuration)
     }
 
-    onDepartametosList  = async (req, res) => {
+    onDepartametosList = async (req, res) => {
         let [lista] = await pool.query(`SELECT * FROM TB_DEPARTAMENTOS_UBIGEO;`);
         res.json(lista)
     }
 
-    onProvinciasList  = async (req, res) => {
+    onProvinciasList = async (req, res) => {
         let dataRecept = ((req || {}).query || {});
         let [lista] = await pool.query(`SELECT * FROM TB_PROVINCIAS_UBIGEO WHERE ID_DEPARTAMENTO='${(dataRecept || {}).id_departamento}';`);
         res.json(lista)
     }
 
-    onDistritoList  = async (req, res) => {
+    onDistritoList = async (req, res) => {
         let dataRecept = ((req || {}).query || {});
         let [lista] = await pool.query(`SELECT * FROM TB_DISTRITOS_UBIGEO WHERE ID_PROVINCIA ='${(dataRecept || {}).id_provincia}' AND ID_DEPARTAMENTO='${(dataRecept || {}).id_departamento}';`);
         res.json(lista)

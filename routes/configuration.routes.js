@@ -16,5 +16,7 @@ router.get('/service/lista/departamento', configurationController.onDepartametos
 router.get('/service/lista/provincia', configurationController.onProvinciasList);
 router.get('/service/lista/distrito', configurationController.onDistritoList);
 
+router.get('/service/lista/roles', configurationController.onListRoles);
+
 const configurationRoutes = router;
 export default configurationRoutes
