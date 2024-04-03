@@ -99,7 +99,7 @@ export const CreateNewUser = async (req, res) => {
   let validToken = tokenController.verificationToken(
     (headers || {}).authorization
   );
-
+    console.log(((validToken || {}).decoded || {}));
   let [nivel] = await pool.query(
     `SELECT * FROM TB_ROL_SISTEMA WHERE NOMBRE_ROL='${((validToken || {}).decoded || {}).aud
     }'`
