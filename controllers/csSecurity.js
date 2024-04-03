@@ -30,7 +30,11 @@ export const Login = async (req, res) => {
       let submenuList = [];
       submenu.filter((submenu) => {
         if ((menu || {}).ID_MENU == (submenu || {}).ID_MENU_SUBMENU) {
-          submenuList.push(submenu);
+          submenuList.push({
+            nombre_submenu: submenu.NOMBRE_SUBMENU,
+            ruta: submenu.RUTA,
+            ico: submenu.ICO
+          });
         }
       });
 
