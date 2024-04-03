@@ -53,18 +53,18 @@ class clsConfiguration {
     }
 
     onlistConfiguration = async (req, res) => {
-        let [dataServiceEmail] = await pool.query(`SELECT * FROM TB_CONFIGURATION_EMAIL;`);
+        let [dataServiceEmail] = await pool.query(`SELECT * FROM TB_CONFIGURACION_EMAIL;`);
         let [dataListEmail] = await pool.query(`SELECT * FROM TB_EMAIL_TO WHERE FK_CONFIGURATION = '${dataServiceEmail[0].ID_CONFIGURATION}';`);
         let dataParse = {
             emailService: [{
-                email: dataServiceEmail[0].USER_NAME,
+                email: dataServiceEmail[0].EMAIL,
                 key: dataServiceEmail[0].PASSWORD
             }],
             emailList: []
         };
 
         (dataListEmail || []).filter((data) => {
-            ((dataParse || {}).emailList || []).push({ email: (data || {}).EMAIL });
+            ((dataParse || {}).emailList || []).push({ email: (data || {}).EMAIL_ALERT });
         });
 
         res.json(dataParse);
@@ -72,7 +72,7 @@ class clsConfiguration {
 
     onListMenu = async (req, res) => {
         let data = ((req || {}).body || []);
-        let [dataMenuList] = await pool.query(`SELECT ID_MENU_DESC,DESCRIPTION_MENU FROM TB_ALL_MENU_DESCRIPTION;`);
+        let [dataMenuList] = await pool.query(`SELECT ID_MENU,NOMBRE_MENU FROM TB_MENU_SISTEMA;`);
 
         let response =
         {
@@ -85,7 +85,7 @@ class clsConfiguration {
     }
 
     onListPerfilUser = async (req, res) => {
-        let [dataList] = await pool.query(`SELECT * FROM TB_NIVEL_ACCESS;`);
+        let [dataList] = await pool.query(`SELECT * FROM TB_ROL_SISTEMA;`);
 
         let response =
         {
