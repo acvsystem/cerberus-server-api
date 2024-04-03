@@ -28,10 +28,10 @@ class clsConfiguration {
         let emailList = ((req || {}).body || []);
 
         (emailList || []).filter(async (email) => {
-            let [existEmail] = await pool.query(`SELECT * FROM TB_EMAIL_TO WHERE EMAIL = '${email.name}';`);
+            let [existEmail] = await pool.query(`SELECT * FROM TB_LISTA_EMAIL_ALERTA WHERE EMAIL_ALERT = '${email.name}';`);
 
             if (!existEmail.length) {
-                await pool.query(`INSERT INTO TB_EMAIL_TO(EMAIL,FK_CONFIGURATION)VALUES('${email.name}',1);`);
+                await pool.query(`INSERT INTO TB_LISTA_EMAIL_ALERTA(EMAIL_ALERT)VALUES('${email.name}');`);
             }
         });
 
@@ -42,10 +42,10 @@ class clsConfiguration {
         let emailList = ((req || {}).body || []);
 
         (emailList || []).filter(async (email) => {
-            let [existEmail] = await pool.query(`SELECT * FROM TB_EMAIL_TO WHERE EMAIL = '${email.name}';`);
+            let [existEmail] = await pool.query(`SELECT * FROM TB_LISTA_EMAIL_ALERTA WHERE EMAIL_ALERT = '${email.name}';`);
             console.log(existEmail);
             if (existEmail.length) {
-                await pool.query(`DELETE FROM TB_EMAIL_TO WHERE ID_EMAIL_TO = ${existEmail[0].ID_EMAIL_TO};`);
+                await pool.query(`DELETE FROM TB_LISTA_EMAIL_ALERTA WHERE ID_EMAIL_ALERT = ${existEmail[0].ID_EMAIL_ALERT};`);
             }
         });
 

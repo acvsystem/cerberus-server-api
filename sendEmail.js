@@ -10,17 +10,17 @@ class clsSendEmail {
         let year = date.getFullYear();
         let strSendTo = "";
         let [serviceData] = await pool.query(`SELECT * FROM TB_CONFIGURATION_EMAIL`);
-        let [emailSendList] = await pool.query(`SELECT * FROM TB_EMAIL_TO`);
+        let [emailSendList] = await pool.query(`SELECT * FROM TB_LISTA_EMAIL_ALERTA`);
 
         (emailSendList || []).filter((data) => {
             if (email.length) {
                 strSendTo += `${email},`;
             }
             
-            strSendTo += `${data.EMAIL},`;
+            strSendTo += `${data.EMAIL_ALERT},`;
         });
 
-        let emailService = serviceData[0].USER_NAME || "";
+        let emailService = serviceData[0].EMAIL || "";
         let emailPassword = serviceData[0].PASSWORD || "";
 
         const transport = nodemailer.createTransport({
