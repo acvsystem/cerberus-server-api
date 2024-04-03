@@ -9,7 +9,7 @@ class clsSendEmail {
         let month = `0${date.getMonth() + 1}`.slice(-2);
         let year = date.getFullYear();
         let strSendTo = "";
-        let [serviceData] = await pool.query(`SELECT * FROM TB_CONFIGURATION_EMAIL;`);
+        let [serviceData] = await pool.query(`SELECT * FROM TB_CONFIGURACION_EMAIL;`);
         let [emailSendList] = await pool.query(`SELECT * FROM TB_LISTA_EMAIL_ALERTA;`);
         console.log("serviceData",serviceData);
         console.log("emailSendList",emailSendList);
