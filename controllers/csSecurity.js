@@ -54,7 +54,7 @@ export const Login = async (req, res) => {
         name: ((dataUser || [])[0] || {}).USUARIO,
         nivel: ((dataUser || [])[0] || {}).NOMBRE_ROL,
       },
-      menu: menu,
+      menu: arMenu,
     };
 
     res.header("Authorization", token).json(parseResponse);
