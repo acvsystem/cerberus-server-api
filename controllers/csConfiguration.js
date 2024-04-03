@@ -19,7 +19,7 @@ class clsConfiguration {
               }
       */
         if (email.length && pass.length) {
-            await pool.query(`UPDATE TB_CONFIGURATION_EMAIL SET USER_NAME = '${email}', PASSWORD = '${pass}' WHERE ID_CONFIGURATION = 1;`);
+            await pool.query(`UPDATE TB_CONFIGURATION_EMAIL SET EMAIL = '${email}', PASSWORD = '${pass}' WHERE ID_CRD_EMAIL = 1;`);
             res.json(defaultResponse.success.default);
         }
     }
