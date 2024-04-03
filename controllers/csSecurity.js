@@ -43,6 +43,7 @@ export const Login = async (req, res) => {
           nombre_menu: (menu || {}).NOMBRE_MENU || "",
           ruta: (menu || {}).RUTA || "",
           ico: (menu || {}).ICO || "",
+          visible:false,
           submenu: submenuList || []
         }
       );
