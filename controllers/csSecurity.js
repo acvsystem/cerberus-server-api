@@ -16,20 +16,38 @@ export const Login = async (req, res) => {
   let nivelUser = ((dataUser || [])[0] || {}).ID_ROL;
   console.log(dataUser);
   if (dataUser.length > 0) {
-    const [menu] = await pool.query(`SELECT NOMBRE_MENU,RUTA,ICO FROM TB_PERMISO_SISTEMA 
-                                             INNER JOIN TB_ROL_SISTEMA ON TB_PERMISO_SISTEMA.ID_ROL_PERMISO = TB_ROL_SISTEMA.ID_ROL
-                                             INNER JOIN TB_MENU_SISTEMA ON TB_PERMISO_SISTEMA.ID_MENU_PERMISO = TB_MENU_SISTEMA.ID_MENU
+    const [menu] = await pool.query(`SELECT ID_MENU,NOMBRE_MENU,RUTA,ICO FROM TB_PERMISO_SISTEMA INNER JOIN TB_ROL_SISTEMA ON TB_PERMISO_SISTEMA.ID_ROL_PERMISO = TB_ROL_SISTEMA.ID_ROL INNER JOIN TB_MENU_SISTEMA ON TB_PERMISO_SISTEMA.ID_MENU_PERMISO = TB_MENU_SISTEMA.ID_MENU
                                              WHERE TB_PERMISO_SISTEMA.ID_ROL_PERMISO = ${nivelUser};`);
 
-    const [submenu] = await pool.query(`SELECT NOMBRE_SUBMENU FROM TB_SUBMENU_SISTEMA;`); 
-    
+    const [submenu] = await pool.query(`SELECT ID_MENU_SUBMENU,NOMBRE_SUBMENU FROM TB_SUBMENU_SISTEMA;`);
+
     let arMenu = [];
 
     console.log(menu);
     console.log(submenu);
 
+    menu.filter((menu) => {
+      let submenuList = [];
+      submenu.filter((submenu) => {
+        if ((menu || {}).ID_MENU == (submenu || {}).ID_MENU_SUBMENU) {
+          submenuList.push(submenu);
+        }
+      });
+
+      arMenu.push(
+        {
+          nombre_menu: menu.NOMBRE_MENU,
+          ruta: menu.RUTA,
+          ico: menu.ICO,
+          submenu: submenuList
+        }
+      );
+    });
+
+    console.log(arMenu);
+
     const token = tokenController.createToken(usuario, nivelUser);
-   
+
     let parseResponse = {
       auth: { token: token },
       profile: {
@@ -78,15 +96,13 @@ export const CreateNewUser = async (req, res) => {
   );
 
   let [nivel] = await pool.query(
-    `SELECT * FROM TB_NIVEL_ACCESS WHERE NM_NIVEL='${
-      ((validToken || {}).decoded || {}).aud
+    `SELECT * FROM TB_NIVEL_ACCESS WHERE NM_NIVEL='${((validToken || {}).decoded || {}).aud
     }'`
   );
 
   await pool.query(`INSERT INTO TB_LOGIN(DESC_USUARIO,PASSWORD,FK_ID_NVL_ACCESS)
-            VALUES('${newRegister.usuario}','${newRegister.password}',${
-    ((nivel || [])[0] || {}).ID_NVL_ACCESS
-  })`);
+            VALUES('${newRegister.usuario}','${newRegister.password}',${((nivel || [])[0] || {}).ID_NVL_ACCESS
+    })`);
 
   const [id_new_user] = await pool.query(
     `SELECT ID_LOGIN FROM TB_LOGIN WHERE DESC_USUARIO = '${newRegister.usuario}' AND PASSWORD = '${newRegister.password}'`
@@ -109,7 +125,7 @@ export const createAccessPostulant = async (req, res) => {
 
   if ((tokenDecode || {}).isValid) {
     let privateKey = prop.keyCrypt;
-  
+
     let option = {
       expiresIn: "10800s",
       issuer: "cerberus.server",
@@ -135,12 +151,12 @@ export const createAccessPostulant = async (req, res) => {
 
     request(options, function (error, response) {
       if (error) throw new Error(error);
-      console.log("createAccessPostulant",(((response || {}).body || {})));
+      console.log("createAccessPostulant", (((response || {}).body || {})));
       urlAccess = JSON.parse(((response || {}).body || '{}'))["shorturl"] || `http://159.65.226.239:5000/postulante/${token}`;
       res.json(urlAccess);
     });
 
-   
+
   } else {
     res.status(401).send(defaultResponse.error.default);
   }
