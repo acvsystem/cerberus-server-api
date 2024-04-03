@@ -31,19 +31,19 @@ export const Login = async (req, res) => {
       submenu.filter((submenu) => {
         if ((menu || {}).ID_MENU == (submenu || {}).ID_MENU_SUBMENU) {
           submenuList.push({
-            nombre_submenu: submenu.NOMBRE_SUBMENU,
-            ruta: submenu.RUTA,
-            ico: submenu.ICO
+            nombre_submenu: (submenu || {}).NOMBRE_SUBMENU || "",
+            ruta: (submenu || {}).RUTA || "",
+            ico: (submenu || {}).ICO || ""
           });
         }
       });
 
       arMenu.push(
         {
-          nombre_menu: menu.NOMBRE_MENU,
-          ruta: menu.RUTA,
-          ico: menu.ICO,
-          submenu: submenuList
+          nombre_menu: (menu || {}).NOMBRE_MENU || "",
+          ruta: (menu || {}).RUTA || "",
+          ico: (menu || {}).ICO || "",
+          submenu: submenuList || []
         }
       );
     });
