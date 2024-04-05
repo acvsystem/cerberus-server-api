@@ -114,6 +114,7 @@ io.on('connection', async (socket) => {
   socket.on('disconnect', async () => {
     if (codeTerminal == "SRVFACT") {
       await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET ESTATUS_CONEXION = 0 WHERE ID_ESTATUS_SERVER = 1;`);
+      await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET OLD_ESTATUS = 0 WHERE ID_ESTATUS_SERVER = 1;`);
       setTimeout(async () => {
         let [conexionList] = await pool.query(`SELECT * FROM TB_ESTATUS_SERVER_BACKUP;`);
         if (!((conexionList || [])[0] || {}).ESTATUS_CONEXION) {
@@ -148,11 +149,13 @@ io.on('connection', async (socket) => {
     if (codeTerminal == "SRVFACT") {
       console.log('SERVIDOR', codeTerminal);
       let [conexionList] = await pool.query(`SELECT * FROM TB_ESTATUS_SERVER_BACKUP;`);
-      if (!((conexionList || [])[0] || {}).ESTATUS_CONEXION) {
-        await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET ESTATUS_CONEXION = 1 WHERE ID_ESTATUS_SERVER = 1;`);
-        emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
+      await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET ESTATUS_CONEXION = 1 WHERE ID_ESTATUS_SERVER = 1;`);
+      if (!((conexionList || [])[0] || {}).OLD_ESTATUS) {
+        await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET OLD_ESTATUS = 1 WHERE ID_ESTATUS_SERVER = 1;`);
+        emailController.sendEmail('', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
           .catch(error => res.send(error));
       }
+      
     }
   }
 
