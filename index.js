@@ -114,7 +114,7 @@ io.on('connection', async (socket) => {
   socket.on('disconnect', async () => {
     if (codeTerminal == "SRVFACT") {
 
-    
+
 
       setTimeout(async () => {
         let [conexionList] = await pool.query(`SELECT * FROM TB_ESTATUS_SERVER_BACKUP;`);
@@ -150,10 +150,12 @@ io.on('connection', async (socket) => {
   } else {
     if (codeTerminal == "SRVFACT") {
       console.log('SERVIDOR', codeTerminal);
-      let [conexionList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
-      await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET ESTATUS_CONEXION = 1 WHERE ID_ESTATUS_SERVER = 1;`);
-      emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
-        .catch(error => res.send(error));
+      let [conexionList] = await pool.query(`SELECT * FROM TB_ESTATUS_SERVER_BACKUP;`);
+      if (!((conexionList || [])[0] || {}).ESTATUS_CONEXION) {
+        await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET ESTATUS_CONEXION = 1 WHERE ID_ESTATUS_SERVER = 1;`);
+        emailController.sendEmail('johnnygermano@grupodavid.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
+          .catch(error => res.send(error));
+      }
     }
   }
 
