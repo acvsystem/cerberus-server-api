@@ -114,12 +114,12 @@ io.on('connection', async (socket) => {
   socket.on('disconnect', async () => {
     if (codeTerminal == "SRVFACT") {
 
-      let [conexionList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
+      let [conexionList] = await pool.query(`SELECT * FROM TB_ESTATUS_SERVER_BACKUP;`);
       console.log(conexionList);
       console.log(((conexionList || [])[0] || {}).ESTATUS_CONEXION);
-      
+
       setTimeout(async () => {
-x
+
         if (!((conexionList || [])[0] || {}).ESTATUS_CONEXION) {
           await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET ESTATUS_CONEXION = 0 WHERE ID_ESTATUS_SERVER = 1;`);
           sessionSocket.disconnectServer();
