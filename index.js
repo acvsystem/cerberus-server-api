@@ -114,8 +114,8 @@ io.on('connection', async (socket) => {
   socket.on('disconnect', async () => {
     if (codeTerminal == "SRVFACT") {
       await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET ESTATUS_CONEXION = 0 WHERE ID_ESTATUS_SERVER = 1;`);
-      await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET OLD_ESTATUS = 0 WHERE ID_ESTATUS_SERVER = 1;`);
       setTimeout(async () => {
+        await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET OLD_ESTATUS = 0 WHERE ID_ESTATUS_SERVER = 1;`);
         let [conexionList] = await pool.query(`SELECT * FROM TB_ESTATUS_SERVER_BACKUP;`);
         if (!((conexionList || [])[0] || {}).ESTATUS_CONEXION) {
           sessionSocket.disconnectServer();
