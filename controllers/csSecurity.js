@@ -96,11 +96,11 @@ export const createMenuProfile = async (req, res) => {
 export const CreateNewUser = async (req, res) => {
   let newRegister = (req || {}).body || {};
   let headers = (req || {}).headers;
-  let validToken = tokenController.verificationToken(
+  let validToken = await tokenController.verificationToken(
     (headers || {}).authorization
   );
-    console.log(((validToken || {}).decoded || {}).aud);
-  let [nivel] = await pool.query(
+    console.log(validToken);
+  /*let [nivel] = await pool.query(
     `SELECT * FROM TB_ROL_SISTEMA WHERE NOMBRE_ROL='${((validToken || {}).decoded || {}).aud
     }'`
   );
@@ -111,7 +111,7 @@ export const CreateNewUser = async (req, res) => {
 
   const [id_new_user] = await pool.query(
     `SELECT ID_LOGIN FROM TB_USUARIO WHERE USUARIO = '${newRegister.usuario}' AND PASSWORD = '${newRegister.password}'`
-  );
+  );*/
 
   if (id_new_user.length) {
     res.json(defaultResponse.success.default);
