@@ -72,14 +72,13 @@ class clsConfiguration {
 
     onListMenu = async (req, res) => {
         let data = ((req || {}).body || []);
-        let [dataMenuList] = await pool.query(`SELECT ID_MENU,NOMBRE_MENU FROM TB_MENU_SISTEMA;`);
-
+        let [dataMenuList] = await pool.query(`SELECT ID_MENU,NOMBRE_MENU,RUTA,ICO FROM TB_MENU_SISTEMA;`);
+        
         let response =
         {
             data: dataMenuList || [],
             status: defaultResponse.success.default
         };
-
 
         res.json(response);
     }
