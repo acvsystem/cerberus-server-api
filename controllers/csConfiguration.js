@@ -126,6 +126,7 @@ class clsConfiguration {
         (dataList || []).filter((rol) => {
             (rolesList || []).push(
                 {
+                    id_rol: (rol || {}).ID_ROL || 0,
                     nom_rol: (rol || {}).NOMBRE_ROL || ""
                 }
             );
