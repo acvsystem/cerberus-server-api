@@ -73,7 +73,7 @@ class clsConfiguration {
     onListMenu = async (req, res) => {
         let data = ((req || {}).body || []);
         let [dataMenuList] = await pool.query(`SELECT ID_MENU,NOMBRE_MENU,RUTA,ICO FROM TB_MENU_SISTEMA;`);
-        
+
         let response =
         {
             data: dataMenuList || [],
@@ -85,8 +85,20 @@ class clsConfiguration {
 
     onRegitrarMenu = async (req, res) => {
         let data = ((req || {}).body || []);
-        let [dataMenuList] = await pool.query(`INSERT INTO TB_MENU_SISTEMA(NOMBRE_MENU,RUTA,ICO)VALUES('${data.menu}','${data.ruta}','${data.ico}');`);
-        
+        await pool.query(`INSERT INTO TB_MENU_SISTEMA(NOMBRE_MENU,RUTA,ICO)VALUES('${data.menu}','${data.ruta}','${data.ico}');`);
+
+        let response =
+        {
+            status: defaultResponse.success.default
+        };
+
+        res.json(response);
+    }
+
+    onDeleteMenu = async (req, res) => {
+        let data = ((req || {}).body || []);
+        await pool.query(`DELETE FROM TB_MENU_SISTEMA WHERE ID_MENU = ´${data.id}´;`);
+
         let response =
         {
             status: defaultResponse.success.default
