@@ -9,6 +9,7 @@ router.get('/service/email/sendList', configurationController.onlistConfiguratio
 router.post('/service/email/sendTest', configurationController.sendTestEmail);
 router.post('/service/email/register', configurationController.sendLinkRegister);
 router.get('/service/lista/menu', configurationController.onListMenu);
+router.post('/service/registrar/menu', configurationController.onRegitrarMenu);
 router.post('/service/lista/menu/user', configurationController.onListMenuUser);
 router.get('/service/lista/perfil/user', configurationController.onListPerfilUser);
 

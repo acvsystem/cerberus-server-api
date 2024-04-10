@@ -83,6 +83,18 @@ class clsConfiguration {
         res.json(response);
     }
 
+    onRegitrarMenu = async (req, res) => {
+        let data = ((req || {}).body || []);
+        let [dataMenuList] = await pool.query(`INSERT INTO TB_MENU_SISTEMA(NOMBRE_MENU,RUTA,ICO)VALUES('${data.menu}','${data.ruta}','${data.ico}');`);
+        
+        let response =
+        {
+            status: defaultResponse.success.default
+        };
+
+        res.json(response);
+    }
+
     onListPerfilUser = async (req, res) => {
         let [dataList] = await pool.query(`SELECT * FROM TB_ROL_SISTEMA;`);
 
