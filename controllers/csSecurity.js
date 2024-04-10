@@ -43,7 +43,7 @@ export const Login = async (req, res) => {
           nombre_menu: (menu || {}).NOMBRE_MENU || "",
           ruta: (menu || {}).RUTA || "",
           ico: (menu || {}).ICO || "",
-          visible:false,
+          visible: false,
           submenu: submenuList || []
         }
       );
@@ -77,14 +77,12 @@ export const createMenuProfile = async (req, res) => {
   noOptionList = (request || {}).noOption || [];
   menuUser = (request || {}).menu || [];
 
-  await pool.query(
-    `DELETE FROM TB_MENU_SISTEMA WHERE FK_ID_NVL_ACCESS = ${idProfile};`
-  );
+  await pool.query(`DELETE FROM TB_PERMISO_SISTEMA WHERE ID_PERMISO_SISTEMA = ${idProfile};`);
 
   if (menuUser.length) {
     await menuUser.filter(async (op) => {
       await pool.query(
-        `INSERT INTO TB_MENU_SISTEMA(FK_ID_MENU_DESC,FK_ID_NVL_ACCESS)VALUES(${op},${idProfile});`
+        `INSERT INTO TB_PERMISO_SISTEMA(ID_ROL_PERMISO,ID_MENU_PERMISO)VALUES(${idProfile},${op});`
       );
     });
   }
@@ -99,7 +97,7 @@ export const CreateNewUser = async (req, res) => {
   let validToken = await tokenController.verificationToken(
     (headers || {}).authorization
   );
-    console.log(validToken);
+  console.log(validToken);
   let [nivel] = await pool.query(
     `SELECT * FROM TB_ROL_SISTEMA WHERE NOMBRE_ROL='${((validToken || {}).decoded || {}).aud
     }'`
