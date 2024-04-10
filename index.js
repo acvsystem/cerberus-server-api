@@ -120,7 +120,7 @@ io.on('connection', async (socket) => {
           await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET OLD_ESTATUS = 0 WHERE ID_ESTATUS_SERVER = 1;`);
           sessionSocket.disconnectServer();
         }
-      }, 180000);
+      }, 300000);
 
       socket.broadcast.emit("status:serverSUNAT:send", { 'code': 'SRVFACT', 'online': 'false' });
     } else if (isIcg != 'true') {
