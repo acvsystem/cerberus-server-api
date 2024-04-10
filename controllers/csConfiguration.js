@@ -97,7 +97,7 @@ class clsConfiguration {
 
     onDeleteMenu = async (req, res) => {
         let data = ((req || {}).body || []);
-        await pool.query(`DELETE FROM TB_MENU_SISTEMA WHERE ID_MENU = ´${data.id}´;`);
+        await pool.query(`DELETE FROM TB_MENU_SISTEMA WHERE ID_MENU = ${data.id};`);
 
         let response =
         {
