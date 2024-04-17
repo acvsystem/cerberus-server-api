@@ -77,7 +77,7 @@ export const createMenuProfile = async (req, res) => {
   noOptionList = (request || {}).noOption || [];
   menuUser = (request || {}).menu || [];
 
-  await pool.query(`DELETE FROM TB_PERMISO_SISTEMA WHERE ID_PERMISO_SISTEMA = ${idProfile};`);
+  await pool.query(`DELETE FROM TB_PERMISO_SISTEMA WHERE ID_ROL_PERMISO = ${idProfile};`);
 
   if (menuUser.length) {
     await menuUser.filter(async (op) => {
