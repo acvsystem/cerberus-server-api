@@ -146,7 +146,7 @@ class clsConfiguration {
         let data = ((req || {}).body || []);
         let [dataMenuList] = await pool.query(`SELECT ID_MENU,NOMBRE_MENU FROM TB_PERMISO_SISTEMA 
         INNER JOIN TB_MENU_SISTEMA ON TB_PERMISO_SISTEMA.ID_MENU_PERMISO = TB_MENU_SISTEMA.ID_MENU
-        WHERE ID_ROL_PERMISO = ${data.ID_NVL_ACCESS};`);
+        WHERE ID_ROL_PERMISO = ${data.ID_NVL_ACCESS} GROUP BY ID_MENU;`);
 
         let response =
         {
