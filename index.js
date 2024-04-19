@@ -77,7 +77,7 @@ const task_ftp_backup = cron.schedule("00 09 * * *", async () => {
   client.ftp.verbose = true
   try {
     await client.access({
-      host: "190.117.53.199",
+      host: "38.253.182.51",
       user: "metasFTP",
       password: "METAS20600516885"
     })
