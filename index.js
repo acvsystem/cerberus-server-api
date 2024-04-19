@@ -631,6 +631,11 @@ console.log(dataEmpServidor);
     io.emit("searchAsistencia", confConsulting);
   });
 
+  socket.on("consultingClient", (request) => {
+    let dataRequest = (request || [])[0] || {};    
+    io.emit("resClient", dataRequest);
+  });
+
   socket.on("update:file:FrontAgent", (body) => {
     let configurationList = {
       socket: (socket || {}).id,
