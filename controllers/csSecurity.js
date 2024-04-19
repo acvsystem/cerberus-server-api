@@ -14,7 +14,7 @@ export const Login = async (req, res) => {
                       WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}'`);
 
   let nivelUser = ((dataUser || [])[0] || {}).ID_ROL;
-  console.log(dataUser);
+
   if (dataUser.length > 0) {
     const [menu] = await pool.query(`SELECT ID_MENU,NOMBRE_MENU,RUTA,ICO FROM TB_PERMISO_SISTEMA INNER JOIN TB_ROL_SISTEMA ON TB_PERMISO_SISTEMA.ID_ROL_PERMISO = TB_ROL_SISTEMA.ID_ROL INNER JOIN TB_MENU_SISTEMA ON TB_PERMISO_SISTEMA.ID_MENU_PERMISO = TB_MENU_SISTEMA.ID_MENU
                                              WHERE TB_PERMISO_SISTEMA.ID_ROL_PERMISO = ${nivelUser};`);
@@ -22,9 +22,6 @@ export const Login = async (req, res) => {
     const [submenu] = await pool.query(`SELECT ID_MENU_SUBMENU,NOMBRE_SUBMENU FROM TB_SUBMENU_SISTEMA;`);
 
     let arMenu = [];
-
-    console.log(menu);
-    console.log(submenu);
 
     menu.filter((menu) => {
       let submenuList = [];

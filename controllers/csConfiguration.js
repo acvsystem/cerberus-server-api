@@ -10,14 +10,7 @@ class clsConfiguration {
     saveServiceEmail = async (req, res) => {
         let email = ((req || {}).body || {}).usuario || "";
         let pass = ((req || {}).body || {}).password || "";
-
-        // let [data] = await pool.query(`SELECT * FROM TB_CONFIGURATION_EMAIL WHERE USER_NAME = '${email}'`);
-
-        /*
-              if (email.length && pass.length && !data.length) {
-                  await pool.query(`INSERT INTO TB_CONFIGURATION_EMAIL(USER_NAME,PASSWORD)VALUES('${email}','${pass}');`);
-              }
-      */
+        
         if (email.length && pass.length) {
             await pool.query(`UPDATE TB_CONFIGURATION_EMAIL SET EMAIL = '${email}', PASSWORD = '${pass}' WHERE ID_CRD_EMAIL = 1;`);
             res.json(defaultResponse.success.default);

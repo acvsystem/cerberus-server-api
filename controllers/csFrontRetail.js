@@ -1,10 +1,10 @@
 import { pool } from '../conections/conexMysql.js';
 
 class clsFrontRetail {
-
+/* DATA SQL SERVER */
     onAgenteConfigList = async (req, res) => {
         let data = ((req || {}).body || []);
-        let [configuration] = await pool.query(`SELECT * FROM TB_CONFIGURATION_CONEX_AGENTE WHERE MAC='${(data || {}).mac}';`);
+        let [configuration] = await pool.query(`SELECT * FROM TB_PARAMENTROS_TIENDA WHERE MAC='${(data || {}).mac}';`);
         console.log(configuration);
         res.json(configuration)
     }
