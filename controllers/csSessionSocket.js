@@ -26,6 +26,7 @@ class clsSessionSocket {
     async connect(codigo) {
         let listSession = [];
         if (codigo) {
+            console.log(codigo);
             let isExistTerminal = await this.onEvalueIsExist(codigo);
             if (!isExistTerminal.length) {
                 await this.onNewTerminal(codigo);

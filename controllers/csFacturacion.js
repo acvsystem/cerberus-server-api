@@ -41,7 +41,7 @@ class clsFacturacion {
         var serverData = JSON.parse((dataVerify || {}).serverData);
         var frontData = JSON.parse((dataVerify || {}).frontData);
         var codigoFront = (dataVerify || {}).codigoFront;
-        console.log(codigoFront, dataNoFound);
+        //console.log(codigoFront, dataNoFound);
         
         (serverData || []).filter((data) => {
             var cpParse = (data || {}).cmpNumero.split('-');
