@@ -13,11 +13,12 @@ export const Login = async (req, res) => {
     await pool.query(`SELECT USUARIO,EMAIL,ID_ROL,NOMBRE_ROL,ACTIVO FROM TB_USUARIO INNER JOIN TB_ROL_SISTEMA ON TB_USUARIO.ID_ROL_USUARIO = TB_ROL_SISTEMA.ID_ROL
                       WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}'`);
 
-  let nivelUser = ((dataUser || [])[0] || {}).ID_ROL;
+  let idNivel = ((dataUser || [])[0] || {}).ID_ROL;
+  let nivelUser = ((dataUser || [])[0] || {}).NOMBRE_ROL;
 
   if (dataUser.length > 0) {
     const [menu] = await pool.query(`SELECT ID_MENU,NOMBRE_MENU,RUTA,ICO FROM TB_PERMISO_SISTEMA INNER JOIN TB_ROL_SISTEMA ON TB_PERMISO_SISTEMA.ID_ROL_PERMISO = TB_ROL_SISTEMA.ID_ROL INNER JOIN TB_MENU_SISTEMA ON TB_PERMISO_SISTEMA.ID_MENU_PERMISO = TB_MENU_SISTEMA.ID_MENU
-                                             WHERE TB_PERMISO_SISTEMA.ID_ROL_PERMISO = ${nivelUser};`);
+                                             WHERE TB_PERMISO_SISTEMA.ID_ROL_PERMISO = ${idNivel};`);
 
     const [submenu] = await pool.query(`SELECT ID_MENU_SUBMENU,NOMBRE_SUBMENU FROM TB_SUBMENU_SISTEMA;`);
 
