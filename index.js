@@ -603,12 +603,21 @@ console.log(dataEmpServidor);
 
   //EMITE DESDE EL FRONT
   socket.on("comunicationFront", (data) => {
-    console.log("comunicationFront",socket.decoded);
-    socket.broadcast.emit("consultingToFront", "ready");
     if (socket.decoded.aud == "ADMINISTRADOR") {
       socket.broadcast.emit("consultingToFront", "ready");
     }
   });
+
+  socket.on("consultingClient", (request) => {
+    if (socket.decoded.aud == "ADMINISTRADOR") {
+      let dataRequest = (request || [])[0] || {};  
+      console.log(dataRequest);
+      socket.broadcast.emit("resClient", "ready");
+      io.emit("resClient", dataRequest);
+    }
+    
+  })
+
 
   socket.on("emitRRHH", (request) => {
     let dataRequest = (request || [])[0] || {};
@@ -631,11 +640,6 @@ console.log(dataEmpServidor);
     ];
     
     io.emit("searchAsistencia", confConsulting);
-  });
-
-  socket.on("consultingClient", (request) => {
-    let dataRequest = (request || [])[0] || {};    
-    io.emit("resClient", dataRequest);
   });
 
   socket.on("update:file:FrontAgent", (body) => {
