@@ -609,7 +609,9 @@ console.log(dataEmpServidor);
   });
 
   socket.on("consultingClient", (request) => {
-    console.log("consultingClient",request);
+    console.log(socket.decoded.aud);
+    socket.broadcast.emit("resClient", "ready");
+    io.emit("resClient", dataRequest);
     if (socket.decoded.aud == "ADMINISTRADOR") {
       let dataRequest = (request || [])[0] || {};  
       console.log(dataRequest);
