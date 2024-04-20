@@ -603,7 +603,7 @@ console.log(dataEmpServidor);
 
   //EMITE DESDE EL FRONT
   socket.on("comunicationFront", (data) => {
-    console.log(socket.decoded.aud);
+    console.log("comunicationFront",socket.decoded.aud);
     socket.broadcast.emit("consultingToFront", "ready");
     if (socket.decoded.aud == "ADMINISTRADOR") {
       socket.broadcast.emit("consultingToFront", "ready");
