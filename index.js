@@ -609,17 +609,15 @@ console.log(dataEmpServidor);
   });
 
   socket.on("consultingClient", (request) => {
-    console.log(socket.decoded.aud);
-    socket.broadcast.emit("resClient", "ready");
-    io.emit("resClient", dataRequest);
     if (socket.decoded.aud == "ADMINISTRADOR") {
-      let dataRequest = (request || [])[0] || {};  
-      console.log(dataRequest);
-      socket.broadcast.emit("resClient", "ready");
-      io.emit("resClient", dataRequest);
+      socket.broadcast.emit("consultingToClient", "ready");
     }
     
   })
+
+  socket.on("resClient", (data) => {
+    socket.broadcast.emit("sendDataClient", data);
+  });
 
 
   socket.on("emitRRHH", (request) => {
