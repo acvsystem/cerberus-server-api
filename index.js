@@ -609,6 +609,7 @@ console.log(dataEmpServidor);
   });
 
   socket.on("consultingClient", (request) => {
+    console.log("consultingClient",request);
     if (socket.decoded.aud == "ADMINISTRADOR") {
       let dataRequest = (request || [])[0] || {};  
       console.log(dataRequest);
