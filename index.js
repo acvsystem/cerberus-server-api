@@ -87,7 +87,7 @@ const task_ftp_backup = cron.schedule("00 09 * * *", async () => {
     var bodyHTML = templateHtmlController.errorFTP(err);
 
     emailController.sendEmail(`itperu@grupodavid.com`, `CONEXION FTP BACKUP`, bodyHTML, null, null, 'ALERTA FTP SERVER').then((response) => {
-        console.log(response);
+      console.log(response);
     }).catch(error => console.log(error));
   }
   client.close()
@@ -213,8 +213,12 @@ io.use(function (socket, next) {
     console.log(configurationList);
     let socketID = (configurationList || {}).configuracion[0].socket;
     let data = (configurationList || {}).data;
-    console.log(configurationList);
-    io.to(`${socketID}`).emit("appResNetScan", data);
+    let networkList = [];
+    (data || []).filter((net) => {
+      networkList.push(net.addresses[0].ipv4);
+    });
+
+    io.to(`${socketID}`).emit("appResNetScan", networkList);
   });
 
 
@@ -231,18 +235,18 @@ io.use(function (socket, next) {
 
     let listDocumentEmp = [];
     await empleadoList.filter((doc) => {
-      listDocumentEmp.push(((doc ||{}).NRO_DOC).trim());
+      listDocumentEmp.push(((doc || {}).NRO_DOC).trim());
     });
-console.log(dataEmpServidor);
+    console.log(dataEmpServidor);
     await (dataEmpServidor || []).filter(async (empSrv, i) => {
-      
-      if((empSrv || {}).STATUS == "VIG") {
-          let existEMP = listDocumentEmp.indexOf(((empSrv ||{}).NUMDOC).trim());
 
-          if (existEMP == -1) {
-  
-            dataEmployee.push(empSrv);
-            await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
+      if ((empSrv || {}).STATUS == "VIG") {
+        let existEMP = listDocumentEmp.indexOf(((empSrv || {}).NUMDOC).trim());
+
+        if (existEMP == -1) {
+
+          dataEmployee.push(empSrv);
+          await actionBDController.execQuery(`INSERT INTO TB_EMPLEADO(
                                             CODIGO_ICG,
                                             CODIGO_EJB,
                                             AP_PATERNO,
@@ -260,30 +264,30 @@ console.log(dataEmpServidor);
                                             SALARIO_BASE,
                                             FEC_INGRESO)VALUES(
                                                 "",
-                                                '${((empSrv ||{}).CODEJB || "").trim()}',
-                                                '${((empSrv ||{}).APEPAT || "")}',
-                                                '${((empSrv ||{}).APEMAT || "")}',
-                                                '${((empSrv ||{}).NOMBRE || "")}',
+                                                '${((empSrv || {}).CODEJB || "").trim()}',
+                                                '${((empSrv || {}).APEPAT || "")}',
+                                                '${((empSrv || {}).APEMAT || "")}',
+                                                '${((empSrv || {}).NOMBRE || "")}',
                                                 'ACEPTADO',
                                                 '',
                                                 '',
-                                                '${((empSrv ||{}).NUMDOC || "").trim()}',
-                                                '${((empSrv ||{}).TELEFO || "").trim()}',
-                                                '${((empSrv ||{}).EMAIL || "").trim()}',
-                                                '${((empSrv ||{}).FECNAC || "").trim()}',
+                                                '${((empSrv || {}).NUMDOC || "").trim()}',
+                                                '${((empSrv || {}).TELEFO || "").trim()}',
+                                                '${((empSrv || {}).EMAIL || "").trim()}',
+                                                '${((empSrv || {}).FECNAC || "").trim()}',
                                                 '',
                                                 '',
                                                 0.0,
                                                 ""
                                             );`);
-          }
+        }
       } else {
         let existEMP = listDocumentEmp.indexOf(((empSrv || {}).NUMDOC).trim());
-        if(existEMP){
+        if (existEMP) {
           await actionBDController.execQuery(`DELETE FROM TB_EMPLEADO WHERE NRO_DOC = '${((empSrv || {}).NUMDOC || "").trim()}';`);
         }
       }
-      
+
     });
 
     if (dataEmpServidor.length) {
@@ -334,17 +338,17 @@ console.log(dataEmpServidor);
 
     (dataAsistensList || []).filter(async (asits) => {
       if ((listDocumentEmp || []).indexOf(asits.nroDocumento) == -1) {
-        listNMFl.push({nom: (asits || {}).nombreCompleto, dni: (asits || {}).nroDocumento});
+        listNMFl.push({ nom: (asits || {}).nombreCompleto, dni: (asits || {}).nroDocumento });
       }
     });
 
 
     await (originEmpleadoList || []).filter((emp) => {
       return (dataAsistensList || []).filter(async (asits) => {
-        
-        if ((emp || {}).NRO_DOC == (asits ||{}).nroDocumento) {
+
+        if ((emp || {}).NRO_DOC == (asits || {}).nroDocumento) {
           let serie = (asits || {}).caja.slice(0, 2);
-          
+
           c_costo = new Promise((resolve, reject) => {
             (tiendasList || {}).filter((tienda) => {
               if ((tienda || {}).code == serie && serie != "7A") {
@@ -365,9 +369,8 @@ console.log(dataEmpServidor);
 
             if ((emp || {}).TIENDA_ASIGNADO != (res || {}).name) {
               await actionBDController.execQuery(
-                `UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO = '${
-                  (res || {}).name
-                }' WHERE NRO_DOC = '${((asits ||{}).nroDocumento || "").trim()}';`
+                `UPDATE TB_EMPLEADO SET TIENDA_ASIGNADO = '${(res || {}).name
+                }' WHERE NRO_DOC = '${((asits || {}).nroDocumento || "").trim()}';`
               );
               return;
             }
@@ -418,9 +421,8 @@ console.log(dataEmpServidor);
       let hFaltante = 0;
 
       (dataAsistensList || []).filter(async (asits) => {
-        let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${
-          (emp || {}).AP_MATERNO
-        } ${(emp || {}).NOM_EMPLEADO}`;
+        let nombreEmpleado = `${(emp || {}).AP_PATERNO} ${(emp || {}).AP_MATERNO
+          } ${(emp || {}).NOM_EMPLEADO}`;
 
         if (emp.NRO_DOC == asits.nroDocumento) {
           let index = -1;
@@ -580,8 +582,8 @@ console.log(dataEmpServidor);
 
     socket.to(`${socketID}`).emit("sendControlAsistencia", reportData);
   });
-  
-  
+
+
 
   //EMITE DESDE EL SERVIDOR
   socket.on("verifyDocument", async (resData) => {
@@ -613,7 +615,7 @@ console.log(dataEmpServidor);
     if (socket.decoded.aud == "ADMINISTRADOR") {
       socket.broadcast.emit("consultingToClient", "ready");
     }
-    
+
   })
 
   socket.on("resClient", (data) => {
@@ -640,7 +642,7 @@ console.log(dataEmpServidor);
         dateList: dateList,
       },
     ];
-    
+
     io.emit("searchAsistencia", confConsulting);
   });
 
@@ -797,8 +799,7 @@ console.log(dataEmpServidor);
       (arrDocumento || {}).CODIGO_ERROR_SUNAT == 2022
     ) {
       let [verifyDocument] = await pool.query(
-        `SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = ${
-          (arrDocumento || {}).CODIGO_DOCUMENTO
+        `SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO
         };`
       );
       let isEmailEnvio =
@@ -811,10 +812,9 @@ console.log(dataEmpServidor);
                                 '${(arrDocumento || {}).NRO_CORRELATIVO}',
                                 '${(arrDocumento || {}).NOM_ADQUIRIENTE}',
                                 '${(arrDocumento || {}).NRO_DOCUMENTO}',
-                                '${
-                                  (arrDocumento || {})
-                                    .TIPO_DOCUMENTO_ADQUIRIENTE
-                                }',
+                                '${(arrDocumento || {})
+            .TIPO_DOCUMENTO_ADQUIRIENTE
+          }',
                                 '${(arrDocumento || {}).OBSERVACION}',
                                 '${(arrDocumento || {}).ESTADO_SUNAT}',
                                 '${(arrDocumento || {}).ESTADO_COMPROBANTE}',
@@ -825,30 +825,22 @@ console.log(dataEmpServidor);
         res.send("RECEPCION EXITOSA..!!");
       } else {
         await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET
-                                NOM_ADQUIRIENTE ='${
-                                  (arrDocumento || {}).NOM_ADQUIRIENTE
-                                }',
-                                NRO_DOCUMENTO = '${
-                                  (arrDocumento || {}).NRO_DOCUMENTO
-                                }',
-                                TIPO_DOCUMENTO_ADQUIRIENTE = '${
-                                  (arrDocumento || {})
-                                    .TIPO_DOCUMENTO_ADQUIRIENTE
-                                }',
-                                OBSERVACION = '${
-                                  (arrDocumento || {}).OBSERVACION
-                                }',
-                                ESTADO_SUNAT = '${
-                                  (arrDocumento || {}).ESTADO_SUNAT
-                                }',
-                                ESTADO_COMPROBANTE = '${
-                                  (arrDocumento || {}).ESTADO_COMPROBANTE
-                                }',
-                                CODIGO_ERROR_SUNAT = '${
-                                  (arrDocumento || {}).CODIGO_ERROR_SUNAT
-                                }' WHERE CODIGO_DOCUMENTO = ${
-          (arrDocumento || {}).CODIGO_DOCUMENTO
-        };`);
+                                NOM_ADQUIRIENTE ='${(arrDocumento || {}).NOM_ADQUIRIENTE
+          }',
+                                NRO_DOCUMENTO = '${(arrDocumento || {}).NRO_DOCUMENTO
+          }',
+                                TIPO_DOCUMENTO_ADQUIRIENTE = '${(arrDocumento || {})
+            .TIPO_DOCUMENTO_ADQUIRIENTE
+          }',
+                                OBSERVACION = '${(arrDocumento || {}).OBSERVACION
+          }',
+                                ESTADO_SUNAT = '${(arrDocumento || {}).ESTADO_SUNAT
+          }',
+                                ESTADO_COMPROBANTE = '${(arrDocumento || {}).ESTADO_COMPROBANTE
+          }',
+                                CODIGO_ERROR_SUNAT = '${(arrDocumento || {}).CODIGO_ERROR_SUNAT
+          }' WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO
+          };`);
         res.send("RECEPCION EXITOSA..!!");
       }
 
@@ -883,8 +875,7 @@ console.log(dataEmpServidor);
         console.log("sunat:tienda", selectedLocal);
 
         await pool.query(
-          `UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET ENVIO_EMAIL ='true' WHERE CODIGO_DOCUMENTO = ${
-            (arrDocumento || {}).CODIGO_DOCUMENTO
+          `UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET ENVIO_EMAIL ='true' WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO
           };`
         );
 
