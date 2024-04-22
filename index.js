@@ -215,7 +215,7 @@ io.use(function (socket, next) {
     let data = JSON.parse((configurationList || {}).data);
     let networkList = [];
     (data || []).filter((net) => {
-      console.log(net);
+      networkList.push(net.addresses);
     });
 
     io.to(`${socketID}`).emit("appResNetScan", networkList);
