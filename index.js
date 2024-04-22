@@ -210,12 +210,12 @@ io.use(function (socket, next) {
   });
 
   socket.on("resNetScan", (configurationList) => {
-    console.log(configurationList);
+    
     let socketID = (configurationList || {}).configuracion[0].socket;
     let data = JSON.parse((configurationList || {}).data);
     let networkList = [];
     (data || []).filter((net) => {
-      networkList.push(net.addresses[0].ipv4);
+      console.log(net);
     });
 
     io.to(`${socketID}`).emit("appResNetScan", networkList);
