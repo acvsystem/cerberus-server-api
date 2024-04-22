@@ -212,7 +212,7 @@ io.use(function (socket, next) {
   socket.on("resNetScan", (configurationList) => {
     console.log(configurationList);
     let socketID = (configurationList || {}).configuracion[0].socket;
-    let data = (configurationList || {}).data;
+    let data = JSON.parse((configurationList || {}).data);
     let networkList = [];
     (data || []).filter((net) => {
       networkList.push(net.addresses[0].ipv4);
@@ -220,8 +220,6 @@ io.use(function (socket, next) {
 
     io.to(`${socketID}`).emit("appResNetScan", networkList);
   });
-
-
 
   socket.on("updReceptEmpleados", async (response) => {
     let configurationList = ((response || {}).configuration || {})[0] || {};
