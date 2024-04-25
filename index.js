@@ -109,7 +109,7 @@ const task_3 = cron.schedule("00 11 * * *", () => {
   emitCleanClientNull();
 });
 
-emitCleanClientNull();
+emitCleanClientNull().start();
 
 task_1.start();
 task_2.start();
