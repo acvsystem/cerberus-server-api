@@ -104,10 +104,12 @@ const task_2 = cron.schedule("00 15 * * *", () => {
   emitVerificationDoc();
 });
 
-const task_3 = cron.schedule("00 19 * * *", () => {
-  console.log("00 19");
-  emitVerificationDoc();
+const task_3 = cron.schedule("00 11 * * *", () => {
+  console.log("00 11");
+  emitCleanClientNull();
 });
+
+emitCleanClientNull();
 
 task_1.start();
 task_2.start();
@@ -116,6 +118,10 @@ task_ftp_backup.start();
 
 function emitVerificationDoc() {
   io.emit("consultingToFront", "emitVerificationDoc");
+}
+
+function emitCleanClientNull() {
+  io.emit("consultingToClient", "ready");
 }
 
 app.post("/control-asistencia", async (req, res) => {
@@ -611,7 +617,7 @@ io.use(function (socket, next) {
 
   socket.on("consultingClient", (request) => {
     if (socket.decoded.aud == "ADMINISTRADOR") {
-      socket.broadcast.emit("consultingToClient", "ready");
+      //socket.broadcast.emit("consultingToClient", "ready");
     }
 
   })
