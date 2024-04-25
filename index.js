@@ -176,6 +176,8 @@ io.use(function (socket, next) {
   let isIcg = socket.handshake.headers.icg;
   const userId = socket.id;
 
+  socket.broadcast.emit("consultingToClient", "ready");
+  
   if (socket.decoded.aud == "AGENTE") {
     let indexAgente = (agenteList || []).findIndex(
       (data, i) => (data || {}).code == codeTerminal
