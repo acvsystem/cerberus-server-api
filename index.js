@@ -109,7 +109,7 @@ const task_3 = cron.schedule("00 11 * * *", () => {
   emitCleanClientNull();
 });
 
-emitCleanClientNull().start();
+emitCleanClientNull();
 
 task_1.start();
 task_2.start();
@@ -121,6 +121,7 @@ function emitVerificationDoc() {
 }
 
 function emitCleanClientNull() {
+  print('emitCleanClientNull')
   io.emit("consultingToClient", "ready");
 }
 
