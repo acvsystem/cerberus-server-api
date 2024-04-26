@@ -96,9 +96,29 @@ io.on('connection', async (socket) => {
 
   });
 
+  socket.on('resClient', (data) => {
+    console.log(data);
+    let response = JSON.parse(data);
+    let body = [
+      {
+        code: codeTerminal,
+        clientCant: response[0]['clientCant']
+      }
+    ];
+
+    socket.to(`${listClient.id}`).emit("sendDataClient", body);
+
+  });
+  
+
   socket.on('emitTransaction', (data) => {
     console.log('emitTransaction');
     socket.broadcast.emit("searchTransaction", 'ready');
+  });
+
+  socket.on('emitCantCliente', (data) => {
+    console.log('emitTransaction');
+    socket.broadcast.emit("searchCantCliente", 'ready');
   });
 
 
