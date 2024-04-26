@@ -127,12 +127,10 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("consultingToFront", 'ready');
   });
 
-  socket.on('cleanClient', (data) => {
+  socket.on('emitCleanClient', (data) => {
     console.log('cleanClient');
     socket.broadcast.emit("limpiarCliente", 'ready');
   });
-
-  
 
   socket.on('conexion:serverICG', (data) => {
     socket.broadcast.emit("conexion:serverICG:send", data);
