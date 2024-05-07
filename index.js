@@ -97,7 +97,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('resClient', (data) => {
-    console.log(data);
+    console.log('resClient',data);
     let response = JSON.parse(data);
     let body = [
       {
