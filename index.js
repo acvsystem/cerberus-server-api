@@ -116,8 +116,8 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("searchTransaction", 'ready');
   });
 
-  socket.on('emitCantCliente', (data) => {
-    console.log('emitTransaction');
+  socket.on('cleanClient', (data) => {
+    console.log('cleanClient');
     socket.broadcast.emit("searchCantCliente", 'ready');
   });
 
