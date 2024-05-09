@@ -122,7 +122,6 @@ function emitVerificationDoc() {
 }
 
 function emitCleanClientNull() {
-  print('emitCleanClientNull')
   io.emit("consultingToClient", "ready");
 }
 
