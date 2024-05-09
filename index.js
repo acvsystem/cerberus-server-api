@@ -96,9 +96,16 @@ io.on('connection', async (socket) => {
 
   });
 
-  socket.on('resClient', (data) => {
-    console.log('resClient',data);
+  socket.on('resClient', async (data) => {
+    console.log('resClient', data);
     let response = JSON.parse(data);
+    let [tiendaExist] = await pool.query(`SELECT * FROM TB_CLIENTES_BLANCO WHERE SERIE_TIENDA = ´${codeTerminal}´;`);
+    if ((tiendaExist || []).length) {
+      await pool.query(`UPDATE TB_CLIENTES_BLANCO SET NUMERO_CLIENTES = ´${response[0]['clientCant']}´ WHERE SERIE_TIENDA = ´${codeTerminal}´);`);
+    } else {
+      await pool.query(`INSERT INTO TB_CLIENTES_BLANCO(SERIE_TIENDA,NUMERO_CLIENTES)VALUES(´${codeTerminal}´,´${response[0]['clientCant']}´);`);
+    }
+
     let body = [
       {
         code: codeTerminal,
@@ -109,7 +116,7 @@ io.on('connection', async (socket) => {
     socket.to(`${listClient.id}`).emit("sendDataClient", body);
 
   });
-  
+
 
   socket.on('emitTransaction', (data) => {
     console.log('emitTransaction');
@@ -180,7 +187,7 @@ io.on('connection', async (socket) => {
           .catch(error => res.send(error));
       }
       await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET OLD_ESTATUS = 1 WHERE ID_ESTATUS_SERVER = 1;`);
-      
+
     }
   }
 
