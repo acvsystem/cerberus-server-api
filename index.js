@@ -99,12 +99,12 @@ io.on('connection', async (socket) => {
   socket.on('resClient', async (data) => {
     console.log('resClient', data);
     let response = JSON.parse(data);
-    let [tiendaExist] = await pool.query(`SELECT * FROM TB_CLIENTES_BLANCO WHERE SERIE_TIENDA = ´${codeTerminal}´;`);
+    let [tiendaExist] = await pool.query(`SELECT * FROM TB_CLIENTES_BLANCO WHERE SERIE_TIENDA = ${codeTerminal};`);
     console.log('tiendaExist', tiendaExist);
     if ((tiendaExist || []).length) {
-      await pool.query(`UPDATE TB_CLIENTES_BLANCO SET NUMERO_CLIENTES = ´${response[0]['clientCant']}´ WHERE SERIE_TIENDA = ´${codeTerminal}´);`);
+      await pool.query(`UPDATE TB_CLIENTES_BLANCO SET NUMERO_CLIENTES = ${response[0]['clientCant']} WHERE SERIE_TIENDA = ${codeTerminal});`);
     } else {
-      await pool.query(`INSERT INTO TB_CLIENTES_BLANCO(SERIE_TIENDA,NUMERO_CLIENTES)VALUES(´${codeTerminal}´,´${response[0]['clientCant']}´);`);
+      await pool.query(`INSERT INTO TB_CLIENTES_BLANCO(SERIE_TIENDA,NUMERO_CLIENTES)VALUES(${codeTerminal},${response[0]['clientCant']});`);
     }
 
     let body = [
