@@ -100,6 +100,7 @@ io.on('connection', async (socket) => {
     console.log('resClient', data);
     let response = JSON.parse(data);
     let [tiendaExist] = await pool.query(`SELECT * FROM TB_CLIENTES_BLANCO WHERE SERIE_TIENDA = ´${codeTerminal}´;`);
+    console.log('tiendaExist', tiendaExist);
     if ((tiendaExist || []).length) {
       await pool.query(`UPDATE TB_CLIENTES_BLANCO SET NUMERO_CLIENTES = ´${response[0]['clientCant']}´ WHERE SERIE_TIENDA = ´${codeTerminal}´);`);
     } else {
