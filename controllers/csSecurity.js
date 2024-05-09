@@ -6,6 +6,7 @@ import Jwt from "jsonwebtoken";
 import request from "request";
 
 export const Login = async (req, res) => {
+  console.log(req);
   let objLogin = req.body;
   let usuario = objLogin["usuario"].replace(/[^a-zA-Z-0-9 ]/g, "");
   let password = objLogin["password"];
