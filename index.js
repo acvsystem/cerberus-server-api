@@ -99,7 +99,7 @@ io.on('connection', async (socket) => {
   socket.on('resClient', async (data) => {
     console.log('resClient', data);
     let response = JSON.parse(data);
-   // let [tiendaExist] = await pool.query(`SELECT * FROM TB_CLIENTES_BLANCO WHERE SERIE_TIENDA = ${codeTerminal};`);
+    // let [tiendaExist] = await pool.query(`SELECT * FROM TB_CLIENTES_BLANCO WHERE SERIE_TIENDA = ${codeTerminal};`);
     //console.log('tiendaExist', tiendaExist);
     /*if ((tiendaExist || []).length) {
       await pool.query(`UPDATE TB_CLIENTES_BLANCO SET NUMERO_CLIENTES = ${response[0]['clientCant']} WHERE SERIE_TIENDA = ${codeTerminal});`);
@@ -194,13 +194,43 @@ io.on('connection', async (socket) => {
 
 
   app.post('/facturas-pendiente', async (req, res) => {
+    let request = ((req || []).body || [])
     console.log((((req || []).body || [])));
 
-    var bodyHTML = `<p>Verificar el servidor, se detecta que hay facturas con estado pendiente.</p>`;
 
-    /*emailController.sendEmail(['itperu@metasperu.com', ''], `ALERTA FACTURAS EN COLA PENDIENTE`, bodyHTML, null, null)
-    .catch(error => res.send(error));*/
+    let bodyHTML = `<p>Verificar el servidor, se detecta que hay facturas con estado pendiente.</p>
     
+    <table align="left" cellspacing="0">
+        <thead>
+            <tr>
+                <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">ID.FACTURA</th>
+                <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">NUM.FACTURA</th>
+                <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">FEC.EMISION</th>
+                <th style="border: 1px solid #9E9E9E;border-right:0px" width="200px">NOM.CLIENTE</th>
+                <th style="border: 1px solid #9E9E9E" width="140px">NUM.DOCUMENTO</th>
+            </tr>
+        </thead>
+        <tbody>`;
+
+    (request || []).filter((factura) => {
+      bodyHTML += `
+              <tr>
+                  <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(factura || {}).CODIGO_DOCUMENTO}</td>
+                  <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(factura || {}).NRO_CORRELATIVO}</td>
+                  <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(factura || {}).FECHA_EMISION}</td>
+                  <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(factura || {}).NOM_ADQUIRIENTE}</td>
+                  <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(factura || {}).NRO_DOCUMENTO}</td>
+              </tr>`;
+    });
+
+    bodyHTML += `
+        </tbody>
+    </table>`;
+
+
+    emailController.sendEmail(['itperu@metasperu.com', ''], `ALERTA FACTURAS EN COLA PENDIENTE`, bodyHTML, null, null)
+    .catch(error => res.send(error));
+
     res.send('RECEPCION EXITOSA..!!');
   });
 
