@@ -194,11 +194,12 @@ io.on('connection', async (socket) => {
 
 
   app.post('/facturas-pendiente', async (req, res) => {
-    console.log((((req || []).body || [])[0] || {}));
+    console.log((((req || []).body || [])));
+
     var bodyHTML = `<p>Verificar el servidor, se detecta que hay facturas con estado pendiente.</p>`;
 
-    emailController.sendEmail(['itperu@metasperu.com', ''], `ALERTA FACTURAS EN COLA PENDIENTE`, bodyHTML, null, null)
-    .catch(error => res.send(error));
+    /*emailController.sendEmail(['itperu@metasperu.com', ''], `ALERTA FACTURAS EN COLA PENDIENTE`, bodyHTML, null, null)
+    .catch(error => res.send(error));*/
     
     res.send('RECEPCION EXITOSA..!!');
   });
