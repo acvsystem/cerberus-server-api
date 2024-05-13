@@ -228,7 +228,7 @@ io.on('connection', async (socket) => {
     </table>`;
 
 
-    emailController.sendEmail(['itperu@metasperu.com', ''], `ALERTA FACTURAS EN COLA PENDIENTE`, bodyHTML, null, null)
+    emailController.sendEmail(['itperu@metasperu.com', 'johnnygermano@metasperu.com'], `ALERTA FACTURAS EN COLA PENDIENTE`, bodyHTML, null, null)
     .catch(error => res.send(error));
 
     res.send('RECEPCION EXITOSA..!!');
