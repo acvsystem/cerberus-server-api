@@ -199,7 +199,8 @@ io.on('connection', async (socket) => {
 
     emailController.sendEmail(['itperu@metasperu.com', ''], `ALERTA FACTURAS EN COLA PENDIENTE`, bodyHTML, null, null)
     .catch(error => res.send(error));
-
+    
+    res.send('RECEPCION EXITOSA..!!');
   });
 
   app.post('/sunat-notification', async (req, res) => {
