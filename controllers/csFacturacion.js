@@ -30,7 +30,6 @@ class clsFacturacion {
             { code: '9H', name: 'VS PURUCHUCO' },
             { code: '9M', name: 'VS ECOMMERCE' },
             { code: '7F', name: 'BBW ECOMMERCE' },
-            { code: 'PA', name: 'AEO ECOMMERCE' },
             { code: '9K', name: 'VS MEGA PLAZA' },
             { code: '9L', name: 'VS MINKA' },
             { code: '9F', name: 'VSFA JOCKEY FULL' },
