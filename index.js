@@ -10,6 +10,7 @@ import { pool } from './conections/conexMysql.js';
 import * as cron from 'node-cron';
 import { EventEmitter } from "events";
 
+
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: '*' } })
