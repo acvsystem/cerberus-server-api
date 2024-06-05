@@ -11,54 +11,20 @@ export const Login = async (req, res) => {
   let usuario = objLogin["usuario"].replace(/[^a-zA-Z-0-9 ]/g, "");
   let password = objLogin["password"];
   const [dataUser] =
-    await pool.query(`SELECT USUARIO,EMAIL,ID_ROL,NOMBRE_ROL,ACTIVO FROM TB_USUARIO INNER JOIN TB_ROL_SISTEMA ON TB_USUARIO.ID_ROL_USUARIO = TB_ROL_SISTEMA.ID_ROL
+    await pool.query(`SELECT USUARIO,DEFAULT_PAGE FROM TB_USUARIO INNER JOIN TB_ROL_SISTEMA ON TB_USUARIO.ID_ROL_USUARIO = TB_ROL_SISTEMA.ID_ROL
                       WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}'`);
 
-  let idNivel = ((dataUser || [])[0] || {}).ID_ROL;
-  let nivelUser = ((dataUser || [])[0] || {}).NOMBRE_ROL;
+  let nivelUser = ((dataUser || [])[0] || {}).USUARIO;
 
   if (dataUser.length > 0) {
-    const [menu] = await pool.query(`SELECT ID_MENU,NOMBRE_MENU,RUTA,ICO FROM TB_PERMISO_SISTEMA INNER JOIN TB_ROL_SISTEMA ON TB_PERMISO_SISTEMA.ID_ROL_PERMISO = TB_ROL_SISTEMA.ID_ROL INNER JOIN TB_MENU_SISTEMA ON TB_PERMISO_SISTEMA.ID_MENU_PERMISO = TB_MENU_SISTEMA.ID_MENU
-                                             WHERE TB_PERMISO_SISTEMA.ID_ROL_PERMISO = ${idNivel};`);
-
-    const [submenu] = await pool.query(`SELECT ID_MENU_SUBMENU,NOMBRE_SUBMENU FROM TB_SUBMENU_SISTEMA;`);
-
-    let arMenu = [];
-
-    menu.filter((menu) => {
-      let submenuList = [];
-      submenu.filter((submenu) => {
-        if ((menu || {}).ID_MENU == (submenu || {}).ID_MENU_SUBMENU) {
-          submenuList.push({
-            nombre_submenu: (submenu || {}).NOMBRE_SUBMENU || "",
-            ruta: (submenu || {}).RUTA || "",
-            ico: (submenu || {}).ICO || ""
-          });
-        }
-      });
-
-      arMenu.push(
-        {
-          nombre_menu: (menu || {}).NOMBRE_MENU || "",
-          ruta: (menu || {}).RUTA || "",
-          ico: (menu || {}).ICO || "",
-          visible: false,
-          submenu: submenuList || []
-        }
-      );
-    });
-
-    console.log(arMenu);
 
     const token = tokenController.createToken(usuario, nivelUser);
 
     let parseResponse = {
       auth: { token: token },
       profile: {
-        name: ((dataUser || [])[0] || {}).USUARIO,
-        nivel: ((dataUser || [])[0] || {}).NOMBRE_ROL,
-      },
-      menu: arMenu,
+        name: ((dataUser || [])[0] || {}).USUARIO
+      }
     };
 
     res.header("Authorization", token).json(parseResponse);

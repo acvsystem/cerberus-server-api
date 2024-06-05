@@ -9,7 +9,7 @@ import emailController from './sendEmail.js';
 import { pool } from './conections/conexMysql.js';
 import * as cron from 'node-cron';
 import { EventEmitter } from "events";
-
+import securityRoutes from "./routes/security.routes.js";
 
 const app = express();
 const httpServer = createServer(app);
