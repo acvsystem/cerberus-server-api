@@ -17,6 +17,9 @@ const io = new Server(httpServer, { cors: { origin: '*' } })
 app.use(cors());
 app.use(bodyParser.json({ limit: '1000000mb' }));
 app.use(bodyParser.urlencoded({ limit: '1000000mb', extended: true }));
+
+app.use("/security", securityRoutes);
+
 const emiter = new EventEmitter();
 
 var listClient = { id: '' };
