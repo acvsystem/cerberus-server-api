@@ -1,12 +1,3 @@
-exports.default = {
-    database: {
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'BD_METASPERU'
-    }
-};
-
 export const prop = {
     ipServer: '159.65.226.239:5000', //'159.65.226.239',
     database: {
