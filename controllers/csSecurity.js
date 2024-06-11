@@ -11,7 +11,7 @@ export const Login = async (req, res) => {
   let usuario = objLogin["usuario"].replace(/[^a-zA-Z-0-9 ]/g, "");
   let password = objLogin["password"];
   const [dataUser] =
-    await pool.query(`SELECT USUARIO,DEFAULT_PAGE FROM TB_USUARIO WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}'`);
+    await pool.query(`SELECT USUARIO,DEFAULT_PAGE FROM TB_LOGIN WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}'`);
 
   let nivelUser = ((dataUser || [])[0] || {}).USUARIO;
 
