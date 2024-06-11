@@ -19,12 +19,12 @@ export const Login = async (req, res) => {
 
     const token = tokenController.createToken(usuario, nivelUser);
 
-    let parseResponse = {
+    let parseResponse = [{
       auth: { token: token },
       profile: {
         name: ((dataUser || [])[0] || {}).USUARIO
       }
-    };
+    }];
 
     res.header("Authorization", token).json(parseResponse);
   } else {
