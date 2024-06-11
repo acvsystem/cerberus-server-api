@@ -87,9 +87,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('responseStock', (data) => {
-    if (typeof codeTerminal != 'undefined' && codeTerminal != '') {
       socket.to(`${listClient.id}`).emit("dataStock", data);
-    }
   });
 
   socket.on('resTransaction', (data) => {
