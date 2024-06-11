@@ -87,6 +87,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('responseStock', (data) => {
+      console.log(data);
       socket.to(`${listClient.id}`).emit("dataStock", data);
   });
 
