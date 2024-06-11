@@ -86,6 +86,12 @@ io.on('connection', async (socket) => {
     }
   });
 
+  socket.on('responseStock', (data) => {
+    if (typeof codeTerminal != 'undefined' && codeTerminal != '') {
+      socket.broadcast.emit("dataStock", data);
+    }
+  });
+
   socket.on('resTransaction', (data) => {
     console.log(data);
     let response = JSON.parse(data);
@@ -137,6 +143,11 @@ io.on('connection', async (socket) => {
   socket.on('comunicationFront', (data) => {
     console.log('comunicationFront');
     socket.broadcast.emit("consultingToFront", 'ready');
+  });
+
+  socket.on('comunicationStock', (data) => {
+    console.log('comunicationStock');
+    socket.broadcast.emit("searchStock", 'ready');
   });
 
   socket.on('emitCleanClient', (data) => {
