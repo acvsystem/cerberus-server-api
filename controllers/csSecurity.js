@@ -21,6 +21,7 @@ export const Login = async (req, res) => {
 
     let parseResponse = [{
       auth: { token: token },
+      page: {default : ((dataUser || [])[0] || {}).DEFAULT_PAGE},
       profile: {
         name: ((dataUser || [])[0] || {}).USUARIO
       }
