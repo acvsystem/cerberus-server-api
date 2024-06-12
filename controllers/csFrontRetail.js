@@ -6,6 +6,6 @@ import Jwt from "jsonwebtoken";
 import request from "request";
 
 export const onStock = async (req, res) => {
-  console.log(req);
+  console.log(req.body);
   res.json(defaultResponse.success.default);
 };
