@@ -10,16 +10,23 @@ import { pool } from './conections/conexMysql.js';
 import * as cron from 'node-cron';
 import { EventEmitter } from "events";
 import securityRoutes from "./routes/security.routes.js";
+import frontRetailRoutes from "./routes/frontRetail.routes.js";
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer, { cors: { origin: '*' } })
+const io = new Server(httpServer, { cors: { origin: "*" } });
 
-app.use(cors());
-app.use(bodyParser.json({ limit: '1000000mb' }));
-app.use(bodyParser.urlencoded({ limit: '1000000mb', extended: true }));
+app.use(
+  cors({
+    origin: "*",
+  })
+);
+
+app.use(bodyParser.json({ limit: "1000000mb" }));
+app.use(bodyParser.urlencoded({ limit: "1000000mb", extended: true }));
 
 app.use("/security", securityRoutes);
+app.use("/frontRetail", frontRetailRoutes);
 
 const emiter = new EventEmitter();
 
@@ -148,6 +155,8 @@ io.on('connection', async (socket) => {
     console.log('comunicationStock');
     socket.broadcast.emit("searchStock", 'ready');
   });
+
+  
 
   socket.on('emitCleanClient', (data) => {
     console.log('cleanClient');
