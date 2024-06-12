@@ -26,7 +26,7 @@ app.use(bodyParser.json({ limit: "1000000mb" }));
 app.use(bodyParser.urlencoded({ limit: "1000000mb", extended: true }));
 
 app.use("/security", securityRoutes);
-app.use("/frontRetail", frontRetailRoutes);
+
 
 const emiter = new EventEmitter();
 
@@ -215,6 +215,11 @@ io.on('connection', async (socket) => {
     }
   }
 
+
+  app.post("/frontRetail/search/stock", async (req, res) => {
+    console.log(req.body);
+    socket.to(`${listClient.id}`).emit("dataStock", req.body);
+  });
 
   app.post('/facturas-pendiente', async (req, res) => {
     let request = ((req || []).body || [])
