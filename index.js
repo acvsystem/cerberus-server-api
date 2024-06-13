@@ -313,7 +313,7 @@ io.on('connection', async (socket) => {
         }
       });
       console.log(dataResponse);
-      socket.to(`${listClient.id}`).emit("dataStock", dataResponse);
+      //socket.to(`${listClient.id}`).emit("dataStock", dataResponse);
     }
 
     res.json(defaultResponse.success.default);
