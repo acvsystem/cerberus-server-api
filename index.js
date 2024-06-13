@@ -311,10 +311,6 @@ io.on('connection', async (socket) => {
           dataResponse[index][(valueSock || {})['property']] = (data || {}).cStock;
           socket.to(`${listClient.id}`).emit("dataStock", dataResponse);
         }
-
-
-        
-
       });
 
       
