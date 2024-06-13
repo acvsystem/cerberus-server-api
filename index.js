@@ -259,11 +259,11 @@ io.on('connection', async (socket) => {
 
     if (countReady == 1) {
       
-      dataProcess.push(dataServer);
+      dataProcess = dataServer;
       console.log('stock', dataProcess);
       (dataProcess || []).filter((data, i) => {
         
-       /* let isExist = dataResponse.find((res) => (res || {}).cCodigoBarra == (data || {}).cCodigoBarra);
+        let isExist = dataResponse.find((res) => (res || {}).cCodigoBarra == (data || {}).cCodigoBarra);
 
         if (typeof isExist != 'undefined') {
           let codigoExist = (data || {}).cCodigoTienda;
@@ -308,7 +308,7 @@ io.on('connection', async (socket) => {
           
           let index = dataResponse.findIndex((dataIndex) => (dataIndex || {}).cCodigoBarra == (data || {}).cCodigoBarra);
           dataResponse[index][(valueSock || {})['property']] = (data || {}).cStock;
-        }*/
+        }
 
         
 
