@@ -314,7 +314,7 @@ io.on('connection', async (socket) => {
 
       });
 
-      socket.to(`${listClient.id}`).emit("dataStock", dataServer);
+      socket.to(`${listClient.id}`).emit("dataStock", dataResponse);
     }
 
     res.json(defaultResponse.success.default);
