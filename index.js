@@ -311,13 +311,14 @@ io.on('connection', async (socket) => {
           dataResponse[index][(valueSock || {})['property']] = (data || {}).cStock;
         }
 
-        (dataResponse.length == dataProcess.length) {
+        if (dataResponse.length == dataProcess.length) {
           console.log(dataResponse);
           socket.to(`${listClient.id}`).emit("dataStock", dataResponse);
         }
-      });
-    }
 
+      });
+
+    }
     res.json(defaultResponse.success.default);
   });
 
