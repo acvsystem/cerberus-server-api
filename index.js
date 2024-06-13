@@ -11,6 +11,7 @@ import * as cron from 'node-cron';
 import { EventEmitter } from "events";
 import securityRoutes from "./routes/security.routes.js";
 import frontRetailRoutes from "./routes/frontRetail.routes.js";
+import { prop as defaultResponse } from "./const/defaultResponse.js";
 
 const app = express();
 const httpServer = createServer(app);
@@ -245,13 +246,13 @@ io.on('connection', async (socket) => {
       { code: '7A7', property: 'bbw_asia', ready: false }
     ];
 
-    let tiendaIndex = tiendasList.findIndex((property) => property.code == codigoTienda);
+    let tiendaIndex = tiendasList.findIndex((property) => (property || {}).code == codigoTienda);
     tiendasList[tiendaIndex]['ready'] = true;
 
     let countReady = 0;
 
     tiendasList.filter((tienda) => {
-      if (tienda.ready == true) {
+      if ((tienda || {}).ready == true) {
         countReady += 1;
       }
     });
@@ -263,18 +264,18 @@ io.on('connection', async (socket) => {
       dataServer = [];
 
       (dataProcess || []).filter((data, i) => {
-        let isExist = dataResponse.find((res) => res.cCodigoBarra == data.cCodigoBarra);
+        let isExist = dataResponse.find((res) => (res || {}).cCodigoBarra == (data || {}).cCodigoBarra);
 
         if (typeof isExist != 'undefined') {
           let codigoExist = (data || {}).cCodigoTienda;
-          let valueSock = tiendasList.find((property) => property.code == codigoExist);
+          let valueSock = tiendasList.find((property) => (property || {}).code == codigoExist);
 
-          let index = dataResponse.findIndex((dataIndex) => dataIndex.cCodigoBarra == data.cCodigoBarra);
+          let index = dataResponse.findIndex((dataIndex) => (dataIndex || {}).cCodigoBarra == (data || {}).cCodigoBarra);
           dataResponse[index][valueSock.property] = (data || {}).cStock;
 
         } else {
           let codigoTienda = (data || {}).cCodigoTienda;
-          let valueSock = tiendasList.find((property) => property.code == codigoTienda);
+          let valueSock = tiendasList.find((property) => (property || {}).code == codigoTienda);
 
           dataResponse.push({
             "cPreferencia": (data || {}).cPreferencia,
@@ -306,8 +307,8 @@ io.on('connection', async (socket) => {
             "bbw_asia": 0
           });
 
-          let index = dataResponse.findIndex((dataIndex) => dataIndex.cCodigoBarra == data.cCodigoBarra);
-          dataResponse[index][valueSock.property] = (data || {}).cStock;
+          let index = dataResponse.findIndex((dataIndex) => (dataIndex || {}).cCodigoBarra == (data || {}).cCodigoBarra);
+          dataResponse[index][(valueSock || {})['property']] = (data || {}).cStock;
         }
 
 
@@ -315,6 +316,8 @@ io.on('connection', async (socket) => {
 
       socket.to(`${listClient.id}`).emit("dataStock", dataResponse);
     }
+
+    res.json(defaultResponse.success.default);
   });
 
 
