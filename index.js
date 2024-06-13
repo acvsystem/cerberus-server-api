@@ -94,8 +94,8 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('responseStock', (data) => {
-      console.log(data);
-      socket.to(`${listClient.id}`).emit("dataStock", data);
+    console.log(data);
+    socket.to(`${listClient.id}`).emit("dataStock", data);
   });
 
   socket.on('resTransaction', (data) => {
@@ -156,7 +156,7 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("searchStock", 'ready');
   });
 
-  
+
 
   socket.on('emitCleanClient', (data) => {
     console.log('cleanClient');
@@ -217,9 +217,106 @@ io.on('connection', async (socket) => {
 
 
   app.post("/frontRetail/search/stock", async (req, res) => {
-    console.log(req.body);
-    socket.to(`${listClient.id}`).emit("dataStock", req.body);
+    let codigoTienda = (((req || {}).body || [])[0] || {}).cCodigoTienda;
+
+    let dataResponse = [];
+    let dataProcess = [];
+
+    let dataServer = (req || {}).body || [];
+
+    let tiendasList = [
+      { code: '7A', property: 'bbw_jockey', ready: false },
+      { code: '9N', property: 'vs_m_aventura', ready: false },
+      { code: '7J', property: 'bbw_m_aventura', ready: false },
+      { code: '7E', property: 'bbw_rambla', ready: false },
+      { code: '9D', property: 'vs_rambla', ready: false },
+      { code: '9B', property: 'vs_p_norte', ready: false },
+      { code: '7C', property: 'bbw_s_miguel', ready: false },
+      { code: '9C', property: 'vs_s_miguel', ready: false },
+      { code: '7D', property: 'bbw_salaverry', ready: false },
+      { code: '9I', property: 'vs_salaverry', ready: false },
+      { code: '9G', property: 'vs_m_sur', ready: false },
+      { code: '9H', property: 'vs_puruchuco', ready: false },
+      { code: '9M', property: 'vs_ecom', ready: false },
+      { code: '7F', property: 'bbw_ecom', ready: false },
+      { code: '9K', property: 'vs_m_plaza', ready: false },
+      { code: '9L', property: 'vs_minka', ready: false },
+      { code: '9F', property: 'vs_full', ready: false },
+      { code: '7A7', property: 'bbw_asia', ready: false }
+    ];
+
+    let tiendaIndex = tiendasList.findIndex((property) => property.code == codigoTienda);
+    tiendasList[tiendaIndex]['ready'] = true;
+
+    let countReady = 0;
+
+    tiendasList.filter((tienda) => {
+      if (tienda.ready == true) {
+        countReady += 1;
+      }
+    });
+
+    if (countReady == 1) {
+
+      dataProcess.push(dataServer);
+
+      dataServer = [];
+
+      (dataProcess || []).filter((data, i) => {
+        let isExist = dataResponse.find((res) => res.cCodigoBarra == data.cCodigoBarra);
+
+        if (typeof isExist != 'undefined') {
+          let codigoExist = (data || {}).cCodigoTienda;
+          let valueSock = tiendasList.find((property) => property.code == codigoExist);
+
+          let index = dataResponse.findIndex((dataIndex) => dataIndex.cCodigoBarra == data.cCodigoBarra);
+          dataResponse[index][valueSock.property] = (data || {}).cStock;
+
+        } else {
+          let codigoTienda = (data || {}).cCodigoTienda;
+          let valueSock = tiendasList.find((property) => property.code == codigoTienda);
+
+          dataResponse.push({
+            "cPreferencia": (data || {}).cPreferencia,
+            "cCodigoBarra": (data || {}).cCodigoBarra,
+            "cDescripcion": (data || {}).cDescripcion,
+            "cDepartamento": (data || {}).cDepartamento,
+            "cSeccion": (data || {}).cSeccion,
+            "cFamilia": (data || {}).cFamilia,
+            "cSubfamilia": (data || {}).cSubfamilia,
+            "cTalla": (data || {}).cTalla,
+            "cColor": (data || {}).cColor,
+            "bbw_jockey": 0,
+            "vs_m_aventura": 0,
+            "bbw_m_aventura": 0,
+            "bbw_rambla": 0,
+            "vs_rambla": 0,
+            "vs_p_norte": 0,
+            "bbw_s_miguel": 0,
+            "vs_s_miguel": 0,
+            "bbw_salaverry": 0,
+            "vs_salaverry": 0,
+            "vs_m_sur": 0,
+            "vs_puruchuco": 0,
+            "vs_ecom": 0,
+            "bbw_ecom": 0,
+            "vs_m_plaza": 0,
+            "vs_minka": 0,
+            "vs_full": 0,
+            "bbw_asia": 0
+          });
+
+          let index = dataResponse.findIndex((dataIndex) => dataIndex.cCodigoBarra == data.cCodigoBarra);
+          dataResponse[index][valueSock.property] = (data || {}).cStock;
+        }
+
+
+      });
+
+      socket.to(`${listClient.id}`).emit("dataStock", dataResponse);
+    }
   });
+
 
   app.post('/facturas-pendiente', async (req, res) => {
     let request = ((req || []).body || [])
@@ -257,7 +354,7 @@ io.on('connection', async (socket) => {
 
 
     emailController.sendEmail(['itperu@metasperu.com', 'johnnygermano@metasperu.com'], `ALERTA FACTURAS EN COLA PENDIENTE`, bodyHTML, null, null)
-    .catch(error => res.send(error));
+      .catch(error => res.send(error));
 
     res.send('RECEPCION EXITOSA..!!');
   });
@@ -269,7 +366,6 @@ io.on('connection', async (socket) => {
       { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@grupodavid.com' },
       { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@grupodavid.com' },
       { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@grupodavid.com' },
-      { code: 'PC', name: 'AEO JOCKEY', email: 'americaneaglejp@grupodavid.com' },
       { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@grupodavid.com' },
       { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@grupodavid.com' },
       { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@grupodavid.com' },
@@ -281,7 +377,6 @@ io.on('connection', async (socket) => {
       { code: '9H', name: 'VS PURUCHUCO', email: 'vspuruchuco@grupodavid.com' },
       { code: '9M', name: 'VS ECOMMERCE', email: 'vsecommpe@grupodavid.com' },
       { code: '7F', name: 'BBW ECOMMERCE', email: 'bbwecommperu@grupodavid.com' },
-      { code: 'PA', name: 'AEO ECOMMERCE', email: 'aeecompe@grupodavid.com' },
       { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@grupodavid.com' },
       { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@grupodavid.com' },
       { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@grupodavid.com' },
