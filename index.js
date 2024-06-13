@@ -260,7 +260,7 @@ io.on('connection', async (socket) => {
     if (countReady == 1) {
       
       dataProcess = dataServer;
-      console.log('stock', dataProcess);
+      
       (dataProcess || []).filter((data, i) => {
         
         let isExist = dataResponse.find((res) => (res || {}).cCodigoBarra == (data || {}).cCodigoBarra);
@@ -274,6 +274,7 @@ io.on('connection', async (socket) => {
 
         } else {
           let codigoTienda = (data || {}).cCodigoTienda;
+          console.log('stock', codigoTienda);
           let valueSock = tiendasList.find((property) => (property || {}).code == codigoTienda);
 
           dataResponse.push({
