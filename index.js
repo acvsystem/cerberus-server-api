@@ -309,7 +309,7 @@ io.on('connection', async (socket) => {
           
           let index = dataResponse.findIndex((dataIndex) => (dataIndex || {}).cCodigoBarra == (data || {}).cCodigoBarra);
           dataResponse[index][(valueSock || {})['property']] = (data || {}).cStock;
-          console.log(dataResponse);
+          socket.to(`${listClient.id}`).emit("dataStock", dataResponse);
         }
 
 
@@ -317,7 +317,7 @@ io.on('connection', async (socket) => {
 
       });
 
-      socket.to(`${listClient.id}`).emit("dataStock", dataResponse);
+      
     }
 
     res.json(defaultResponse.success.default);
