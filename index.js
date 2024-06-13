@@ -218,6 +218,8 @@ io.on('connection', async (socket) => {
 
 
   app.post("/frontRetail/search/stock", async (req, res) => {
+    let dataServer = (req || {}).body || [];
+
     /*let codigoTienda = (((req || {}).body || [])[0] || {}).cCodigoTienda;
     
     let dataResponse = [];
@@ -316,7 +318,7 @@ io.on('connection', async (socket) => {
       
     }*/
 
-    socket.to(`${listClient.id}`).emit("dataStock", (req || {}).body || []);
+    socket.to(`${listClient.id}`).emit("dataStock", dataServer);
     res.json(defaultResponse.success.default);
   });
 
