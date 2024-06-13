@@ -260,9 +260,9 @@ io.on('connection', async (socket) => {
     if (countReady == 1) {
       
       dataProcess.push(dataServer);
-      console.log('stock', dataProcess);
-
+      
       (dataProcess || []).filter((data, i) => {
+        console.log('stock', data);
         let isExist = dataResponse.find((res) => (res || {}).cCodigoBarra == (data || {}).cCodigoBarra);
 
         if (typeof isExist != 'undefined') {
@@ -310,10 +310,11 @@ io.on('connection', async (socket) => {
           dataResponse[index][(valueSock || {})['property']] = (data || {}).cStock;
         }
 
+        socket.to(`${listClient.id}`).emit("dataStock", dataResponse);
 
       });
 
-      socket.to(`${listClient.id}`).emit("dataStock", dataResponse);
+      
     }
 
     res.json(defaultResponse.success.default);
