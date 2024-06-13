@@ -262,7 +262,7 @@ io.on('connection', async (socket) => {
       dataProcess.push(dataServer);
       
       (dataProcess || []).filter((data, i) => {
-        console.log('stock', (data || {}).cPreferencia);
+        console.log('stock', (data || {})[i].cPreferencia);
         let isExist = dataResponse.find((res) => (res || {}).cCodigoBarra == (data || {}).cCodigoBarra);
 
         if (typeof isExist != 'undefined') {
