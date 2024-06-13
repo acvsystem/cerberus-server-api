@@ -256,11 +256,11 @@ io.on('connection', async (socket) => {
         countReady += 1;
       }
     });
-    console.log('stock', countReady);
+
     if (countReady == 1) {
       
       dataProcess.push(dataServer);
-      console.log('stock', dataProcess.length);
+      console.log('stock', dataProcess);
 
       (dataProcess || []).filter((data, i) => {
         let isExist = dataResponse.find((res) => (res || {}).cCodigoBarra == (data || {}).cCodigoBarra);
