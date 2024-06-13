@@ -274,7 +274,7 @@ io.on('connection', async (socket) => {
 
         } else {
           let codigoTienda = (data || {}).cCodigoTienda;
-          console.log('stock', codigoTienda);
+         
           let valueSock = tiendasList.find((property) => (property || {}).code == codigoTienda);
 
           dataResponse.push({
@@ -309,6 +309,7 @@ io.on('connection', async (socket) => {
           
           let index = dataResponse.findIndex((dataIndex) => (dataIndex || {}).cCodigoBarra == (data || {}).cCodigoBarra);
           dataResponse[index][(valueSock || {})['property']] = (data || {}).cStock;
+          console.log('stock', dataResponse);
         }
 
         
