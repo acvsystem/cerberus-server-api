@@ -219,7 +219,7 @@ io.on('connection', async (socket) => {
 
   app.post("/frontRetail/search/stock", async (req, res) => {
     let codigoTienda = (((req || {}).body || [])[0] || {}).cCodigoTienda;
-    
+
     let dataResponse = [];
     let dataProcess = [];
 
@@ -258,11 +258,11 @@ io.on('connection', async (socket) => {
     });
 
     if (countReady == 1) {
-      
+
       dataProcess = dataServer;
-      
-     await (dataProcess || []).filter((data, i) => {
-        
+
+      (dataProcess || []).filter((data, i) => {
+
         let isExist = dataResponse.find((res) => (res || {}).cCodigoBarra == (data || {}).cCodigoBarra);
 
         if (typeof isExist != 'undefined') {
@@ -274,7 +274,7 @@ io.on('connection', async (socket) => {
 
         } else {
           let codigoTienda = (data || {}).cCodigoTienda;
-         
+
           let valueSock = tiendasList.find((property) => (property || {}).code == codigoTienda);
 
           dataResponse.push({
@@ -306,17 +306,19 @@ io.on('connection', async (socket) => {
             "vs_full": 0,
             "bbw_asia": 0
           });
-          
+
           let index = dataResponse.findIndex((dataIndex) => (dataIndex || {}).cCodigoBarra == (data || {}).cCodigoBarra);
           dataResponse[index][(valueSock || {})['property']] = (data || {}).cStock;
-          console.log(dataResponse.length);
-          return dataResponse;
         }
       });
     }
 
-    console.log(dataResponse);
-    socket.to(`${listClient.id}`).emit("dataStock", dataResponse);
+    if (dataResponse.length) {
+      console.log(dataResponse);
+      socket.to(`${listClient.id}`).emit("dataStock", dataResponse);
+    }
+
+
     res.json(defaultResponse.success.default);
   });
 
