@@ -219,7 +219,7 @@ io.on('connection', async (socket) => {
 
   app.post("/frontRetail/search/stock", async (req, res) => {
     let codigoTienda = (((req || {}).body || [])[0] || {}).cCodigoTienda;
-    console.log('stock', codigoTienda);
+    
     let dataResponse = [];
     let dataProcess = [];
 
@@ -256,12 +256,11 @@ io.on('connection', async (socket) => {
         countReady += 1;
       }
     });
-
+    console.log('stock', countReady);
     if (countReady == 1) {
-
+      
       dataProcess.push(dataServer);
-
-      dataServer = [];
+      console.log('stock', dataProcess.length);
 
       (dataProcess || []).filter((data, i) => {
         let isExist = dataResponse.find((res) => (res || {}).cCodigoBarra == (data || {}).cCodigoBarra);
