@@ -260,7 +260,7 @@ io.on('connection', async (socket) => {
     if (countReady == 1) {
       
       dataProcess = dataServer;
-      
+      console.log(dataProcess);
       (dataProcess || []).filter((data, i) => {
         
         let isExist = dataResponse.find((res) => (res || {}).cCodigoBarra == (data || {}).cCodigoBarra);
@@ -312,7 +312,7 @@ io.on('connection', async (socket) => {
           
         }
 
-        
+
         
 
       });
