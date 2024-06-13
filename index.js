@@ -310,14 +310,13 @@ io.on('connection', async (socket) => {
           let index = dataResponse.findIndex((dataIndex) => (dataIndex || {}).cCodigoBarra == (data || {}).cCodigoBarra);
           dataResponse[index][(valueSock || {})['property']] = (data || {}).cStock;
         }
+
+        (dataResponse.length == dataProcess.length) {
+          console.log(dataResponse);
+          socket.to(`${listClient.id}`).emit("dataStock", dataResponse);
+        }
       });
     }
-
-    if (dataResponse.length) {
-      console.log(dataResponse);
-      socket.to(`${listClient.id}`).emit("dataStock", dataResponse);
-    }
-
 
     res.json(defaultResponse.success.default);
   });
