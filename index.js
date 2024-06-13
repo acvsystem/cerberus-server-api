@@ -260,9 +260,9 @@ io.on('connection', async (socket) => {
     if (countReady == 1) {
       
       dataProcess.push(dataServer);
-      
+      console.log('stock', dataProcess);
       (dataProcess || []).filter((data, i) => {
-        console.log('stock', (data || {})[i]);
+        
        /* let isExist = dataResponse.find((res) => (res || {}).cCodigoBarra == (data || {}).cCodigoBarra);
 
         if (typeof isExist != 'undefined') {
