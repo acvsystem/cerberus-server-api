@@ -262,7 +262,7 @@ io.on('connection', async (socket) => {
       dataProcess.push(dataServer);
       
       (dataProcess || []).filter((data, i) => {
-        
+        console.log('stock', (data || {}).cPreferencia);
         let isExist = dataResponse.find((res) => (res || {}).cCodigoBarra == (data || {}).cCodigoBarra);
 
         if (typeof isExist != 'undefined') {
@@ -305,7 +305,7 @@ io.on('connection', async (socket) => {
             "vs_full": 0,
             "bbw_asia": 0
           });
-          console.log('stock', dataResponse);
+          
           let index = dataResponse.findIndex((dataIndex) => (dataIndex || {}).cCodigoBarra == (data || {}).cCodigoBarra);
           dataResponse[index][(valueSock || {})['property']] = (data || {}).cStock;
         }
