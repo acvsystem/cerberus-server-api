@@ -263,7 +263,7 @@ io.on('connection', async (socket) => {
       
       (dataProcess || []).filter((data, i) => {
         console.log('stock', (data || {})[i]);
-        let isExist = dataResponse.find((res) => (res || {}).cCodigoBarra == (data || {}).cCodigoBarra);
+       /* let isExist = dataResponse.find((res) => (res || {}).cCodigoBarra == (data || {}).cCodigoBarra);
 
         if (typeof isExist != 'undefined') {
           let codigoExist = (data || {}).cCodigoTienda;
@@ -308,13 +308,13 @@ io.on('connection', async (socket) => {
           
           let index = dataResponse.findIndex((dataIndex) => (dataIndex || {}).cCodigoBarra == (data || {}).cCodigoBarra);
           dataResponse[index][(valueSock || {})['property']] = (data || {}).cStock;
-        }
+        }*/
 
-        socket.to(`${listClient.id}`).emit("dataStock", dataResponse);
+        
 
       });
 
-      
+      socket.to(`${listClient.id}`).emit("dataStock", dataServer);
     }
 
     res.json(defaultResponse.success.default);
