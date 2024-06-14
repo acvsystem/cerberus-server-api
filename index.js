@@ -219,7 +219,7 @@ io.on('connection', async (socket) => {
 
   app.post("/frontRetail/search/stock", async (req, res) => {
     let dataServer = (req || {}).body || [];
-
+    console.log(dataServer);
     /*let codigoTienda = (((req || {}).body || [])[0] || {}).cCodigoTienda;
     
     let dataResponse = [];
