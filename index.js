@@ -218,7 +218,7 @@ io.on('connection', async (socket) => {
 
 
   app.post("/frontRetail/search/stock", async (req, res) => {
-    const archivo = req.file;
+    const archivo = req;
     console.log(archivo);
     if (!archivo) {
       return res.status(400).json({ mensaje: 'No se recibió ningún archivo' });
