@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-import { Login, CreateNewUser, createAccessPostulant, validationAccessPostulant, createMenuProfile } from '../controllers/csSecurity.js';
+import { Login, EmailList } from '../controllers/csSecurity.js';
 import tokenController from '../controllers/csToken.js';
 import path from 'path';
 import { pathDownload } from '../const/routesDownload.js';
@@ -8,6 +8,7 @@ import CryptoJS from 'crypto-js';
 import { prop } from '../keys.js';
 
 router.post('/login', Login);
+router.get('/emailList',EmailList)
 
 router.get('/download', (req, res) => {
 

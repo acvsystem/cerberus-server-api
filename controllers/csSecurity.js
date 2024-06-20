@@ -21,7 +21,7 @@ export const Login = async (req, res) => {
 
     let parseResponse = [{
       auth: { token: token },
-      page: {default : ((dataUser || [])[0] || {}).DEFAULT_PAGE},
+      page: { default: ((dataUser || [])[0] || {}).DEFAULT_PAGE },
       profile: {
         name: ((dataUser || [])[0] || {}).USUARIO
       }
@@ -31,6 +31,16 @@ export const Login = async (req, res) => {
   } else {
     res.json(defaultResponse.error.login);
   }
+};
+
+export const EmailList = async (req, res) => {
+
+  res.json([
+    {mail:"inventariogd.peru@gmail.com"},
+    {mail:"josecarreno@metasperu.com"},
+    {mail:"itperu@metasperu.com"},
+    {mail:"johnnygermano@metasperu.com"}
+  ]);
 };
 
 export const createMenuProfile = async (req, res) => {
