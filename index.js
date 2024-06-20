@@ -153,7 +153,7 @@ io.on('connection', async (socket) => {
 
   socket.on('comunicationStock', (email, arrCodeTienda) => {
     console.log('comunicationStock');
-    socket.broadcast.emit("searchStock", email, arrCodeTienda);
+    socket.broadcast.emit("searchStockTest", email, arrCodeTienda);
   });
 
 
