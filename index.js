@@ -151,9 +151,9 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("consultingToFront", 'ready');
   });
 
-  socket.on('comunicationStock', (data) => {
+  socket.on('comunicationStock', (email, arrCodeTienda) => {
     console.log('comunicationStock');
-    socket.broadcast.emit("searchStock", data);
+    socket.broadcast.emit("searchStock", email, arrCodeTienda);
   });
 
 
@@ -222,9 +222,9 @@ io.on('connection', async (socket) => {
     if (!archivo) {
       return res.status(400).json({ mensaje: 'No se recibió ningún archivo' });
     }
-   
-   /*emailController.sendEmail('andrecanalesv@gmail.com', `STOCK VSFA`, bodyHTML, null, null, archivo)
-      .catch(error => res.send(error));*/
+
+    /*emailController.sendEmail('andrecanalesv@gmail.com', `STOCK VSFA`, bodyHTML, null, null, archivo)
+       .catch(error => res.send(error));*/
 
     res.json({ mensaje: 'Archivo recibido con éxito' });
 
