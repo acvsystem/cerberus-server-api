@@ -218,8 +218,8 @@ io.on('connection', async (socket) => {
 
 
   app.post("/frontRetail/search/stock", async (req, res) => {
-    console.log(req);
-    socket.to(`${listClient.id}`).emit("dataStock", req);
+    console.log(req.body);
+    //socket.to(`${listClient.id}`).emit("dataStock", req);
     /*emailController.sendEmail('andrecanalesv@gmail.com', `STOCK VSFA`, bodyHTML, null, null, archivo)
        .catch(error => res.send(error));*/
 
