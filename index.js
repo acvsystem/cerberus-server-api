@@ -217,12 +217,8 @@ io.on('connection', async (socket) => {
 
 
   app.post("/frontRetail/search/stock", async (req, res) => {
-    const archivo = req;
+    console.log(req);
     socket.to(`${listClient.id}`).emit("dataStock", req);
-    if (!archivo) {
-      return res.status(400).json({ mensaje: 'No se recibió ningún archivo' });
-    }
-
     /*emailController.sendEmail('andrecanalesv@gmail.com', `STOCK VSFA`, bodyHTML, null, null, archivo)
        .catch(error => res.send(error));*/
 
