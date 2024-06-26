@@ -157,6 +157,10 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("searchStockTest", email, arrCodeTienda);
   });
 
+  socket.on('comunicationStockTable', (arrCodeTienda) => {
+    console.log('comunicationStockTable');
+    socket.broadcast.emit("searchStockTable", arrCodeTienda);
+  });
 
 
   socket.on('emitCleanClient', (data) => {
