@@ -39,7 +39,8 @@ export const EmailList = async (req, res) => {
     {mail:"inventariogd.peru@gmail.com"},
     {mail:"josecarreno@metasperu.com"},
     {mail:"itperu@metasperu.com"},
-    {mail:"johnnygermano@metasperu.com"}
+    {mail:"johnnygermano@metasperu.com"},
+    {mail:"logisticaperu@metasperu.com"}
   ]);
 };
 
