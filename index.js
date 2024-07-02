@@ -222,7 +222,7 @@ io.on('connection', async (socket) => {
 
 
   app.post("/frontRetail/search/stock", async (req, res) => {
-    console.log(req.body);
+    console.log(req);
     //socket.to(`${listClient.id}`).emit("dataStockParse", JSON.parse(req.body));
     /*emailController.sendEmail('andrecanalesv@gmail.com', `STOCK VSFA`, bodyHTML, null, null, archivo)
        .catch(error => res.send(error));*/
