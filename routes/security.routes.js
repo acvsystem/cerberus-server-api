@@ -34,7 +34,7 @@ router.post('/create/hash/agente', (req, res) => {
 
 router.get('/download', (req, res) => {
 
-    let token = req.header('Authorization');
+  /*  let token = req.header('Authorization');
     let hash = req.header('hash');
 
     if (hash) {
@@ -47,8 +47,8 @@ router.get('/download', (req, res) => {
     }
 
     let resValidation = tokenController.verificationToken(token);
-
-    if ((resValidation || {}).isValid) {
+*/
+  //  if ((resValidation || {}).isValid) {
         let file = "";
 
         if (((resValidation || {}).decoded || {}).aud == "AGENTE") {
@@ -67,9 +67,9 @@ router.get('/download', (req, res) => {
         res.download(fileLocation, file);
 
 
-    } else {
+  /*  } else {
         return res.status(401).json('Access denied');
-    }
+    }*/
 
 });
 
