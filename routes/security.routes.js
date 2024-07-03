@@ -8,7 +8,29 @@ import CryptoJS from 'crypto-js';
 import { prop } from '../keys.js';
 
 router.post('/login', Login);
-router.get('/emailList',EmailList)
+router.get('/emailList',EmailList);
+
+router.post('/create/hash/agente', (req, res) => {
+
+    const token = req.header('Authorization') || "";
+    let body = (req || {}).body || {};
+    console.log(body);
+    let resValidation = tokenController.verificationToken(token);
+
+    if ((resValidation || {}).isValid) {
+        let data = {
+            user: "DUNAMIS",
+            nivel: (body || {}).nivel
+        };
+
+        const hash = CryptoJS.AES.encrypt(JSON.stringify(data), prop.keyCryptHash).toString();
+
+        res.json({ success: true, hash: hash });
+    } else {
+        return res.status(401).json('Access denied');
+    }
+
+});
 
 router.get('/download', (req, res) => {
 

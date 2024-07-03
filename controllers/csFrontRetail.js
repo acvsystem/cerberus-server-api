@@ -9,3 +9,10 @@ export const onStock = async (req, res) => {
   console.log(req.body);
   res.json(defaultResponse.success.default);
 };
+
+export const onAgenteConfigList = async (req, res) => {
+  let data = ((req || {}).body || []);
+  let [configuration] = await pool.query(`SELECT * FROM TB_PARAMENTROS_TIENDA WHERE MAC_SERVER='${(data || {}).mac}';`);
+  console.log(configuration);
+  res.json(configuration)
+}
