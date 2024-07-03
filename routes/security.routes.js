@@ -51,18 +51,18 @@ router.get('/download', (req, res) => {
   //  if ((resValidation || {}).isValid) {
         let file = "";
 
-        if (((resValidation || {}).decoded || {}).aud == "AGENTE") {
+      //  if (((resValidation || {}).decoded || {}).aud == "AGENTE") {
             file = pathDownload.path.agente;
-        }
+      //  }
 
-        if (((resValidation || {}).decoded || {}).aud == "SUNAT") {
+      /*  if (((resValidation || {}).decoded || {}).aud == "SUNAT") {
             file = pathDownload.path.pluginSunat;
         }
 
         if (((resValidation || {}).decoded || {}).aud == "DOCUMENTO") {
             file = pathDownload.path.pluginDocument;
         }
-
+*/
         var fileLocation = path.join('./', file);
         res.download(fileLocation, file);
 
