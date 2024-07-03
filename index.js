@@ -222,7 +222,7 @@ io.on('connection', async (socket) => {
 
   app.post("/frontRetail/search/configuration/agente", async (req, res) => {
     let data = ((req || {}).body || []);
-    let [configuration] = await pool.query(`SELECT * FROM TB_PARAMENTROS_TIENDA WHERE MAC='${((data || {}).mac).toUpperCase()}';`);
+    let [configuration] = await pool.query(`SELECT * FROM TB_PARAMETROS_TIENDA WHERE MAC='${((data || {}).mac).toUpperCase()}';`);
     console.log(configuration);
     res.json(configuration)
   });
