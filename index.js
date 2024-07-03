@@ -220,6 +220,12 @@ io.on('connection', async (socket) => {
     }
   }
 
+  app.post("/frontRetail/search/configuration/agente", async (req, res) => {
+    let data = ((req || {}).body || []);
+    let [configuration] = await pool.query(`SELECT * FROM TB_PARAMENTROS_TIENDA WHERE MAC_SERVER='${(data || {}).mac}';`);
+    console.log(configuration);
+    res.json(configuration)
+  });
 
   app.post("/frontRetail/search/stock", async (req, res) => {
     console.log(req.body);
