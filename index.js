@@ -211,7 +211,8 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('status:serverSUNAT', (data) => {
-    socket.broadcast.emit("status:serverSUNAT:send", data);
+    console.log(data);
+    socket.to(`${listClient.id}`).emit("status:serverSUNAT:send", data);
   });
 
 
