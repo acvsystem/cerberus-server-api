@@ -205,9 +205,9 @@ io.on('connection', async (socket) => {
       fileName: body.fileName,
     };
 
-    if (socket.decoded.aud == "ADMINISTRADOR") {
+ 
       socket.broadcast.emit("update_file_Agente", "python");
-    }
+    
   });
 
   socket.on('status:serverSUNAT', (data) => {
