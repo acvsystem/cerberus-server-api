@@ -198,6 +198,18 @@ io.on('connection', async (socket) => {
     console.log('user disconnected');
   });
 
+  socket.on("update:file:FrontAgent", (body) => {
+    let configurationList = {
+      socket: (socket || {}).id,
+      hash: body.hash,
+      fileName: body.fileName,
+    };
+
+    if (socket.decoded.aud == "ADMINISTRADOR") {
+      socket.broadcast.emit("update_file_Agente", "python");
+    }
+  });
+
   socket.on('status:serverSUNAT', (data) => {
     socket.broadcast.emit("status:serverSUNAT:send", data);
   });
