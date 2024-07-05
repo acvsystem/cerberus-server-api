@@ -208,6 +208,20 @@ io.on('connection', async (socket) => {
     
   });
 
+  socket.on("update:file:response", (response) => {
+    let socketID = (response || {}).socket;
+    let status = (response || {}).status;
+    let serie = (response || {}).serie;
+
+    let statusList = {
+      serie: serie,
+      status: status,
+    };
+
+    socket.to(`${socketID}`).emit("update:file:status", statusList);
+  });
+  
+
   socket.on('status:serverSUNAT', (data) => {
     socket.broadcast.emit("status:serverSUNAT:send", data);
   });
@@ -240,111 +254,8 @@ io.on('connection', async (socket) => {
   app.post("/frontRetail/search/stock", async (req, res) => {
     console.log(req.body);
     socket.to(`${listClient.id}`).emit("dataStockParse", req.body);
-    /*emailController.sendEmail('andrecanalesv@gmail.com', `STOCK VSFA`, bodyHTML, null, null, archivo)
-       .catch(error => res.send(error));*/
 
     res.json({ mensaje: 'Archivo recibido con éxito' });
-
-    /*let codigoTienda = (((req || {}).body || [])[0] || {}).cCodigoTienda;
-    
-    let dataResponse = [];
-    let dataProcess = [];
-
-    let dataServer = (req || {}).body || [];
-
-    let tiendasList = [
-      { code: '7A', property: 'bbw_jockey', ready: false },
-      { code: '9N', property: 'vs_m_aventura', ready: false },
-      { code: '7J', property: 'bbw_m_aventura', ready: false },
-      { code: '7E', property: 'bbw_rambla', ready: false },
-      { code: '9D', property: 'vs_rambla', ready: false },
-      { code: '9B', property: 'vs_p_norte', ready: false },
-      { code: '7C', property: 'bbw_s_miguel', ready: false },
-      { code: '9C', property: 'vs_s_miguel', ready: false },
-      { code: '7D', property: 'bbw_salaverry', ready: false },
-      { code: '9I', property: 'vs_salaverry', ready: false },
-      { code: '9G', property: 'vs_m_sur', ready: false },
-      { code: '9H', property: 'vs_puruchuco', ready: false },
-      { code: '9M', property: 'vs_ecom', ready: false },
-      { code: '7F', property: 'bbw_ecom', ready: false },
-      { code: '9K', property: 'vs_m_plaza', ready: false },
-      { code: '9L', property: 'vs_minka', ready: false },
-      { code: '9F', property: 'vs_full', ready: false },
-      { code: '7A7', property: 'bbw_asia', ready: false }
-    ];
-
-    let tiendaIndex = tiendasList.findIndex((property) => (property || {}).code == codigoTienda);
-    tiendasList[tiendaIndex]['ready'] = true;
-
-    let countReady = 0;
-
-    tiendasList.filter((tienda) => {
-      if ((tienda || {}).ready == true) {
-        countReady += 1;
-      }
-    });
-
-    if (countReady == 1) {
-      
-      dataProcess = dataServer;
-     
-      (dataProcess || []).filter((data, i) => {
-        
-        let isExist = dataResponse.find((res) => (res || {}).cCodigoBarra == (data || {}).cCodigoBarra);
-
-        if (typeof isExist != 'undefined') {
-          let codigoExist = (data || {}).cCodigoTienda;
-          let valueSock = tiendasList.find((property) => (property || {}).code == codigoExist);
-
-          let index = dataResponse.findIndex((dataIndex) => (dataIndex || {}).cCodigoBarra == (data || {}).cCodigoBarra);
-          dataResponse[index][valueSock.property] = (data || {}).cStock;
-
-        } else {
-          let codigoTienda = (data || {}).cCodigoTienda;
-         
-          let valueSock = tiendasList.find((property) => (property || {}).code == codigoTienda);
-
-          dataResponse.push({
-            "cPreferencia": (data || {}).cPreferencia,
-            "cCodigoBarra": (data || {}).cCodigoBarra,
-            "cDescripcion": (data || {}).cDescripcion,
-            "cDepartamento": (data || {}).cDepartamento,
-            "cSeccion": (data || {}).cSeccion,
-            "cFamilia": (data || {}).cFamilia,
-            "cSubfamilia": (data || {}).cSubfamilia,
-            "cTalla": (data || {}).cTalla,
-            "cColor": (data || {}).cColor,
-            "bbw_jockey": 0,
-            "vs_m_aventura": 0,
-            "bbw_m_aventura": 0,
-            "bbw_rambla": 0,
-            "vs_rambla": 0,
-            "vs_p_norte": 0,
-            "bbw_s_miguel": 0,
-            "vs_s_miguel": 0,
-            "bbw_salaverry": 0,
-            "vs_salaverry": 0,
-            "vs_m_sur": 0,
-            "vs_puruchuco": 0,
-            "vs_ecom": 0,
-            "bbw_ecom": 0,
-            "vs_m_plaza": 0,
-            "vs_minka": 0,
-            "vs_full": 0,
-            "bbw_asia": 0
-          });
-          
-          let index = dataResponse.findIndex((dataIndex) => (dataIndex || {}).cCodigoBarra == (data || {}).cCodigoBarra);
-          dataResponse[index][(valueSock || {})['property']] = (data || {}).cStock;
-          
-        }
-      });
-      console.log(dataResponse);
-      
-    }*/
-
-    //socket.to(`${listClient.id}`).emit("dataStock", dataServer);
-    //res.json(defaultResponse.success.default);
   });
 
 
