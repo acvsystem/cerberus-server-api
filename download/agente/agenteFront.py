@@ -63,14 +63,14 @@ if len(configuration) > 0:
     def searchStockTest(email,codeList):
         rows = codeList
         for row in rows:
-            if row['code'] == '9F':
+            if row['code'] == serieTienda:
                 reporteStock(email)
 
     @sio.event
     def searchStockTable(codeList):
         rows = codeList
         for row in rows:
-            if row['code'] == '9F':
+            if row['code'] == serieTienda:
                 fnSendDataFront()   
 
     def fnSendDataFront():
