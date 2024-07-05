@@ -8,7 +8,6 @@ import socket
 import time
 from datetime import datetime,timedelta
 from getmac import get_mac_address as gma
-import nmap
 import requests
 import pandas as pd
 from email.mime.multipart import MIMEMultipart
@@ -16,6 +15,7 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 import smtplib
+import msvcrt
 
 res = requests.post('http://38.187.8.22:3200/frontRetail/search/configuration/agente',data={"mac":gma()})
 configuration = res.json()
@@ -389,3 +389,4 @@ if len(configuration) > 0:
     
     consultingData()
     consultingTransaction()
+    msvcrt.getch()
