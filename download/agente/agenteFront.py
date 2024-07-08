@@ -84,7 +84,7 @@ if len(configuration) > 0:
         lastDate = datetime.today()+timedelta(days=-1)
         shift = timedelta(max(1, (lastDate.weekday() + 6) % 7))
         lastDate = lastDate.strftime('%Y-%m-%d')
-        querySql="DECLARE @CODALMACEN AS NVARCHAR(3)=(SELECT DISTINCT VALOR FROM PARAMETROS WHERE CLAVE='ALDEF');SELECT ART.CODARTICULO,ART.REFPROVEEDOR AS REFERENCIA,AL.CODBARRAS AS CODIGO_BARRAS,ART.DESCRIPCION AS DESCRIPCION,DPTO.DESCRIPCION AS DEPARTAMENTO,SEC.DESCRIPCION AS SECCION,FM.DESCRIPCION AS FAMILIA,SFM.DESCRIPCION AS SUBFAMILIA,S.TALLA AS TALLA,S.COLOR AS COLOR,S.STOCK AS STOCK FROM ARTICULOS ART WITH(NOLOCK) RIGHT JOIN FAMILIAS FM WITH(NOLOCK) ON ART.DPTO = FM.NUMDPTO AND  ART.SECCION = FM.NUMSECCION AND ART.FAMILIA = FM.NUMFAMILIA RIGHT JOIN SUBFAMILIAS SFM WITH(NOLOCK) ON ART.DPTO = SFM.NUMDPTO AND  ART.SECCION = SFM.NUMSECCION AND ART.FAMILIA = SFM.NUMFAMILIA AND ART.SUBFAMILIA = SFM.NUMSUBFAMILIA INNER JOIN ARTICULOSLIN AL WITH(NOLOCK) ON ART.CODARTICULO=AL.CODARTICULO LEFT JOIN DEPARTAMENTO DPTO WITH(NOLOCK) ON ART.DPTO=DPTO.NUMDPTO LEFT JOIN SECCIONES SEC WITH(NOLOCK) ON ART.DPTO=SEC.NUMDPTO AND ART.SECCION=SEC.NUMSECCION LEFT JOIN STOCKS S WITH(NOLOCK) ON S.CODARTICULO=AL.CODARTICULO AND S.COLOR=AL.COLOR AND S.TALLA=AL.TALLA AND S.CODALMACEN=@CODALMACEN LEFT JOIN RIP.RIP_FSTOCK_ARTICULO_FECHA(GETDATE(), @CODALMACEN) S2 ON S2.CODARTICULO=AL.CODARTICULO AND S2.COLOR=AL.COLOR AND S2.TALLA=AL.TALLA WHERE DPTO.NUMDPTO != '96' AND DPTO.NUMDPTO != '97' AND ART.REFPROVEEDOR NOT LIKE '%-1' AND AL.CODBARRAS NOT LIKE '%-1' AND S.TALLA != '' AND S.COLOR != '' AND S.STOCK != '' AND SFM.DESCRIPCION != 'INGRESOS' AND SFM.DESCRIPCION != 'GASTOS' GROUP BY ART.CODARTICULO,ART.REFPROVEEDOR,AL.CODBARRAS,ART.DESCRIPCION,DPTO.DESCRIPCION,SEC.DESCRIPCION,FM.DESCRIPCION,SFM.DESCRIPCION,S.TALLA,S.COLOR,S.STOCK,ART.DPTO,ART.SECCION,ART.FAMILIA,ART.SUBFAMILIA;"
+        querySql="DECLARE @CODALMACEN AS NVARCHAR(3)=(SELECT DISTINCT VALOR FROM PARAMETROS WHERE CLAVE='ALDEF');SELECT ART.CODARTICULO,ART.REFPROVEEDOR AS REFERENCIA,AL.CODBARRAS AS CODIGO_BARRAS,ART.DESCRIPCION AS DESCRIPCION,DPTO.DESCRIPCION AS DEPARTAMENTO,SEC.DESCRIPCION AS SECCION,FM.DESCRIPCION AS FAMILIA,SFM.DESCRIPCION AS SUBFAMILIA,S.TALLA AS TALLA,S.COLOR AS COLOR,S.STOCK AS STOCK,ART.TEMPORADA AS TEMPORADA FROM ARTICULOS ART WITH(NOLOCK) RIGHT JOIN FAMILIAS FM WITH(NOLOCK) ON ART.DPTO = FM.NUMDPTO AND  ART.SECCION = FM.NUMSECCION AND ART.FAMILIA = FM.NUMFAMILIA RIGHT JOIN SUBFAMILIAS SFM WITH(NOLOCK) ON ART.DPTO = SFM.NUMDPTO AND  ART.SECCION = SFM.NUMSECCION AND ART.FAMILIA = SFM.NUMFAMILIA AND ART.SUBFAMILIA = SFM.NUMSUBFAMILIA INNER JOIN ARTICULOSLIN AL WITH(NOLOCK) ON ART.CODARTICULO=AL.CODARTICULO LEFT JOIN DEPARTAMENTO DPTO WITH(NOLOCK) ON ART.DPTO=DPTO.NUMDPTO LEFT JOIN SECCIONES SEC WITH(NOLOCK) ON ART.DPTO=SEC.NUMDPTO AND ART.SECCION=SEC.NUMSECCION LEFT JOIN STOCKS S WITH(NOLOCK) ON S.CODARTICULO=AL.CODARTICULO AND S.COLOR=AL.COLOR AND S.TALLA=AL.TALLA AND S.CODALMACEN=@CODALMACEN LEFT JOIN RIP.RIP_FSTOCK_ARTICULO_FECHA(GETDATE(), @CODALMACEN) S2 ON S2.CODARTICULO=AL.CODARTICULO AND S2.COLOR=AL.COLOR AND S2.TALLA=AL.TALLA WHERE DPTO.NUMDPTO != '96' AND DPTO.NUMDPTO != '97' AND ART.REFPROVEEDOR NOT LIKE '%-1' AND AL.CODBARRAS NOT LIKE '%-1' AND S.TALLA != '' AND S.COLOR != '' AND S.STOCK != '' AND SFM.DESCRIPCION != 'INGRESOS' AND SFM.DESCRIPCION != 'GASTOS' GROUP BY ART.CODARTICULO,ART.REFPROVEEDOR,AL.CODBARRAS,ART.DESCRIPCION,DPTO.DESCRIPCION,SEC.DESCRIPCION,FM.DESCRIPCION,SFM.DESCRIPCION,S.TALLA,S.COLOR,S.STOCK,ART.DPTO,ART.SECCION,ART.FAMILIA,ART.SUBFAMILIA,ART.TEMPORADA;"
         connection = pyodbc.connect(conexion)
         cursor = connection.cursor()
         cursor.execute("SELECT @@version;")
@@ -102,6 +102,7 @@ if len(configuration) > 0:
             obj['cSeccion'] = row[5]
             obj['cFamilia'] = row[6]
             obj['cSubFamilia'] = row[7]
+            obj['cTemporada'] = row[11]
             obj['cTalla'] = row[8]
             obj['cColor'] = row[9]
             obj[propertyStock] = row[10]
@@ -168,73 +169,149 @@ if len(configuration) > 0:
     
     def consultingClient():
         myobj = []
+        myobjProcess = []
         j = {}
+        count = 0
+        count_1 = 0
+        count_2 = 0
         server = instanciaBD
         dataBase = nameBD
         conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=ICGAdmin;PWD=masterkey'
-        nowDate=datetime.today().strftime('%Y-%m-%d')
-        lastDate = datetime.today()+timedelta(days=-1)
-        shift = timedelta(max(1, (lastDate.weekday() + 6) % 7))
-        lastDate = lastDate.strftime('%Y-%m-%d')
-        querySql="SELECT count(*) FROM CLIENTES WHERE ((NOMBRECLIENTE = '' AND NOMBRECOMERCIAL = '') OR (SUBSTRING(NOMBRECLIENTE,1,3) = 'AAA')) AND DESCATALOGADO = 'F';"
+
+        querySql="SELECT CODCLIENTE FROM CLIENTES WHERE ((NOMBRECLIENTE = '' AND NOMBRECOMERCIAL = '') OR (SUBSTRING(NOMBRECLIENTE,1,3) = 'AAA')) AND DESCATALOGADO = 'F';"
         connection = pyodbc.connect(conexion)
         cursor = connection.cursor()
         cursor.execute("SELECT @@version;")
-        row = cursor.fetchone()
+        row1 = cursor.fetchone()
         cursor.execute(querySql)
         rows = cursor.fetchall()
-        for row in rows:
-            obj = collections.OrderedDict()
-            obj['clientCant'] = row[0]
+        for row1 in rows:
+            count_1 = row1[0]
+        
+        querySql2="SELECT LOWER(SUBSTRING(NOMBRECLIENTE, 1, 5)) AS NOMBRE,CODCLIENTE FROM CLIENTES WHERE DESCATALOGADO = 'F';"
+        cursor2 = connection.cursor()
+        cursor2.execute("SELECT @@version;")
+        row2 = cursor2.fetchone()
+        cursor2.execute(querySql2)
+        rows2 = cursor2.fetchall()
+        for row2 in rows2:
+            if proccessNombre(row2[0]) == 1:
+                count += proccessNombre(row2[0])
             
-            myobj.append(obj)
+        
+        querySql3="SELECT COUNT(*) AS NUM,CODCLIENTE FROM CLIENTES WHERE CODVISIBLE != 8 AND DESCATALOGADO = 'F' GROUP BY CODCLIENTE;"
+        cursor3 = connection.cursor()
+        cursor3.execute("SELECT @@version;")
+        row3 = cursor3.fetchone()
+        cursor3.execute(querySql3)
+        rows3 = cursor3.fetchall()
+        for row3 in rows3:
+            count_2 += row3[0]
+            
+        obj = collections.OrderedDict()
+        
+        obj['clientCant'] = count_1 + count + count_2
+        myobj.append(obj)
         j = json.dumps(myobj)
         print(j)
         sio.emit('resClient',j)
-    
+        
+    def proccessNombre(palabras):
+        contador = 0
+        contadorc = 0
+        delete = 0
+        for x in palabras:
+          if x in ('aeiou'):
+            contador+=1
+          if x in ('bcdfghjklmnñpqrstvwxyz'):
+            contadorc+=1
+      
+        if contadorc >= 5:
+          if palabras != 'cynth' and palabras != 'cryst'and palabras != 'chrys':
+              delete = 1
+
+        return delete
+
     def consultingNotFound(data):
         
-        myobjA = []
-        myobjB = []
-        myobjRes = []
+        myobj = []
+        myobjProcess = []
         j = {}
-        i = {}
+        count = 0
+        count_1 = 0
+        count_2 = 0
         server = instanciaBD
         dataBase = nameBD
         conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=ICGAdmin;PWD=masterkey'
+
         querySql="SELECT CODCLIENTE FROM CLIENTES WHERE ((NOMBRECLIENTE = '' AND NOMBRECOMERCIAL = '') OR (SUBSTRING(NOMBRECLIENTE,1,3) = 'AAA')) AND DESCATALOGADO = 'F';"
-        
         connection = pyodbc.connect(conexion)
-        
         cursor = connection.cursor()
         cursor.execute("SELECT @@version;")
-        row = cursor.fetchone()
+        row1 = cursor.fetchone()
         cursor.execute(querySql)
         rows = cursor.fetchall()
-        for row in rows:
-            obja = collections.OrderedDict()
-            querySql_2="SELECT * FROM FACTURASVENTA WHERE CODCLIENTE = "+str(row[0])+";"
-            cursor.execute(querySql_2)
-            rows_2 = cursor.fetchall()
-            for row_2 in rows_2:
-                objb = collections.OrderedDict()
-                objb = row[0]
-                myobjB.append(objb)    
-            obja['codigo'] = row[0]
-            myobjA.append(obja)
-        for codA in myobjA:
-            if codA['codigo'] in myobjB:
-                print(codA['codigo'],'in')
-                querySql_3="UPDATE CLIENTES SET DESCATALOGADO = 'T' WHERE CODCLIENTE = "+str(codA['codigo'])+";"
-                cursor2 = connection.cursor()
-                cursor2.execute(querySql_3)
-                connection.commit()
-            else:
-                print(codA['codigo'],'not')
-                querySql_4="DELETE FROM CLIENTES WHERE CODCLIENTE = "+str(codA['codigo'])+";"
-                cursor2 = connection.cursor()
-                cursor2.execute(querySql_4)
-                connection.commit()
+        for row1 in rows:
+            count_1 = row1[0]
+            processClientesSQL(row1[0])
+            
+        querySql2="SELECT LOWER(SUBSTRING(NOMBRECLIENTE, 1, 5)) AS NOMBRE,CODCLIENTE FROM CLIENTES;"
+        cursor2 = connection.cursor()
+        cursor2.execute("SELECT @@version;")
+        row2 = cursor2.fetchone()
+        cursor2.execute(querySql2)
+        rows2 = cursor2.fetchall()
+        for row2 in rows2:
+            if proccessNombre(row2[0]) == 1:
+                count += proccessNombre(row2[0])
+                processClientesSQL(row2[1])
+        
+        querySql3="SELECT COUNT(*) AS NUM,CODCLIENTE FROM CLIENTES WHERE CODVISIBLE != 8 GROUP BY CODCLIENTE;"
+        cursor3 = connection.cursor()
+        cursor3.execute("SELECT @@version;")
+        row3 = cursor3.fetchone()
+        cursor3.execute(querySql3)
+        rows3 = cursor3.fetchall()
+        for row3 in rows3:
+            count_2 += row3[0]
+            processClientesSQL(row3[1])
+            
+        consultingClient()
+
+
+    def processClientesSQL(codigo):
+        vCodigo = ''
+        server = instanciaBD
+        dataBase = nameBD
+        conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=ICGAdmin;PWD=masterkey'
+
+        connection = pyodbc.connect(conexion)
+        cursor = connection.cursor()
+        cursor.execute("SELECT @@version;")
+        
+        obja = collections.OrderedDict()
+        querySql_2="SELECT CODCLIENTE FROM FACTURASVENTA WHERE CODCLIENTE = "+str(codigo)+";"
+    
+        row1 = cursor.fetchone()
+        cursor.execute(querySql_2)
+        rows_2 = cursor.fetchall()
+        for row_2 in rows_2:
+            vCodigo = row_2[0]
+        
+        if vCodigo != '':
+           print(vCodigo,'in')
+           querySql_3="UPDATE CLIENTES SET DESCATALOGADO = 'T' WHERE CODCLIENTE = "+str(codigo)+";"
+           cursor2 = connection.cursor()
+           cursor2.execute(querySql_3)
+           connection.commit()
+        else:
+           print(codigo,'not')
+           querySql_4="DELETE FROM CLIENTES WHERE CODCLIENTE = "+str(codigo)+";"
+           cursor2 = connection.cursor()
+           cursor2.execute(querySql_4)
+           connection.commit()
+
+    
     
     def deleteDescatalogado(data):
         
@@ -290,7 +367,7 @@ if len(configuration) > 0:
         lastDate = datetime.today()+timedelta(days=-1)
         shift = timedelta(max(1, (lastDate.weekday() + 6) % 7))
         lastDate = lastDate.strftime('%Y-%m-%d')
-        querySql="DECLARE @CODALMACEN AS NVARCHAR(3)=(SELECT DISTINCT VALOR FROM PARAMETROS WHERE CLAVE='ALDEF');SELECT ART.CODARTICULO,ART.REFPROVEEDOR AS REFERENCIA,AL.CODBARRAS AS CODIGO_BARRAS,ART.DESCRIPCION AS DESCRIPCION,DPTO.DESCRIPCION AS DEPARTAMENTO,SEC.DESCRIPCION AS SECCION,FM.DESCRIPCION AS FAMILIA,SFM.DESCRIPCION AS SUBFAMILIA,S.TALLA AS TALLA,S.COLOR AS COLOR,S.STOCK AS STOCK FROM ARTICULOS ART WITH(NOLOCK) RIGHT JOIN FAMILIAS FM WITH(NOLOCK) ON ART.DPTO = FM.NUMDPTO AND  ART.SECCION = FM.NUMSECCION AND ART.FAMILIA = FM.NUMFAMILIA RIGHT JOIN SUBFAMILIAS SFM WITH(NOLOCK) ON ART.DPTO = SFM.NUMDPTO AND  ART.SECCION = SFM.NUMSECCION AND ART.FAMILIA = SFM.NUMFAMILIA AND ART.SUBFAMILIA = SFM.NUMSUBFAMILIA INNER JOIN ARTICULOSLIN AL WITH(NOLOCK) ON ART.CODARTICULO=AL.CODARTICULO LEFT JOIN DEPARTAMENTO DPTO WITH(NOLOCK) ON ART.DPTO=DPTO.NUMDPTO LEFT JOIN SECCIONES SEC WITH(NOLOCK) ON ART.DPTO=SEC.NUMDPTO AND ART.SECCION=SEC.NUMSECCION LEFT JOIN STOCKS S WITH(NOLOCK) ON S.CODARTICULO=AL.CODARTICULO AND S.COLOR=AL.COLOR AND S.TALLA=AL.TALLA AND S.CODALMACEN=@CODALMACEN LEFT JOIN RIP.RIP_FSTOCK_ARTICULO_FECHA(GETDATE(), @CODALMACEN) S2 ON S2.CODARTICULO=AL.CODARTICULO AND S2.COLOR=AL.COLOR AND S2.TALLA=AL.TALLA WHERE DPTO.NUMDPTO != '96' AND DPTO.NUMDPTO != '97' AND ART.REFPROVEEDOR NOT LIKE '%-1' AND AL.CODBARRAS NOT LIKE '%-1' AND S.TALLA != '' AND S.COLOR != '' AND S.STOCK != '' AND SFM.DESCRIPCION != 'INGRESOS' AND SFM.DESCRIPCION != 'GASTOS' GROUP BY ART.CODARTICULO,ART.REFPROVEEDOR,AL.CODBARRAS,ART.DESCRIPCION,DPTO.DESCRIPCION,SEC.DESCRIPCION,FM.DESCRIPCION,SFM.DESCRIPCION,S.TALLA,S.COLOR,S.STOCK,ART.DPTO,ART.SECCION,ART.FAMILIA,ART.SUBFAMILIA;"
+        querySql="DECLARE @CODALMACEN AS NVARCHAR(3)=(SELECT DISTINCT VALOR FROM PARAMETROS WHERE CLAVE='ALDEF');SELECT ART.CODARTICULO,ART.REFPROVEEDOR AS REFERENCIA,AL.CODBARRAS AS CODIGO_BARRAS,ART.DESCRIPCION AS DESCRIPCION,DPTO.DESCRIPCION AS DEPARTAMENTO,SEC.DESCRIPCION AS SECCION,FM.DESCRIPCION AS FAMILIA,SFM.DESCRIPCION AS SUBFAMILIA,S.TALLA AS TALLA,S.COLOR AS COLOR,S.STOCK AS STOCK,ART.TEMPORADA AS TEMPORADA FROM ARTICULOS ART WITH(NOLOCK) RIGHT JOIN FAMILIAS FM WITH(NOLOCK) ON ART.DPTO = FM.NUMDPTO AND  ART.SECCION = FM.NUMSECCION AND ART.FAMILIA = FM.NUMFAMILIA RIGHT JOIN SUBFAMILIAS SFM WITH(NOLOCK) ON ART.DPTO = SFM.NUMDPTO AND  ART.SECCION = SFM.NUMSECCION AND ART.FAMILIA = SFM.NUMFAMILIA AND ART.SUBFAMILIA = SFM.NUMSUBFAMILIA INNER JOIN ARTICULOSLIN AL WITH(NOLOCK) ON ART.CODARTICULO=AL.CODARTICULO LEFT JOIN DEPARTAMENTO DPTO WITH(NOLOCK) ON ART.DPTO=DPTO.NUMDPTO LEFT JOIN SECCIONES SEC WITH(NOLOCK) ON ART.DPTO=SEC.NUMDPTO AND ART.SECCION=SEC.NUMSECCION LEFT JOIN STOCKS S WITH(NOLOCK) ON S.CODARTICULO=AL.CODARTICULO AND S.COLOR=AL.COLOR AND S.TALLA=AL.TALLA AND S.CODALMACEN=@CODALMACEN LEFT JOIN RIP.RIP_FSTOCK_ARTICULO_FECHA(GETDATE(), @CODALMACEN) S2 ON S2.CODARTICULO=AL.CODARTICULO AND S2.COLOR=AL.COLOR AND S2.TALLA=AL.TALLA WHERE DPTO.NUMDPTO != '96' AND DPTO.NUMDPTO != '97' AND ART.REFPROVEEDOR NOT LIKE '%-1' AND AL.CODBARRAS NOT LIKE '%-1' AND S.TALLA != '' AND S.COLOR != '' AND S.STOCK != '' AND SFM.DESCRIPCION != 'INGRESOS' AND SFM.DESCRIPCION != 'GASTOS' GROUP BY ART.CODARTICULO,ART.REFPROVEEDOR,AL.CODBARRAS,ART.DESCRIPCION,DPTO.DESCRIPCION,SEC.DESCRIPCION,FM.DESCRIPCION,SFM.DESCRIPCION,S.TALLA,S.COLOR,S.STOCK,ART.DPTO,ART.SECCION,ART.FAMILIA,ART.SUBFAMILIA,ART.TEMPORADA;"
         connection = pyodbc.connect(conexion)
         cursor = connection.cursor()
         cursor.execute("SELECT @@version;")
@@ -307,10 +384,11 @@ if len(configuration) > 0:
             obj['cSeccion'] = row[5]
             obj['cFamilia'] = row[6]
             obj['cSubFamilia'] = row[7]
+            obj['cTemporada'] = row[11]
             obj['cTalla'] = row[8]
             obj['cColor'] = row[9]
             obj['cStock'] = row[10]
-    
+            
             myobj.append(obj)
         j = json.dumps(myobj)
         print(j)
