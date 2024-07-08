@@ -19,7 +19,7 @@ router.post('/service/cliente/list/delete', async (req, res) => {
         await pool.query(`UPDATE TB_CLIENTES_CLEAR_FORNT SET LIST_CLIENTE = ${body} WHERE ID_CLIENTE_CLEAR = 1;`);
     }
 
-    res.json(defaultResponse.success.default);
+    res.status(200);
 });
 
 router.get('/service/cliente/list/delete', async (req, res) => {
