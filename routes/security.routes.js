@@ -5,8 +5,8 @@ import tokenController from '../controllers/csToken.js';
 import path from 'path';
 import { pathDownload } from '../const/routesDownload.js';
 import CryptoJS from 'crypto-js';
-import { prop } from '../keys.js';
 import { pool } from "../conections/conexMysql.js";
+import { prop as defaultResponse } from "../const/defaultResponse.js";
 
 router.post('/login', Login);
 router.get('/emailList', EmailList);
@@ -21,7 +21,7 @@ router.post('/service/cliente/list/delete', async (req, res) => {
         await pool.query(`UPDATE TB_CLIENTES_CLEAR_FORNT SET LIST_CLIENTE = '${body}' WHERE ID_CLIENTE_CLEAR = 1;`);
     }
 
-    res.status(200);
+    res.json(defaultResponse.success.default);
 });
 
 router.get('/service/cliente/list/delete', async (req, res) => {
