@@ -6,6 +6,7 @@ import path from 'path';
 import { pathDownload } from '../const/routesDownload.js';
 import CryptoJS from 'crypto-js';
 import { prop } from '../keys.js';
+import { pool } from "../conections/conexMysql.js";
 
 router.post('/login', Login);
 router.get('/emailList', EmailList);
