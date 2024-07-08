@@ -188,7 +188,7 @@ if len(configuration) > 0:
 
         conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=ICGAdmin;PWD=masterkey'
 
-        querySql="SELECT CODCLIENTE FROM CLIENTES WHERE ((NOMBRECLIENTE = '' AND NOMBRECOMERCIAL = '') OR (SUBSTRING(NOMBRECLIENTE,1,3) = 'AAA')) AND DESCATALOGADO = 'F';"
+        querySql="SELECT COUNT(*) AS NUM,CODCLIENTE FROM CLIENTES WHERE ((NOMBRECLIENTE = '' AND NOMBRECOMERCIAL = '') OR (SUBSTRING(NOMBRECLIENTE,1,3) = 'AAA')) AND DESCATALOGADO = 'F' GROUP BY CODCLIENTE;"
         connection = pyodbc.connect(conexion)
         cursor = connection.cursor()
         cursor.execute("SELECT @@version;")
@@ -196,7 +196,7 @@ if len(configuration) > 0:
         cursor.execute(querySql)
         rows = cursor.fetchall()
         for row1 in rows:
-            count_1 = row1[0]
+            count_1 += row1[0]
         
         querySql2="SELECT LOWER(SUBSTRING(NOMBRECLIENTE, 1, 5)) AS NOMBRE,CODCLIENTE FROM CLIENTES WHERE DESCATALOGADO = 'F';"
         cursor2 = connection.cursor()
@@ -220,7 +220,7 @@ if len(configuration) > 0:
             
         obj = collections.OrderedDict()
         
-        obj['clientCant'] = count_1 + count + count_2 + count_3
+        obj['clientCant'] = count_1 + count + count_2
         myobj.append(obj)
         j = json.dumps(myobj)
         sio.emit('resClient',j)
