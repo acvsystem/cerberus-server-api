@@ -15,9 +15,9 @@ router.post('/service/cliente/list/delete', async (req, res) => {
     let [data] = await pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`)
 
     if (!data.length) {
-        await pool.query(`INSERT INTO TB_CLIENTES_CLEAR_FORNT(LIST_CLIENTE)VALUES(${body});`);
+        await pool.query(`INSERT INTO TB_CLIENTES_CLEAR_FORNT(LIST_CLIENTE)VALUES(${body[0]});`);
     } else {
-        await pool.query(`UPDATE TB_CLIENTES_CLEAR_FORNT SET LIST_CLIENTE = ${body} WHERE ID_CLIENTE_CLEAR = 1;`);
+        await pool.query(`UPDATE TB_CLIENTES_CLEAR_FORNT SET LIST_CLIENTE = ${body[0]} WHERE ID_CLIENTE_CLEAR = 1;`);
     }
 
     res.status(200);
