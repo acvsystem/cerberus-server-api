@@ -12,6 +12,7 @@ router.post('/login', Login);
 router.get('/emailList', EmailList);
 router.post('/service/cliente/list/delete', async (req, res) => {
     let body = req.body;
+    console.log(req.body);
     let [data] = await pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`)
 
     if (!data.length) {
