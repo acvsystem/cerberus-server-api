@@ -71,7 +71,9 @@ if len(configuration) > 0:
         rows = codeList
         for row in rows:
             if row['code'] == serieTienda:
-                fnSendDataFront()   
+                fnSendDataFront()  
+
+    
 
     def fnSendDataFront():
         myobj = []
@@ -174,8 +176,16 @@ if len(configuration) > 0:
         count = 0
         count_1 = 0
         count_2 = 0
+        count_3 = 0
         server = instanciaBD
         dataBase = nameBD
+
+        res = requests.get('http://38.187.8.22:3200/security/service/cliente/list/delete')
+        configuration = res
+        for row3 in configuration:
+            count_3 += row3[0]
+            print(count_3)
+
         conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=ICGAdmin;PWD=masterkey'
 
         querySql="SELECT CODCLIENTE FROM CLIENTES WHERE ((NOMBRECLIENTE = '' AND NOMBRECOMERCIAL = '') OR (SUBSTRING(NOMBRECLIENTE,1,3) = 'AAA')) AND DESCATALOGADO = 'F';"
@@ -210,10 +220,9 @@ if len(configuration) > 0:
             
         obj = collections.OrderedDict()
         
-        obj['clientCant'] = count_1 + count + count_2
+        obj['clientCant'] = count_1 + count + count_2 + count_3
         myobj.append(obj)
         j = json.dumps(myobj)
-        print(j)
         sio.emit('resClient',j)
         
     def proccessNombre(palabras):
