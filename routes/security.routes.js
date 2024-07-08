@@ -11,14 +11,14 @@ import { pool } from "../conections/conexMysql.js";
 router.post('/login', Login);
 router.get('/emailList', EmailList);
 router.post('/service/cliente/list/delete', async (req, res) => {
-    let body = req.body;
+    let body = ((req || []).body[0] || {})['cliente'] || "";
     console.log(body);
     let [data] = await pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`)
 
     if (!data.length) {
-        await pool.query(`INSERT INTO TB_CLIENTES_CLEAR_FORNT(LIST_CLIENTE)VALUES(${body[0]});`);
+        await pool.query(`INSERT INTO TB_CLIENTES_CLEAR_FORNT(LIST_CLIENTE)VALUES(${body});`);
     } else {
-        await pool.query(`UPDATE TB_CLIENTES_CLEAR_FORNT SET LIST_CLIENTE = ${body[0]} WHERE ID_CLIENTE_CLEAR = 1;`);
+        await pool.query(`UPDATE TB_CLIENTES_CLEAR_FORNT SET LIST_CLIENTE = ${body} WHERE ID_CLIENTE_CLEAR = 1;`);
     }
 
     res.status(200);
