@@ -27,7 +27,7 @@ router.post('/service/cliente/list/delete', async (req, res) => {
 router.get('/service/cliente/list/delete', async (req, res) => {
     let [data] = await pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`);
     console.log(data);
-    let listCliente = ((data || [])[0]).split(',');
+    let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
     res.json(listCliente);
 });
 
