@@ -143,7 +143,7 @@ io.on('connection', async (socket) => {
 
   socket.on('cleanClient', (data) => {
     console.log('cleanClient');
-    socket.broadcast.emit("searchCantCliente", 'ready');
+    socket.broadcast.emit("searchCantCliente", data);
   });
 
 
@@ -220,7 +220,7 @@ io.on('connection', async (socket) => {
 
     socket.to(`${socketID}`).emit("update:file:status", statusList);
   });
-  
+
 
   socket.on('status:serverSUNAT', (data) => {
     socket.broadcast.emit("status:serverSUNAT:send", data);

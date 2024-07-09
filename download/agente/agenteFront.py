@@ -194,6 +194,27 @@ if len(configuration) > 0:
         j = json.dumps(myobj)
         print(j)
         sio.emit('resClient',j)
+
+    def extraCliente(lsCliente):
+        myobj = []
+        j = {}
+        server = instanciaBD
+        dataBase = nameBD
+        count = 0
+        conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=pereport;PWD=reportpe'
+        for cli in lsCliente:
+            querySql="SELECT count(*) FROM CLIENTES WHERE NOMBRECLIENTE = '"+row[0]+"';"
+            connection = pyodbc.connect(conexion)
+            cursor = connection.cursor()
+            cursor.execute("SELECT @@version;")
+            row = cursor.fetchone()
+            cursor.execute(querySql)
+            rows = cursor.fetchall()
+            for row in rows:
+                count += row[0]
+
+        print(count)
+        return count
     
     def consultingNotFound(data):
         
@@ -394,3 +415,4 @@ if len(configuration) > 0:
     consultingData()
     consultingTransaction()
     msvcrt.getch()
+    extraCliente(lsCliente)
