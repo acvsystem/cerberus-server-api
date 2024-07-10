@@ -203,7 +203,7 @@ if len(configuration) > 0:
         conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=pereport;PWD=reportpe'
         
         for cli in lsCliente:
-            querySql="SELECT count(*) FROM CLIENTES WHERE NOMBRECLIENTE = '"+cli+"';"
+            querySql="SELECT count(*) FROM CLIENTES WHERE NOMBRECLIENTE = '"+cli+"' AND DESCATALOGADO = 'F';"
             connection = pyodbc.connect(conexion)
             cursor = connection.cursor()
             cursor.execute("SELECT @@version;")
