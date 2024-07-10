@@ -55,9 +55,9 @@ if len(configuration) > 0:
 
     @sio.event
     def limpiarCliente(data):
-        consultingNotFound('data')
+        consultingNotFound(data)
         deleteDescatalogado('data')
-        consultingClient()
+        consultingClient(data)
 
     @sio.event
     def searchStockTest(email,codeList):
@@ -216,14 +216,17 @@ if len(configuration) > 0:
         return count
 
     def extraDelete(lsCliente):
-        myobj = []
+        myobjA = []
+        myobjB = []
+        myobjRes = []
         j = {}
+        i = {}
         server = instanciaBD
         dataBase = nameBD
         conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=pereport;PWD=reportpe'
 
         for cli in lsCliente:
-            querySql="SELECT CODCLIENTE FROM CLIENTES WHERE NOMBRECLIENTE = '"+cli+"';"
+            querySql="SELECT CODCLIENTE,NOMBRECLIENTE FROM CLIENTES WHERE NOMBRECLIENTE = '"+cli+"';"
             connection = pyodbc.connect(conexion)
             cursor = connection.cursor()
             cursor.execute("SELECT @@version;")
@@ -240,20 +243,21 @@ if len(configuration) > 0:
                     objb = row[0]
                     myobjB.append(objb)    
                 obja['codigo'] = row[0]
+                obja['name'] = row[1]
                 myobjA.append(obja)
                 for codA in myobjA:
                     if codA['codigo'] in myobjB:
-                        print(codA['codigo'],'in')
+                        print(codA['codigo'],'in',codA['name'])
                         querySql_3="UPDATE CLIENTES SET DESCATALOGADO = 'T' WHERE CODCLIENTE = "+str(codA['codigo'])+";"
                         cursor2 = connection.cursor()
                         cursor2.execute(querySql_3)
                         connection.commit()
                     else:
-                        print(codA['codigo'],'not')
+                        print(codA['codigo'],'not',codA['name'])
                         querySql_4="DELETE FROM CLIENTES WHERE CODCLIENTE = "+str(codA['codigo'])+";"
                         cursor2 = connection.cursor()
                         cursor2.execute(querySql_4)
-                        connection.commit()                
+                        connection.commit()
 
     
     def consultingNotFound(data):
@@ -288,13 +292,11 @@ if len(configuration) > 0:
             myobjA.append(obja)
         for codA in myobjA:
             if codA['codigo'] in myobjB:
-                print(codA['codigo'],'in')
                 querySql_3="UPDATE CLIENTES SET DESCATALOGADO = 'T' WHERE CODCLIENTE = "+str(codA['codigo'])+";"
                 cursor2 = connection.cursor()
                 cursor2.execute(querySql_3)
                 connection.commit()
             else:
-                print(codA['codigo'],'not')
                 querySql_4="DELETE FROM CLIENTES WHERE CODCLIENTE = "+str(codA['codigo'])+";"
                 cursor2 = connection.cursor()
                 cursor2.execute(querySql_4)
