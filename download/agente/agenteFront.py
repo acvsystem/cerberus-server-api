@@ -301,7 +301,7 @@ if len(configuration) > 0:
                 cursor2 = connection.cursor()
                 cursor2.execute(querySql_4)
                 connection.commit()
-        extraDelete(data)
+        extraDelete(data)d
     
     def deleteDescatalogado(data):
         
