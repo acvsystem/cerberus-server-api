@@ -51,7 +51,7 @@ if len(configuration) > 0:
 
     @sio.event
     def searchCantCliente(data):
-        consultingClient()
+        consultingClient(data)
 
     @sio.event
     def limpiarCliente(data):
@@ -169,16 +169,14 @@ if len(configuration) > 0:
         print(j)
         sio.emit('resTransaction',j)
     
-    def consultingClient():
+    def consultingClient(data):
         myobj = []
         j = {}
         server = instanciaBD
         dataBase = nameBD
+        count = extraCliente(data)
         conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=pereport;PWD=reportpe'
-        nowDate=datetime.today().strftime('%Y-%m-%d')
-        lastDate = datetime.today()+timedelta(days=-1)
-        shift = timedelta(max(1, (lastDate.weekday() + 6) % 7))
-        lastDate = lastDate.strftime('%Y-%m-%d')
+        
         querySql="SELECT count(*) FROM CLIENTES WHERE ((NOMBRECLIENTE = '' AND NOMBRECOMERCIAL = '') OR (SUBSTRING(NOMBRECLIENTE,1,3) = 'AAA')) AND DESCATALOGADO = 'F';"
         connection = pyodbc.connect(conexion)
         cursor = connection.cursor()
@@ -187,12 +185,13 @@ if len(configuration) > 0:
         cursor.execute(querySql)
         rows = cursor.fetchall()
         for row in rows:
-            obj = collections.OrderedDict()
-            obj['clientCant'] = row[0]
+            count += row[0]
             
-            myobj.append(obj)
+        obj = collections.OrderedDict()
+
+        obj['clientCant'] = count
+        myobj.append(obj)
         j = json.dumps(myobj)
-        print(j)
         sio.emit('resClient',j)
 
     def extraCliente(lsCliente):
@@ -202,8 +201,9 @@ if len(configuration) > 0:
         dataBase = nameBD
         count = 0
         conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=pereport;PWD=reportpe'
+        
         for cli in lsCliente:
-            querySql="SELECT count(*) FROM CLIENTES WHERE NOMBRECLIENTE = '"+row[0]+"';"
+            querySql="SELECT count(*) FROM CLIENTES WHERE NOMBRECLIENTE = '"+cli+"';"
             connection = pyodbc.connect(conexion)
             cursor = connection.cursor()
             cursor.execute("SELECT @@version;")
@@ -213,8 +213,48 @@ if len(configuration) > 0:
             for row in rows:
                 count += row[0]
 
-        print(count)
         return count
+
+    def extraDelete(lsCliente):
+        myobj = []
+        j = {}
+        server = instanciaBD
+        dataBase = nameBD
+        conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=pereport;PWD=reportpe'
+
+        for cli in lsCliente:
+            querySql="SELECT CODCLIENTE FROM CLIENTES WHERE NOMBRECLIENTE = '"+cli+"';"
+            connection = pyodbc.connect(conexion)
+            cursor = connection.cursor()
+            cursor.execute("SELECT @@version;")
+            row = cursor.fetchone()
+            cursor.execute(querySql)
+            rows = cursor.fetchall()
+            for row in rows:
+                obja = collections.OrderedDict()
+                querySql_2="SELECT * FROM FACTURASVENTA WHERE CODCLIENTE = "+str(row[0])+";"
+                cursor.execute(querySql_2)
+                rows_2 = cursor.fetchall()
+                for row_2 in rows_2:
+                    objb = collections.OrderedDict()
+                    objb = row[0]
+                    myobjB.append(objb)    
+                obja['codigo'] = row[0]
+                myobjA.append(obja)
+                for codA in myobjA:
+                    if codA['codigo'] in myobjB:
+                        print(codA['codigo'],'in')
+                        querySql_3="UPDATE CLIENTES SET DESCATALOGADO = 'T' WHERE CODCLIENTE = "+str(codA['codigo'])+";"
+                        cursor2 = connection.cursor()
+                        cursor2.execute(querySql_3)
+                        connection.commit()
+                    else:
+                        print(codA['codigo'],'not')
+                        querySql_4="DELETE FROM CLIENTES WHERE CODCLIENTE = "+str(codA['codigo'])+";"
+                        cursor2 = connection.cursor()
+                        cursor2.execute(querySql_4)
+                        connection.commit()                
+
     
     def consultingNotFound(data):
         
@@ -259,6 +299,7 @@ if len(configuration) > 0:
                 cursor2 = connection.cursor()
                 cursor2.execute(querySql_4)
                 connection.commit()
+        extraDelete(data)
     
     def deleteDescatalogado(data):
         
@@ -415,4 +456,3 @@ if len(configuration) > 0:
     consultingData()
     consultingTransaction()
     msvcrt.getch()
-    extraCliente(lsCliente)

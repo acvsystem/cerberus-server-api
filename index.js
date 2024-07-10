@@ -165,7 +165,7 @@ io.on('connection', async (socket) => {
 
   socket.on('emitCleanClient', (data) => {
     console.log('cleanClient');
-    socket.broadcast.emit("limpiarCliente", 'ready');
+    socket.broadcast.emit("limpiarCliente", data);
   });
 
   socket.on('conexion:serverICG', (data) => {
