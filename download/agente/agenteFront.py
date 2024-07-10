@@ -223,7 +223,7 @@ if len(configuration) > 0:
         i = {}
         server = instanciaBD
         dataBase = nameBD
-        conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=pereport;PWD=reportpe'
+        conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=ICGAdmin;PWD=masterkey'
 
         for cli in lsCliente:
             querySql="SELECT CODCLIENTE,NOMBRECLIENTE FROM CLIENTES WHERE NOMBRECLIENTE = '"+cli+"';"
