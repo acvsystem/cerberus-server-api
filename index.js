@@ -49,9 +49,14 @@ const task_3 = cron.schedule('00 19 * * *', () => {
   emitVerificationDoc();
 });
 
+const task_4 = cron.schedule('1 * * * *', () => {
+  console.log('1 * * * *');
+});
+
 task_1.start();
 task_2.start();
 task_3.start();
+task_4.start();
 
 function emitVerificationDoc() {
   io.emit('consultingToFront', 'emitVerificationDoc');
