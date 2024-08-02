@@ -33,7 +33,8 @@ class clsFacturacion {
             { code: '9K', name: 'VS MEGA PLAZA' },
             { code: '9L', name: 'VS MINKA' },
             { code: '9F', name: 'VSFA JOCKEY FULL' },
-            { code: '7A7', name: 'BBW ASIA' }
+            { code: '7A7', name: 'BBW ASIA' },
+            { code: '9P', name: 'VS MALL PLAZA'}
         ];
         var dataNoFound = [];
         var paseDataList = [];

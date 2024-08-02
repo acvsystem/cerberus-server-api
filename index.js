@@ -314,24 +314,25 @@ io.on('connection', async (socket) => {
 
     let arrDocumento = (((req || []).body || [])[0] || {});
     let tiendasList = [
-      { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@grupodavid.com' },
-      { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@grupodavid.com' },
-      { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@grupodavid.com' },
-      { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@grupodavid.com' },
-      { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@grupodavid.com' },
-      { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@grupodavid.com' },
-      { code: '7C', name: 'BBW SAN MIGUEL', email: 'bbwsanmiguel@grupodavid.com' },
-      { code: '9C', name: 'VS SAN MIGUEL', email: 'vssanmiguel@grupodavid.com' },
-      { code: '7D', name: 'BBW SALAVERRY', email: 'bbwsalaverry@grupodavid.com' },
-      { code: '9I', name: 'VS SALAVERRY', email: 'vssalaverry@grupodavid.com' },
-      { code: '9G', name: 'VS MALL DEL SUR', email: 'vsmalldelsur@grupodavid.com' },
-      { code: '9H', name: 'VS PURUCHUCO', email: 'vspuruchuco@grupodavid.com' },
-      { code: '9M', name: 'VS ECOMMERCE', email: 'vsecommpe@grupodavid.com' },
-      { code: '7F', name: 'BBW ECOMMERCE', email: 'bbwecommperu@grupodavid.com' },
-      { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@grupodavid.com' },
-      { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@grupodavid.com' },
-      { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@grupodavid.com' },
-      { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@grupodavid.com' }
+      { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
+      { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
+      { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@metasperu.com' },
+      { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@metasperu.com' },
+      { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@metasperu.com' },
+      { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@metasperu.com' },
+      { code: '7C', name: 'BBW SAN MIGUEL', email: 'bbwsanmiguel@metasperu.com' },
+      { code: '9C', name: 'VS SAN MIGUEL', email: 'vssanmiguel@metasperu.com' },
+      { code: '7D', name: 'BBW SALAVERRY', email: 'bbwsalaverry@metasperu.com' },
+      { code: '9I', name: 'VS SALAVERRY', email: 'vssalaverry@metasperu.com' },
+      { code: '9G', name: 'VS MALL DEL SUR', email: 'vsmalldelsur@metasperu.com' },
+      { code: '9H', name: 'VS PURUCHUCO', email: 'vspuruchuco@metasperu.com' },
+      { code: '9M', name: 'VS ECOMMERCE', email: 'vsecommpe@metasperu.com' },
+      { code: '7F', name: 'BBW ECOMMERCE', email: 'bbwecommperu@metasperu.com' },
+      { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@metasperu.com' },
+      { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@metasperu.com' },
+      { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@metasperu.com' },
+      { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@metasperu.com' },
+      { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com'}
     ];
 
     if ((arrDocumento || {}).CODIGO_ERROR_SUNAT == 2800 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 1032 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 2022 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 1083 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 1033) {
@@ -345,7 +346,7 @@ io.on('connection', async (socket) => {
                                 '${(arrDocumento || {}).NRO_CORRELATIVO}',
                                 '${(arrDocumento || {}).NOM_ADQUIRIENTE}',
                                 '${(arrDocumento || {}).NRO_DOCUMENTO}',
-                                '${(arrDocumento || {}).TIPO_DOCUMENTO_ADQUIRIENTE}',
+                                '',
                                 '${(arrDocumento || {}).OBSERVACION}',
                                 '${(arrDocumento || {}).ESTADO_SUNAT}',
                                 '${(arrDocumento || {}).ESTADO_COMPROBANTE}',
@@ -358,7 +359,6 @@ io.on('connection', async (socket) => {
         await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET
                                 NOM_ADQUIRIENTE ='${(arrDocumento || {}).NOM_ADQUIRIENTE}',
                                 NRO_DOCUMENTO = '${(arrDocumento || {}).NRO_DOCUMENTO}',
-                                TIPO_DOCUMENTO_ADQUIRIENTE = '${(arrDocumento || {}).TIPO_DOCUMENTO_ADQUIRIENTE}',
                                 OBSERVACION = '${(arrDocumento || {}).OBSERVACION}',
                                 ESTADO_SUNAT = '${(arrDocumento || {}).ESTADO_SUNAT}',
                                 ESTADO_COMPROBANTE = '${(arrDocumento || {}).ESTADO_COMPROBANTE}',
