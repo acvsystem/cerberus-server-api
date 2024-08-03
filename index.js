@@ -239,6 +239,7 @@ io.on('connection', async (socket) => {
 
   if (codeTerminal != "SRVFACT" && isIcg != 'true') {
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
+    console.log(listSessionConnect);
     socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
   } else {
     if (codeTerminal == "SRVFACT") {
