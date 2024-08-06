@@ -333,7 +333,8 @@ io.on('connection', async (socket) => {
       { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@metasperu.com' },
       { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@metasperu.com' },
       { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@metasperu.com' },
-      { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com'}
+      { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com'},
+      { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com'}
     ];
 
     if ((arrDocumento || {}).CODIGO_ERROR_SUNAT == 2800 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 1032 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 2022 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 1083 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 1033) {

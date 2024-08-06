@@ -175,7 +175,7 @@ if len(configuration) > 0:
         server = instanciaBD
         dataBase = nameBD
         count = extraCliente(data)
-        conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=pereport;PWD=reportpe'
+        conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=ICGAdmin;PWD=masterkey'
         
         querySql="SELECT count(*) FROM CLIENTES WHERE ((NOMBRECLIENTE = '' AND NOMBRECOMERCIAL = '') OR (SUBSTRING(NOMBRECLIENTE,1,3) = 'AAA')) AND DESCATALOGADO = 'F';"
         connection = pyodbc.connect(conexion)
@@ -192,7 +192,41 @@ if len(configuration) > 0:
         obj['clientCant'] = count
         myobj.append(obj)
         j = json.dumps(myobj)
+        print(j)
         sio.emit('resClient',j)
+
+    def consultingClient():
+    myobj = []
+    myobjProcess = []
+    j = {}
+    count = 0
+    count_1 = 0
+    count_2 = 0
+    server = 'VSFAJPBD\\VSFAJP'
+    dataBase = 'VSFAPR'
+    conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=pereport;PWD=reportpe'
+
+    querySql="SELECT CODCLIENTE FROM CLIENTES WHERE ((NOMBRECLIENTE = '' AND NOMBRECOMERCIAL = '') OR (SUBSTRING(NOMBRECLIENTE,1,3) = 'AAA')) AND DESCATALOGADO = 'F';"
+    connection = pyodbc.connect(conexion)
+    cursor = connection.cursor()
+    cursor.execute("SELECT @@version;")
+    row1 = cursor.fetchone()
+    cursor.execute(querySql)
+    rows = cursor.fetchall()
+    for row1 in rows:
+        count_1 = row1[0]
+        processClientesSQL(row1[0])
+        
+    querySql2="SELECT LOWER(SUBSTRING(NOMBRECLIENTE, 1, 5)) AS NOMBRE,CODCLIENTE FROM CLIENTES;"
+    cursor2 = connection.cursor()
+    cursor2.execute("SELECT @@version;")
+    row2 = cursor2.fetchone()
+    cursor2.execute(querySql2)
+    rows2 = cursor2.fetchall()
+    for row2 in rows2:
+        count += proccessNombre(row2[0])
+        if proccessNombre(row2[0]) == 1:
+            processClientesSQL(row2[1])
 
     def extraCliente(lsCliente):
         myobj = []
@@ -200,7 +234,7 @@ if len(configuration) > 0:
         server = instanciaBD
         dataBase = nameBD
         count = 0
-        conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=pereport;PWD=reportpe'
+        conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=ICGAdmin;PWD=masterkey'
         
         for cli in lsCliente:
             querySql="SELECT count(*) FROM CLIENTES WHERE NOMBRECLIENTE = '"+cli+"' AND DESCATALOGADO = 'F';"
@@ -396,6 +430,25 @@ if len(configuration) > 0:
         process = json.dumps({'code':serieTienda,'progress':80})
         sio.emit('responseStock',process)
         fnEnviarEmail(email)
+
+    def proccessNombre(palabras):
+        contador = 0
+        contadorc = 0
+        delete = 0
+        for x in palabras:
+          if x in ('aeiou'):
+            contador+=1
+          if x in ('bcdfghjklmnñpqrstvwxyz'):
+            contadorc+=1
+      
+        if contadorc >= 5:
+          if palabras != 'cynth' and palabras != 'cryst'and palabras != 'chrys':
+              delete = 1
+
+        if contador >= 5:
+            delete = 1
+
+        return delete
     
         
     def fnEnviarEmail(email):
