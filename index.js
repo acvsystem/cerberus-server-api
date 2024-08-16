@@ -50,7 +50,7 @@ const task_3 = cron.schedule('00 19 * * *', () => {
 });
 
 const task_4 = cron.schedule('*/15 * * * *', () => {
-  console.log('/1 * * * *');
+  console.log('/15 * * * *');
   emitVerificationSUNAT();
 });
 
@@ -167,9 +167,9 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("searchStockTest", email, arrCodeTienda);
   });
 
-  socket.on('comunicationStockTable', (arrCodeTienda) => {
+  socket.on('comunicationStockTable', (arrCodeTienda, barcode) => {
     console.log('comunicationStockTable');
-    socket.broadcast.emit("searchStockTable", arrCodeTienda);
+    socket.broadcast.emit("searchStockTable", arrCodeTienda, barcode);
   });
 
 
@@ -214,8 +214,8 @@ io.on('connection', async (socket) => {
       update: "python",
     };
 
-      socket.broadcast.emit("update_file_Agente", configurationList);
-    
+    socket.broadcast.emit("update_file_Agente", configurationList);
+
   });
 
   socket.on("update:file:response", (response) => {
@@ -333,8 +333,8 @@ io.on('connection', async (socket) => {
       { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@metasperu.com' },
       { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@metasperu.com' },
       { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@metasperu.com' },
-      { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com'},
-      { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com'}
+      { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com' },
+      { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
     ];
 
     if ((arrDocumento || {}).CODIGO_ERROR_SUNAT == 2800 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 1032 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 2022 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 1083 || (arrDocumento || {}).CODIGO_ERROR_SUNAT == 1033) {
