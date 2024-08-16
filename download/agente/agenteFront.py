@@ -96,22 +96,29 @@ if len(configuration) > 0:
         row = cursor.fetchone()
         cursor.execute(querySql)
         rows = cursor.fetchall()
-        for row in rows:
+        if len(rows) > 0:
+            for row in rows:
+                obj = collections.OrderedDict()
+                obj['cCodigoTienda'] = serieTienda
+                obj['cCodigoArticulo'] = row[0]
+                obj['cReferencia'] = row[1]
+                obj['cCodigoBarra'] = row[2]
+                obj['cDescripcion'] = row[3]
+                obj['cDepartamento'] = row[4]
+                obj['cSeccion'] = row[5]
+                obj['cFamilia'] = row[6]
+                obj['cSubFamilia'] = row[7]
+                obj['cTemporada'] = row[11]
+                obj['cTalla'] = row[8]
+                obj['cColor'] = row[9]
+                obj[propertyStock] = row[10]
+
+                myobj.append(obj)
+        else:
             obj = collections.OrderedDict()
             obj['cCodigoTienda'] = serieTienda
-            obj['cCodigoArticulo'] = row[0]
-            obj['cReferencia'] = row[1]
-            obj['cCodigoBarra'] = row[2]
-            obj['cDescripcion'] = row[3]
-            obj['cDepartamento'] = row[4]
-            obj['cSeccion'] = row[5]
-            obj['cFamilia'] = row[6]
-            obj['cSubFamilia'] = row[7]
-            obj['cTemporada'] = row[11]
-            obj['cTalla'] = row[8]
-            obj['cColor'] = row[9]
-            obj[propertyStock] = row[10]
-    
+            obj['cCodigoBarra'] = barcode
+            obj[propertyStock] = 0
             myobj.append(obj)
         print(myobj)
         x = requests.post('http://38.187.8.22:3200/frontRetail/search/stock', json = myobj)
