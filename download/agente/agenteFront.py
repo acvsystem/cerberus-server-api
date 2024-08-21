@@ -98,22 +98,45 @@ if len(configuration) > 0:
         rows = cursor.fetchall()
         if len(rows) > 0:
             for row in rows:
-                obj = collections.OrderedDict()
-                obj['cCodigoTienda'] = serieTienda
-                obj['cCodigoArticulo'] = row[0]
-                obj['cReferencia'] = row[1]
-                obj['cCodigoBarra'] = row[2]
-                obj['cDescripcion'] = row[3]
-                obj['cDepartamento'] = row[4]
-                obj['cSeccion'] = row[5]
-                obj['cFamilia'] = row[6]
-                obj['cSubFamilia'] = row[7]
-                obj['cTemporada'] = row[11]
-                obj['cTalla'] = row[8]
-                obj['cColor'] = row[9]
-                obj[propertyStock] = row[10]
+                if len(barcode):
+                    querySql="DECLARE @CODALMACEN AS NVARCHAR(3)=(SELECT DISTINCT VALOR FROM PARAMETROS WHERE CLAVE='ALDEF');SELECT ART.CODARTICULO,ART.REFPROVEEDOR AS REFERENCIA,AL.CODBARRAS AS CODIGO_BARRAS,ART.DESCRIPCION AS DESCRIPCION,DPTO.DESCRIPCION AS DEPARTAMENTO,SEC.DESCRIPCION AS SECCION,FM.DESCRIPCION AS FAMILIA,SFM.DESCRIPCION AS SUBFAMILIA,S.TALLA AS TALLA,S.COLOR AS COLOR,S.STOCK AS STOCK,ART.TEMPORADA AS TEMPORADA FROM ARTICULOS ART WITH(NOLOCK) RIGHT JOIN FAMILIAS FM WITH(NOLOCK) ON ART.DPTO = FM.NUMDPTO AND  ART.SECCION = FM.NUMSECCION AND ART.FAMILIA = FM.NUMFAMILIA RIGHT JOIN SUBFAMILIAS SFM WITH(NOLOCK) ON ART.DPTO = SFM.NUMDPTO AND  ART.SECCION = SFM.NUMSECCION AND ART.FAMILIA = SFM.NUMFAMILIA AND ART.SUBFAMILIA = SFM.NUMSUBFAMILIA INNER JOIN ARTICULOSLIN AL WITH(NOLOCK) ON ART.CODARTICULO=AL.CODARTICULO LEFT JOIN DEPARTAMENTO DPTO WITH(NOLOCK) ON ART.DPTO=DPTO.NUMDPTO LEFT JOIN SECCIONES SEC WITH(NOLOCK) ON ART.DPTO=SEC.NUMDPTO AND ART.SECCION=SEC.NUMSECCION LEFT JOIN STOCKS S WITH(NOLOCK) ON S.CODARTICULO=AL.CODARTICULO AND S.COLOR=AL.COLOR AND S.TALLA=AL.TALLA AND S.CODALMACEN=@CODALMACEN LEFT JOIN RIP.RIP_FSTOCK_ARTICULO_FECHA(GETDATE(), @CODALMACEN) S2 ON S2.CODARTICULO=AL.CODARTICULO AND S2.COLOR=AL.COLOR AND S2.TALLA=AL.TALLA WHERE  ART.DESCRIPCION = '"+row[3]+"' AND DPTO.NUMDPTO != '96' AND DPTO.NUMDPTO != '97' AND ART.REFPROVEEDOR NOT LIKE '%-1' AND AL.CODBARRAS NOT LIKE '%-1' AND S.TALLA != '' AND S.COLOR != '' AND S.STOCK != '' AND SFM.DESCRIPCION != 'INGRESOS' AND SFM.DESCRIPCION != 'GASTOS' GROUP BY ART.CODARTICULO,ART.REFPROVEEDOR,AL.CODBARRAS,ART.DESCRIPCION,DPTO.DESCRIPCION,SEC.DESCRIPCION,FM.DESCRIPCION,SFM.DESCRIPCION,S.TALLA,S.COLOR,S.STOCK,ART.DPTO,ART.SECCION,ART.FAMILIA,ART.SUBFAMILIA,ART.TEMPORADA;"
+                    connection = pyodbc.connect(conexion)
+                    cursor = connection.cursor()
+                    cursor.execute("SELECT @@version;")
+                    row = cursor.fetchone()
+                    cursor.execute(querySql)
+                    rows_2 = cursor.fetchall()
+                    if len(rows) > 0:
+                        for row in rows_2:
+                            obj = collections.OrderedDict()
+                            obj['cCodigoTienda'] = serieTienda
+                            obj['cCodigoArticulo'] = row[0]
+                            obj['cReferencia'] = row[1]
+                            obj['cCodigoBarra'] = row[2]
+                            obj['cDescripcion'] = row[3]
+                            obj['cDepartamento'] = row[4]
+                            obj['cSeccion'] = row[5]
+                            obj['cFamilia'] = row[6]
+                            obj['cSubFamilia'] = row[7]
+                            obj['cTemporada'] = row[11]
+                            obj['cTalla'] = row[8]
+                            obj['cColor'] = row[9]
+                            obj[propertyStock] = row[10]
 
-                myobj.append(obj)
+                            myobj.append(obj)
+                    else:
+                        obj = collections.OrderedDict()
+                        obj['cCodigoTienda'] = serieTienda
+                        obj['cCodigoBarra'] = barcode
+                        obj[propertyStock] = 0
+                        myobj.append(obj)
+                else:
+                    obj = collections.OrderedDict()
+                    obj['cCodigoTienda'] = serieTienda
+                    obj['cCodigoBarra'] = barcode
+                    obj[propertyStock] = 0
+                    myobj.append(obj)
+
         else:
             obj = collections.OrderedDict()
             obj['cCodigoTienda'] = serieTienda
