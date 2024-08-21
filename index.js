@@ -86,7 +86,7 @@ io.on('connection', async (socket) => {
     let listSessionConnect = await sessionSocket.connect();
     socket.emit("sessionConnect", listSessionConnect);
     let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
-    socket.emit("sendNotificationSunat", documentList);
+    c
   }
 
   socket.on('verifyDocument', async (resData) => {
@@ -94,6 +94,20 @@ io.on('connection', async (socket) => {
     if ((resData || "").id == "server") {
       let listSessionConnect = await facturacionController.verificacionDocumentos(resData);
       socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
+    }
+  });
+
+  
+  socket.on('consultAsistencia', async (configuracion) => {
+    (configuracion || [])['socket'] = listClient.id;
+
+    socket.emit("searchAsistencia", configuracion);
+  });
+
+  socket.on('reporteAssitencia', async (resData) => {
+    print(resData)
+    if ((resData || "").id == "server") {
+      socket.to(`${(resData || [])['configuration']['socket']}`).emit("responseAsistencia", resData);
     }
   });
 
