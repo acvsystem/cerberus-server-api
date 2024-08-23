@@ -351,7 +351,7 @@ io.on('connection', async (socket) => {
       { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com' },
       { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
     ];
-    
+    console.log((arrDocumento || {}).ESTADO_SUNAT);
     if ((arrDocumento || {}).ESTADO_SUNAT == 'RECHAZADO') {
       console.log(arrDocumento);
       let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = '${(arrDocumento || {}).CODIGO_DOCUMENTO}';`);
