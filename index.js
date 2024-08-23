@@ -49,8 +49,8 @@ const task_3 = cron.schedule('00 19 * * *', () => {
   emitVerificationDoc();
 });
 
-const task_4 = cron.schedule('*/1 * * * *', () => {
-  console.log('/1 * * * *');
+const task_4 = cron.schedule('*/15 * * * *', () => {
+  console.log('/15 * * * *');
   emitVerificationSUNAT();
 });
 
