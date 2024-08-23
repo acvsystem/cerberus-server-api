@@ -351,11 +351,12 @@ io.on('connection', async (socket) => {
       { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com' },
       { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
     ];
-    console.log((arrDocumento || {}).ESTADO_SUNAT);
+    
     if ((arrDocumento || {}).ESTADO_SUNAT == 'RECHAZADO') {
       let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
+      console.log((arrDocumento || {}).ESTADO_SUNAT);
       let isEmailEnvio = ((verifyDocument || [])[0] || {}).ENVIO_EMAIL || 'false';
-      console.log('verifyDocument', verifyDocument);
+      console.log('verifyDocument', (verifyDocument || []).length);
 
       if (!(verifyDocument || []).length) {
         await pool.query(`INSERT INTO TB_DOCUMENTOS_ERROR_SUNAT(CODIGO_DOCUMENTO,NRO_CORRELATIVO,NOM_ADQUIRIENTE,NRO_DOCUMENTO,TIPO_DOCUMENTO_ADQUIRIENTE,OBSERVACION,ESTADO_SUNAT,ESTADO_COMPROBANTE,CODIGO_ERROR_SUNAT,ENVIO_EMAIL,FECHA_EMISION)
