@@ -247,7 +247,7 @@ if len(configuration) > 0:
         count = extraCliente(data)
         conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=ICGAdmin;PWD=masterkey'
         
-        querySql="SELECT count(*) FROM CLIENTES WHERE ((NOMBRECLIENTE = '' AND NOMBRECOMERCIAL = '') OR (SUBSTRING(NOMBRECLIENTE,1,5) = 'AAAAA')) OR (SUBSTRING(NOMBRECLIENTE,1,5) = 'EEEEE')) OR (SUBSTRING(NOMBRECLIENTE,1,5) = 'IIIII')) OR (SUBSTRING(NOMBRECLIENTE,1,5) = 'OOOOO')) OR (SUBSTRING(NOMBRECLIENTE,1,5) = 'UUUUUU')) AND DESCATALOGADO = 'F';"
+        querySql="SELECT COUNT(*) FROM CLIENTES WHERE ((NOMBRECLIENTE = '' AND NOMBRECOMERCIAL = '') OR (SUBSTRING(NOMBRECLIENTE,1,5) = 'AAAAA') OR (SUBSTRING(NOMBRECLIENTE,1,5) = 'EEEEE') OR (SUBSTRING(NOMBRECLIENTE,1,5) = 'IIIII') OR (SUBSTRING(NOMBRECLIENTE,1,5) = 'OOOOO') OR (SUBSTRING(NOMBRECLIENTE,1,5) = 'UUUUUU')) AND DESCATALOGADO = 'F';"
         connection = pyodbc.connect(conexion)
         cursor = connection.cursor()
         cursor.execute("SELECT @@version;")
