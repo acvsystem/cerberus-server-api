@@ -49,8 +49,8 @@ const task_3 = cron.schedule('00 19 * * *', () => {
   emitVerificationDoc();
 });
 
-const task_4 = cron.schedule('*/15 * * * *', () => {
-  console.log('/15 * * * *');
+const task_4 = cron.schedule('*/1 * * * *', () => {
+  console.log('/1 * * * *');
   emitVerificationSUNAT();
 });
 
@@ -328,6 +328,7 @@ io.on('connection', async (socket) => {
   app.post('/sunat-notification', async (req, res) => {
 
     let arrDocumento = (((req || []).body || [])[0] || {});
+    console.log(arrDocumento);
     let tiendasList = [
       { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
       { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
@@ -457,7 +458,7 @@ io.on('connection', async (socket) => {
 
         await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET ENVIO_EMAIL ='true' WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
 
-        emailController.sendEmail([(selectedLocal || {}).email || '', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com'], `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
+        emailController.sendEmail([(selectedLocal || {}).email || '', 'johnnygermano@metasperu.com', ''], `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
           .catch(error => res.send(error));
       }
     }
