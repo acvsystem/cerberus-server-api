@@ -367,7 +367,7 @@ io.on('connection', async (socket) => {
                                 '${(arrDocumento || {}).NOM_ADQUIRIENTE}',
                                 '${(arrDocumento || {}).NRO_DOCUMENTO}',
                                 '',
-                                '${(arrDocumento || {}).OBSERVACION}',
+                                '',
                                 '${(arrDocumento || {}).ESTADO_SUNAT}',
                                 '${(arrDocumento || {}).ESTADO_COMPROBANTE}',
                                 '${(arrDocumento || {}).CODIGO_ERROR_SUNAT}',
@@ -379,7 +379,7 @@ io.on('connection', async (socket) => {
         await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET
                                 NOM_ADQUIRIENTE ='${(arrDocumento || {}).NOM_ADQUIRIENTE}',
                                 NRO_DOCUMENTO = '${(arrDocumento || {}).NRO_DOCUMENTO}',
-                                OBSERVACION = '${(arrDocumento || {}).OBSERVACION}',
+                                OBSERVACION = '',
                                 ESTADO_SUNAT = '${(arrDocumento || {}).ESTADO_SUNAT}',
                                 ESTADO_COMPROBANTE = '${(arrDocumento || {}).ESTADO_COMPROBANTE}',
                                 CODIGO_ERROR_SUNAT = '${(arrDocumento || {}).CODIGO_ERROR_SUNAT}' WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
@@ -461,8 +461,8 @@ io.on('connection', async (socket) => {
 
         await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET ENVIO_EMAIL ='true' WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
 
-        emailController.sendEmail([(selectedLocal || {}).email || '', 'johnnygermano@metasperu.com', ''], `PRUEBA FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
-          .catch(error => res.send(error));
+       /* emailController.sendEmail([(selectedLocal || {}).email || '', 'johnnygermano@metasperu.com', ''], `PRUEBA FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
+          .catch(error => res.send(error));*/
       }
     }
 
