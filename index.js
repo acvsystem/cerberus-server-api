@@ -328,7 +328,7 @@ io.on('connection', async (socket) => {
   app.post('/sunat-notification', async (req, res) => {
 
     let arrDocumento = (((req || []).body || [])[0] || {});
-    console.log(arrDocumento);
+    
     let tiendasList = [
       { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
       { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
@@ -351,7 +351,7 @@ io.on('connection', async (socket) => {
       { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com' },
       { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
     ];
-
+    console.log((arrDocumento || {}).ESTADO_SUNAT);
     if ((arrDocumento || {}).ESTADO_SUNAT == 'RECHAZADO') {
       let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
       let isEmailEnvio = ((verifyDocument || [])[0] || {}).ENVIO_EMAIL || 'false';
