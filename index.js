@@ -353,8 +353,10 @@ io.on('connection', async (socket) => {
     ];
     
     if ((arrDocumento || {}).ESTADO_SUNAT == 'RECHAZADO') {
-      let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = ${(arrDocumento || {}).CODIGO_DOCUMENTO};`);
+      console.log(arrDocumento);
+      let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = '${(arrDocumento || {}).CODIGO_DOCUMENTO}';`);
       console.log((arrDocumento || {}).ESTADO_SUNAT);
+      console.log(verifyDocument);
       let isEmailEnvio = ((verifyDocument || [])[0] || {}).ENVIO_EMAIL || 'false';
       console.log('verifyDocument', (verifyDocument || []).length);
 
