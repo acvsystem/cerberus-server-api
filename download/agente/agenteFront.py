@@ -341,7 +341,7 @@ if len(configuration) > 0:
         server = instanciaBD
         dataBase = nameBD
         conexion="DRIVER={SQL Server};SERVER="+server+";DATABASE="+dataBase+";UID=ICGAdmin;PWD=masterkey"
-        querySql="SELECT CODCLIENTE FROM CLIENTES WHERE ((NOMBRECLIENTE = '' AND NOMBRECOMERCIAL = '') OR (SUBSTRING(NOMBRECLIENTE,1,3) = 'AAA')) AND DESCATALOGADO = 'F';"
+        querySql="SELECT CODCLIENTE FROM CLIENTES WHERE ((NOMBRECLIENTE = '' AND NOMBRECOMERCIAL = '') OR (SUBSTRING(NOMBRECLIENTE,1,5) = 'AAAAA') OR (SUBSTRING(NOMBRECLIENTE,1,5) = 'EEEEE') OR (SUBSTRING(NOMBRECLIENTE,1,5) = 'IIIII') OR (SUBSTRING(NOMBRECLIENTE,1,5) = 'OOOOO') OR (SUBSTRING(NOMBRECLIENTE,1,5) = 'UUUUUU')) AND DESCATALOGADO = 'F';"
         
         connection = pyodbc.connect(conexion)
         
