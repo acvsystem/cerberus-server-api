@@ -243,10 +243,22 @@ io.on('connection', async (socket) => {
 
   socket.on("resEmpleados", (response) => {
     let data = response;
-    
-    let dataEJB = data.serverData;
+    let dataEJB = (data || []).serverData || [];
+    let parseEJB = [];
     if (data.id = "EJB") {
-      console.log(dataEJB);
+      (dataEJB || []).filter((ejb)=>{
+        parseEJB.push({
+          codigoEJB: (ejb || {}).CODEJB,
+          nombre_completo: `${(ejb || {}).APEPAT} ${(ejb || {}).APEMAT} ${(ejb || {}).NOMBRE}`,
+          nro_documento: (ejb || {}).NUMDOC,
+          telefono: (ejb || {}).TELEFO,
+          email: (ejb || {}).EMAIL,
+          fec_nacimiento: (ejb || {}).FECNAC,
+          fec_ingreso: (ejb || {}).FECING,
+          status: (ejb || {}).STATUS
+        });
+      });
+      console.log(parseEJB);
     }
 
   });
