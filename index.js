@@ -247,16 +247,16 @@ io.on('connection', async (socket) => {
     dataEJB = JSON.parse((data || {}).serverData || []);
     let parseEJB = [];
     if (data.id = "EJB") {
-      (dataEJB || []).filter((ejb)=>{
+      (dataEJB || []).filter((ejb) => {
         parseEJB.push({
-          codigoEJB: (ejb || {}).CODEJB,
+          codigoEJB: ((ejb || {}).CODEJB).trim(),
           nombre_completo: `${(ejb || {}).APEPAT} ${(ejb || {}).APEMAT} ${(ejb || {}).NOMBRE}`,
-          nro_documento: (ejb || {}).NUMDOC,
-          telefono: (ejb || {}).TELEFO,
-          email: (ejb || {}).EMAIL,
-          fec_nacimiento: (ejb || {}).FECNAC,
-          fec_ingreso: (ejb || {}).FECING,
-          status: (ejb || {}).STATUS
+          nro_documento: ((ejb || {}).NUMDOC).trim(),
+          telefono: ((ejb || {}).TELEFO).trim(),
+          email: ((ejb || {}).EMAIL).trim(),
+          fec_nacimiento: ((ejb || {}).FECNAC).trim(),
+          fec_ingreso: ((ejb || {}).FECING).trim(),
+          status: ((ejb || {}).STATUS).trim()
         });
       });
       console.log(parseEJB);
