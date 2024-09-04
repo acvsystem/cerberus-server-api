@@ -242,7 +242,12 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("resEmpleados", (response) => {
-    console.log(response);
+    let data = JSON.parse(response);
+    let dataEJB = data[0].serverData;
+    if (data[0].id = "EJB") {
+      console.log(dataEJB);
+    }
+
   });
 
   socket.on("update:file:response", (response) => {
