@@ -243,8 +243,9 @@ io.on('connection', async (socket) => {
 
   socket.on("resEmpleados", (response) => {
     let data = response;
-    let dataEJB = data[0].serverData;
-    if (data[0].id = "EJB") {
+    
+    let dataEJB = data.serverData;
+    if (data.id = "EJB") {
       console.log(dataEJB);
     }
 
