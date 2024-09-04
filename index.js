@@ -270,6 +270,7 @@ io.on('connection', async (socket) => {
     if (data.id = "servGeneral") {
       let dataServGeneral = [];
       dataServGeneral = JSON.parse((data || {}).serverData || []);
+      console.log(data.id);
       console.log(dataServGeneral);
     }
 
