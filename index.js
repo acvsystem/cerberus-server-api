@@ -234,19 +234,25 @@ io.on('connection', async (socket) => {
 
   socket.on("consultaMarcacion", (body) => {
     let configurationList = {
-      socket: (socket || {}).id
+      socket: (socket || {}).id,
+      isReportForDay: true,
+      isReportTotal: false,
+      isReporRgDate: false,
+      centroCosto: 'BBW',
+      dateList: ['2024-09-03']
     };
 
     socket.broadcast.emit("consultarEJB", configurationList);
-
+    socket.broadcast.emit("consultarServGen", configurationList);
   });
 
   socket.on("resEmpleados", (response) => {
     let data = response;
-    let dataEJB = [];
-    dataEJB = JSON.parse((data || {}).serverData || []);
     let parseEJB = [];
+
     if (data.id = "EJB") {
+      let dataEJB = [];
+      dataEJB = JSON.parse((data || {}).serverData || []);
       (dataEJB || []).filter((ejb) => {
         parseEJB.push({
           codigoEJB: ((ejb || {}).CODEJB).trim(),
@@ -259,7 +265,12 @@ io.on('connection', async (socket) => {
           status: ((ejb || {}).STATUS).trim()
         });
       });
-      console.log(parseEJB);
+    }
+
+    if (data.id = "servGeneral") {
+      let dataServGeneral = [];
+      dataServGeneral = JSON.parse((data || {}).serverData || []);
+      console.log(dataServGeneral);
     }
 
   });
