@@ -86,7 +86,7 @@ io.on('connection', async (socket) => {
     let listSessionConnect = await sessionSocket.connect();
     socket.emit("sessionConnect", listSessionConnect);
     let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
-    
+
   }
 
   socket.on('verifyDocument', async (resData) => {
@@ -97,7 +97,7 @@ io.on('connection', async (socket) => {
     }
   });
 
-  
+
   socket.on('consultAsistencia', async (configuracion) => {
     (configuracion || [])['socket'] = listClient.id;
 
@@ -232,6 +232,19 @@ io.on('connection', async (socket) => {
 
   });
 
+  socket.on("consultaMarcacion", (body) => {
+    let configurationList = {
+      socket: (socket || {}).id
+    };
+
+    socket.broadcast.emit("consultarEJB", configurationList);
+
+  });
+
+  socket.on("resEmpleados", (response) => {
+    console.log(response);
+  });
+
   socket.on("update:file:response", (response) => {
     let socketID = (response || {}).socket;
     let status = (response || {}).status;
@@ -328,7 +341,7 @@ io.on('connection', async (socket) => {
   app.post('/sunat-notification', async (req, res) => {
 
     let arrDocumento = (((req || []).body || [])[0] || {});
-    
+
     let tiendasList = [
       { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
       { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
