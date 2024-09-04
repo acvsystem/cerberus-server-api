@@ -243,7 +243,8 @@ io.on('connection', async (socket) => {
 
   socket.on("resEmpleados", (response) => {
     let data = response;
-    let dataEJB = (data || []).serverData || [];
+    let dataEJB = [];
+    dataEJB = (data || {}).serverData || [];
     let parseEJB = [];
     if (data.id = "EJB") {
       (dataEJB || []).filter((ejb)=>{
