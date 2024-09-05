@@ -253,10 +253,6 @@ io.on('connection', async (socket) => {
     let dataResponse = [];
     let IDSocket = data.socket;
 
-
-
-
-
     if (data.id == "EJB") {
       let dataEJB = [];
       dataEJB = JSON.parse((data || {}).serverData || []);
@@ -265,8 +261,9 @@ io.on('connection', async (socket) => {
         console.log("EJB", true);
       }
 
-      (dataEJB || []).filter( (ejb) => {
+      (dataEJB || []).filter((ejb) => {
         parseEJB.push({
+          id: "EJB",
           codigoEJB: ((ejb || {}).CODEJB).trim(),
           nombre_completo: `${(ejb || {}).APEPAT} ${(ejb || {}).APEMAT} ${(ejb || {}).NOMBRE}`,
           nro_documento: ((ejb || {}).NUMDOC).trim(),
@@ -277,6 +274,8 @@ io.on('connection', async (socket) => {
           status: ((ejb || {}).STATUS).trim()
         });
       });
+
+      socket.to(`${IDSocket}`).emit("reporteHuellero", parseEJB);
     }
 
     if (data.id == "servGeneral") {
@@ -287,8 +286,9 @@ io.on('connection', async (socket) => {
         console.log("servGeneral", true);
       }
 
-      (dataServGeneral || []).filter( (huellero) => {
+      (dataServGeneral || []).filter((huellero) => {
         parseHuellero.push({
+          id: "servGeneral",
           nro_documento: (huellero || {}).nroDocumento,
           dia: (huellero || {}).dia,
           hr_ingreso: (huellero || {}).hrIn,
@@ -297,43 +297,44 @@ io.on('connection', async (socket) => {
           caja: (huellero || {}).caja
         });
       });
+
+      socket.to(`${IDSocket}`).emit("reporteHuellero", parseHuellero);
     }
 
-    console.log(parseEJB.length , parseHuellero.length);
-
-    if (parseEJB.length && parseHuellero.length) {
-      (parseEJB || []).filter(async (ejb) => {
-        await (parseHuellero || []).filter((huellero) => {
-          console.log((ejb || {}).nro_documento == (huellero || {}).nro_documento);
-          if ((ejb || {}).nro_documento == (huellero || {}).nro_documento) {
-            dataResponse.push({
-              codigoEJB: ((ejb || {}).codigoEJB).trim(),
-              nombre_completo: (ejb || {}).nombre_completo,
-              nro_documento: ((ejb || {}).nro_documento).trim(),
-              telefono: ((ejb || {}).telefono).trim(),
-              email: ((ejb || {}).email).trim(),
-              fec_nacimiento: ((ejb || {}).fec_nacimiento).trim(),
-              fec_ingreso: ((ejb || {}).fec_ingreso).trim(),
-              status: ((ejb || {}).status).trim(),
-              dia: ((huellero || {}).dia).trim(),
-              hr_ingreso: ((huellero || {}).hr_ingreso).trim(),
-              hr_salida: ((huellero || {}).hr_salida).trim(),
-              hr_trabajadas: ((huellero || {}).hr_trabajadas).trim(),
-              caja: ((huellero || {}).caja).trim()
-            });
+    /*
+        if (parseEJB.length && parseHuellero.length) {
+          (parseEJB || []).filter(async (ejb) => {
+            await (parseHuellero || []).filter((huellero) => {
+              console.log((ejb || {}).nro_documento == (huellero || {}).nro_documento);
+              if ((ejb || {}).nro_documento == (huellero || {}).nro_documento) {
+                dataResponse.push({
+                  codigoEJB: ((ejb || {}).codigoEJB).trim(),
+                  nombre_completo: (ejb || {}).nombre_completo,
+                  nro_documento: ((ejb || {}).nro_documento).trim(),
+                  telefono: ((ejb || {}).telefono).trim(),
+                  email: ((ejb || {}).email).trim(),
+                  fec_nacimiento: ((ejb || {}).fec_nacimiento).trim(),
+                  fec_ingreso: ((ejb || {}).fec_ingreso).trim(),
+                  status: ((ejb || {}).status).trim(),
+                  dia: ((huellero || {}).dia).trim(),
+                  hr_ingreso: ((huellero || {}).hr_ingreso).trim(),
+                  hr_salida: ((huellero || {}).hr_salida).trim(),
+                  hr_trabajadas: ((huellero || {}).hr_trabajadas).trim(),
+                  caja: ((huellero || {}).caja).trim()
+                });
+              }
+            })
+          })
+    
+          if (dataResponse.length) {
+            console.log(dataResponse);
           }
-        })
-      })
-
-      if (dataResponse.length) {
-        console.log(dataResponse);
-      }
-    }
+        }*/
 
 
 
 
-    socket.to(`${IDSocket}`).emit("reporteHuellero", parseHuellero);
+    
 
   });
 
