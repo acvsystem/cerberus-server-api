@@ -250,7 +250,7 @@ io.on('connection', async (socket) => {
     let data = response;
     let parseEJB = [];
 
-    if (data.id = "EJB") {
+    if (data.id == "EJB") {
       let dataEJB = [];
       dataEJB = JSON.parse((data || {}).serverData || []);
       (dataEJB || []).filter((ejb) => {
@@ -267,7 +267,7 @@ io.on('connection', async (socket) => {
       });
     }
 
-    if (data.id = "servGeneral") {
+    if (data.id == "servGeneral") {
       let dataServGeneral = [];
       dataServGeneral = JSON.parse((data || {}).serverData || []);
       console.log(data.id);
