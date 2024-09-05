@@ -300,7 +300,7 @@ io.on('connection', async (socket) => {
     }
 
     if (parseEJB.length && parseHuellero.length) {
-     await (parseEJB || []).filter((ejb) => {
+      (parseEJB || []).filter((ejb) => {
         (parseHuellero || []).filter((huellero) => {
           if ((ejb || {}).nro_documento == (huellero || {}).nro_documento) {
             dataResponse.push({
