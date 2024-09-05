@@ -318,6 +318,7 @@ io.on('connection', async (socket) => {
               hr_trabajadas: ((huellero || {}).hr_trabajadas).trim(),
               caja: ((huellero || {}).caja).trim()
             });
+            console.log(dataResponse);
           }
         })
       })
