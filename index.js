@@ -275,7 +275,7 @@ io.on('connection', async (socket) => {
         });
       });
 
-      socket.to(`${IDSocket}`).emit("reporteHuellero", parseEJB);
+      socket.to(`${socketID}`).emit("reporteHuellero", parseEJB);
     }
 
     if (data.id == "servGeneral") {
@@ -298,7 +298,7 @@ io.on('connection', async (socket) => {
         });
       });
 
-      socket.to(`${IDSocket}`).emit("reporteHuellero", parseHuellero);
+      socket.to(`${socketID}`).emit("reporteHuellero", parseHuellero);
     }
 
     /*
