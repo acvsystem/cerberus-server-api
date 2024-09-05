@@ -298,7 +298,7 @@ io.on('connection', async (socket) => {
         });
       });
 
-      socket.to(`${listClient.id}`).emit("reporteHuellero", parseHuellero);
+      //socket.to(`${listClient.id}`).emit("reporteHuellero", parseHuellero);
     }
 
     /*
@@ -330,11 +330,6 @@ io.on('connection', async (socket) => {
             console.log(dataResponse);
           }
         }*/
-
-
-
-
-    
 
   });
 
