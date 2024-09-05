@@ -265,7 +265,7 @@ io.on('connection', async (socket) => {
         console.log("EJB", true);
       }
 
-      await (dataEJB || []).filter((ejb) => {
+     await (dataEJB || []).filter(async (ejb) => {
         parseEJB.push({
           codigoEJB: ((ejb || {}).CODEJB).trim(),
           nombre_completo: `${(ejb || {}).APEPAT} ${(ejb || {}).APEMAT} ${(ejb || {}).NOMBRE}`,
@@ -287,7 +287,7 @@ io.on('connection', async (socket) => {
         console.log("servGeneral", true);
       }
 
-      await (dataServGeneral || []).filter((huellero) => {
+     await (dataServGeneral || []).filter(async (huellero) => {
         parseHuellero.push({
           nro_documento: (huellero || {}).nroDocumento,
           dia: (huellero || {}).dia,
@@ -299,7 +299,7 @@ io.on('connection', async (socket) => {
       });
     }
 
-    console.log(parseEJB.length, parseHuellero.length);
+    console.log(parseEJB.length , parseHuellero.length);
 
     if (parseEJB.length && parseHuellero.length) {
       (parseEJB || []).filter(async (ejb) => {
