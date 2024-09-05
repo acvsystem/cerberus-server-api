@@ -321,11 +321,13 @@ io.on('connection', async (socket) => {
           }
         })
       })
+
+      if (dataResponse.length) {
+        console.log(dataResponse);
+      }
     }
 
-    if (dataResponse.length) {
-      console.log(dataResponse);
-    }
+
 
 
     socket.to(`${IDSocket}`).emit("reporteHuellero", parseHuellero);
