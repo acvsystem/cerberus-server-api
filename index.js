@@ -275,12 +275,12 @@ io.on('connection', async (socket) => {
       dataServGeneral = JSON.parse((data || {}).serverData || []);
       (dataServGeneral || []).filter((huellero) => {
         parseHuellero.push({
-          nro_documento: ((huellero || {}).nroDocumento).trim(),
-          dia: ((huellero || {}).dia).trim(),
-          hr_ingreso: ((huellero || {}).hrIn).trim(),
-          hr_salida: ((huellero || {}).hrOut).trim(),
-          hr_trabajadas: ((huellero || {}).hrWorking).trim(),
-          caja: ((huellero || {}).caja).trim()
+          nro_documento: (huellero || {}).nroDocumento,
+          dia: (huellero || {}).dia,
+          hr_ingreso: (huellero || {}).hrIn,
+          hr_salida: (huellero || {}).hrOut,
+          hr_trabajadas: (huellero || {}).hrWorking,
+          caja: (huellero || {}).caja
         });
       });
     }
