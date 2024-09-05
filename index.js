@@ -265,7 +265,7 @@ io.on('connection', async (socket) => {
         console.log("EJB", true);
       }
 
-      (dataEJB || []).filter((ejb) => {
+      await (dataEJB || []).filter((ejb) => {
         parseEJB.push({
           codigoEJB: ((ejb || {}).CODEJB).trim(),
           nombre_completo: `${(ejb || {}).APEPAT} ${(ejb || {}).APEMAT} ${(ejb || {}).NOMBRE}`,
@@ -287,7 +287,7 @@ io.on('connection', async (socket) => {
         console.log("servGeneral", true);
       }
 
-      (dataServGeneral || []).filter((huellero) => {
+      await (dataServGeneral || []).filter((huellero) => {
         parseHuellero.push({
           nro_documento: (huellero || {}).nroDocumento,
           dia: (huellero || {}).dia,
@@ -298,6 +298,8 @@ io.on('connection', async (socket) => {
         });
       });
     }
+
+    console.log(parseEJB.length, parseHuellero.length);
 
     if (parseEJB.length && parseHuellero.length) {
       (parseEJB || []).filter(async (ejb) => {
@@ -319,7 +321,6 @@ io.on('connection', async (socket) => {
               hr_trabajadas: ((huellero || {}).hr_trabajadas).trim(),
               caja: ((huellero || {}).caja).trim()
             });
-            console.log(dataResponse);
           }
         })
       })
