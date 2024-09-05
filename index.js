@@ -302,6 +302,7 @@ io.on('connection', async (socket) => {
     if (parseEJB.length && parseHuellero.length) {
       (parseEJB || []).filter(async (ejb) => {
         await (parseHuellero || []).filter((huellero) => {
+          console.log((ejb || {}).nro_documento == (huellero || {}).nro_documento);
           if ((ejb || {}).nro_documento == (huellero || {}).nro_documento) {
             dataResponse.push({
               codigoEJB: ((ejb || {}).codigoEJB).trim(),
