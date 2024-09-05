@@ -233,6 +233,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("consultaMarcacion", (configuracion) => {
+    console.log(configuracion);
     let configurationList = {
       socket: (socket || {}).id,
       isReportForDay: configuracion.isReportForDay,
@@ -241,7 +242,7 @@ io.on('connection', async (socket) => {
       centroCosto: configuracion.centroCosto,
       dateList: configuracion.dateList
     };
-
+    
     socket.broadcast.emit("consultarEJB", configurationList);
     socket.broadcast.emit("consultarServGen", configurationList);
   });
