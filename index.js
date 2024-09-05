@@ -322,7 +322,8 @@ io.on('connection', async (socket) => {
         })
       })
     }
-    console.log(parseHuellero);
+    
+    console.log(dataResponse);
     socket.to(`${IDSocket}`).emit("reporteHuellero", parseHuellero);
 
   });
