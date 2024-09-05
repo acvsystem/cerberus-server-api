@@ -232,14 +232,14 @@ io.on('connection', async (socket) => {
 
   });
 
-  socket.on("consultaMarcacion", (body) => {
+  socket.on("consultaMarcacion", (configuracion) => {
     let configurationList = {
       socket: (socket || {}).id,
-      isReportForDay: true,
-      isReportTotal: false,
-      isReporRgDate: false,
-      centroCosto: 'BBW',
-      dateList: ['2024-09-03']
+      isReportForDay: configuracion.isReportForDay,
+      isReportTotal: configuracion.isReportTotal,
+      isReporRgDate: configuracion.isReporRgDate,
+      centroCosto: configuracion.centroCosto,
+      dateList: configuracion.dateList
     };
 
     socket.broadcast.emit("consultarEJB", configurationList);
