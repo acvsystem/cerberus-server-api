@@ -262,7 +262,7 @@ io.on('connection', async (socket) => {
       dataEJB = JSON.parse((data || {}).serverData || []);
 
       if (data.id == "EJB" && dataEJB.length) {
-        console.log("EJB",true);
+        console.log("EJB", true);
       }
 
       (dataEJB || []).filter((ejb) => {
@@ -284,7 +284,7 @@ io.on('connection', async (socket) => {
       dataServGeneral = JSON.parse((data || {}).serverData || []);
 
       if (data.id == "servGeneral" && dataServGeneral.length) {
-        console.log("servGeneral",true);
+        console.log("servGeneral", true);
       }
 
       (dataServGeneral || []).filter((huellero) => {
@@ -300,10 +300,10 @@ io.on('connection', async (socket) => {
     }
 
     if (parseEJB.length && parseHuellero.length) {
-      await (parseEJB || []).filter((ejb) => {
-        await (parseHuellero || []).filter(async (huellero) => {
+      (parseEJB || []).filter((ejb) => {
+        (parseHuellero || []).filter((huellero) => {
           if ((ejb || {}).nro_documento == (huellero || {}).nro_documento) {
-           await dataResponse.push({
+            dataResponse.push({
               codigoEJB: ((ejb || {}).codigoEJB).trim(),
               nombre_completo: (ejb || {}).nombre_completo,
               nro_documento: ((ejb || {}).nro_documento).trim(),
@@ -322,8 +322,12 @@ io.on('connection', async (socket) => {
         })
       })
     }
-    
-    console.log(dataResponse);
+
+    if (dataResponse.length) {
+      console.log(dataResponse);
+    }
+
+
     socket.to(`${IDSocket}`).emit("reporteHuellero", parseHuellero);
 
   });
