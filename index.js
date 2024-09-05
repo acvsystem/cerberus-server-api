@@ -331,7 +331,7 @@ io.on('connection', async (socket) => {
           }
         }*/
 
-      socket.to(`${listClient.id}`).emit("reporteHuellero", "ENVIADO DESDE SERVIDOR");
+      socket.to(`${listClient.id}`).emit("reporteHuellero", JSON.parse((data || {}).serverData || []));
 
   });
 
