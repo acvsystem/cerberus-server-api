@@ -275,7 +275,7 @@ io.on('connection', async (socket) => {
         });
       });
 
-     // socket.to(`${listClient.id}`).emit("reporteHuellero", parseEJB);
+      // socket.to(`${listClient.id}`).emit("reporteHuellero", parseEJB);
     }
 
     if (data.id == "servGeneral") {
@@ -331,7 +331,7 @@ io.on('connection', async (socket) => {
           }
         }*/
 
-      socket.to(`${listClient.id}`).emit("reporteHuellero", JSON.parse((data || {}).serverData || []));
+    socket.to(`${listClient.id}`).emit("reporteHuellero", { id: data.id, data: JSON.parse((data || {}).serverData || []) });
 
   });
 
