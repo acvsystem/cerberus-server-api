@@ -275,7 +275,7 @@ io.on('connection', async (socket) => {
         });
       });
 
-      socket.to(`${listClient.id}`).emit("reporteHuellero", parseEJB);
+     // socket.to(`${listClient.id}`).emit("reporteHuellero", parseEJB);
     }
 
     if (data.id == "servGeneral") {
@@ -330,6 +330,8 @@ io.on('connection', async (socket) => {
             console.log(dataResponse);
           }
         }*/
+
+      socket.to(`${listClient.id}`).emit("reporteHuellero", "ENVIADO DESDE SERVIDOR");
 
   });
 
