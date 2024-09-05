@@ -253,9 +253,18 @@ io.on('connection', async (socket) => {
     let dataResponse = [];
     let IDSocket = data.socket;
 
+
+
+
+
     if (data.id == "EJB") {
       let dataEJB = [];
       dataEJB = JSON.parse((data || {}).serverData || []);
+
+      if (data.id == "EJB" && dataEJB.length) {
+        console.log("EJB",true);
+      }
+
       (dataEJB || []).filter((ejb) => {
         parseEJB.push({
           codigoEJB: ((ejb || {}).CODEJB).trim(),
@@ -273,6 +282,11 @@ io.on('connection', async (socket) => {
     if (data.id == "servGeneral") {
       let dataServGeneral = [];
       dataServGeneral = JSON.parse((data || {}).serverData || []);
+
+      if (data.id == "servGeneral" && dataServGeneral.length) {
+        console.log("servGeneral",true);
+      }
+
       (dataServGeneral || []).filter((huellero) => {
         parseHuellero.push({
           nro_documento: (huellero || {}).nroDocumento,
