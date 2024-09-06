@@ -284,6 +284,7 @@ io.on('connection', async (socket) => {
 
       if (data.id == "servGeneral" && dataServGeneral.length) {
         console.log("servGeneral", true);
+        console.log(dataServGeneral);
       }
 
       (dataServGeneral || []).filter((huellero) => {
