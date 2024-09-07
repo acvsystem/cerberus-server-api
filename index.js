@@ -275,7 +275,6 @@ io.on('connection', async (socket) => {
         });
       });
 
-      // socket.to(`${listClient.id}`).emit("reporteHuellero", parseEJB);
     }
 
     if (data.id == "servGeneral") {
@@ -298,38 +297,7 @@ io.on('connection', async (socket) => {
         });
       });
 
-      //socket.to(`${listClient.id}`).emit("reporteHuellero", parseHuellero);
     }
-
-    /*
-        if (parseEJB.length && parseHuellero.length) {
-          (parseEJB || []).filter(async (ejb) => {
-            await (parseHuellero || []).filter((huellero) => {
-              console.log((ejb || {}).nro_documento == (huellero || {}).nro_documento);
-              if ((ejb || {}).nro_documento == (huellero || {}).nro_documento) {
-                dataResponse.push({
-                  codigoEJB: ((ejb || {}).codigoEJB).trim(),
-                  nombre_completo: (ejb || {}).nombre_completo,
-                  nro_documento: ((ejb || {}).nro_documento).trim(),
-                  telefono: ((ejb || {}).telefono).trim(),
-                  email: ((ejb || {}).email).trim(),
-                  fec_nacimiento: ((ejb || {}).fec_nacimiento).trim(),
-                  fec_ingreso: ((ejb || {}).fec_ingreso).trim(),
-                  status: ((ejb || {}).status).trim(),
-                  dia: ((huellero || {}).dia).trim(),
-                  hr_ingreso: ((huellero || {}).hr_ingreso).trim(),
-                  hr_salida: ((huellero || {}).hr_salida).trim(),
-                  hr_trabajadas: ((huellero || {}).hr_trabajadas).trim(),
-                  caja: ((huellero || {}).caja).trim()
-                });
-              }
-            })
-          })
-    
-          if (dataResponse.length) {
-            console.log(dataResponse);
-          }
-        }*/
 
     socket.to(`${listClient.id}`).emit("reporteHuellero", { id: data.id, data: JSON.parse((data || {}).serverData || []) });
 
@@ -383,6 +351,11 @@ io.on('connection', async (socket) => {
     console.log(req.body);
     socket.to(`${listClient.id}`).emit("dataStockParse", req.body);
 
+    res.json({ mensaje: 'Archivo recibido con éxito' });
+  });
+
+  app.post("/frontRetail/search/huellero", async (req, res) => {
+    socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: JSON.parse(res.body) });
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
 
