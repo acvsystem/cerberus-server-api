@@ -356,7 +356,7 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/frontRetail/search/huellero", async (req, res) => {
-    socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: JSON.parse(res.body) });
+    socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: req.body });
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
 
