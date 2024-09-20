@@ -238,6 +238,7 @@ io.on('connection', async (socket) => {
       socket: (socket || {}).id,
       isDefault: configuracion.isDefault,
       isFeriados: configuracion.isFeriados,
+      isDetallado: configuracion.isDetallado,
       centroCosto: configuracion.centroCosto,
       dateList: configuracion.dateList
     };
