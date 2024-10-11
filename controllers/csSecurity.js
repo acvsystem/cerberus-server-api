@@ -19,11 +19,37 @@ export const Login = async (req, res) => {
 
     const token = tokenController.createToken(usuario, nivelUser);
 
+    let tiendasList = [
+      { code: '7A', user: 'bbwjoc' },
+      { code: '9N', user: 'vsaqp' },
+      { code: '7J', user: 'bbwaqp' },
+      { code: '7E', user: 'bbwlrb' },
+      { code: '9D', user: 'vslrb' },
+      { code: '9B', user: 'vspn' },
+      { code: '7C', user: 'bbwpsm' },
+      { code: '9C', user: 'vspsm' },
+      { code: '7D', user: 'bbwrps' },
+      { code: '9I', user: 'vsrps' },
+      { code: '9G', user: 'vspur' },
+      { code: '9H', user: 'vspur' },
+      { code: '9M', user: 'vsecom' },
+      { code: '7F', user: 'bbwecom' },
+      { code: '9K', user: 'vsmep' },
+      { code: '9L', user: 'vsmnk' },
+      { code: '9F', user: 'vsfajoc' },
+      { code: '7A7', user: 'bbwasia' },
+      { code: '9P', user: 'vsmptru' },
+      { code: '7I', user: 'bbwmptru' }
+    ];
+
+    let selectedUser = (tiendasList || []).find((tnd) => tnd.user == usuario);
+
     let parseResponse = [{
       auth: { token: token },
       page: { default: ((dataUser || [])[0] || {}).DEFAULT_PAGE },
       profile: {
-        name: ((dataUser || [])[0] || {}).USUARIO
+        name: ((dataUser || [])[0] || {}).USUARIO,
+        codigo: (selectedUser || []).code || ""
       }
     }];
 
@@ -36,11 +62,11 @@ export const Login = async (req, res) => {
 export const EmailList = async (req, res) => {
 
   res.json([
-    {mail:"inventariogd.peru@gmail.com"},
-    {mail:"josecarreno@metasperu.com"},
-    {mail:"itperu@metasperu.com"},
-    {mail:"johnnygermano@metasperu.com"},
-    {mail:"logisticaperu@metasperu.com"}
+    { mail: "inventariogd.peru@gmail.com" },
+    { mail: "josecarreno@metasperu.com" },
+    { mail: "itperu@metasperu.com" },
+    { mail: "johnnygermano@metasperu.com" },
+    { mail: "logisticaperu@metasperu.com" }
   ]);
 };
 
