@@ -20,26 +20,26 @@ export const Login = async (req, res) => {
     const token = tokenController.createToken(usuario, nivelUser);
 
     let tiendasList = [
-      { code: '7A', user: 'bbwjoc' },
-      { code: '9N', user: 'vsaqp' },
-      { code: '7J', user: 'bbwaqp' },
-      { code: '7E', user: 'bbwlrb' },
-      { code: '9D', user: 'vslrb' },
-      { code: '9B', user: 'vspn' },
-      { code: '7C', user: 'bbwpsm' },
-      { code: '9C', user: 'vspsm' },
-      { code: '7D', user: 'bbwrps' },
-      { code: '9I', user: 'vsrps' },
-      { code: '9G', user: 'vspur' },
-      { code: '9H', user: 'vspur' },
-      { code: '9M', user: 'vsecom' },
-      { code: '7F', user: 'bbwecom' },
-      { code: '9K', user: 'vsmep' },
-      { code: '9L', user: 'vsmnk' },
-      { code: '9F', user: 'vsfajoc' },
-      { code: '7A7', user: 'bbwasia' },
-      { code: '9P', user: 'vsmptru' },
-      { code: '7I', user: 'bbwmptru' }
+      { code: '7A', user: 'bbwjoc', nameTienda: 'BBW JOCKEY' },
+      { code: '9N', user: 'vsaqp', nameTienda: 'VS MALL AVENTURA' },
+      { code: '7J', user: 'bbwaqp', nameTienda: 'BBW MALL AVENTURA' },
+      { code: '7E', user: 'bbwlrb', nameTienda: 'BBW LA RAMBLA' },
+      { code: '9D', user: 'vslrb', nameTienda: 'VS LA RAMBLA' },
+      { code: '9B', user: 'vspn', nameTienda: 'VS PLAZA NORTE' },
+      { code: '7C', user: 'bbwpsm', nameTienda: 'BBW SAN MIGUEL' },
+      { code: '9C', user: 'vspsm', nameTienda: 'VS SAN MIGUEL' },
+      { code: '7D', user: 'bbwrps', nameTienda: 'BBW SALAVERRY' },
+      { code: '9I', user: 'vsrps', nameTienda: 'VS SALAVERRY' },
+      { code: '9G', user: 'vsmds', nameTienda: 'VS MALL DEL SUR' },
+      { code: '9H', user: 'vspur', nameTienda: 'VS PURUCHUCO' },
+      { code: '9M', user: 'vsecom', nameTienda: 'VS ECOMMERCE' },
+      { code: '7F', user: 'bbwecom', nameTienda: 'BBW ECOMMERCE' },
+      { code: '9K', user: 'vsmep', nameTienda: 'VS MEGA PLAZA' },
+      { code: '9L', user: 'vsmnk', nameTienda: 'VS MINKA' },
+      { code: '9F', user: 'vsfajoc', nameTienda: 'VSFA JOCKEY FULL' },
+      { code: '7A7', user: 'bbwasia', nameTienda: 'BBW ASIA'  },
+      { code: '9P', user: 'vsmptru', nameTienda: 'VS MALL PLAZA' },
+      { code: '7I', user: 'bbwmptru', nameTienda: 'BBW MALL PLAZA' }
     ];
 
     let selectedUser = (tiendasList || []).find((tnd) => tnd.user == usuario);
@@ -49,7 +49,8 @@ export const Login = async (req, res) => {
       page: { default: ((dataUser || [])[0] || {}).DEFAULT_PAGE },
       profile: {
         name: ((dataUser || [])[0] || {}).USUARIO,
-        codigo: (selectedUser || []).code || ""
+        codigo: (selectedUser || []).code || "",
+        nameTienda: (selectedUser || []).nameTienda || ""
       }
     }];
 
