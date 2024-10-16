@@ -376,6 +376,11 @@ io.on('connection', async (socket) => {
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
 
+  app.post("/frontRetail/search/horario", async (req, res) => {
+    socket.to(`${listClient.id}`).emit("reporteHorario", { id: "servGeneral", data: req.body });
+    res.json({ mensaje: 'Archivo recibido con éxito' });
+  });
+
 
   app.post('/facturas-pendiente', async (req, res) => {
     let request = ((req || []).body || [])
