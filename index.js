@@ -247,19 +247,16 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("consultarServGen", configurationList);
   });
 
-  socket.on("consultaMarcacion", (configuracion) => {
+  socket.on("consultaHorasTrab", (configuracion) => {
     console.log(configuracion);
     let configurationList = {
       socket: (socket || {}).id,
-      isDefault: configuracion.isDefault,
-      isFeriados: configuracion.isFeriados,
-      isDetallado: configuracion.isDetallado,
-      centroCosto: configuracion.centroCosto,
-      dateList: configuracion.dateList
+      fechain: configuracion.fechain,
+      fechaend: configuracion.fechaend,
+      nro_documento: configuracion.nro_documento
     };
 
-    socket.broadcast.emit("consultarEJB", configurationList);
-    socket.broadcast.emit("consultarServGen", configurationList);
+    socket.broadcast.emit("consultaHoras", configurationList);
   });
 
   socket.on("resEmpleados", (response) => {
