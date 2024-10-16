@@ -251,9 +251,9 @@ io.on('connection', async (socket) => {
     console.log(configuracion);
     let configurationList = {
       socket: (socket || {}).id,
-      fechain: configuracion.fechain,
-      fechaend: configuracion.fechaend,
-      nro_documento: configuracion.nro_documento
+      fechain: configuracion[0].fechain,
+      fechaend: configuracion[0].fechaend,
+      nro_documento: configuracion[0].nro_documento
     };
 
     socket.broadcast.emit("consultaHoras", configurationList);
