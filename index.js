@@ -259,6 +259,22 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("consultaHoras", configurationList);
   });
 
+  socket.on("consultaListaEmpleado", (cntCosto) => {
+    let configurationList = {
+      socket: (socket || {}).id,
+      cntCosto: cntCosto
+    };
+
+    socket.broadcast.emit("consultarEJB", configurationList);
+    socket.broadcast.emit("consultarEmpleados", configurationList);
+  });
+
+
+  socket.on("listaEmpleados", (response) => {
+    let data = response;
+    socket.to(`${(resData || [])['configuration']['socket']}`).emit("reporteEmpleadoTienda", { id: data.id, data: JSON.parse((data || {}).serverData || []) });
+  });
+
   socket.on("resEmpleados", (response) => {
     let data = response;
     let parseEJB = [];
