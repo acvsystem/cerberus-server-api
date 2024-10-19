@@ -260,6 +260,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("consultaListaEmpleado", (cntCosto) => {
+    console.log(cntCosto);
     let configurationList = {
       socket: (socket || {}).id,
       cntCosto: cntCosto
