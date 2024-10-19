@@ -273,7 +273,7 @@ io.on('connection', async (socket) => {
 
   socket.on("listaEmpleados", (response) => {
     let data = response;
-    socket.to(`${(resData || [])['configuration']['socket']}`).emit("reporteEmpleadoTienda", { id: data.id, data: JSON.parse((data || {}).serverData || []) });
+    socket.to(`${(data || [])['configuration']['socket']}`).emit("reporteEmpleadoTienda", { id: data.id, data: JSON.parse((data || {}).serverData || []) });
   });
 
   socket.on("resEmpleados", (response) => {
