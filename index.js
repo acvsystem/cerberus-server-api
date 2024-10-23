@@ -297,7 +297,10 @@ io.on('connection', async (socket) => {
       (response || []).filter(async (dth, index) => {
         let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.id};`);
         response[index]['rg_hora'].push(requestRg[0]);
-        console.log(response);
+        if (index == 3) {
+          res.json(response);
+        }
+        
       });
     }
 
@@ -308,7 +311,7 @@ io.on('connection', async (socket) => {
 */
 
 
-    res.json(response);
+
 
 
   })
