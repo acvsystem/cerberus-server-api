@@ -308,7 +308,7 @@ io.on('connection', async (socket) => {
           let diaHorarioSelected = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${(dth || {}).id};`);
           await pool.query(`UPDATE TB_DIAS_HORARIO SET DIA = '${diah.dia}',FECHA='${diah.fecha}' WHERE ID_DIAS = ${(diaHorarioSelected || {}).ID_DIAS};`);
         } else {
-          await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO)VALUES('${diah.dia}','${diah.fecha}',${diah.idhoraro})`);
+          await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO)VALUES('${diah.dia}','${diah.fecha}',${(dth || {}).id})`);
         }
       });
 
