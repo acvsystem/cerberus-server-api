@@ -285,7 +285,9 @@ io.on('connection', async (socket) => {
      }*/
 
     let dataHorario = data[0];
-    /**RANGO HORARIO */
+    console.log(data);
+    /** 
+  
     let [rangoHora] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(dataHorario || {}).id};`);
 
     dataHorario['rg_hora'].filter(async (rangoh) => {
@@ -297,7 +299,7 @@ io.on('connection', async (socket) => {
       }
     });
 
-    /**DIAS HORARIO */
+   
     let [diasHorario] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${(dataHorario || {}).id};`);
 
     dataHorario['dias'].filter(async (diah) => {
@@ -309,19 +311,22 @@ io.on('connection', async (socket) => {
       }
     });
 
-    /**DIAS TRABAJADOS HORARIO */
+  
     await pool.query(`DELETE FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${(dataHorario || {}).id};`);
 
     dataHorario['dias_trabajo'].filter(async (diat) => {
       await pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${diat.rg},${diat.id_dia},${(dataHorario || {}).id})`);
     });
 
-    /**DIAS LIBRES HORARIO */
+
     await pool.query(`DELETE FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${(dataHorario || {}).id};`);
 
     dataHorario['dias_libres'].filter(async (diat) => {
       await pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${diat.rg},${diat.id_dia},${(dataHorario || {}).id})`);
     });
+
+    */
+    
 
 
   });
