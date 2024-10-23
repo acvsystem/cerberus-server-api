@@ -288,7 +288,7 @@ io.on('connection', async (socket) => {
  
 
     dataHorario.filter(async (dth) => {
-      console.log(dth);
+      console.log(dth.id);
       /**let [rangoHora] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(dth || {}).id};`);
 
       dth['rg_hora'].filter(async (rangoh) => {
