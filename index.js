@@ -277,31 +277,31 @@ io.on('connection', async (socket) => {
     let dataReq = req.body;
 
     let response = [];
-    
+    let rangoHora = [];
     let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE RANGO_DIAS = '${dataReq[0]['rango_dias']}';`);
 
     (requestSql || []).filter(async (dth) => {
       console.log(dth);
 
       let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.ID_HORARIO};`);
-      console.log(requestRg);
+      rangoHora.push(requestRg[0]);
       /*let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.ID_HORARIO};`);
       let [requestTb] = await pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${dth.ID_HORARIO};`);
       let [requestTd] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${dth.ID_TRB_HORARIO};`);
-
+*/
       (response || []).push({
         id: dth.ID_HORARIO,
         cargo: dth.CARGO,
-        rg_hora: requestRg,
+        rg_hora: rangoHora,
         dias: requestDh,
         dias_trabajo: requestTb,
         dias_libres: requestTd,
         arListTrabajador: [],
         observacion: []
       });
-      */
+
     });
- 
+
     res.json(response);
   })
 
