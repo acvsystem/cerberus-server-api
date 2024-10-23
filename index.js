@@ -275,10 +275,10 @@ io.on('connection', async (socket) => {
 
   app.post("/calendario/searchrHorario", async (req, res) => {
     let dataReq = req.body;
-    console.log(dataReq);
+    console.log(dataReq[0]['rango_dias']);
     let response = [];
-    /**
-    let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE RANGO_DIAS = '${dataReq[0]['rango_dias']}';`);
+    
+    let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE RANGO_DIAS = ${dataReq[0]['rango_dias']};`);
 
     (requestSql || []).filter(async (dth) => {
 
@@ -298,7 +298,7 @@ io.on('connection', async (socket) => {
         observacion: []
       });
     });
- */
+ 
     res.json(response);
   })
 
