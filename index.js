@@ -278,7 +278,7 @@ io.on('connection', async (socket) => {
     console.log(dataReq[0]['rango_dias']);
     let response = [];
     
-    let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE RANGO_DIAS = ${dataReq[0]['rango_dias']};`);
+    let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE RANGO_DIAS = '${dataReq[0]['rango_dias']}';`);
 
     (requestSql || []).filter(async (dth) => {
 
