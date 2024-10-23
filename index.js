@@ -293,9 +293,9 @@ io.on('connection', async (socket) => {
         id: dth.ID_HORARIO,
         cargo: dth.CARGO,
         rg_hora: rangoHora,
-        dias: requestDh,
-        dias_trabajo: requestTb,
-        dias_libres: requestTd,
+        dias: [],
+        dias_trabajo: [],
+        dias_libres: [],
         arListTrabajador: [],
         observacion: []
       });
