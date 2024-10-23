@@ -253,6 +253,8 @@ io.on('connection', async (socket) => {
       await pool.query(`INSERT INTO TB_HORARIO_PROPERTY(CARGO,CODIGO_TIENDA)VALUES('${rs.cargo}','${rs.codigo_tienda}')`);
     });
 
+    res.json(defaultResponse.success.default);
+
   });
 
   socket.on("actualizarHorario", async (data) => {
