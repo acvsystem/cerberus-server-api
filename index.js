@@ -281,7 +281,7 @@ io.on('connection', async (socket) => {
     let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE RANGO_DIAS = '${dataReq[0]['rango_dias']}';`);
 
     await (requestSql || []).filter(async (dth) => {
-      console.log(dth);
+      
 
       let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.ID_HORARIO};`);
       rangoHora.push(requestRg[0]);
@@ -299,10 +299,13 @@ io.on('connection', async (socket) => {
         arListTrabajador: [],
         observacion: []
       });
-
+      console.log(response);
     });
 
-    res.json(response);
+    if (response.length) {
+      res.json(response);
+    }
+
   })
 
   socket.on("actualizarHorario", async (data) => {
