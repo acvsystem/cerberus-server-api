@@ -293,11 +293,14 @@ io.on('connection', async (socket) => {
       });
     });
 
+    if (response.length) {
+      (response || []).filter(async (dth, index) => {
+        let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.ID_HORARIO};`);
+        response[index]['rg_hora'].push(requestRg[0]);
+        console.log(response);
+      });
+    }
 
-    (response || []).filter(async (dth, index) => {
-      let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.ID_HORARIO};`);
-      response[index]['rg_hora'].push(requestRg[0]);
-    });
 
     /*let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.ID_HORARIO};`);
     let [requestTb] = await pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${dth.ID_HORARIO};`);
