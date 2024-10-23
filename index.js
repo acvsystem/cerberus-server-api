@@ -260,7 +260,7 @@ io.on('connection', async (socket) => {
     let [cargosListVerf] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE FECHA = '${day[0]}-${day[1]}-${day[2]}';`);
 
     if (!(cargosListVerf || []).length) {
-      (data || []).filter(async (rs) => {
+      await (data || []).filter(async (rs) => {
         await pool.query(`INSERT INTO TB_HORARIO_PROPERTY(CARGO,CODIGO_TIENDA,FECHA)VALUES('${rs.cargo}','${rs.codigo_tienda}','${rs.fecha}')`);
       });
     }
