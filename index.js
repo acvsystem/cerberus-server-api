@@ -296,7 +296,7 @@ io.on('connection', async (socket) => {
           let rangoHoraSelected = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(dth || {}).id};`);
           await pool.query(`UPDATE TB_RANGO_HORA SET CODIGO_TIENDA = '${rangoh.codigo_tienda}',RANGO_HORA='${rangoh.rg}' WHERE ID_RANGO_HORA = ${(rangoHoraSelected || {}).ID_RANGO_HORA};`);
         } else {
-          await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)VALUES('${rangoh.codigo_tienda}','${rangoh.rg}',${rangoh.idhoraro})`);
+          await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)VALUES('${rangoh.codigo_tienda}','${rangoh.rg}',${(dth || {}).id})`);
         }
       });
 
