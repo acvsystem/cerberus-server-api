@@ -275,13 +275,14 @@ io.on('connection', async (socket) => {
 
   app.post("/calendario/searchrHorario", async (req, res) => {
     let dataReq = req.body;
-    console.log(dataReq[0]['rango_dias']);
+
     let response = [];
     
     let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE RANGO_DIAS = '${dataReq[0]['rango_dias']}';`);
 
     (requestSql || []).filter(async (dth) => {
-
+      console.log(dth);
+/*
       let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.ID_HORARIO};`);
       let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.ID_HORARIO};`);
       let [requestTb] = await pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${dth.ID_HORARIO};`);
@@ -297,6 +298,7 @@ io.on('connection', async (socket) => {
         arListTrabajador: [],
         observacion: []
       });
+      */
     });
  
     res.json(response);
