@@ -284,49 +284,52 @@ io.on('connection', async (socket) => {
        observacion: []
      }*/
 
-    let dataHorario = data[0];
-    console.log(data);
-    /** 
-  
-    let [rangoHora] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(dataHorario || {}).id};`);
+    let dataHorario = data || [];
+ 
 
-    dataHorario['rg_hora'].filter(async (rangoh) => {
-      if ((rangoHora || []).length) {
-        let rangoHoraSelected = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(dataHorario || {}).id};`);
-        await pool.query(`UPDATE TB_RANGO_HORA SET CODIGO_TIENDA = '${rangoh.codigo_tienda}',RANGO_HORA='${rangoh.rg}' WHERE ID_RANGO_HORA = ${(rangoHoraSelected || {}).ID_RANGO_HORA};`);
-      } else {
-        await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)VALUES('${rangoh.codigo_tienda}','${rangoh.rg}',${rangoh.idhoraro})`);
-      }
+    dataHorario.filter(async (dth) => {
+
+      let [rangoHora] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(dth || {}).id};`);
+
+      dth['rg_hora'].filter(async (rangoh) => {
+        if ((rangoHora || []).length) {
+          let rangoHoraSelected = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(dth || {}).id};`);
+          await pool.query(`UPDATE TB_RANGO_HORA SET CODIGO_TIENDA = '${rangoh.codigo_tienda}',RANGO_HORA='${rangoh.rg}' WHERE ID_RANGO_HORA = ${(rangoHoraSelected || {}).ID_RANGO_HORA};`);
+        } else {
+          await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)VALUES('${rangoh.codigo_tienda}','${rangoh.rg}',${rangoh.idhoraro})`);
+        }
+      });
+
+
+      let [diasHorario] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${(dth || {}).id};`);
+
+      dth['dias'].filter(async (diah) => {
+        if ((diasHorario || []).length) {
+          let diaHorarioSelected = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${(dth || {}).id};`);
+          await pool.query(`UPDATE TB_DIAS_HORARIO SET DIA = '${diah.dia}',FECHA='${diah.fecha}' WHERE ID_DIAS = ${(diaHorarioSelected || {}).ID_DIAS};`);
+        } else {
+          await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO)VALUES('${diah.dia}','${diah.fecha}',${diah.idhoraro})`);
+        }
+      });
+
+
+      await pool.query(`DELETE FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${(dth || {}).id};`);
+
+      dth['dias_trabajo'].filter(async (diat) => {
+        await pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${diat.rg},${diat.id_dia},${(dth || {}).id})`);
+      });
+
+
+      await pool.query(`DELETE FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${(dth || {}).id};`);
+
+      dth['dias_libres'].filter(async (diat) => {
+        await pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${diat.rg},${diat.id_dia},${(dth || {}).id})`);
+      });
+
+
     });
 
-   
-    let [diasHorario] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${(dataHorario || {}).id};`);
 
-    dataHorario['dias'].filter(async (diah) => {
-      if ((diasHorario || []).length) {
-        let diaHorarioSelected = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${(dataHorario || {}).id};`);
-        await pool.query(`UPDATE TB_DIAS_HORARIO SET DIA = '${diah.dia}',FECHA='${diah.fecha}' WHERE ID_DIAS = ${(diaHorarioSelected || {}).ID_DIAS};`);
-      } else {
-        await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO)VALUES('${diah.dia}','${diah.fecha}',${diah.idhoraro})`);
-      }
-    });
-
-  
-    await pool.query(`DELETE FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${(dataHorario || {}).id};`);
-
-    dataHorario['dias_trabajo'].filter(async (diat) => {
-      await pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${diat.rg},${diat.id_dia},${(dataHorario || {}).id})`);
-    });
-
-
-    await pool.query(`DELETE FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${(dataHorario || {}).id};`);
-
-    dataHorario['dias_libres'].filter(async (diat) => {
-      await pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${diat.rg},${diat.id_dia},${(dataHorario || {}).id})`);
-    });
-
-    */
-    
 
 
   });
