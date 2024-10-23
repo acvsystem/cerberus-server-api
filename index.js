@@ -277,7 +277,6 @@ io.on('connection', async (socket) => {
     let dataReq = req.body;
 
     let response = [];
-    let rangoHora = [];
     let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE RANGO_DIAS = '${dataReq[0]['rango_dias']}';`);
 
     await (requestSql || []).filter(async (dth) => {
@@ -297,23 +296,19 @@ io.on('connection', async (socket) => {
       (response || []).filter(async (dth, index) => {
         let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.id};`);
         response[index]['rg_hora'].push(requestRg[0]);
+        let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.ID_HORARIO};`);
+        response[index]['dias'].push(requestDh[0]);
+        let [requestTb] = await pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${dth.ID_HORARIO};`);
+        response[index]['dias_trabajo'].push(requestTb[0]);
+        let [requestTd] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${dth.ID_HORARIO};`);
+        response[index]['dias_libres'].push(requestTd[0]);
+
         if (index == 3) {
           res.json(response);
         }
-        
+
       });
     }
-
-
-    /*let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.ID_HORARIO};`);
-    let [requestTb] = await pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${dth.ID_HORARIO};`);
-    let [requestTd] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${dth.ID_TRB_HORARIO};`);
-*/
-
-
-
-
-
   })
 
   socket.on("actualizarHorario", async (data) => {
