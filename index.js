@@ -249,11 +249,26 @@ io.on('connection', async (socket) => {
 
   app.post("/calendario/generar", async (req, res) => {
     let data = req.body;
-    (data || []).filter(async (rs) => {
-      await pool.query(`INSERT INTO TB_HORARIO_PROPERTY(CARGO,CODIGO_TIENDA)VALUES('${rs.cargo}','${rs.codigo_tienda}')`);
-    });
 
-    res.json(defaultResponse.success.default);
+    let dateNow = new Date();
+
+    var año = dateNow.getFullYear();
+    var mes = (dateNow.getMonth() + 1);
+    let dayNow = dateNow.getDay();
+    let day = new Date(dateNow).toLocaleDateString().split('/');
+
+    let [cargosListVerf] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE FECHA = '${day[0]}-${day[1]}-${day[2]}';`);
+
+    if (!(cargosListVerf || []).length) {
+      (data || []).filter(async (rs) => {
+        await pool.query(`INSERT INTO TB_HORARIO_PROPERTY(CARGO,CODIGO_TIENDA,FECHA)VALUES('${rs.cargo}','${rs.codigo_tienda}','${rs.fecha}')`);
+      });
+    }
+
+    let [cargosList] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE FECHA = '${day[0]}-${day[1]}-${day[2]}';`);
+
+
+    res.json(cargosList);
 
   });
 
