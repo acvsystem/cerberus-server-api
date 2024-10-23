@@ -282,9 +282,10 @@ io.on('connection', async (socket) => {
 
     (requestSql || []).filter(async (dth) => {
       console.log(dth);
-/*
+
       let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.ID_HORARIO};`);
-      let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.ID_HORARIO};`);
+      console.log(requestRg);
+      /*let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.ID_HORARIO};`);
       let [requestTb] = await pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${dth.ID_HORARIO};`);
       let [requestTd] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${dth.ID_TRB_HORARIO};`);
 
