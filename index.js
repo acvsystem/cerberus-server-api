@@ -250,7 +250,7 @@ io.on('connection', async (socket) => {
   app.post("/calendario/generar", async (req, res) => {
     let data = req.body;
     (data || []).filter(async (rs) => {
-      await pool.query(`INSERT INTO TB_HORARIO_PROPERTY(CARGO,CODIGO_TIENDA)VALUES(${rs.cargo},${rs.codigo_tienda})`);
+      await pool.query(`INSERT INTO TB_HORARIO_PROPERTY(CARGO,CODIGO_TIENDA)VALUES('${rs.cargo}','${rs.codigo_tienda}')`);
     });
 
   });
