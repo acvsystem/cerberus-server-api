@@ -288,8 +288,8 @@ io.on('connection', async (socket) => {
  
 
     dataHorario.filter(async (dth) => {
-
-      let [rangoHora] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(dth || {}).id};`);
+      console.log(dth);
+      /**let [rangoHora] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(dth || {}).id};`);
 
       dth['rg_hora'].filter(async (rangoh) => {
         if ((rangoHora || []).length) {
@@ -325,7 +325,7 @@ io.on('connection', async (socket) => {
       dth['dias_libres'].filter(async (diat) => {
         await pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${diat.rg},${diat.id_dia},${(dth || {}).id})`);
       });
-
+ */
 
     });
 
