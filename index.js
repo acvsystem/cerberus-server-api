@@ -285,7 +285,7 @@ io.on('connection', async (socket) => {
      }*/
 
     let dataHorario = data || [];
-
+    console.log(dataHorario);
 
     dataHorario.filter(async (dth) => {
 
