@@ -295,13 +295,30 @@ io.on('connection', async (socket) => {
     if (response.length) {
       (response || []).filter(async (dth, index) => {
         let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.id};`);
-        response[index]['rg_hora'].push(requestRg[0]);
+
+        await (requestRg || []).filter(async (rdh) => {
+          response[index]['rg_hora'].push(rdh);
+        });
+
         let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.id};`);
-        response[index]['dias'].push(requestDh[0]);
+
+        await (requestDh || []).filter(async (rdh) => {
+          response[index]['dias'].push(rdh);
+        });
+
         let [requestTb] = await pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${dth.id};`);
-        response[index]['dias_trabajo'].push(requestTb[0]);
+
+        await (requestTb || []).filter(async (rdb) => {
+          response[index]['dias_trabajo'].push(rdb);
+        });
+
         let [requestTd] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${dth.id};`);
-        response[index]['dias_libres'].push(requestTd[0]);
+
+        await (requestTd || []).filter(async (rdb) => {
+          response[index]['dias_libres'].push(rdb);
+        });
+
+
 
         if (index == 3) {
           res.json(response);
