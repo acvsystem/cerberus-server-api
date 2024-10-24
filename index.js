@@ -267,7 +267,7 @@ io.on('connection', async (socket) => {
       }
     });
 
-    let [cargosList] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${data[0].codigo_tienda}' AND FECHA = '${day[0]}-${day[1]}-${day[2]}';`);
+    let [cargosList] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${data.codigo_tienda}' AND FECHA = '${day[0]}-${day[1]}-${day[2]}';`);
 
 
     res.json(cargosList);
@@ -304,7 +304,7 @@ io.on('connection', async (socket) => {
 
         let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.id} ORDER BY SUBSTRING(FECHA,1,2)  ASC;`);
 
-        await (requestDh || []).filter(async (rdh, index) => {
+        await (requestDh || []).filter(async (rdh) => {
           response[index]['dias'].push({ dia: rdh.DIA, fecha: rdh.FECHA, id: rdh.ID_DIAS });
         });
 
