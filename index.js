@@ -259,7 +259,7 @@ io.on('connection', async (socket) => {
         await pool.query(`INSERT INTO TB_HORARIO_PROPERTY(CARGO,CODIGO_TIENDA,FECHA,RANGO_DIAS)VALUES('${rs.cargo}','${rs.codigo_tienda}','${rs.fecha}','${rs.rango}')`);
       }
     });
-   
+
     let [cargosList] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${data[0].codigo_tienda}' AND FECHA = '${day[0]}-${day[1]}-${day[2]}';`);
 
 
@@ -292,7 +292,7 @@ io.on('connection', async (socket) => {
         let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.id};`);
 
         await (requestRg || []).filter(async (rdh) => {
-          response[index]['rg_hora'].push({ id: rdh.ID_RANGO_HORA, rg: rdh.RANGO_HORA });
+          response[index]['rg_hora'].push({ id: rdh.ID_RANGO_HORA, rg: response[index]['rg_hora'].length + 1 });
         });
 
         let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.id} ORDER BY SUBSTRING(FECHA,1,2)  ASC;`);
