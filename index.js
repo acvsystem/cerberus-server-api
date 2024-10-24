@@ -261,7 +261,7 @@ io.on('connection', async (socket) => {
 
     if (!(cargosListVerf || []).length) {
       await (data || []).filter(async (rs) => {
-        await pool.query(`INSERT INTO TB_HORARIO_PROPERTY(CARGO,CODIGO_TIENDA,FECHA)VALUES('${rs.cargo}','${rs.codigo_tienda}','${rs.fecha}')`);
+        await pool.query(`INSERT INTO TB_HORARIO_PROPERTY(CARGO,CODIGO_TIENDA,FECHA,RANGO_DIAS)VALUES('${rs.cargo}','${rs.codigo_tienda}','${rs.fecha}','${rs.rango}')`);
       });
     }
 
