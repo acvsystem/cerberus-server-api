@@ -325,6 +325,8 @@ io.on('connection', async (socket) => {
         }
 
       });
+    } else {
+      res.json({ msj: "NO HAY NINGUN CALENDARIO CON ESTE RAGO DE FECHA" });
     }
   })
 
@@ -361,7 +363,7 @@ io.on('connection', async (socket) => {
       let [diasHorario] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${(dth || {}).id};`);
 
       dth['dias'].filter(async (diah) => {
-       
+
         if ((diasHorario || []).length) {
           let [diaHorarioSelected] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${(dth || {}).id};`);
           await pool.query(`UPDATE TB_DIAS_HORARIO SET DIA = '${diah.dia}',FECHA='${diah.fecha}' WHERE ID_DIAS = ${(diaHorarioSelected[0] || []).ID_DIAS};`);
