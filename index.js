@@ -257,15 +257,17 @@ io.on('connection', async (socket) => {
     let dayNow = dateNow.getDay();
     let day = new Date(dateNow).toLocaleDateString().split('/');
 
-    let [cargosListVerf] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE FECHA = '${day[0]}-${day[1]}-${day[2]}';`);
 
-    if (!(cargosListVerf || []).length) {
-      await (data || []).filter(async (rs) => {
+
+
+    await (data || []).filter(async (rs) => {
+      let [cargosListVerf] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${rs.codigo_tienda}' AND FECHA = '${day[0]}-${day[1]}-${day[2]}';`);
+      if (!(cargosListVerf || []).length) {
         await pool.query(`INSERT INTO TB_HORARIO_PROPERTY(CARGO,CODIGO_TIENDA,FECHA,RANGO_DIAS)VALUES('${rs.cargo}','${rs.codigo_tienda}','${rs.fecha}','${rs.rango}')`);
-      });
-    }
+      }
+    });
 
-    let [cargosList] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE FECHA = '${day[0]}-${day[1]}-${day[2]}';`);
+    let [cargosList] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${data[0].codigo_tienda}' AND FECHA = '${day[0]}-${day[1]}-${day[2]}';`);
 
 
     res.json(cargosList);
