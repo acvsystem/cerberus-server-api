@@ -300,7 +300,7 @@ io.on('connection', async (socket) => {
           response[index]['rg_hora'].push({ id: rdh.ID_RANGO_HORA, rg: rdh.RANGO_HORA });
         });
 
-        let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.id};`);
+        let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.id} ORDER BY SUBSTRING(FECHA,1,2)  ASC;`);
 
         await (requestDh || []).filter(async (rdh) => {
           response[index]['dias'].push({ dia: rdh.DIA, fecha: rdh.FECHA, id: rdh.ID_DIAS });
