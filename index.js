@@ -259,7 +259,7 @@ io.on('connection', async (socket) => {
         await pool.query(`INSERT INTO TB_HORARIO_PROPERTY(CARGO,CODIGO_TIENDA,FECHA,RANGO_DIAS)VALUES('${rs.cargo}','${rs.codigo_tienda}','${rs.fecha}','${rs.rango}')`);
       }
     });
-   
+
     let [cargosList] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${data[0].codigo_tienda}' AND FECHA = '${day[0]}-${day[1]}-${day[2]}';`);
 
 
@@ -278,6 +278,7 @@ io.on('connection', async (socket) => {
       (response || []).push({
         id: dth.ID_HORARIO,
         cargo: dth.CARGO,
+        codigo_tienda: dth.CODIGO_TIENDA,
         rg_hora: [],
         dias: [],
         dias_trabajo: [],
@@ -304,16 +305,14 @@ io.on('connection', async (socket) => {
         let [requestTb] = await pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${dth.id};`);
 
         await (requestTb || []).filter(async (rdb) => {
-          response[index]['dias_trabajo'].push({ id: rdb.ID_DIA_TRB, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA });
+          response[index]['dias_trabajo'].push({ id: rdb.ID_DIA_TRB, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA, codigo_tienda: rdb.CODIGO_TIENDA });
         });
 
         let [requestTd] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${dth.id};`);
 
         await (requestTd || []).filter(async (rdb) => {
-          response[index]['dias_libres'].push({ id: rdb.ID_DIA_LBR, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA });
+          response[index]['dias_libres'].push({ id: rdb.ID_DIA_LBR, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA, codigo_tienda: rdb.CODIGO_TIENDA });
         });
-
-
 
         if (index == 3) {
           res.json(response);
@@ -321,7 +320,7 @@ io.on('connection', async (socket) => {
 
       });
     } else {
-      res.json({ msj: "NO HAY NINGUN CALENDARIO CON ESTE RAGO DE FECHA" });
+      res.json({ msj: "No hay ningun calendario en este rago de fecha." });
     }
   })
 
