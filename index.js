@@ -249,41 +249,46 @@ io.on('connection', async (socket) => {
 
   app.post("/calendario/generar", async (req, res) => {
     let data = req.body;
-
+    let response = [];
     let dateNow = new Date();
     let day = new Date(dateNow).toLocaleDateString().split('/');
 
-    await (data || []).filter(async (rs) => {
+    await (data || []).filter(async (rs, i) => {
       let [cargosListVerf] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE RANGO_DIAS = '${rs.rango}' AND CODIGO_TIENDA = '${rs.codigo_tienda}';`);
       if (!(cargosListVerf || []).length) {
         await pool.query(`INSERT INTO TB_HORARIO_PROPERTY(CARGO,CODIGO_TIENDA,FECHA,RANGO_DIAS)VALUES('${rs.cargo}','${rs.codigo_tienda}','${rs.fecha}','${rs.rango}')`);
       }
+
+      if (i == 3) {
+        let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${data[0]['codigo_tienda']}' AND RANGO_DIAS = '${data[0]['rango']}';`);
+
+        if (!(requestSql || []).length) {
+          res.json({ msj: "Ocurrio un error al generar horario." });
+        } else {
+          await (requestSql || []).filter(async (dth, index) => {
+            (response || []).push({
+              id: dth.ID_HORARIO,
+              cargo: dth.CARGO,
+              codigo_tienda: dth.CODIGO_TIENDA,
+              rg_hora: [],
+              dias: [],
+              dias_trabajo: [],
+              dias_libres: [],
+              arListTrabajador: [],
+              observacion: []
+            });
+
+            if (index == 3) {
+              res.json(response);
+            }
+          });
+        }
+      }
+
     });
 
-    let response = [];
-    let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${data[0]['codigo_tienda']}' AND RANGO_DIAS = '${data[0]['rango']}';`);
 
-    if (!(requestSql || []).length) {
-      res.json({ msj: "Ocurrio un error al generar horario." });
-    } else {
-      await (requestSql || []).filter(async (dth, index) => {
-        (response || []).push({
-          id: dth.ID_HORARIO,
-          cargo: dth.CARGO,
-          codigo_tienda: dth.CODIGO_TIENDA,
-          rg_hora: [],
-          dias: [],
-          dias_trabajo: [],
-          dias_libres: [],
-          arListTrabajador: [],
-          observacion: []
-        });
 
-        if (index == 3) {
-          res.json(response);
-        }
-      });
-    }
 
   });
 
