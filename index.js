@@ -257,39 +257,84 @@ io.on('connection', async (socket) => {
       let [cargosListVerf] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE RANGO_DIAS = '${rs.rango}' AND CODIGO_TIENDA = '${rs.codigo_tienda}';`);
       if (!(cargosListVerf || []).length) {
         await pool.query(`INSERT INTO TB_HORARIO_PROPERTY(CARGO,CODIGO_TIENDA,FECHA,RANGO_DIAS)VALUES('${rs.cargo}','${rs.codigo_tienda}','${rs.fecha}','${rs.rango}')`);
-      }
 
-      if (i == 3) {
-        let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${data[0]['codigo_tienda']}' AND RANGO_DIAS = '${data[0]['rango']}';`);
+        if (i == 3) {
+          let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${data[0]['codigo_tienda']}' AND RANGO_DIAS = '${data[0]['rango']}';`);
 
-        if (!(requestSql || []).length) {
-          res.json({ msj: "Ocurrio un error al generar horario." });
-        } else {
-          await (requestSql || []).filter(async (dth, index) => {
-            (response || []).push({
-              id: dth.ID_HORARIO,
-              cargo: dth.CARGO,
-              codigo_tienda: dth.CODIGO_TIENDA,
-              rg_hora: [],
-              dias: [],
-              dias_trabajo: [],
-              dias_libres: [],
-              arListTrabajador: [],
-              observacion: []
+          if (!(requestSql || []).length) {
+            res.json({ msj: "Ocurrio un error al generar horario." });
+          } else {
+            await (requestSql || []).filter(async (dth, index) => {
+              (response || []).push({
+                id: dth.ID_HORARIO,
+                cargo: dth.CARGO,
+                codigo_tienda: dth.CODIGO_TIENDA,
+                rg_hora: [],
+                dias: [],
+                dias_trabajo: [],
+                dias_libres: [],
+                arListTrabajador: [],
+                observacion: []
+              });
+
+              if (index == 3) {
+                res.json(response);
+              }
+            });
+          }
+        }
+      } else {
+        let response = [];
+        let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${dataReq[0]['codigo_tienda']}' AND RANGO_DIAS = '${dataReq[0]['rango_dias']}';`);
+
+        await (requestSql || []).filter(async (dth) => {
+          (response || []).push({
+            id: dth.ID_HORARIO,
+            cargo: dth.CARGO,
+            codigo_tienda: dth.CODIGO_TIENDA,
+            rg_hora: [],
+            dias: [],
+            dias_trabajo: [],
+            dias_libres: [],
+            arListTrabajador: [],
+            observacion: []
+          });
+        });
+
+        if (response.length) {
+          (response || []).filter(async (dth, index) => {
+            let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.id};`);
+
+            await (requestRg || []).filter(async (rdh) => {
+              response[index]['rg_hora'].push({ id: response[index]['rg_hora'].length + 1, rg: rdh.RANGO_HORA });
+            });
+
+            let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.id} ORDER BY POSITION  ASC;`);
+
+            await (requestDh || []).filter(async (rdh) => {
+              response[index]['dias'].push({ dia: rdh.DIA, fecha: rdh.FECHA, id: response[index]['dias'].length + 1 });
+            });
+
+            let [requestTb] = await pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${dth.id};`);
+
+            await (requestTb || []).filter(async (rdb) => {
+              response[index]['dias_trabajo'].push({ id: rdb.ID_DIA_TRB, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA, codigo_tienda: rdb.CODIGO_TIENDA });
+            });
+
+            let [requestTd] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${dth.id};`);
+
+            await (requestTd || []).filter(async (rdb) => {
+              response[index]['dias_libres'].push({ id: rdb.ID_DIA_LBR, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA, codigo_tienda: rdb.CODIGO_TIENDA });
             });
 
             if (index == 3) {
               res.json(response);
             }
+
           });
         }
       }
-
     });
-
-
-
-
   });
 
 
