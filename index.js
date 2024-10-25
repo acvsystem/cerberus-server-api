@@ -277,40 +277,8 @@ io.on('connection', async (socket) => {
       });
     });
 
-    if ((response || []).length) {
-      (response || []).filter(async (dth, index) => {
-        let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.id};`);
+    res.json(response);
 
-        await (requestRg || []).filter(async (rdh) => {
-          response[index]['rg_hora'].push({ id: response[index]['rg_hora'].length + 1, rg: rdh.RANGO_HORA });
-        });
-
-        let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.id} ORDER BY SUBSTRING(FECHA,1,2)  ASC;`);
-
-        await (requestDh || []).filter(async (rdh) => {
-          response[index]['dias'].push({ dia: rdh.DIA, fecha: rdh.FECHA, id: response[index]['dias'].length + 1 });
-        });
-
-        let [requestTb] = await pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${dth.id};`);
-
-        await (requestTb || []).filter(async (rdb) => {
-          response[index]['dias_trabajo'].push({ id: rdb.ID_DIA_TRB, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA, codigo_tienda: rdb.CODIGO_TIENDA });
-        });
-
-        let [requestTd] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${dth.id};`);
-
-        await (requestTd || []).filter(async (rdb) => {
-          response[index]['dias_libres'].push({ id: rdb.ID_DIA_LBR, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA, codigo_tienda: rdb.CODIGO_TIENDA });
-        });
-
-        if (index == 3) {
-          res.json(response);
-        }
-
-      });
-    } else {
-      res.json(response);
-    }
 
   });
 
