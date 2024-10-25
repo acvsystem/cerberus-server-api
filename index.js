@@ -277,7 +277,7 @@ io.on('connection', async (socket) => {
       });
     });
 
-    if (response.length) {
+    if ((response || []).length) {
       (response || []).filter(async (dth, index) => {
         let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.id};`);
 
@@ -308,6 +308,8 @@ io.on('connection', async (socket) => {
         }
 
       });
+    } else {
+      res.json(response);
     }
 
   });
