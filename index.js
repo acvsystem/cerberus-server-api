@@ -321,7 +321,7 @@ io.on('connection', async (socket) => {
           response[index]['rg_hora'].push({ id: response[index]['rg_hora'].length + 1, rg: rdh.RANGO_HORA });
         });
 
-        let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.id} ORDER BY SUBSTRING(FECHA,1,2)  ASC;`);
+        let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.id} ORDER BY POSITION  ASC;`);
 
         await (requestDh || []).filter(async (rdh) => {
           response[index]['dias'].push({ dia: rdh.DIA, fecha: rdh.FECHA, id: response[index]['dias'].length + 1 });
@@ -388,7 +388,7 @@ io.on('connection', async (socket) => {
           await pool.query(`UPDATE TB_DIAS_HORARIO SET FECHA='${diah.fecha}' WHERE ID_DIAS = ${(diaHorarioSelected[0] || []).ID_DIAS};`);
         } else {
           console.log(diah);
-          await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO)VALUES('${diah.dia}','${diah.fecha}',${(dth || {}).id})`);
+          await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION)VALUES('${diah.dia}','${diah.fecha}',${(dth || {}).id},${(diah || {}).id})`);
         }
       });
 
