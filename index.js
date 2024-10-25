@@ -371,7 +371,7 @@ io.on('connection', async (socket) => {
 
     dataHorario.filter(async (dth) => {
 
-      await pool.query(`DELETE FROM TB_DIAS_TRABAJO WHERE ID_RG_HORARIO = ${(dth || {}).id};`);
+      await pool.query(`DELETE FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(dth || {}).id};`);
 
       dth['rg_hora'].filter(async (rangoh) => {
         await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)VALUES('${dth.codigo_tienda}','${rangoh.rg}',${(dth || {}).id})`);
