@@ -263,26 +263,26 @@ io.on('connection', async (socket) => {
     let response = [];
     let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${data[0]['codigo_tienda']}' AND RANGO_DIAS = '${data[0]['rango']}';`);
 
-    await (requestSql || []).filter(async (dth, index) => {
-      (response || []).push({
-        id: dth.ID_HORARIO,
-        cargo: dth.CARGO,
-        codigo_tienda: dth.CODIGO_TIENDA,
-        rg_hora: [],
-        dias: [],
-        dias_trabajo: [],
-        dias_libres: [],
-        arListTrabajador: [],
-        observacion: []
-      });
-
-      if (index == 3) {
-        res.json(response);
-      }
-    });
-
-    if ((requestSql || []).length) {
+    if (!(requestSql || []).length) {
       res.json({ msj: "Ocurrio un error al generar horario." });
+    } else {
+      await (requestSql || []).filter(async (dth, index) => {
+        (response || []).push({
+          id: dth.ID_HORARIO,
+          cargo: dth.CARGO,
+          codigo_tienda: dth.CODIGO_TIENDA,
+          rg_hora: [],
+          dias: [],
+          dias_trabajo: [],
+          dias_libres: [],
+          arListTrabajador: [],
+          observacion: []
+        });
+
+        if (index == 3) {
+          res.json(response);
+        }
+      });
     }
 
   });
