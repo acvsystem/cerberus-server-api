@@ -367,7 +367,6 @@ io.on('connection', async (socket) => {
      }*/
 
     let dataHorario = data || [];
-    console.log(dataHorario);
 
     dataHorario.filter(async (dth) => {
 
@@ -405,7 +404,7 @@ io.on('connection', async (socket) => {
       });
 
       await pool.query(`DELETE FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${(dth || {}).id};`);
-
+      console.log(dth['observacion']);
       dth['observacion'].filter(async (obs) => {
         await pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION)VALUES(${(obs || {}).id_dia},${(dth || {}).id},${(obs || {}).codigo_tienda},'${(obs || {}).nombre_completo}','${(obs || {}).observacion}')`);
       });
