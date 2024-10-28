@@ -287,13 +287,7 @@ io.on('connection', async (socket) => {
       } else {
         res.json({ msj: "Ya existe un calendario con este rango de fecha." });
       }
-
-
-
     });
-
-
-
 
   });
 
@@ -342,6 +336,12 @@ io.on('connection', async (socket) => {
 
         await (requestTd || []).filter(async (rdb) => {
           response[index]['dias_libres'].push({ id: rdb.ID_DIA_LBR, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA, codigo_tienda: rdb.CODIGO_TIENDA });
+        });
+
+        let [requestObs] = await pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${dth.id};`);
+
+        await (requestObs || []).filter(async (obs) => {
+          response[index]['observacion'].push({ id: obs.ID_OBSERVACION, id_dia: obs.ID_OBS_DIAS, nombre_completo: obs.NOMBRE_COMPLETO, observacion: obs.OBSERVACION });
         });
 
         if (index == 3) {
@@ -402,6 +402,12 @@ io.on('connection', async (socket) => {
 
       dth['dias_libres'].filter(async (diat) => {
         await pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${diat.rg},${diat.id_dia},${(dth || {}).id})`);
+      });
+
+      await pool.query(`DELETE FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${(dth || {}).id};`);
+
+      dth['observacion'].filter(async (obs) => {
+        await pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION)VALUES(${(obs || {}).id_dia},${(dth || {}).id},${(obs || {}).codigo_tienda},'${(obs || {}).nombre_completo}','${(obs || {}).observacion}')`);
       });
 
     });
