@@ -248,26 +248,24 @@ io.on('connection', async (socket) => {
   });
 
   function fnGenerarCodigoPap() {
-    new Promise((resolve, reject) => {
-      let min = 1000;
-      let max = 99000;
+    let min = 1000;
+    let max = 99000;
 
-      let codigoGenerado = Math.floor(Math.random() * (max - min + 1) + min);
-      console.log(codigoGenerado);
+    let codigoGenerado = Math.floor(Math.random() * (max - min + 1) + min);
+    console.log(codigoGenerado);
+    return codigoGenerado;
+    /*let [arPapeleta] = pool.query(`SELECT * FROM TB_PAPELETA WHERE CODIGO_PAPELETA = ${codigoGenerado};`);
+    console.log(arPapeleta);
+    if (!(arPapeleta || []).length) {
+
       resolve(codigoGenerado);
-      /*let [arPapeleta] = pool.query(`SELECT * FROM TB_PAPELETA WHERE CODIGO_PAPELETA = ${codigoGenerado};`);
-      console.log(arPapeleta);
-      if (!(arPapeleta || []).length) {
-
-        resolve(codigoGenerado);
-      } else {
-        fnGenerarCodigoPap();
-      }*/
-    });
+    } else {
+      fnGenerarCodigoPap();
+    }*/
   }
 
   app.get("/papeleta/generar/codigo", async (req, res) => {
-    let codigoGenerado = await fnGenerarCodigoPap();
+    let codigoGenerado = fnGenerarCodigoPap();
     res.json({ codigo: codigoGenerado });
   });
 
