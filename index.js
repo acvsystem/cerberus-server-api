@@ -264,6 +264,11 @@ io.on('connection', async (socket) => {
     });
   }
 
+  app.get("/papeleta/generar/codigo", async (req, res) => {
+    let codigoGenerado = await fnGenerarCodigoPap();
+    res.json({ codigo: codigoGenerado });
+  });
+
   app.post("/papeleta/generar", async (req, res) => {
     let data = req.body;
 
@@ -272,11 +277,7 @@ io.on('connection', async (socket) => {
 
       if (!(arPapeleta || []).length) {
 
-        let codigoGenerado = await fnGenerarCodigoPap();
-
-        if (codigoGenerado > 0) {
-
-          await pool.query(`INSERT INTO TB_PAPELETA(
+        await pool.query(`INSERT INTO TB_PAPELETA(
             CODIGO_PAPELETA,
             NOMBRE_COMPLETO,
             DOCUMENTO,
@@ -291,7 +292,7 @@ io.on('connection', async (socket) => {
             HORAS_SOBRANTES,
             CODIGO_TIENDA,
             FECHA_CREACION)VALUES(
-            '${codigoGenerado}',
+            '${pap.codigo_papeleta}',
             '${pap.nombre_completo}',
             '${pap.documento}',
             ${pap.id_tipo_papeleta},
@@ -305,7 +306,7 @@ io.on('connection', async (socket) => {
             '${pap.horas_sobrantes}',
             '${pap.codigo_tienda}',
             '${pap.fecha_creacion}')`);
-        }
+
 
         await (pap.horas_extras || []).filter(async (hx) => {
           await pool.query(`INSERT INTO TB_HORA_EXTRA_EMPLEADO(
@@ -315,7 +316,7 @@ io.on('connection', async (socket) => {
             ESTADO,
             APROBADO,
             SELECCIONADO)VALUES(
-            '${codigoGenerado}',
+            '${hx.codigo_papeleta}',
             '${hx.documento}',
             '${hx.hrx_acumulado}',
             '${hx.estado}',
@@ -323,7 +324,7 @@ io.on('connection', async (socket) => {
             '${hx.seleccionado}')`);
         });
 
-        res.json({ success: true, codigo: codigoGenerado });
+        res.json({ success: true });
       } else {
         res.json({ success: false, msj: "Ya existe una papeleta de este empleado." });
       }
