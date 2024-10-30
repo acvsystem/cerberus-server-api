@@ -323,9 +323,9 @@ io.on('connection', async (socket) => {
             '${hx.seleccionado}')`);
         });
 
-        res.json({ codigo: codigoGenerado });
+        res.json({ success: true, codigo: codigoGenerado });
       } else {
-        res.json({ msj: "Ya existe una papeleta de este empleado." });
+        res.json({ success: false, msj: "Ya existe una papeleta de este empleado." });
       }
     });
   });
