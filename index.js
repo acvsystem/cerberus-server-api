@@ -254,6 +254,7 @@ io.on('connection', async (socket) => {
 
       let codigoGenerado = Math.floor(Math.random() * (max - min + 1) + min);
       console.log(codigoGenerado);
+
       let [arPapeleta] = pool.query(`SELECT * FROM TB_PAPELETA WHERE CODIGO_PAPELETA = ${codigoGenerado};`);
       console.log(arPapeleta);
       if (!(arPapeleta || []).length) {
@@ -266,8 +267,10 @@ io.on('connection', async (socket) => {
   }
 
   app.get("/papeleta/generar/codigo", async (req, res) => {
-    let codigoGenerado = await fnGenerarCodigoPap();
-    res.json({ codigo: codigoGenerado });
+    fnGenerarCodigoPap().then((codigo) => {
+      res.json({ codigo: codigo });
+    });
+
   });
 
   app.post("/papeleta/generar", async (req, res) => {
