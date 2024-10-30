@@ -247,6 +247,90 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("consultarServGen", configurationList);
   });
 
+  function fnGenerarCodigoPap() {
+    new Promise(async (resolve, reject) => {
+      let min = 1000;
+      let max = 99000;
+
+      let codigoGenerado = Math.floor(Math.random() * (max - min + 1) + min);
+
+      let [arPapeleta] = await pool.query(`SELECT * FROM TB_PAPELETA WHERE CODIGO_PAPELETA = '${codigoGenerado}';`);
+
+      if (!(arPapeleta || []).length) {
+        resolve(codigoGenerado);
+      } else {
+        fnGenerarCodigoPap();
+      }
+    });
+  }
+
+  app.post("/papeleta/generar", async (req, res) => {
+    let data = req.body;
+
+    await (data || []).filter(async (pap, i) => {
+      let [arPapeleta] = await pool.query(`SELECT * FROM TB_PAPELETA WHERE CODIGO_TIENDA = '${pap.codigo_tienda}' AND DOCUMENTO = '${pap.documento}' AND FECHA_CREACION = '${pap.fecha_creacion}' AND ID_PAP_TIPO_PAPELETA = ${pap.id_tipo_papeleta};`);
+
+      if (!(arPapeleta || []).length) {
+
+        let codigoGenerado = await fnGenerarCodigoPap();
+
+        if (codigoGenerado > 0) {
+
+          await pool.query(`INSERT INTO TB_PAPELETA(
+            CODIGO_PAPELETA,
+            NOMBRE_COMPLETO,
+            DOCUMENTO,
+            ID_PAP_TIPO_PAPELETA,
+            CARGO_EMPLEADO,
+            FECHA_DESDE,
+            FECHA_HASTA,
+            SALIDA_HORA,
+            LLEGADA_HORA,
+            HORAS_ACUMULADAS,
+            HORAS_TOMADAS,
+            HORAS_SOBRANTES,
+            CODIGO_TIENDA,
+            FECHA_CREACION)VALUES(
+            '${codigoGenerado}',
+            '${pap.nombre_completo}',
+            '${pap.documento}',
+            ${pap.id_tipo_papeleta},
+            '${pap.cargo_empleado}',
+            '${pap.fecha_desde}',
+            '${pap.fecha_hasta}',
+            '${pap.salida_hora}',
+            '${pap.llegada_hora}',
+            '${pap.horas_acouladas}',
+            '${pap.horas_tomadas}',
+            '${pap.horas_sobrantes}',
+            '${pap.codigo_tienda}',
+            '${pap.fecha_creacion}')`);
+        }
+
+        await (pap.horas_extras || []).filter(async (hx) => {
+          await pool.query(`INSERT INTO TB_HORA_EXTRA_EMPLEADO(
+            CODIGO_PAPELETA,
+            NRO_DOCUMENTO_EMPLEADO,
+            HR_EXTRA_ACOMULADO,
+            ESTADO,
+            APROBADO,
+            SELECCIONADO)VALUES(
+            '${codigoGenerado}',
+            '${hx.documento}',
+            '${hx.hrx_acumulado}',
+            '${hx.estado}',
+            '${hx.aprobado}',
+            '${hx.seleccionado}')`);
+        });
+
+        res.json({ codigo: codigoGenerado });
+      } else {
+        res.json({ msj: "Ya existe una papeleta de este empleado." });
+      }
+    });
+  });
+
+
   app.post("/calendario/generar", async (req, res) => {
     let data = req.body;
     let response = [];
