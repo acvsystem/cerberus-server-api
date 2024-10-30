@@ -253,17 +253,11 @@ io.on('connection', async (socket) => {
       let max = 99000;
 
       let codigoGenerado = Math.floor(Math.random() * (max - min + 1) + min);
-      console.log(codigoGenerado);
-
       let [arPapeleta] = await pool.query(`SELECT * FROM TB_PAPELETA WHERE CODIGO_PAPELETA = ${codigoGenerado};`);
-      console.log(arPapeleta);
-      resolve(codigoGenerado);
-     /* if (!(arPapeleta || []).length) {
-
+      console.log(arPapeleta,"");
+      if (!(arPapeleta || []).length) {
         resolve(codigoGenerado);
-      } else {
-        fnGenerarCodigoPap();
-      }*/
+      }
     });
   }
 
