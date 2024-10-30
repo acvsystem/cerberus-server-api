@@ -254,7 +254,7 @@ io.on('connection', async (socket) => {
 
       let codigoGenerado = Math.floor(Math.random() * (max - min + 1) + min);
 
-      let [arPapeleta] = await pool.query(`SELECT * FROM TB_PAPELETA WHERE CODIGO_PAPELETA = '${codigoGenerado}';`);
+      let [arPapeleta] = await pool.query(`SELECT * FROM TB_PAPELETA WHERE CODIGO_PAPELETA = ${codigoGenerado};`);
       console.log(arPapeleta);
       if (!(arPapeleta || []).length) {
         console.log(codigoGenerado);
