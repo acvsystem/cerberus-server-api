@@ -321,8 +321,8 @@ io.on('connection', async (socket) => {
             '${hx.documento}',
             '${hx.hrx_acumulado}',
             '${hx.estado}',
-            '${hx.aprobado}',
-            '${hx.seleccionado}')`);
+            ${hx.aprobado},
+            ${hx.seleccionado})`);
         });
 
         res.json({ success: true });
