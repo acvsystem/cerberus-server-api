@@ -367,6 +367,7 @@ io.on('connection', async (socket) => {
     let dataResponse = [];
     await (data || []).filter(async (dt, i) => {
       let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${dt['documento']}' AND FECHA = '${dt['fecha']}';`);
+      console.log(arHrExtra);
       if ((arHrExtra || []).length && typeof arHrExtra != 'undefined') {
         (dataResponse || []).push({
           documento: dt.documento,
@@ -379,12 +380,14 @@ io.on('connection', async (socket) => {
           seleccionado: arHrExtra[0]['SELECCIONADO']
         });
       } else {
+        
         (dataResponse || []).push(dt);
+        console.log(dataResponse);
       }
 
     });
 
-    res.json(data);
+    res.json(dataResponse);
 
   });
 
