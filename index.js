@@ -378,11 +378,16 @@ io.on('connection', async (socket) => {
           aprobado: arHrExtra[0]['APROBADO'],
           seleccionado: arHrExtra[0]['SELECCIONADO']
         });
+      } else {
+        (dataResponse || []).push(dt);
       }
 
     });
 
-    res.json(dataResponse || data);
+    if ((dataResponse || []).length) {
+      res.json(dataResponse);
+    }
+
   });
 
   app.post("/papeleta/lista", async (req, res) => {
