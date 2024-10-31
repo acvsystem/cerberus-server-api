@@ -364,7 +364,8 @@ io.on('connection', async (socket) => {
         let hExtra = [];
 
         fnHoraExtra((pap || {}).CODIGO_PAPELETA).then((data) => {
-          hExtra = data;
+          console.log(data);
+          hExtra = data || [];
 
           (parsePap || []).push({
             codigo_papeleta: (pap || {}).CODIGO_PAPELETA,
@@ -381,7 +382,7 @@ io.on('connection', async (socket) => {
             horas_sobrantes: (pap || {}).HORAS_SOBRANTES,
             codigo_tienda: (pap || {}).CODIGO_TIENDA,
             fecha_creacion: (pap || {}).FECHA_CREACION,
-            horas_extras: hExtra
+            horas_extras: hExtra || []
           });
         });
       });
