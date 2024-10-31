@@ -358,8 +358,8 @@ io.on('connection', async (socket) => {
 
           if ((parsePap || []).length) {
             let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE CODIGO_PAPELETA = '${(pap || {}).CODIGO_PAPELETA}';`);
-
-            if ((arHrExtra || []).length) {
+            console.log(arHrExtra);
+           /* if ((arHrExtra || []).length) {
               await (arHrExtra || []).filter((hrx) => {
                 console.log(hrx);
                 parsePap[0]['horas_extras'].push({
@@ -371,7 +371,7 @@ io.on('connection', async (socket) => {
                   seleccionado: (hrx || {}).SELECCIONADO
                 });
               });
-            }
+            }*/
           }
         });
       }
