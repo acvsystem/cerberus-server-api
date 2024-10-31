@@ -382,10 +382,11 @@ io.on('connection', async (socket) => {
       } else {
 
         (dataResponse || []).push(dt);
-        console.log(dataResponse);
+        
       }
 
       if (data.length == i + 1) {
+        console.log(dataResponse);
         res.json(dataResponse);
       }
     });
