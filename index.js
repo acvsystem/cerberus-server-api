@@ -331,10 +331,10 @@ io.on('connection', async (socket) => {
     });
   });
 
-  async function fnHoraExtra() {
+  async function fnHoraExtra(codigo_papeleta) {
     return new Promise(async (resolve, reject) => {
       let arHoraExtra = [];
-      let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE CODIGO_PAPELETA = '${(pap || {}).CODIGO_PAPELETA}';`);
+      let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE CODIGO_PAPELETA = '${codigo_papeleta}';`);
 
       if ((arHrExtra || []).length) {
         await (arHrExtra || []).filter((hrx) => {
@@ -348,7 +348,7 @@ io.on('connection', async (socket) => {
           });
         });
       }
-      
+
       resolve(arHoraExtra);
     });
   }
@@ -360,6 +360,12 @@ io.on('connection', async (socket) => {
       let parsePap = [];
       if ((arPapeleta || []).length) {
         await (arPapeleta || []).filter(async (pap) => {
+          let hExtra = [];
+
+          await fnHoraExtra((pap || {}).CODIGO_PAPELETA).then((data) => {
+            hExtra = data;
+          });
+
           (parsePap || []).push({
             codigo_papeleta: (pap || {}).CODIGO_PAPELETA,
             nombre_completo: (pap || {}).NOMBRE_COMPLETO,
@@ -375,7 +381,7 @@ io.on('connection', async (socket) => {
             horas_sobrantes: (pap || {}).HORAS_SOBRANTES,
             codigo_tienda: (pap || {}).CODIGO_TIENDA,
             fecha_creacion: (pap || {}).FECHA_CREACION,
-            horas_extras: await fnHoraExtra()
+            horas_extras: hExtra
           });
         });
       }
