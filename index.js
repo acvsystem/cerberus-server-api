@@ -376,13 +376,13 @@ io.on('connection', async (socket) => {
           hrx_acumulado: dt.hrx_acumulado,
           extra: dt.extra,
           estado: (arHrExtra)[0]['ESTADO'],
-          aprobado: arHrExtra[0]['APROBADO'],
-          seleccionado: arHrExtra[0]['SELECCIONADO']
+          aprobado: arHrExtra[0]['APROBADO'] == 1 ? true : false,
+          seleccionado: arHrExtra[0]['SELECCIONADO'] == 1 ? true : false
         });
       } else {
 
         (dataResponse || []).push(dt);
-        
+
       }
 
       if (data.length == i + 1) {
