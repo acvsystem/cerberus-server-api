@@ -349,7 +349,10 @@ io.on('connection', async (socket) => {
         });
       }
 
-      resolve(arHoraExtra);
+      if ((arHoraExtra || []).length) {
+        resolve(arHoraExtra);
+      }
+
     });
   }
 
