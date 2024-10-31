@@ -331,7 +331,7 @@ io.on('connection', async (socket) => {
     });
   });
 
-  async function fnHoraExtra(codigo_papeleta) {
+  function fnHoraExtra(codigo_papeleta) {
     return new Promise(async (resolve, reject) => {
       let arHoraExtra = [];
       let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE CODIGO_PAPELETA = '${codigo_papeleta}';`);
