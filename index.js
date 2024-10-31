@@ -387,7 +387,10 @@ io.on('connection', async (socket) => {
         });
       });
 
-      res.json(parsePap);
+      if ((parsePap || []).length) {
+        res.json(parsePap);
+      }
+
     }
   });
 
