@@ -338,7 +338,7 @@ io.on('connection', async (socket) => {
       let parsePap = [];
       if ((arPapeleta || []).length) {
         await (arPapeleta || []).filter(async (pap) => {
-          parsePap.push({
+          (parsePap || []).push({
             codigo_papeleta: (pap || {}).CODIGO_PAPELETA,
             nombre_completo: (pap || {}).NOMBRE_COMPLETO,
             documento: (pap || {}).DOCUMENTO,
@@ -356,27 +356,27 @@ io.on('connection', async (socket) => {
             horas_extras: []
           });
 
+          if ((parsePap || []).length) {
+            let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE CODIGO_PAPELETA = '${(pap || {}).CODIGO_PAPELETA}';`);
 
-          let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE CODIGO_PAPELETA = '${(pap || {}).CODIGO_PAPELETA}';`);
-
-          if ((arHrExtra || []).length) {
-            await (arHrExtra || []).filter((hrx) => {
-              parsePap[0]['horas_extras'].push({
-                codigoGenerado: (hrx || {}).CODIGO_PAPELETA,
-                documento: (hrx || {}).NRO_DOCUMENTO_EMPLEADO,
-                hrx_acumulado: (hrx || {}).HR_EXTRA_ACOMULADO,
-                estado: (hrx || {}).ESTADO,
-                aprobado: (hrx || {}).APROBADO,
-                seleccionado: (hrx || {}).SELECCIONADO
+            if ((arHrExtra || []).length) {
+              await (arHrExtra || []).filter((hrx) => {
+                parsePap[0]['horas_extras'].push({
+                  codigoGenerado: (hrx || {}).CODIGO_PAPELETA,
+                  documento: (hrx || {}).NRO_DOCUMENTO_EMPLEADO,
+                  hrx_acumulado: (hrx || {}).HR_EXTRA_ACOMULADO,
+                  estado: (hrx || {}).ESTADO,
+                  aprobado: (hrx || {}).APROBADO,
+                  seleccionado: (hrx || {}).SELECCIONADO
+                });
               });
-            });
+            }
           }
-
         });
       }
       resolve(parsePap);
     });
-    
+
     arList.then((dataResponse) => {
       res.json(dataResponse);
     });
