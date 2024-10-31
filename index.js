@@ -16,7 +16,7 @@ import { prop as defaultResponse } from "./const/defaultResponse.js";
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: "*" } });
-var codigoPap = 0;
+
 app.use(
   cors({
     origin: "*",
@@ -247,25 +247,27 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("consultarServGen", configurationList);
   });
 
-  async function fnGenerarCodigoPap() {
-    let min = 1000;
-    let max = 99000;
+  function fnGenerarCodigoPap(callback) {
+    return new Promise(async (resolve, reject) => {
+      let min = 1000;
+      let max = 99000;
 
-    let codigoGenerado = Math.floor(Math.random() * (max - min + 1) + min);
+      let codigoGenerado = Math.floor(Math.random() * (max - min + 1) + min);
+      let [arPapeleta] = await pool.query(`SELECT * FROM TB_PAPELETA WHERE CODIGO_PAPELETA = ${codigoGenerado};`);
 
-    let [arPapeleta] = await pool.query(`SELECT * FROM TB_PAPELETA WHERE CODIGO_PAPELETA = ${fnGenerarCodigo()};`);
-
-    if (!(arPapeleta || []).length && typeof arPapeleta != 'undefined') {
-      codigoPap = codigoGenerado;
-      return codigoPap
-    } else {
-      fnGenerarCodigoPap();
-    }
+      if (!(arPapeleta || []).length && typeof arPapeleta != 'undefined') {
+        resolve(codigoGenerado);
+      } else {
+        callback();
+      }
+    });
   }
 
   app.get("/papeleta/generar/codigo", async (req, res) => {
-    await fnGenerarCodigoPap();
-    res.json({ codigo: codigoPap });
+    fnGenerarCodigoPap(fnGenerarCodigoPap()).then((codigo) => {
+      res.json({ codigo: codigo });
+    })
+
   });
 
   app.post("/papeleta/generar", async (req, res) => {
