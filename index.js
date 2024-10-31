@@ -331,6 +331,28 @@ io.on('connection', async (socket) => {
     });
   });
 
+  async function fnHoraExtra() {
+    return new Promise(async (resolve, reject) => {
+      let arHoraExtra = [];
+      let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE CODIGO_PAPELETA = '${(pap || {}).CODIGO_PAPELETA}';`);
+
+      if ((arHrExtra || []).length) {
+        await (arHrExtra || []).filter((hrx) => {
+          (arHoraExtra || []).push({
+            codigoGenerado: (hrx || {}).CODIGO_PAPELETA,
+            documento: (hrx || {}).NRO_DOCUMENTO_EMPLEADO,
+            hrx_acumulado: (hrx || {}).HR_EXTRA_ACOMULADO,
+            estado: (hrx || {}).ESTADO,
+            aprobado: (hrx || {}).APROBADO,
+            seleccionado: (hrx || {}).SELECCIONADO
+          });
+        });
+      }
+      
+      resolve(arHoraExtra);
+    });
+  }
+
   app.post("/papeleta/lista", async (req, res) => {
     const arList = new Promise(async (resolve, reject) => {
       let data = req.body;
@@ -353,26 +375,8 @@ io.on('connection', async (socket) => {
             horas_sobrantes: (pap || {}).HORAS_SOBRANTES,
             codigo_tienda: (pap || {}).CODIGO_TIENDA,
             fecha_creacion: (pap || {}).FECHA_CREACION,
-            horas_extras: []
+            horas_extras: await fnHoraExtra()
           });
-
-          if ((parsePap || []).length) {
-            let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE CODIGO_PAPELETA = '${(pap || {}).CODIGO_PAPELETA}';`);
-            console.log(arHrExtra);
-           /* if ((arHrExtra || []).length) {
-              await (arHrExtra || []).filter((hrx) => {
-                console.log(hrx);
-                parsePap[0]['horas_extras'].push({
-                  codigoGenerado: (hrx || {}).CODIGO_PAPELETA,
-                  documento: (hrx || {}).NRO_DOCUMENTO_EMPLEADO,
-                  hrx_acumulado: (hrx || {}).HR_EXTRA_ACOMULADO,
-                  estado: (hrx || {}).ESTADO,
-                  aprobado: (hrx || {}).APROBADO,
-                  seleccionado: (hrx || {}).SELECCIONADO
-                });
-              });
-            }*/
-          }
         });
       }
       resolve(parsePap);
