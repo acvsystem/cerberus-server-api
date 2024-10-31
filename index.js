@@ -335,7 +335,7 @@ io.on('connection', async (socket) => {
     let data = req.body;
     let [arPapeleta] = await pool.query(`SELECT * FROM TB_PAPELETA WHERE CODIGO_TIENDA = '${data[0].codigo_tienda}';`);
 
-    if ((arHrExtra || []).length) {
+    if ((arPapeleta || []).length) {
       await (arPapeleta || []).filter(async (pap) => {
         parsePap.push({
           codigo_papeleta: (pap || {}).CODIGO_PAPELETA,
@@ -357,17 +357,18 @@ io.on('connection', async (socket) => {
 
         let parsePap = [];
         let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE CODIGO_PAPELETA = '${(pap || {}).CODIGO_PAPELETA}';`);
-
-        await (arHrExtra || []).filter((hrx) => {
-          parsePap[0]['horas_extras'].push({
-            codigoGenerado: (hrx || {}).CODIGO_PAPELETA,
-            documento: (hrx || {}).NRO_DOCUMENTO_EMPLEADO,
-            hrx_acumulado: (hrx || {}).HR_EXTRA_ACOMULADO,
-            estado: (hrx || {}).ESTADO,
-            aprobado: (hrx || {}).APROBADO,
-            seleccionado: (hrx || {}).SELECCIONADO
+        if ((arHrExtra || []).length) {
+          await (arHrExtra || []).filter((hrx) => {
+            parsePap[0]['horas_extras'].push({
+              codigoGenerado: (hrx || {}).CODIGO_PAPELETA,
+              documento: (hrx || {}).NRO_DOCUMENTO_EMPLEADO,
+              hrx_acumulado: (hrx || {}).HR_EXTRA_ACOMULADO,
+              estado: (hrx || {}).ESTADO,
+              aprobado: (hrx || {}).APROBADO,
+              seleccionado: (hrx || {}).SELECCIONADO
+            });
           });
-        });
+        }
       });
 
       res.json(parsePap);
