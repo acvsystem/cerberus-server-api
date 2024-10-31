@@ -355,6 +355,11 @@ io.on('connection', async (socket) => {
     });
   }
 
+  app.get("/papeleta/lista/tipo_papeleta", async (req, res) => {
+    let [arTipoPapeleta] = await pool.query(`SELECT * FROM TB_TIPO_PAPELETA;`);
+    res.json(arTipoPapeleta);
+  });
+
   app.post("/papeleta/lista", async (req, res) => {
     let data = req.body;
     let [arPapeleta] = await pool.query(`SELECT * FROM TB_PAPELETA WHERE CODIGO_TIENDA = '${data[0].codigo_tienda}';`);
