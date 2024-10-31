@@ -385,8 +385,8 @@ io.on('connection', async (socket) => {
         (dataResponse || []).push(dt);
       }
 
-      if (data.length == i + 1) {
-        console.log(dataResponse);
+      if (data.length - 1 == i) {
+        console.log(data.length);
         res.json(dataResponse);
       }
     });
