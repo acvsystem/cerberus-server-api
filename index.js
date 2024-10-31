@@ -302,7 +302,7 @@ io.on('connection', async (socket) => {
             '${pap.fecha_hasta}',
             '${pap.salida_hora}',
             '${pap.llegada_hora}',
-            '${pap.horas_acouladas}',
+            '${pap.horas_acomuladas}',
             '${pap.horas_tomadas}',
             '${pap.horas_sobrantes}',
             '${pap.codigo_tienda}',
