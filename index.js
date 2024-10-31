@@ -361,6 +361,7 @@ io.on('connection', async (socket) => {
 
             if ((arHrExtra || []).length) {
               await (arHrExtra || []).filter((hrx) => {
+                console.log(hrx);
                 parsePap[0]['horas_extras'].push({
                   codigoGenerado: (hrx || {}).CODIGO_PAPELETA,
                   documento: (hrx || {}).NRO_DOCUMENTO_EMPLEADO,
