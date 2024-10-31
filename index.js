@@ -334,7 +334,7 @@ io.on('connection', async (socket) => {
   app.post("/papeleta/lista", async (req, res) => {
     let data = req.body;
     let [arPapeleta] = await pool.query(`SELECT * FROM TB_PAPELETA WHERE CODIGO_TIENDA = '${data[0].codigo_tienda}';`);
-
+    let parsePap = [];
     if ((arPapeleta || []).length) {
       await (arPapeleta || []).filter(async (pap) => {
         parsePap.push({
@@ -355,7 +355,7 @@ io.on('connection', async (socket) => {
           horas_extras: []
         });
 
-      /*  let parsePap = [];
+      /*  
         let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE CODIGO_PAPELETA = '${(pap || {}).CODIGO_PAPELETA}';`);
         if ((arHrExtra || []).length) {
           await (arHrExtra || []).filter((hrx) => {
