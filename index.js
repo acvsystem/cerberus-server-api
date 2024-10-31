@@ -347,10 +347,9 @@ io.on('connection', async (socket) => {
             seleccionado: (hrx || {}).SELECCIONADO
           });
         });
-      }
-
-      if ((arHoraExtra || []).length) {
         resolve(arHoraExtra);
+      }else{
+        resolve([]);
       }
 
     });
@@ -387,10 +386,7 @@ io.on('connection', async (socket) => {
         });
       });
 
-      if ((parsePap || []).length) {
-        res.json(parsePap);
-      }
-
+      res.json(parsePap);
     }
   });
 
