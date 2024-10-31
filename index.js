@@ -346,7 +346,8 @@ io.on('connection', async (socket) => {
             hrx_acumulado: (hrx || {}).HR_EXTRA_ACOMULADO,
             estado: (hrx || {}).ESTADO,
             aprobado: (hrx || {}).APROBADO,
-            seleccionado: (hrx || {}).SELECCIONADO
+            seleccionado: (hrx || {}).SELECCIONADO,
+            verify: true
           });
         });
         resolve(arHoraExtra);
@@ -377,12 +378,11 @@ io.on('connection', async (socket) => {
           extra: dt.extra,
           estado: (arHrExtra)[0]['ESTADO'],
           aprobado: arHrExtra[0]['APROBADO'] == 1 ? true : false,
-          seleccionado: arHrExtra[0]['SELECCIONADO'] == 1 ? true : false
+          seleccionado: arHrExtra[0]['SELECCIONADO'] == 1 ? true : false,
+          verify: true
         });
       } else {
-
         (dataResponse || []).push(dt);
-
       }
 
       if (data.length == i + 1) {
