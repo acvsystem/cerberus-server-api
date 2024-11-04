@@ -382,6 +382,7 @@ io.on('connection', async (socket) => {
           verify: true
         });
       } else {
+        dt[i]['verify'] = false;
         (dataResponse || []).push(dt);
       }
 
