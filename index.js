@@ -382,7 +382,7 @@ io.on('connection', async (socket) => {
           verify: arHrExtra[0]['SELECCIONADO'] == 1 ? true : false
         });
       } else {
-        dt[i]['verify'] = false;
+        data[i]['verify'] = false;
         (dataResponse || []).push(dt);
       }
 
