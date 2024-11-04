@@ -379,7 +379,7 @@ io.on('connection', async (socket) => {
           estado: (arHrExtra)[0]['ESTADO'],
           aprobado: arHrExtra[0]['APROBADO'] == 1 ? true : false,
           seleccionado: arHrExtra[0]['SELECCIONADO'] == 1 ? true : false,
-          verify: true
+          verify: arHrExtra[0]['SELECCIONADO'] == 1 ? true : false
         });
       } else {
         dt[i]['verify'] = false;
