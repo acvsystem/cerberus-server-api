@@ -364,23 +364,29 @@ io.on('connection', async (socket) => {
   });
 
   app.get("/papeleta/lista/horas_autorizacion", async (req, res) => {
-    let [arAutorizacion] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE APROBADO = 0;`);
+    let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
     res.json(arAutorizacion);
   });
 
 
-  socket.on("solicitud_autorizacion_hext", async (data) => {
-    let configurationList = {
-      socket: (socket || {}).id
-    };
+  socket.on("solicitar_aprobacion_hrx", async (data) => {
 
-    
+    await pool.query(`INSERT INTO TB_AUTORIZAR_HR_EXTRA(
+      HR_EXTRA_ACOMULADO,
+      NRO_DOCUMENTO_EMPLEADO,
+      APROBADO,
+      FECHA,
+      CODIGO_TIENDA)VALUES('${data.hora_extra}','${data.nro_documento}','${data.aprobado}','${data.fecha}','${data.codigo_tienda}')`);
+
+    let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
+
+    socket.broadcast.emit("lista_solicitudes", arAutorizacion);
   });
 
   app.post("/papeleta/verificar/horas_extras", async (req, res) => {
     let data = req.body;
     let dataResponse = [];
-    await (data || []).filter(async (dt, i) => {
+    (data || []).filter(async (dt, i) => {
       let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${dt['documento']}' AND FECHA = '${dt['fecha']}';`);
 
       if ((arHrExtra || []).length && typeof arHrExtra != 'undefined') {
