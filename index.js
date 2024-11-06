@@ -376,7 +376,7 @@ io.on('connection', async (socket) => {
       NRO_DOCUMENTO_EMPLEADO,
       APROBADO,
       FECHA,
-      CODIGO_TIENDA)VALUES('${data.hora_extra}','${data.nro_documento}','${data.aprobado}','${data.fecha}','${data.codigo_tienda}')`);
+      CODIGO_TIENDA)VALUES('${data.hora_extra}','${data.nro_documento}',${data.aprobado},'${data.fecha}','${data.codigo_tienda}')`);
 
     let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
 
