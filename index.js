@@ -363,6 +363,20 @@ io.on('connection', async (socket) => {
     res.json(arTipoPapeleta);
   });
 
+  app.get("/papeleta/lista/horas_autorizacion", async (req, res) => {
+    let [arAutorizacion] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE APROBADO = 0;`);
+    res.json(arAutorizacion);
+  });
+
+
+  socket.on("solicitud_autorizacion_hext", async (data) => {
+    let configurationList = {
+      socket: (socket || {}).id
+    };
+
+    
+  });
+
   app.post("/papeleta/verificar/horas_extras", async (req, res) => {
     let data = req.body;
     let dataResponse = [];
