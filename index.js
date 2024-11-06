@@ -373,7 +373,7 @@ io.on('connection', async (socket) => {
 
     let [arHrExtra] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
     
-    if ((arHrExtra || []).length) {
+    if (!(arHrExtra || []).length) {
       await pool.query(`INSERT INTO TB_AUTORIZAR_HR_EXTRA(
         HR_EXTRA_ACOMULADO,
         NRO_DOCUMENTO_EMPLEADO,
