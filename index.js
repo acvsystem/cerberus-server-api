@@ -377,7 +377,7 @@ io.on('connection', async (socket) => {
       await pool.query(`INSERT INTO TB_AUTORIZAR_HR_EXTRA(
         HR_EXTRA_ACOMULADO,
         NRO_DOCUMENTO_EMPLEADO,
-        NOMBRE_COMPLETO
+        NOMBRE_COMPLETO,
         APROBADO,
         RECHAZADO,
         FECHA,
@@ -455,7 +455,7 @@ io.on('connection', async (socket) => {
       await pool.query(`INSERT INTO TB_AROBADO_HR_EXTRA(
         HR_EXTRA_ACOMULADO,
         NRO_DOCUMENTO_EMPLEADO,
-        NOMBRE_COMPLETO
+        NOMBRE_COMPLETO,
         APROBADO,
         RECHAZADO,
         FECHA,
