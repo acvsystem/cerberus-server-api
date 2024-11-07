@@ -378,8 +378,9 @@ io.on('connection', async (socket) => {
         HR_EXTRA_ACOMULADO,
         NRO_DOCUMENTO_EMPLEADO,
         APROBADO,
+        RECHAZADO,
         FECHA,
-        CODIGO_TIENDA)VALUES('${data.hora_extra}','${data.nro_documento}',${data.aprobado},'${data.fecha}','${data.codigo_tienda}')`);
+        CODIGO_TIENDA)VALUES('${data.hora_extra}','${data.nro_documento}',${data.aprobado},false,'${data.fecha}','${data.codigo_tienda}')`);
     }
 
     let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
@@ -396,10 +397,11 @@ io.on('connection', async (socket) => {
         HR_EXTRA_ACOMULADO,
         NRO_DOCUMENTO_EMPLEADO,
         APROBADO,
+        RECHAZADO,
         FECHA,
-        CODIGO_TIENDA)VALUES('${data.hora_extra}','${data.nro_documento}',${data.aprobado},'${data.fecha}','${data.codigo_tienda}')`);
+        CODIGO_TIENDA)VALUES('${data.hora_extra}','${data.nro_documento}',${data.aprobado},${data.rechazado},'${data.fecha}','${data.codigo_tienda}')`);
 
-      await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET APROBADO = true WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
+      await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET APROBADO = ${data.aprobado},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
     }
 
     let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
