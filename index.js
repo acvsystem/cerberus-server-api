@@ -385,6 +385,8 @@ io.on('connection', async (socket) => {
 
     let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
 
+    let selectedLocal = tiendasList.find((data) => data.code == data.codigo_tienda) || {};
+    
     socket.broadcast.emit("lista_solicitudes", arAutorizacion);
 
     let tiendasList = [
@@ -411,7 +413,7 @@ io.on('connection', async (socket) => {
     ];
 
 
-    let selectedLocal = tiendasList.find((data) => data.code == data.codigo_tienda) || {};
+ 
 
     let bodyHTML = `<table style="width:100%;border-spacing:0">
                 <tbody>
@@ -431,7 +433,7 @@ io.on('connection', async (socket) => {
                                     </tr>
                                     <tr>
                                         <td style="margin-bottom:10px;display:flex">
-                                            <a style="margin-left:155px;text-decoration:none;background:#155795;padding:10px 30px;font-size:18px;color:#ffff;border-radius:4px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif" href="http://38.187.8.22:3600/auth-hora-extra/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ik5FV19VU0VSIiwiaWF0IjoxNjk1MzE0Mjk5LCJhdWQiOiJSUmhoIiwiaXNzIjoiY2VyYmVydXMuc2VydmVyIn0._1ngjYJy9vGRHm12kcCzVdnm3XrWZua28M759xuBfc4" target="_blank" data-saferedirecturl="http://38.187.8.22:3600/auth-hora-extra/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ik5FV19VU0VSIiwiaWF0IjoxNjk1MzE0Mjk5LCJhdWQiOiJSUmhoIiwiaXNzIjoiY2VyYmVydXMuc2VydmVyIn0._1ngjYJy9vGRHm12kcCzVdnm3XrWZua28M759xuBfc4&amp;source=gmail&amp;ust=1731083566026000&amp;usg=AOvVaw1uoosgWxgT_byumsHV7LBp">horas extras</a>
+                                            <a style="margin-left:155px;text-decoration:none;background:#155795;padding:10px 30px;font-size:18px;color:#ffff;border-radius:4px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif" href="http://38.187.8.22:3600/auth-hora-extra/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ik5FV19VU0VSIiwiaWF0IjoxNjk1MzE0Mjk5LCJhdWQiOiJSUmhoIiwiaXNzIjoiY2VyYmVydXMuc2VydmVyIn0._1ngjYJy9vGRHm12kcCzVdnm3XrWZua28M759xuBfc4" target="_blank">horas extras</a>
                                         </td>
                                     </tr>
                                 </tbody>
