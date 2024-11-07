@@ -578,7 +578,7 @@ io.on('connection', async (socket) => {
     let usuario = objLogin["usuario"].replace(/[^a-zA-Z-0-9 ]/g, "");
     let password = objLogin["password"];
     const [dataUser] =
-      await pool.query(`SELECT USUARIO,DEFAULT_PAGE FROM TB_LOGIN WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}';`);
+      await pool.query(`SELECT USUARIO,DEFAULT_PAGE,EMAIL FROM TB_LOGIN WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}';`);
     let emeil = ((dataUser || [])[0] || {}).EMAIL;
 
 
