@@ -515,7 +515,7 @@ io.on('connection', async (socket) => {
 
         res.json({ success: true });
       } else {
-        let [arSession] = await pool.query(`SELECT * FROM TB_SESSION_LOGIN WHERE EMAIL = '${emeil}' AND IP = '${data[0].ip}' AND DIVICE = '${data[0].divice}';`);
+        let [arSession] = await pool.query(`SELECT * FROM TB_SESSION_LOGIN WHERE EMAIL = '${emeil}' AND IP = '${data.ip}' AND DIVICE = '${data.divice}';`);
 
         if (!(arSession || []).length) {
           let min = 1000;
@@ -579,7 +579,7 @@ io.on('connection', async (socket) => {
     let emeil = ((dataUser || [])[0] || {}).EMAIL;
 
 
-    let [arSession] = await pool.query(`SELECT * FROM TB_AUTH_SESSION WHERE EMAIL = '${emeil}' AND CODIGO = '${data[0].codigo}';`);
+    let [arSession] = await pool.query(`SELECT * FROM TB_AUTH_SESSION WHERE EMAIL = '${emeil}' AND CODIGO = '${data.codigo}';`);
 
     if ((arSession || []).length) {
       await pool.query(`INSERT INTO TB_SESSION_LOGIN(
