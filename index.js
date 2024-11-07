@@ -386,6 +386,64 @@ io.on('connection', async (socket) => {
     let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
 
     socket.broadcast.emit("lista_solicitudes", arAutorizacion);
+
+    let tiendasList = [
+      { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
+      { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
+      { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@metasperu.com' },
+      { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@metasperu.com' },
+      { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@metasperu.com' },
+      { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@metasperu.com' },
+      { code: '7C', name: 'BBW SAN MIGUEL', email: 'bbwsanmiguel@metasperu.com' },
+      { code: '9C', name: 'VS SAN MIGUEL', email: 'vssanmiguel@metasperu.com' },
+      { code: '7D', name: 'BBW SALAVERRY', email: 'bbwsalaverry@metasperu.com' },
+      { code: '9I', name: 'VS SALAVERRY', email: 'vssalaverry@metasperu.com' },
+      { code: '9G', name: 'VS MALL DEL SUR', email: 'vsmalldelsur@metasperu.com' },
+      { code: '9H', name: 'VS PURUCHUCO', email: 'vspuruchuco@metasperu.com' },
+      { code: '9M', name: 'VS ECOMMERCE', email: 'vsecommpe@metasperu.com' },
+      { code: '7F', name: 'BBW ECOMMERCE', email: 'bbwecommperu@metasperu.com' },
+      { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@metasperu.com' },
+      { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@metasperu.com' },
+      { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@metasperu.com' },
+      { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@metasperu.com' },
+      { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com' },
+      { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
+    ];
+    
+
+    let selectedLocal = tiendasList.find((data) => data.code == data.codigo_tienda) || {};
+
+    let bodyHTML = `<table style="width:100%;border-spacing:0">
+                <tbody>
+                    <tr style="display:flex">
+                        <td>
+                            <table style="border-radius:4px;border-spacing:0;border:1px solid #155795;min-width:450px">
+                                <tbody>
+                                    <tr>
+                                        <td style="border-top-left-radius:4px;border-top-right-radius:4px;display:flex;background:#155795;padding:20px">
+                                            <p style="margin-left:72px;color:#fff;font-weight:700;font-size:30px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif"><span class="il">METAS PERU</span> S.A.C</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:10px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
+                                            <p>Hola, puedes accerder a registrate dandole click al boton.</p> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="margin-bottom:10px;display:flex">
+                                            <a style="margin-left:155px;text-decoration:none;background:#155795;padding:10px 30px;font-size:18px;color:#ffff;border-radius:4px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif" href="http://38.187.8.22:3600/auth-hora-extra/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ik5FV19VU0VSIiwiaWF0IjoxNjk1MzE0Mjk5LCJhdWQiOiJSUmhoIiwiaXNzIjoiY2VyYmVydXMuc2VydmVyIn0._1ngjYJy9vGRHm12kcCzVdnm3XrWZua28M759xuBfc4" target="_blank" data-saferedirecturl="http://38.187.8.22:3600/auth-hora-extra/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ik5FV19VU0VSIiwiaWF0IjoxNjk1MzE0Mjk5LCJhdWQiOiJSUmhoIiwiaXNzIjoiY2VyYmVydXMuc2VydmVyIn0._1ngjYJy9vGRHm12kcCzVdnm3XrWZua28M759xuBfc4&amp;source=gmail&amp;ust=1731083566026000&amp;usg=AOvVaw1uoosgWxgT_byumsHV7LBp">registrarse</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>`;
+
+    emailController.sendEmail(['itperu@metasperu.com'], `SOLICITUD DE APROBACION DE HORA EXTRA - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
+      .catch(error => res.send(error));
+
   });
 
   socket.on("autorizar_hrx", async (data) => {
@@ -402,10 +460,10 @@ io.on('connection', async (socket) => {
         FECHA,
         CODIGO_TIENDA)VALUES('${data.hora_extra}','${data.nro_documento}',${data.aprobado},${data.rechazado},'${data.fecha}','${data.codigo_tienda}')`);
 
-     
+
       await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET APROBADO = ${data.aprobado},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
       await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET ESTADO = '${aprobado}',APROBADO = ${data.aprobado} WHERE FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}' AND HR_EXTRA_ACOMULADO = '${data.hora_extra}';`);
-      
+
     } else {
       await pool.query(`UPDATE TB_AROBADO_HR_EXTRA SET APROBADO = ${data.aprobado},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
       await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET ESTADO = '${aprobado}',APROBADO = ${data.aprobado} WHERE FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}' AND HR_EXTRA_ACOMULADO = '${data.hora_extra}';`);
