@@ -410,7 +410,7 @@ io.on('connection', async (socket) => {
     ];
 
     let selectedLocal = tiendasList.find((td) => td.code == data.codigo_tienda) || {};
-    console.log(selectedLocal);
+
     socket.broadcast.emit("lista_solicitudes", arAutorizacion);
 
     let bodyHTML = `<table style="width:100%;border-spacing:0">
@@ -441,7 +441,22 @@ io.on('connection', async (socket) => {
                 </tbody>
             </table>`;
 
-    emailController.sendEmail(['itperu@metasperu.com'], `SOLICITUD DE APROBACION DE HORA EXTRA - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
+    let correo = ['itperu@metasperu.com'];
+
+    /*
+        if (data.codigo_tienda == '7I' || data.codigo_tienda == '9P' || data.codigo_tienda == '9N' || data.codigo_tienda == '7J') {
+          correo.push('carlosmoron@metasperu.com');
+        }
+    
+        if (data.codigo_tienda == '9M' || data.codigo_tienda == '7F') {
+          correo.push('johnnygermano@metasperu.com');
+        }
+    
+        if (data.codigo_tienda != '7I' && data.codigo_tienda != '9P' && data.codigo_tienda != '9N' && data.codigo_tienda != '7J' && data.codigo_tienda != '9M' && data.codigo_tienda != '7F') {
+          correo.push('josecarreno@metasperu.com ');
+        }
+    */
+    emailController.sendEmail(correo, `SOLICITUD DE APROBACION DE HORA EXTRA - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
       .catch(error => res.send(error));
 
   });
@@ -466,6 +481,7 @@ io.on('connection', async (socket) => {
       await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET ESTADO = '${aprobado}',APROBADO = ${data.aprobado} WHERE FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}' AND HR_EXTRA_ACOMULADO = '${data.hora_extra}';`);
 
     } else {
+      await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET APROBADO = ${data.aprobado},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
       await pool.query(`UPDATE TB_AROBADO_HR_EXTRA SET APROBADO = ${data.aprobado},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
       await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET ESTADO = '${aprobado}',APROBADO = ${data.aprobado} WHERE FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}' AND HR_EXTRA_ACOMULADO = '${data.hora_extra}';`);
     }
