@@ -574,6 +574,7 @@ io.on('connection', async (socket) => {
   app.post("/auth_session", async (req, res) => {
     let data = req.body;
     let objLogin = req.body;
+    console.log(objLogin);
     let usuario = objLogin["usuario"].replace(/[^a-zA-Z-0-9 ]/g, "");
     let password = objLogin["password"];
     const [dataUser] =
@@ -585,10 +586,10 @@ io.on('connection', async (socket) => {
 
     if ((arSession || []).length) {
       await pool.query(`INSERT INTO TB_SESSION_LOGIN(
-        EMAIL ,
-        IP ,
+        EMAIL,
+        IP,
         DIVICE,
-        AUTORIZADO,
+        AUTORIZADO
         )VALUES('${emeil}','${data.ip}','${data.divice}',true)`);
 
       res.json({ success: true });
