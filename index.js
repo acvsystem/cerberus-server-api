@@ -385,10 +385,6 @@ io.on('connection', async (socket) => {
 
     let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
 
-    let selectedLocal = tiendasList.find((data) => data.code == data.codigo_tienda) || {};
-    
-    socket.broadcast.emit("lista_solicitudes", arAutorizacion);
-
     let tiendasList = [
       { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
       { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
@@ -412,8 +408,9 @@ io.on('connection', async (socket) => {
       { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
     ];
 
+    let selectedLocal = tiendasList.find((data) => data.code == data.codigo_tienda) || {};
 
- 
+    socket.broadcast.emit("lista_solicitudes", arAutorizacion);
 
     let bodyHTML = `<table style="width:100%;border-spacing:0">
                 <tbody>
