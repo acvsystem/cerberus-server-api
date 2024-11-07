@@ -407,8 +407,8 @@ io.on('connection', async (socket) => {
       { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com' },
       { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
     ];
-    
-    let selectedLocal = tiendasList.find((data) => data.code == `'${data.codigo_tienda}'`) || {};
+
+    let selectedLocal = tiendasList.find((td) => td.code == data.codigo_tienda) || {};
     console.log(selectedLocal);
     socket.broadcast.emit("lista_solicitudes", arAutorizacion);
 
