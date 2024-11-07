@@ -494,30 +494,40 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("respuesta_autorizacion", arAutorizacionResponse);
   });
 
-  socket.on("session_login", async (data) => {
-    let [arSession] = await pool.query(`SELECT * FROM TB_SESSION_LOGIN WHERE EMAIL = '${data.email}';`);
+  app.post("/session_login", async (req, res) => {
+    let data = req.body;
+    let objLogin = req.body;
+    let usuario = objLogin["usuario"].replace(/[^a-zA-Z-0-9 ]/g, "");
+    let password = objLogin["password"];
+    const [dataUser] =
+      await pool.query(`SELECT USUARIO,DEFAULT_PAGE FROM TB_LOGIN WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}';`);
+    let emeil = ((dataUser || [])[0] || {}).EMAIL;
+    if (dataUser.length > 0) {
+      let [arSession] = await pool.query(`SELECT * FROM TB_SESSION_LOGIN WHERE EMAIL = '${emeil}';`);
 
-    if (!(arSession || []).length) {
-      await pool.query(`INSERT INTO TB_SESSION_LOGIN(
+      if (!(arSession || []).length) {
+        await pool.query(`INSERT INTO TB_SESSION_LOGIN(
         EMAIL ,
         IP ,
         DIVICE,
         AUTORIZADO,
-        )VALUES('${data.email}','${data.ip}','${data.divice}',true)`);
-    } else {
-      let [arSession] = await pool.query(`SELECT * FROM TB_SESSION_LOGIN WHERE EMAIL = '${data.email}' AND IP = '${data.ip}' AND DIVICE = '${data.divice}';`);
+        )VALUES('${emeil}','${data[0].ip}','${data[0].divice}',true)`);
 
-      if (!(arSession || []).length) {
-        let min = 1000;
-        let max = 99000;
-        let codigoGenerado = Math.floor(Math.random() * (max - min + 1) + min);
+        res.json({ success: true });
+      } else {
+        let [arSession] = await pool.query(`SELECT * FROM TB_SESSION_LOGIN WHERE EMAIL = '${emeil}' AND IP = '${data[0].ip}' AND DIVICE = '${data[0].divice}';`);
 
-        await pool.query(`INSERT INTO TB_AUTH_SESSION(
+        if (!(arSession || []).length) {
+          let min = 1000;
+          let max = 99000;
+          let codigoGenerado = Math.floor(Math.random() * (max - min + 1) + min);
+
+          await pool.query(`INSERT INTO TB_AUTH_SESSION(
           EMAIL,
           CODIGO
-          )VALUES('${data.email}','${codigoGenerado}')`);
+          )VALUES('${data[0].email}','${codigoGenerado}')`);
 
-        let bodyHTML = `<table style="width:100%;border-spacing:0">
+          let bodyHTML = `<table style="width:100%;border-spacing:0">
         <tbody>
             <tr style="display:flex">
                 <td>
@@ -545,19 +555,31 @@ io.on('connection', async (socket) => {
         </tbody>
     </table>`;
 
-        emailController.sendEmail(data.email, `CODIGO DE ACCESO - METAS PERU`, bodyHTML, null, null)
-          .catch(error => res.send(error));
+          emailController.sendEmail(emeil, `CODIGO DE ACCESO - METAS PERU`, bodyHTML, null, null)
+            .catch(error => res.send(error));
 
+        }
+
+        res.json({ success: false });
       }
+      
+    } else {
+      res.json({ login: false });
     }
-
 
   });
 
   app.post("/auth_session", async (req, res) => {
     let data = req.body;
+    let objLogin = req.body;
+    let usuario = objLogin["usuario"].replace(/[^a-zA-Z-0-9 ]/g, "");
+    let password = objLogin["password"];
+    const [dataUser] =
+      await pool.query(`SELECT USUARIO,DEFAULT_PAGE FROM TB_LOGIN WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}';`);
+    let emeil = ((dataUser || [])[0] || {}).EMAIL;
 
-    let [arSession] = await pool.query(`SELECT * FROM TB_AUTH_SESSION WHERE EMAIL = '${data[0].email}' AND CODIGO = '${data[0].codigo}';`);
+
+    let [arSession] = await pool.query(`SELECT * FROM TB_AUTH_SESSION WHERE EMAIL = '${emeil}' AND CODIGO = '${data[0].codigo}';`);
 
     if ((arSession || []).length) {
       await pool.query(`INSERT INTO TB_SESSION_LOGIN(
@@ -565,7 +587,7 @@ io.on('connection', async (socket) => {
         IP ,
         DIVICE,
         AUTORIZADO,
-        )VALUES('${data.email}','${data.ip}','${data.divice}',true)`);
+        )VALUES('${emeil}','${data.ip}','${data.divice}',true)`);
 
       res.json({ success: true });
     } else {
