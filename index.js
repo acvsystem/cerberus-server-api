@@ -494,7 +494,87 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("respuesta_autorizacion", arAutorizacionResponse);
   });
 
+  socket.on("session_login", async (data) => {
+    let [arSession] = await pool.query(`SELECT * FROM TB_SESSION_LOGIN WHERE EMAIL = '${data.email}';`);
 
+    if (!(arSession || []).length) {
+      await pool.query(`INSERT INTO TB_SESSION_LOGIN(
+        EMAIL ,
+        IP ,
+        DIVICE,
+        AUTORIZADO,
+        )VALUES('${data.email}','${data.ip}','${data.divice}',true)`);
+    } else {
+      let [arSession] = await pool.query(`SELECT * FROM TB_SESSION_LOGIN WHERE EMAIL = '${data.email}' AND IP = '${data.ip}' AND DIVICE = '${data.divice}';`);
+
+      if (!(arSession || []).length) {
+        let min = 1000;
+        let max = 99000;
+        let codigoGenerado = Math.floor(Math.random() * (max - min + 1) + min);
+
+        await pool.query(`INSERT INTO TB_AUTH_SESSION(
+          EMAIL,
+          CODIGO
+          )VALUES('${data.email}','${codigoGenerado}')`);
+
+        let bodyHTML = `<table style="width:100%;border-spacing:0">
+        <tbody>
+            <tr style="display:flex">
+                <td>
+                    <table style="border-radius:4px;border-spacing:0;border:1px solid #155795;min-width:450px">
+                        <tbody>
+                            <tr>
+                                <td style="border-top-left-radius:4px;border-top-right-radius:4px;display:flex;background:#155795;padding:20px">
+                                    <p style="margin-left:72px;color:#fff;font-weight:700;font-size:30px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif"><span class="il">METAS PERU</span> S.A.C</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:10px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
+                                    <p>Codigo de accesso.</p> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="margin-bottom:10px;display:flex">
+                                    <h2>${codigoGenerado}</h2>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>`;
+
+        emailController.sendEmail(data.email, `CODIGO DE ACCESO - METAS PERU`, bodyHTML, null, null)
+          .catch(error => res.send(error));
+
+      }
+    }
+
+
+  });
+
+  app.post("/auth_session", async (req, res) => {
+    let data = req.body;
+
+    let [arSession] = await pool.query(`SELECT * FROM TB_AUTH_SESSION WHERE EMAIL = '${data[0].email}' AND CODIGO = '${data[0].codigo}';`);
+
+    if ((arSession || []).length) {
+      await pool.query(`INSERT INTO TB_SESSION_LOGIN(
+        EMAIL ,
+        IP ,
+        DIVICE,
+        AUTORIZADO,
+        )VALUES('${data.email}','${data.ip}','${data.divice}',true)`);
+
+      res.json({ success: true });
+    } else {
+      res.json({ success: false });
+    }
+
+
+
+  });
 
   app.post("/papeleta/verificar/horas_extras", async (req, res) => {
     let data = req.body;
