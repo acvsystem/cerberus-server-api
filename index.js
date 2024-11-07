@@ -440,7 +440,7 @@ io.on('connection', async (socket) => {
                 </tbody>
             </table>`;
 
-    emailController.sendEmail(['itperu@metasperu.com'], `SOLICITUD DE APROBACION DE HORA EXTRA - ${(selectedLocal || [])[0].name || ''}`, bodyHTML, null, null)
+    emailController.sendEmail(['itperu@metasperu.com'], `SOLICITUD DE APROBACION DE HORA EXTRA - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
       .catch(error => res.send(error));
 
   });
