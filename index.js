@@ -503,6 +503,7 @@ io.on('connection', async (socket) => {
       await pool.query(`SELECT USUARIO,DEFAULT_PAGE,EMAIL FROM TB_LOGIN WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}';`);
       
     let emeil = ((dataUser || [])[0] || {}).EMAIL;
+    
     if (dataUser.length > 0) {
       let [arSession] = await pool.query(`SELECT * FROM TB_SESSION_LOGIN WHERE EMAIL = '${emeil}';`);
 
@@ -526,7 +527,7 @@ io.on('connection', async (socket) => {
           await pool.query(`INSERT INTO TB_AUTH_SESSION(
           EMAIL,
           CODIGO
-          )VALUES('${data[0].email}','${codigoGenerado}')`);
+          )VALUES('${emeil}','${codigoGenerado}')`);
 
           let bodyHTML = `<table style="width:100%;border-spacing:0">
         <tbody>
