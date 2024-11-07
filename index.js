@@ -508,11 +508,11 @@ io.on('connection', async (socket) => {
 
       if (!(arSession || []).length) {
         await pool.query(`INSERT INTO TB_SESSION_LOGIN(
-        EMAIL ,
-        IP ,
+        EMAIL,
+        IP,
         DIVICE,
         AUTORIZADO,
-        )VALUES('${emeil}','${data.ip}','${data.divice}',true)`);
+        )VALUES('${emeil}','${data.ip}','${data.divice}',true);`);
 
         res.json({ success: true });
       } else {
