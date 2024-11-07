@@ -511,7 +511,7 @@ io.on('connection', async (socket) => {
         EMAIL,
         IP,
         DIVICE,
-        AUTORIZADO,
+        AUTORIZADO
         )VALUES('${emeil}','${data.ip}','${data.divice}',true);`);
 
         res.json({ success: true });
