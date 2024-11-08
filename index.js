@@ -547,7 +547,7 @@ io.on('connection', async (socket) => {
                             </tr>
                             <tr>
                                 <td style="margin-bottom:10px;text-align: center;">
-                                    <h4>${codigoGenerado}</h4>
+                                    <h1>${codigoGenerado}</h1>
                                 </td>
                             </tr>
                         </tbody>
@@ -560,6 +560,7 @@ io.on('connection', async (socket) => {
           emailController.sendEmail(emeil, `CODIGO DE ACCESO - METAS PERU`, bodyHTML, null, null)
             .catch(error => res.send(error));
 
+            res.json({ success: false });
         } else {
           if (arSession[0]['AUTORIZADO']) {
             res.json({ success: true });
