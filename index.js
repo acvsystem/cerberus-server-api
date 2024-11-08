@@ -592,9 +592,8 @@ io.on('connection', async (socket) => {
 
     let [arSession] = await pool.query(`SELECT * FROM TB_AUTH_SESSION WHERE EMAIL = '${emeil}' AND CODIGO = '${data.codigo}';`);
 
-    let valid = tokenController.verificationToken(arSession[0]['HASH']);
-
     if ((arSession || []).length) {
+      let valid = tokenController.verificationToken(arSession[0]['HASH']);
       if ((valid || {}).isValid) {
         await pool.query(`INSERT INTO TB_SESSION_LOGIN(
           EMAIL,
