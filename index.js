@@ -501,9 +501,9 @@ io.on('connection', async (socket) => {
     let password = objLogin["password"];
     const [dataUser] =
       await pool.query(`SELECT USUARIO,DEFAULT_PAGE,EMAIL FROM TB_LOGIN WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}';`);
-      
+
     let emeil = ((dataUser || [])[0] || {}).EMAIL;
-    
+
     if (dataUser.length > 0) {
       let [arSession] = await pool.query(`SELECT * FROM TB_SESSION_LOGIN WHERE EMAIL = '${emeil}';`);
 
@@ -560,11 +560,15 @@ io.on('connection', async (socket) => {
           emailController.sendEmail(emeil, `CODIGO DE ACCESO - METAS PERU`, bodyHTML, null, null)
             .catch(error => res.send(error));
 
+        } else {
+          if (arSession[0]['AUTORIZADO']) {
+            res.json({ success: true });
+          } else {
+            res.json({ success: false });
+          }
         }
-
-        res.json({ success: false });
       }
-      
+
     } else {
       res.json({ login: false });
     }
