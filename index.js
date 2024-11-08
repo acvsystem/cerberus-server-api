@@ -605,7 +605,7 @@ io.on('connection', async (socket) => {
 
       await pool.query(`DELETE FROM TB_AUTH_SESSION WHERE EMAIL = '${emeil}' AND CODIGO = '${data.codigo}';`);
 
-      res.json({ success: true });
+      res.json({ success: valid });
     } else {
       res.json({ success: false });
     }
