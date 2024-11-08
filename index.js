@@ -607,10 +607,10 @@ io.on('connection', async (socket) => {
 
         res.json({ success: true });
       } else {
-        res.json({ success: false, msj: "El codigo a expirado." });
+        res.json({ success: false, msj: "El codigo a expirado", codExpired: true });
       }
     } else {
-      res.json({ msj: "Codigo incorrecto", success: false });
+      res.json({ msj: "Codigo incorrecto", success: false, codeFail: true });
     }
   });
 
