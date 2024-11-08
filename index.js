@@ -546,8 +546,8 @@ io.on('connection', async (socket) => {
                                 </td>
                             </tr>
                             <tr>
-                                <td style="margin-bottom:10px;display:flex">
-                                    <h2>${codigoGenerado}</h2>
+                                <td style="margin-bottom:10px;text-align: center;">
+                                    <h4>${codigoGenerado}</h4>
                                 </td>
                             </tr>
                         </tbody>
