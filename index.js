@@ -832,7 +832,9 @@ io.on('connection', async (socket) => {
   socket.on("listarHorarios", async (data) => {
     let [arHorarios] = await pool.query(`SELECT RANGO_DIAS,CODIGO_TIENDA FROM TB_HORARIO_PROPERTY GROUP BY RANGO_DIAS,CODIGO_TIENDA;`);
     console.log(arHorarios);
-    socket.broadcast.emit("responseHorarios", arHorarios);
+    if ((arHorarios || []).length) {
+      socket.broadcast.emit("responseHorarios", arHorarios);
+    }
   });
 
   socket.on("actualizarHorario", async (data) => {
