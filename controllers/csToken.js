@@ -30,6 +30,19 @@ class clsToken {
         });
     }
 
+    createTokenCode(email) {
+        let privateKey = prop.keyCrypt;
+        const now = Date.now().valueOf() / 1000
+        let option = {
+            issuer: 'cerberus.server',
+            exp: now
+        };
+        const token = Jwt.sign({ email: email }, `${privateKey}`, option, {
+            expiresIn: '1m'
+        });
+        return token;
+    }
+
 }
 
 const tokenController = new clsToken;

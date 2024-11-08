@@ -12,7 +12,7 @@ import { EventEmitter } from "events";
 import securityRoutes from "./routes/security.routes.js";
 import frontRetailRoutes from "./routes/frontRetail.routes.js";
 import { prop as defaultResponse } from "./const/defaultResponse.js";
-
+import tokenController from './controllers/csToken';
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: "*" } });
@@ -524,10 +524,14 @@ io.on('connection', async (socket) => {
           let max = 99000;
           let codigoGenerado = Math.floor(Math.random() * (max - min + 1) + min);
 
+          let tokenCode = tokenController.createTokenCode(emeil);
+          console.log(tokenCode);
+
           await pool.query(`INSERT INTO TB_AUTH_SESSION(
           EMAIL,
-          CODIGO
-          )VALUES('${emeil}','${codigoGenerado}')`);
+          CODIGO,
+          HASH
+          )VALUES('${emeil}','${codigoGenerado}','${tokenCode}')`);
 
           let bodyHTML = `<table style="width:100%;border-spacing:0">
         <tbody>
@@ -560,7 +564,7 @@ io.on('connection', async (socket) => {
           emailController.sendEmail(emeil, `CODIGO DE ACCESO - METAS PERU`, bodyHTML, null, null)
             .catch(error => res.send(error));
 
-            res.json({ success: false });
+          res.json({ success: false });
         } else {
           if (arSession[0]['AUTORIZADO']) {
             res.json({ success: true });
@@ -586,16 +590,20 @@ io.on('connection', async (socket) => {
       await pool.query(`SELECT USUARIO,DEFAULT_PAGE,EMAIL FROM TB_LOGIN WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}';`);
     let emeil = ((dataUser || [])[0] || {}).EMAIL;
 
-
     let [arSession] = await pool.query(`SELECT * FROM TB_AUTH_SESSION WHERE EMAIL = '${emeil}' AND CODIGO = '${data.codigo}';`);
 
+    let valid = verificationToken(arSession[0]['HASH']);
+    console.log(valid);
     if ((arSession || []).length) {
+
       await pool.query(`INSERT INTO TB_SESSION_LOGIN(
         EMAIL,
         IP,
         DIVICE,
         AUTORIZADO
         )VALUES('${emeil}','${data.ip}','${data.divice}',true)`);
+
+      await pool.query(`DELETE FROM TB_AUTH_SESSION WHERE EMAIL = '${emeil}' AND CODIGO = '${data.codigo}';`);
 
       res.json({ success: true });
     } else {
