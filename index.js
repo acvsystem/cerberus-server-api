@@ -592,7 +592,7 @@ io.on('connection', async (socket) => {
 
     let [arSession] = await pool.query(`SELECT * FROM TB_AUTH_SESSION WHERE EMAIL = '${emeil}' AND CODIGO = '${data.codigo}';`);
 
-    let valid = verificationToken(arSession[0]['HASH']);
+    let valid = tokenController.verificationToken(arSession[0]['HASH']);
     console.log(valid);
     if ((arSession || []).length) {
 
