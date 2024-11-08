@@ -829,6 +829,12 @@ io.on('connection', async (socket) => {
     }
   })
 
+  socket.on("listarHorarios", async (data) => {
+    let [arHorarios] = await pool.query(`SELECT RANGO_DIAS,CODIGO_TIENDA FROM TB_HORARIO_PROPERTY GROUP BY RANGO_DIAS,CODIGO_TIENDA;`);
+
+    socket.broadcast.emit("responseHorarios", arHorarios);
+  });
+
   socket.on("actualizarHorario", async (data) => {
     /* {
        id: this.dataHorario.length + 1,
