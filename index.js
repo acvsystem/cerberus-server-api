@@ -829,13 +829,16 @@ io.on('connection', async (socket) => {
     }
   })
 
-  socket.on("listarHorarios", async (data) => {
+  app.get("/calendario/listarHorario", async (req, res) => {
     let [arHorarios] = await pool.query(`SELECT RANGO_DIAS,CODIGO_TIENDA FROM TB_HORARIO_PROPERTY GROUP BY RANGO_DIAS,CODIGO_TIENDA;`);
     console.log(arHorarios);
     if ((arHorarios || []).length) {
-      socket.broadcast.emit("responseHorarios", arHorarios);
+      res.json(arHorarios);
+    } else {
+      res.json({ success: false });
     }
   });
+
 
   socket.on("actualizarHorario", async (data) => {
     /* {
