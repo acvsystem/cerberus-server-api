@@ -37,9 +37,7 @@ class clsToken {
             issuer: 'cerberus.server',
             exp: now
         };
-        const token = Jwt.sign({ email: email }, `${privateKey}`, option, {
-            expiresIn: '1m'
-        });
+        const token = Jwt.sign({ email: email }, `${privateKey}`, option);
         return token;
     }
 
