@@ -12,7 +12,7 @@ import { EventEmitter } from "events";
 import securityRoutes from "./routes/security.routes.js";
 import frontRetailRoutes from "./routes/frontRetail.routes.js";
 import { prop as defaultResponse } from "./const/defaultResponse.js";
-import tokenController from './controllers/csToken';
+import tokenController from './controllers/csToken.js';
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: "*" } });
