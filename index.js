@@ -541,8 +541,8 @@ io.on('connection', async (socket) => {
                                 </td>
                             </tr>
                             <tr>
-                                <td style="padding:10px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
-                                    <p>Codigo de accesso.</p> 
+                                <td style="text-align: center;padding:10px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
+                                    <p>Codigo de accesso</p> 
                                 </td>
                             </tr>
                             <tr>
