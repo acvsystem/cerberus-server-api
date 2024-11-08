@@ -35,7 +35,7 @@ class clsToken {
         const now = Date.now().valueOf() / 1000
         let option = {
             issuer: 'cerberus.server',
-            expiresIn: '1m'
+            expiresIn: '5m'
         };
         const token = Jwt.sign({ email: email }, `${privateKey}`, option);
         return token;

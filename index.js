@@ -593,25 +593,25 @@ io.on('connection', async (socket) => {
     let [arSession] = await pool.query(`SELECT * FROM TB_AUTH_SESSION WHERE EMAIL = '${emeil}' AND CODIGO = '${data.codigo}';`);
 
     let valid = tokenController.verificationToken(arSession[0]['HASH']);
-    console.log(valid);
+
     if ((arSession || []).length) {
+      if ((valid || {}).isValid) {
+        await pool.query(`INSERT INTO TB_SESSION_LOGIN(
+          EMAIL,
+          IP,
+          DIVICE,
+          AUTORIZADO
+          )VALUES('${emeil}','${data.ip}','${data.divice}',true)`);
 
-      await pool.query(`INSERT INTO TB_SESSION_LOGIN(
-        EMAIL,
-        IP,
-        DIVICE,
-        AUTORIZADO
-        )VALUES('${emeil}','${data.ip}','${data.divice}',true)`);
+        await pool.query(`DELETE FROM TB_AUTH_SESSION WHERE EMAIL = '${emeil}' AND CODIGO = '${data.codigo}';`);
 
-      await pool.query(`DELETE FROM TB_AUTH_SESSION WHERE EMAIL = '${emeil}' AND CODIGO = '${data.codigo}';`);
-
-      res.json({ success: valid });
+        res.json({ success: true });
+      } else {
+        res.json({ success: false, msj: "El codigo a expirado." });
+      }
     } else {
-      res.json({ success: false });
+      res.json({ msj: "Codigo incorrecto", success: false });
     }
-
-
-
   });
 
   app.post("/papeleta/verificar/horas_extras", async (req, res) => {
