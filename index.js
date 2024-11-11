@@ -839,6 +839,16 @@ io.on('connection', async (socket) => {
     }
   });
 
+  app.get("/papepela/listarPapeleta", async (req, res) => {
+    let [arPapeletas] = await pool.query(`SELECT * FROM TB_PAPELETA;`);
+    console.log(arPapeletas);
+    if ((arHorarios || []).length) {
+      res.json(arPapeletas);
+    } else {
+      res.json({ success: false });
+    }
+  });
+
 
   socket.on("actualizarHorario", async (data) => {
     /* {
