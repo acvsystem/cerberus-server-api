@@ -839,7 +839,7 @@ io.on('connection', async (socket) => {
     }
   });
 
-  app.get("/papepela/listarPapeleta", async (req, res) => {
+  app.get("/papeleta/listarPapeleta", async (req, res) => {
     let [arPapeletas] = await pool.query(`SELECT * FROM TB_PAPELETA;`);
     console.log(arPapeletas);
     if ((arHorarios || []).length) {
