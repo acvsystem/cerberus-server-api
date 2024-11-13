@@ -256,11 +256,11 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("consultarQuincena", configurationList);
   });
 
-  socket.on("consultaPlanilla", (response) => {
+  socket.on("resAdelandoQuinc", (response) => {
     let socketID = (response || {}).socket;
     let dataEJB = [];
     dataEJB = JSON.parse((data || {}).serverData || []);
-
+    console.log(response);
     socket.to(`${socketID}`).emit("reporteQuincena", { id: response.id, data: dataEJB });
   });
 
