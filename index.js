@@ -247,6 +247,26 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("consultarServGen", configurationList);
   });
 
+  socket.on("consultaPlanilla", (configuracion) => {
+    console.log(configuracion);
+    let configurationList = {
+      socket: (socket || {}).id
+    };
+
+    socket.broadcast.emit("consultarQuincena", configurationList);
+  });
+
+  socket.on("consultaPlanilla", (response) => {
+    let socketID = (response || {}).socket;
+    let dataEJB = [];
+    dataEJB = JSON.parse((data || {}).serverData || []);
+
+    socket.to(`${socketID}`).emit("reporteQuincena", { id: response.id, data: dataEJB });
+  });
+
+
+
+
   function fnGenerarCodigoPap(callback) {
     return new Promise(async (resolve, reject) => {
       let min = 1000;
