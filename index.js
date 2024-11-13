@@ -257,7 +257,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("resAdelandoQuinc", (response) => {
-    let socketID = (response || {}).socket;
+    let socketID = (response || {}).configuration.socket;
     let dataEJB = [];
     dataEJB = JSON.parse((response || {}).serverData || []);
     console.log(dataEJB);
