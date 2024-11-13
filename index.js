@@ -259,7 +259,7 @@ io.on('connection', async (socket) => {
   socket.on("resAdelandoQuinc", (response) => {
     let socketID = (response || {}).socket;
     let dataEJB = [];
-    dataEJB = JSON.parse((data || {}).serverData || []);
+    dataEJB = JSON.parse((response || {}).serverData || []);
     console.log(response);
     socket.to(`${socketID}`).emit("reporteQuincena", { id: response.id, data: dataEJB });
   });
