@@ -250,7 +250,8 @@ io.on('connection', async (socket) => {
   socket.on("consultaPlanilla", (configuracion) => {
     console.log(configuracion);
     let configurationList = {
-      socket: (socket || {}).id
+      socket: (socket || {}).id,
+      tipo: configuracion.tipo_planilla
     };
 
     socket.broadcast.emit("consultarQuincena", configurationList);
