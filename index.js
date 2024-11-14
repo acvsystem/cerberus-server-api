@@ -251,7 +251,8 @@ io.on('connection', async (socket) => {
     console.log(configuracion);
     let configurationList = {
       socket: (socket || {}).id,
-      tipo: configuracion.tipo_planilla
+      tipo: configuracion.tipo_planilla,
+      date: configuracion.date
     };
 
     socket.broadcast.emit("consultarQuincena", configurationList);
