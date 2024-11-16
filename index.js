@@ -292,14 +292,12 @@ io.on('connection', async (socket) => {
     let response = req.body; 
     
     var serverData = JSON.parse((response[0] || []).serverData);
-    var configuration = JSON.parse((response[0] || {}).configuration);
-    console.log(configuration);
     let codigoList = [];
     let dataTemp = [];
     let dataRes = [];
     let total_ingresos = 0;
     let total_descuentos = 0;
-    let socketID = "";
+    let socketID = (response[0] || {}).id;
 
     await serverData.filter(async (dt, i) => {
       if (!codigoList.includes(dt['CODIGO'].trim())) {
