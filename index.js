@@ -292,8 +292,8 @@ io.on('connection', async (socket) => {
     let response = req.body; 
     
     var serverData = JSON.parse((response[0] || []).serverData);
-    console.log(serverData);
-   // var configuration = JSON.parse((response || {}).configuration);
+    var configuration = JSON.parse((response || {}).configuration);
+    console.log(configuration);
     let codigoList = [];
     let dataTemp = [];
     let dataRes = [];
@@ -301,7 +301,7 @@ io.on('connection', async (socket) => {
     let total_descuentos = 0;
     let socketID = "";
 
-    await response[0].serverData.filter(async (dt, i) => {
+    await serverData.filter(async (dt, i) => {
       if (!codigoList.includes(dt['CODIGO'].trim())) {
         codigoList.push(dt['CODIGO'].trim());
       }
