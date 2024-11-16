@@ -307,7 +307,7 @@ io.on('connection', async (socket) => {
 
     if (codigoList.length) {
 
-      dataTemp = await response.filter((data) => data['CODIGO'].trim() == codigo);
+      dataTemp = await serverData.filter((data) => data['CODIGO'].trim() == codigo);
       await dataTemp.filter(async (dw, i) => {
 
         if (dw['CODIGO_MOTIVO'] == '0001' || dw['CODIGO_MOTIVO'] == '0031') {
