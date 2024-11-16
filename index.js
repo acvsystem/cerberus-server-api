@@ -292,7 +292,7 @@ io.on('connection', async (socket) => {
     let response = req.body; 
     
     var serverData = JSON.parse((response[0] || []).serverData);
-    var configuration = JSON.parse((response || {}).configuration);
+    var configuration = JSON.parse((response[0] || {}).configuration);
     console.log(configuration);
     let codigoList = [];
     let dataTemp = [];
