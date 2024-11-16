@@ -308,23 +308,23 @@ io.on('connection', async (socket) => {
     if (codigoList.length) {
 
       await codigoList.filter(async (codigo, i) => {
+        dataTemp = [];
+        total_ingresos = 0;
+        total_descuentos = 0;
         dataTemp = await serverData.filter((data) => data['CODIGO'].trim() == codigo);
-        if(codigo == '00000195'){
-          console.log(dataTemp.length);
-        }
+
         await dataTemp.filter(async (dw, i) => {
-      
           
-          if (dw['CODIGO_MOTIVO'] == '0001' || dw['CODIGO_MOTIVO'] == '0031') {
+          if (dw['CODIGO_MOTIVO'].trim() == '0001' || dw['CODIGO_MOTIVO'].trim() == '0031') {
             total_ingresos += total_ingresos + parseFloat(dw['IMPORTE_MOTIVO']);
           }
   
-          if (dw['CODIGO_MOTIVO'] == '0002' || dw['CODIGO_MOTIVO'] == '4002' || dw['CODIGO_MOTIVO'] == '4003' || dw['CODIGO_MOTIVO'] == '9000' || dw['CODIGO_MOTIVO'] == '9007') {
+          if (dw['CODIGO_MOTIVO'].trim() == '0002' || dw['CODIGO_MOTIVO'].trim() == '4002' || dw['CODIGO_MOTIVO'].trim() == '4003' || dw['CODIGO_MOTIVO'].trim() == '9000' || dw['CODIGO_MOTIVO'].trim() == '9007') {
             total_descuentos += total_descuentos + parseFloat(dw['IMPORTE_MOTIVO']);
           }
   
   
-          if (dataTemp.length - 1 == i) {
+          if (i == dataTemp.length - 1) {
             dataRes.push({
               CODIGO: dw['CODIGO'],
               NOMBRE_COMPLETO: dw['NOMBRE_COMPLETO'],
