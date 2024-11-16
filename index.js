@@ -302,32 +302,19 @@ io.on('connection', async (socket) => {
       }
     });
 
-    /**            obj['CODIGO'] = row[0]
-            obj['NOMBRE_COMPLETO'] = row[1]
-            obj['APELLIDO_PATERNO'] = row[2]
-            obj['APELLIDO_MATERNO'] = row[3]
-            obj['NRO_DOCUMENTO'] = row[4]
-            obj['CUENTA_BANCO_HABERES'] = row[5]
-            obj['CUENTA_BANCO_CTS'] = row[6]
-            obj['BANCO'] = row[7]
-            obj['CUENTA_INTERBANCARIO'] = row[8]
-            obj['CUENTA_INTERBANCARIO_CTS'] = row[9]
-            obj['CODIGO_MOTIVO'] = row[10]
-            obj['MOTIVO'] = row[11]
-            obj['IMPORTE_MOTIVO'] = str(row[12])
-            obj['UNIDAD_SERVICIO'] = row[13]
-            obj['CODIGO_UNID_SERVICIO'] = row[14] */
-
     if (codigoList.length) {
 
       dataTemp = await response.filter((data) => data['CODIGO'].trim() == codigo);
-      dataTemp.filter(async (dw, i) => {
+      await dataTemp.filter(async (dw, i) => {
 
         if (dw['CODIGO_MOTIVO'] == '0001' || dw['CODIGO_MOTIVO'] == '0031') {
           total_ingresos += dw['IMPORTE_MOTIVO'] + dw['IMPORTE_MOTIVO'];
         }
 
-        
+        if (dw['CODIGO_MOTIVO'] == '0002' || dw['CODIGO_MOTIVO'] == '4002' || dw['CODIGO_MOTIVO'] == '4003' || dw['CODIGO_MOTIVO'] == '9000' || dw['CODIGO_MOTIVO'] == '9007') {
+          total_descuentos += dw['IMPORTE_MOTIVO'] + dw['IMPORTE_MOTIVO'];
+        }
+
 
         if (dataTemp.length - 1 == i) {
           dataRes.push({
@@ -342,6 +329,8 @@ io.on('connection', async (socket) => {
             CUENTA_INTERBANCARIO: dw['CUENTA_INTERBANCARIO'],
             CUENTA_INTERBANCARIO_CTS: dw['CUENTA_INTERBANCARIO_CTS'],
             TOTAL_INGRESOS: total_ingresos,
+            TOTAL_DESCUENTOS: total_descuentos,
+            TOTAL_PAGO: total_ingresos - total_descuentos,
             UNIDAD_SERVICIO: dw['UNIDAD_SERVICIO'],
             CODIGO_UNID_SERVICIO: dw['CODIGO_UNID_SERVICIO']
           });
@@ -350,8 +339,9 @@ io.on('connection', async (socket) => {
       });
     }
 
-
-    socket.to(`${socketID}`).emit("reporteQuincena", { id: 'EJB', data: dataEJB });
+    if (dataRes.length) {
+      socket.to(`${socketID}`).emit("reporteQuincena", { id: 'EJB', data: dataRes });
+    }
 
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
