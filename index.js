@@ -290,16 +290,15 @@ io.on('connection', async (socket) => {
 
   app.post("/planilla/FDM", async (req, res) => {
     let response = req.body; 
-    console.log(response[0].configuration);
+    console.log(response);
    // var serverData = JSON.parse((response || {}).serverData);
    // var configuration = JSON.parse((response || {}).configuration);
-    console.log(configuration);
     let codigoList = [];
     let dataTemp = [];
     let dataRes = [];
     let total_ingresos = 0;
     let total_descuentos = 0;
-    let socketID = response[0].configuration.socket;
+    let socketID = "";
 
     await response[0].serverData.filter(async (dt, i) => {
       if (!codigoList.includes(dt['CODIGO'].trim())) {
