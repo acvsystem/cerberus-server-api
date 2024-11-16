@@ -295,7 +295,7 @@ io.on('connection', async (socket) => {
     let dataRes = [];
     let total_ingresos = 0;
     let total_descuentos = 0;
-
+    let socketID = (response || {}).configuration.socket;
     await response.filter(async (dt, i) => {
       if (!codigoList.includes(dt['CODIGO'].trim())) {
         codigoList.push(dt['CODIGO'].trim());
