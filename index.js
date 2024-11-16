@@ -289,8 +289,8 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/planilla/FDM", async (req, res) => {
-    let response = JSON.parse(req.body); 
-    console.log(response);
+    let response = req.body; 
+    console.log(JSON.parse(response));
    // var serverData = JSON.parse((response || {}).serverData);
    // var configuration = JSON.parse((response || {}).configuration);
     let codigoList = [];
