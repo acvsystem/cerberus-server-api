@@ -312,11 +312,11 @@ io.on('connection', async (socket) => {
         await dataTemp.filter(async (dw, i) => {
   
           if (dw['CODIGO_MOTIVO'] == '0001' || dw['CODIGO_MOTIVO'] == '0031') {
-            total_ingresos += dw['IMPORTE_MOTIVO'] + dw['IMPORTE_MOTIVO'];
+            total_ingresos += total_ingresos + parseFloat(dw['IMPORTE_MOTIVO']);
           }
   
           if (dw['CODIGO_MOTIVO'] == '0002' || dw['CODIGO_MOTIVO'] == '4002' || dw['CODIGO_MOTIVO'] == '4003' || dw['CODIGO_MOTIVO'] == '9000' || dw['CODIGO_MOTIVO'] == '9007') {
-            total_descuentos += dw['IMPORTE_MOTIVO'] + dw['IMPORTE_MOTIVO'];
+            total_descuentos += total_descuentos + parseFloat(dw['IMPORTE_MOTIVO']);
           }
   
   
