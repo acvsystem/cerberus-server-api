@@ -310,7 +310,10 @@ io.on('connection', async (socket) => {
       await codigoList.filter(async (codigo, i) => {
         dataTemp = await serverData.filter((data) => data['CODIGO'].trim() == codigo);
         await dataTemp.filter(async (dw, i) => {
-  
+          if(dw.codigo == '00000195'){
+            console.log(dataTemp);
+          }
+          
           if (dw['CODIGO_MOTIVO'] == '0001' || dw['CODIGO_MOTIVO'] == '0031') {
             total_ingresos += total_ingresos + parseFloat(dw['IMPORTE_MOTIVO']);
           }
