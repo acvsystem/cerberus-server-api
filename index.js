@@ -307,38 +307,40 @@ io.on('connection', async (socket) => {
 
     if (codigoList.length) {
 
-      dataTemp = await serverData.filter((data) => data['CODIGO'].trim() == codigo);
-      await dataTemp.filter(async (dw, i) => {
-
-        if (dw['CODIGO_MOTIVO'] == '0001' || dw['CODIGO_MOTIVO'] == '0031') {
-          total_ingresos += dw['IMPORTE_MOTIVO'] + dw['IMPORTE_MOTIVO'];
-        }
-
-        if (dw['CODIGO_MOTIVO'] == '0002' || dw['CODIGO_MOTIVO'] == '4002' || dw['CODIGO_MOTIVO'] == '4003' || dw['CODIGO_MOTIVO'] == '9000' || dw['CODIGO_MOTIVO'] == '9007') {
-          total_descuentos += dw['IMPORTE_MOTIVO'] + dw['IMPORTE_MOTIVO'];
-        }
-
-
-        if (dataTemp.length - 1 == i) {
-          dataRes.push({
-            CODIGO: dw['CODIGO'],
-            NOMBRE_COMPLETO: dw['NOMBRE_COMPLETO'],
-            APELLIDO_PATERNO: dw['APELLIDO_PATERNO'],
-            APELLIDO_MATERNO: dw['APELLIDO_MATERNO'],
-            NRO_DOCUMENTO: dw['NRO_DOCUMENTO'],
-            CUENTA_BANCO_HABERES: dw['CUENTA_BANCO_HABERES'],
-            CUENTA_BANCO_CTS: dw['CUENTA_BANCO_CTS'],
-            BANCO: dw['BANCO'],
-            CUENTA_INTERBANCARIO: dw['CUENTA_INTERBANCARIO'],
-            CUENTA_INTERBANCARIO_CTS: dw['CUENTA_INTERBANCARIO_CTS'],
-            TOTAL_INGRESOS: total_ingresos,
-            TOTAL_DESCUENTOS: total_descuentos,
-            TOTAL_PAGO: total_ingresos - total_descuentos,
-            UNIDAD_SERVICIO: dw['UNIDAD_SERVICIO'],
-            CODIGO_UNID_SERVICIO: dw['CODIGO_UNID_SERVICIO']
-          });
-        }
-
+      await codigoList.filter(async (codigo, i) => {
+        dataTemp = await serverData.filter((data) => data['CODIGO'].trim() == codigo);
+        await dataTemp.filter(async (dw, i) => {
+  
+          if (dw['CODIGO_MOTIVO'] == '0001' || dw['CODIGO_MOTIVO'] == '0031') {
+            total_ingresos += dw['IMPORTE_MOTIVO'] + dw['IMPORTE_MOTIVO'];
+          }
+  
+          if (dw['CODIGO_MOTIVO'] == '0002' || dw['CODIGO_MOTIVO'] == '4002' || dw['CODIGO_MOTIVO'] == '4003' || dw['CODIGO_MOTIVO'] == '9000' || dw['CODIGO_MOTIVO'] == '9007') {
+            total_descuentos += dw['IMPORTE_MOTIVO'] + dw['IMPORTE_MOTIVO'];
+          }
+  
+  
+          if (dataTemp.length - 1 == i) {
+            dataRes.push({
+              CODIGO: dw['CODIGO'],
+              NOMBRE_COMPLETO: dw['NOMBRE_COMPLETO'],
+              APELLIDO_PATERNO: dw['APELLIDO_PATERNO'],
+              APELLIDO_MATERNO: dw['APELLIDO_MATERNO'],
+              NRO_DOCUMENTO: dw['NRO_DOCUMENTO'],
+              CUENTA_BANCO_HABERES: dw['CUENTA_BANCO_HABERES'],
+              CUENTA_BANCO_CTS: dw['CUENTA_BANCO_CTS'],
+              BANCO: dw['BANCO'],
+              CUENTA_INTERBANCARIO: dw['CUENTA_INTERBANCARIO'],
+              CUENTA_INTERBANCARIO_CTS: dw['CUENTA_INTERBANCARIO_CTS'],
+              TOTAL_INGRESOS: total_ingresos,
+              TOTAL_DESCUENTOS: total_descuentos,
+              TOTAL_PAGO: total_ingresos - total_descuentos,
+              UNIDAD_SERVICIO: dw['UNIDAD_SERVICIO'],
+              CODIGO_UNID_SERVICIO: dw['CODIGO_UNID_SERVICIO']
+            });
+          }
+  
+        });
       });
     }
 
