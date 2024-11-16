@@ -288,7 +288,7 @@ io.on('connection', async (socket) => {
     })
   });
 
-  app.port("/planilla/FDM", async (req, res) => {
+  app.post("/planilla/FDM", async (req, res) => {
     let response = req.body;
     let codigoList = [];
     let dataTemp = [];
