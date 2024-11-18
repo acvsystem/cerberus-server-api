@@ -308,6 +308,9 @@ io.on('connection', async (socket) => {
         dataTemp = [];
         dataTemp = await serverData.filter((data) => data['CODIGO'].trim() == codigo);
 
+        if(codigo == '00000195'){
+          console.log(dataTemp);
+        }
         await dataTemp.filter(async (dw, i) => {
 
           if (i == dataTemp.length - 1) {
@@ -336,8 +339,9 @@ io.on('connection', async (socket) => {
       });
     }
 
+    if (dataRes.length) {
       socket.to(`${socketID}`).emit("reporteQuincena", { id: 'EJB', data: serverData });
-    
+    }
 
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
