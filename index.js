@@ -308,13 +308,13 @@ io.on('connection', async (socket) => {
         dataTemp = [];
         dataTemp = await serverData.filter((data) => data['CODIGO'].trim() == codigo);
 
-        if(codigo == '00000195'){
-          console.log(dataTemp);
-        }
+
         await dataTemp.filter(async (dw, i) => {
 
-          if (i == dataTemp.length - 1) {
-
+          if (i == dataTemp.length - 1 ) {
+            if(codigo == '00000195'){
+              console.log(dw);
+            }
             dataRes.push({
               CODIGO: dw['CODIGO'],
               NOMBRE_COMPLETO: dw['NOMBRE_COMPLETO'],
