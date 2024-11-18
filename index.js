@@ -290,13 +290,10 @@ io.on('connection', async (socket) => {
 
   app.post("/planilla/FDM", async (req, res) => {
     let response = req.body;
-    console.log(response);
     var serverData = JSON.parse((response[0] || []).serverData);
     let codigoList = [];
     let dataTemp = [];
     let dataRes = [];
-    let total_ingresos = 0;
-    let total_descuentos = 0;
     let socketID = (response[0] || {}).id;
 
     await serverData.filter(async (dt, i) => {
@@ -339,9 +336,8 @@ io.on('connection', async (socket) => {
       });
     }
 
-    if (dataRes.length) {
-      socket.to(`${socketID}`).emit("reporteQuincena", { id: 'EJB', data: dataRes });
-    }
+      socket.to(`${socketID}`).emit("reporteQuincena", { id: 'EJB', data: serverData });
+    
 
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
