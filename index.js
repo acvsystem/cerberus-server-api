@@ -363,7 +363,8 @@ io.on('connection', async (socket) => {
             HORAS_TOMADAS,
             HORAS_SOBRANTES,
             CODIGO_TIENDA,
-            FECHA_CREACION)VALUES(
+            FECHA_CREACION,
+            DESCRCIPCION)VALUES(
             '${pap.codigo_papeleta}',
             '${pap.nombre_completo}',
             '${pap.documento}',
@@ -377,7 +378,8 @@ io.on('connection', async (socket) => {
             '${pap.horas_tomadas}',
             '${pap.horas_sobrantes}',
             '${pap.codigo_tienda}',
-            '${pap.fecha_creacion}')`);
+            '${pap.fecha_creacion}',
+            '${pap.observacion}')`);
 
 
         await (pap.horas_extras || []).filter(async (hx) => {
