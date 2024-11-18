@@ -289,8 +289,8 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/planilla/FDM", async (req, res) => {
-    let response = req.body; 
-    
+    let response = req.body;
+
     var serverData = JSON.parse((response[0] || []).serverData);
     let codigoList = [];
     let dataTemp = [];
@@ -309,21 +309,19 @@ io.on('connection', async (socket) => {
 
       await codigoList.filter(async (codigo, i) => {
         dataTemp = [];
-        total_ingresos = 0;
-        total_descuentos = 0;
         dataTemp = await serverData.filter((data) => data['CODIGO'].trim() == codigo);
 
         await dataTemp.filter(async (dw, i) => {
-          
+
+
           if (dw['CODIGO_MOTIVO'].trim() == '0001' || dw['CODIGO_MOTIVO'].trim() == '0031') {
             total_ingresos += total_ingresos + parseFloat(dw['IMPORTE_MOTIVO']);
           }
-  
+
           if (dw['CODIGO_MOTIVO'].trim() == '0002' || dw['CODIGO_MOTIVO'].trim() == '4002' || dw['CODIGO_MOTIVO'].trim() == '4003' || dw['CODIGO_MOTIVO'].trim() == '9000' || dw['CODIGO_MOTIVO'].trim() == '9007') {
             total_descuentos += total_descuentos + parseFloat(dw['IMPORTE_MOTIVO']);
           }
-  
-  
+
           if (i == dataTemp.length - 1) {
             dataRes.push({
               CODIGO: dw['CODIGO'],
@@ -342,8 +340,11 @@ io.on('connection', async (socket) => {
               UNIDAD_SERVICIO: dw['UNIDAD_SERVICIO'],
               CODIGO_UNID_SERVICIO: dw['CODIGO_UNID_SERVICIO']
             });
+
+            total_ingresos = 0;
+            total_descuentos = 0;
           }
-  
+
         });
       });
     }
