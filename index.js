@@ -316,6 +316,10 @@ io.on('connection', async (socket) => {
 
           if (dw['CODIGO_MOTIVO'].trim() == '0001' || dw['CODIGO_MOTIVO'].trim() == '0031') {
             total_ingresos += total_ingresos + parseFloat(dw['IMPORTE_MOTIVO']);
+            if(dw['CODIGO'] == '00000195'){
+              console.log(parseFloat(dw['IMPORTE_MOTIVO']));
+            }
+            
           }
 
           if (dw['CODIGO_MOTIVO'].trim() == '0002' || dw['CODIGO_MOTIVO'].trim() == '4002' || dw['CODIGO_MOTIVO'].trim() == '4003' || dw['CODIGO_MOTIVO'].trim() == '9000' || dw['CODIGO_MOTIVO'].trim() == '9007') {
