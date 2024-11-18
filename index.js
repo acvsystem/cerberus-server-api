@@ -773,7 +773,7 @@ io.on('connection', async (socket) => {
           horas_sobrantes: (pap || {}).HORAS_SOBRANTES,
           codigo_tienda: (pap || {}).CODIGO_TIENDA,
           fecha_creacion: (pap || {}).FECHA_CREACION,
-          observacion: (pap || {}).DESCRIPCION,
+          observacion: (pap || {}).DESCRCIPCION,
           horas_extras: []
         });
       });
