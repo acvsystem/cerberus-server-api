@@ -310,7 +310,7 @@ io.on('connection', async (socket) => {
 
         await dataTemp.filter(async (dw, i) => {
 
-          if (i == dataTemp.length - 1 ) {
+          if (i == dataTemp.length - 1) {
             dataRes.push({
               CODIGO: dw['CODIGO'],
               NOMBRE_COMPLETO: dw['NOMBRE_COMPLETO'],
@@ -332,9 +332,9 @@ io.on('connection', async (socket) => {
         });
       });
     }
-    
+
     if (dataRes.length) {
-      
+
       socket.to(`${socketID}`).emit("reporteQuincena", { id: 'EJB', data: dataRes });
     }
 
@@ -381,24 +381,25 @@ io.on('connection', async (socket) => {
             '${pap.fecha_creacion}',
             '${pap.observacion}')`);
 
-
-        await (pap.horas_extras || []).filter(async (hx) => {
-          await pool.query(`INSERT INTO TB_HORA_EXTRA_EMPLEADO(
-            CODIGO_PAPELETA,
-            NRO_DOCUMENTO_EMPLEADO,
-            HR_EXTRA_ACOMULADO,
-            ESTADO,
-            APROBADO,
-            SELECCIONADO,
-            FECHA)VALUES(
-            '${hx.codigo_papeleta}',
-            '${hx.documento}',
-            '${hx.hrx_acumulado}',
-            '${hx.estado}',
-            ${hx.aprobado},
-            ${hx.seleccionado},
-            '${hx.fecha}')`);
-        });
+        if (((pap || {}).horas_extras || []).length) {
+          await (pap.horas_extras || []).filter(async (hx) => {
+            await pool.query(`INSERT INTO TB_HORA_EXTRA_EMPLEADO(
+              CODIGO_PAPELETA,
+              NRO_DOCUMENTO_EMPLEADO,
+              HR_EXTRA_ACOMULADO,
+              ESTADO,
+              APROBADO,
+              SELECCIONADO,
+              FECHA)VALUES(
+              '${hx.codigo_papeleta}',
+              '${hx.documento}',
+              '${hx.hrx_acumulado}',
+              '${hx.estado}',
+              ${hx.aprobado},
+              ${hx.seleccionado},
+              '${hx.fecha}')`);
+          });
+        }
 
         res.json({ success: true });
       } else {
