@@ -312,9 +312,6 @@ io.on('connection', async (socket) => {
         await dataTemp.filter(async (dw, i) => {
 
           if (i == dataTemp.length - 1 ) {
-            if(codigo == '00000195'){
-              console.log(dw);
-            }
             dataRes.push({
               CODIGO: dw['CODIGO'],
               NOMBRE_COMPLETO: dw['NOMBRE_COMPLETO'],
@@ -338,7 +335,7 @@ io.on('connection', async (socket) => {
         });
       });
     }
-
+    console.log(dataRes);
     if (dataRes.length) {
       socket.to(`${socketID}`).emit("reporteQuincena", { id: 'EJB', data: serverData });
     }
