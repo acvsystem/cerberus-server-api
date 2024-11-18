@@ -295,7 +295,7 @@ io.on('connection', async (socket) => {
     let dataTemp = [];
     let dataRes = [];
     let socketID = (response[0] || {}).id;
-
+    console.log(socketID);
     await serverData.filter(async (dt, i) => {
       if (!codigoList.includes(dt['CODIGO'].trim())) {
         codigoList.push(dt['CODIGO'].trim());
@@ -334,7 +334,7 @@ io.on('connection', async (socket) => {
     }
     
     if (dataRes.length) {
-      console.log(dataRes);
+      
       socket.to(`${socketID}`).emit("reporteQuincena", { id: 'EJB', data: dataRes });
     }
 
