@@ -308,7 +308,6 @@ io.on('connection', async (socket) => {
         dataTemp = [];
         dataTemp = await serverData.filter((data) => data['CODIGO'].trim() == codigo);
 
-
         await dataTemp.filter(async (dw, i) => {
 
           if (i == dataTemp.length - 1 ) {
@@ -329,15 +328,14 @@ io.on('connection', async (socket) => {
               UNIDAD_SERVICIO: dw['UNIDAD_SERVICIO'],
               CODIGO_UNID_SERVICIO: dw['CODIGO_UNID_SERVICIO']
             });
-
           }
-
         });
       });
     }
-    console.log(dataRes);
+    
     if (dataRes.length) {
-      socket.to(`${socketID}`).emit("reporteQuincena", { id: 'EJB', data: serverData });
+      console.log(dataRes);
+      socket.to(`${socketID}`).emit("reporteQuincena", { id: 'EJB', data: dataRes });
     }
 
     res.json({ mensaje: 'Archivo recibido con éxito' });
