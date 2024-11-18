@@ -312,21 +312,23 @@ io.on('connection', async (socket) => {
         dataTemp = await serverData.filter((data) => data['CODIGO'].trim() == codigo);
 
         await dataTemp.filter(async (dw, i) => {
-
+          let codigo = dw['CODIGO'].trim();
 
           if (dw['CODIGO_MOTIVO'].trim() == '0001' || dw['CODIGO_MOTIVO'].trim() == '0031') {
             total_ingresos += total_ingresos + parseFloat(dw['IMPORTE_MOTIVO']);
-            if(dw['CODIGO'].trim() == '00000195'){
-              console.log(parseFloat(dw['IMPORTE_MOTIVO']));
-            }
-            
+
+
           }
 
           if (dw['CODIGO_MOTIVO'].trim() == '0002' || dw['CODIGO_MOTIVO'].trim() == '4002' || dw['CODIGO_MOTIVO'].trim() == '4003' || dw['CODIGO_MOTIVO'].trim() == '9000' || dw['CODIGO_MOTIVO'].trim() == '9007') {
             total_descuentos += total_descuentos + parseFloat(dw['IMPORTE_MOTIVO']);
           }
 
-          if (i == dataTemp.length - 1) {
+          if (i == dataTemp.length - 1 && codigo == dw['CODIGO'].trim()) {
+
+
+            console.log(codigo, total_ingresos);
+
             dataRes.push({
               CODIGO: dw['CODIGO'],
               NOMBRE_COMPLETO: dw['NOMBRE_COMPLETO'],
