@@ -290,7 +290,7 @@ io.on('connection', async (socket) => {
 
   app.post("/planilla/FDM", async (req, res) => {
     let response = req.body;
-    console.log();
+    console.log(response);
     var serverData = JSON.parse((response[0] || []).serverData);
     let codigoList = [];
     let dataTemp = [];
