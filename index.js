@@ -312,22 +312,13 @@ io.on('connection', async (socket) => {
         dataTemp = await serverData.filter((data) => data['CODIGO'].trim() == codigo);
 
         await dataTemp.filter(async (dw, i) => {
-          let codigo = dw['CODIGO'].trim();
 
-          if (dw['CODIGO_MOTIVO'].trim() == '0001' || dw['CODIGO_MOTIVO'].trim() == '0031') {
-            total_ingresos += total_ingresos + parseFloat(dw['IMPORTE_MOTIVO']);
+          if (i == dataTemp.length - 1) {
 
-
-          }
-
-          if (dw['CODIGO_MOTIVO'].trim() == '0002' || dw['CODIGO_MOTIVO'].trim() == '4002' || dw['CODIGO_MOTIVO'].trim() == '4003' || dw['CODIGO_MOTIVO'].trim() == '9000' || dw['CODIGO_MOTIVO'].trim() == '9007') {
-            total_descuentos += total_descuentos + parseFloat(dw['IMPORTE_MOTIVO']);
-          }
-
-          if (i == dataTemp.length - 1 && codigo == dw['CODIGO'].trim()) {
-
-
-            console.log(codigo, total_ingresos);
+            total_ingresos = await pool.query(`SELECT SUM(DE1_NIMPORT) FROM PLH0002DET124 WHERE DE1_CCODPER = '${dw['PERIODO'].trim()}' AND DE1_CCODTRA = '${dw['CODIGO'].trim()}' AND (DE1_CDESMOT = 'SUELDOS' OR DE1_CDESMOT = 'COMISIONES')`);
+            total_descuentos = await pool.query(`SELECT SUM(DE1_NIMPORT) FROM PLH0002DET124 WHERE 
+            DE1_CCODPER = '${dw['PERIODO'].trim()}' AND DE1_CCODTRA = '${dw['CODIGO'].trim()}' AND 
+            (DE1_CDESMOT = 'AFP LEY 10%' OR DE1_CDESMOT = 'AFP ISS' OR DE1_CDESMOT = 'ADEL.QUINC.' OR DE1_CDESMOT = 'IR 5TA CAT.' OR DE1_CDESMOT = 'COMISIONES')`);
 
             dataRes.push({
               CODIGO: dw['CODIGO'],
@@ -342,13 +333,11 @@ io.on('connection', async (socket) => {
               CUENTA_INTERBANCARIO_CTS: dw['CUENTA_INTERBANCARIO_CTS'],
               TOTAL_INGRESOS: total_ingresos,
               TOTAL_DESCUENTOS: total_descuentos,
-              TOTAL_PAGO: total_ingresos - total_descuentos,
+              TOTAL_PAGO: parseFloat(total_ingresos) - parseFloat(total_descuentos),
               UNIDAD_SERVICIO: dw['UNIDAD_SERVICIO'],
               CODIGO_UNID_SERVICIO: dw['CODIGO_UNID_SERVICIO']
             });
 
-            total_ingresos = 0;
-            total_descuentos = 0;
           }
 
         });
