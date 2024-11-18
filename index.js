@@ -324,7 +324,7 @@ io.on('connection', async (socket) => {
               CUENTA_INTERBANCARIO_CTS: dw['CUENTA_INTERBANCARIO_CTS'],
               TOTAL_INGRESOS: dw['INGRESOS'],
               TOTAL_DESCUENTOS: dw['DESCUENTOS'],
-              TOTAL_PAGO: parseFloat(dw['INGRESOS']) - parseFloat(dw['DESCUENTOS']),
+              ADELANTO_QUINCENA: parseFloat(dw['INGRESOS']) - parseFloat(dw['DESCUENTOS']),
               UNIDAD_SERVICIO: dw['UNIDAD_SERVICIO'],
               CODIGO_UNID_SERVICIO: dw['CODIGO_UNID_SERVICIO']
             });
