@@ -290,7 +290,7 @@ io.on('connection', async (socket) => {
 
   app.post("/planilla/FDM", async (req, res) => {
     let response = req.body;
-
+    console.log();
     var serverData = JSON.parse((response[0] || []).serverData);
     let codigoList = [];
     let dataTemp = [];
@@ -315,11 +315,6 @@ io.on('connection', async (socket) => {
 
           if (i == dataTemp.length - 1) {
 
-            total_ingresos = await pool.query(`SELECT SUM(DE1_NIMPORT) FROM PLH0002DET124 WHERE DE1_CCODPER = '${dw['PERIODO'].trim()}' AND DE1_CCODTRA = '${dw['CODIGO'].trim()}' AND (DE1_CDESMOT = 'SUELDOS' OR DE1_CDESMOT = 'COMISIONES')`);
-            total_descuentos = await pool.query(`SELECT SUM(DE1_NIMPORT) FROM PLH0002DET124 WHERE 
-            DE1_CCODPER = '${dw['PERIODO'].trim()}' AND DE1_CCODTRA = '${dw['CODIGO'].trim()}' AND 
-            (DE1_CDESMOT = 'AFP LEY 10%' OR DE1_CDESMOT = 'AFP ISS' OR DE1_CDESMOT = 'ADEL.QUINC.' OR DE1_CDESMOT = 'IR 5TA CAT.' OR DE1_CDESMOT = 'COMISIONES')`);
-
             dataRes.push({
               CODIGO: dw['CODIGO'],
               NOMBRE_COMPLETO: dw['NOMBRE_COMPLETO'],
@@ -331,9 +326,9 @@ io.on('connection', async (socket) => {
               BANCO: dw['BANCO'],
               CUENTA_INTERBANCARIO: dw['CUENTA_INTERBANCARIO'],
               CUENTA_INTERBANCARIO_CTS: dw['CUENTA_INTERBANCARIO_CTS'],
-              TOTAL_INGRESOS: total_ingresos,
-              TOTAL_DESCUENTOS: total_descuentos,
-              TOTAL_PAGO: parseFloat(total_ingresos) - parseFloat(total_descuentos),
+              TOTAL_INGRESOS: dw['INGRESOS'],
+              TOTAL_DESCUENTOS: dw['DESCUENTOS'],
+              TOTAL_PAGO: parseFloat(dw['INGRESOS']) - parseFloat(dw['DESCUENTOS']),
               UNIDAD_SERVICIO: dw['UNIDAD_SERVICIO'],
               CODIGO_UNID_SERVICIO: dw['CODIGO_UNID_SERVICIO']
             });
