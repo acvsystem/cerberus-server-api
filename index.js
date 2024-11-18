@@ -791,9 +791,9 @@ io.on('connection', async (socket) => {
             fecha: (hrx || {}).FECHA
           });
         });
-
-        res.json(parsePap);
       }
+      
+      res.json(parsePap);
     } else {
       res.json({ msj: "No existe una papeleta con ese codigo." });
     }
