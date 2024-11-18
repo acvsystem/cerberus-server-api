@@ -755,7 +755,8 @@ io.on('connection', async (socket) => {
     let parsePap = [];
     let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE CODIGO_PAPELETA = '${data[0].codigo_papeleta}';`);
 
-    if ((arHrExtra || []).length) {
+
+    if ((arPapeleta || []).length) {
       await (arPapeleta || []).filter((pap) => {
         parsePap.push({
           codigo_papeleta: (pap || {}).CODIGO_PAPELETA,
@@ -776,23 +777,26 @@ io.on('connection', async (socket) => {
         });
       });
 
-      await (arHrExtra || []).filter((hrx) => {
-        parsePap[0]['horas_extras'].push({
-          codigoGenerado: (hrx || {}).CODIGO_PAPELETA,
-          documento: (hrx || {}).NRO_DOCUMENTO_EMPLEADO,
-          hrx_acumulado: (hrx || {}).HR_EXTRA_ACOMULADO,
-          estado: (hrx || {}).ESTADO,
-          aprobado: (hrx || {}).APROBADO,
-          seleccionado: (hrx || {}).SELECCIONADO,
-          fecha: (hrx || {}).FECHA
-        });
-      });
+      if ((arHrExtra || []).length) {
 
-      res.json(parsePap);
+
+        await (arHrExtra || []).filter((hrx) => {
+          parsePap[0]['horas_extras'].push({
+            codigoGenerado: (hrx || {}).CODIGO_PAPELETA,
+            documento: (hrx || {}).NRO_DOCUMENTO_EMPLEADO,
+            hrx_acumulado: (hrx || {}).HR_EXTRA_ACOMULADO,
+            estado: (hrx || {}).ESTADO,
+            aprobado: (hrx || {}).APROBADO,
+            seleccionado: (hrx || {}).SELECCIONADO,
+            fecha: (hrx || {}).FECHA
+          });
+        });
+
+        res.json(parsePap);
+      }
     } else {
       res.json({ msj: "No existe una papeleta con ese codigo." });
     }
-
   })
 
 
