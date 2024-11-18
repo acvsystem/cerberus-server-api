@@ -316,7 +316,7 @@ io.on('connection', async (socket) => {
 
           if (dw['CODIGO_MOTIVO'].trim() == '0001' || dw['CODIGO_MOTIVO'].trim() == '0031') {
             total_ingresos += total_ingresos + parseFloat(dw['IMPORTE_MOTIVO']);
-            if(dw['CODIGO'] == '00000195'){
+            if(dw['CODIGO'].trim() == '00000195'){
               console.log(parseFloat(dw['IMPORTE_MOTIVO']));
             }
             
