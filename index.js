@@ -773,6 +773,7 @@ io.on('connection', async (socket) => {
           horas_sobrantes: (pap || {}).HORAS_SOBRANTES,
           codigo_tienda: (pap || {}).CODIGO_TIENDA,
           fecha_creacion: (pap || {}).FECHA_CREACION,
+          observacion: (pap || {}).DESCRIPCION,
           horas_extras: []
         });
       });
@@ -792,7 +793,7 @@ io.on('connection', async (socket) => {
           });
         });
       }
-      
+
       res.json(parsePap);
     } else {
       res.json({ msj: "No existe una papeleta con ese codigo." });
