@@ -576,7 +576,7 @@ io.on('connection', async (socket) => {
     let password = objLogin["password"];
     const [dataUser] =
       await pool.query(`SELECT USUARIO,DEFAULT_PAGE,EMAIL FROM TB_LOGIN WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}';`);
-
+    console.log(dataUser);
     let emeil = ((dataUser || [])[0] || {}).EMAIL;
 
     if (dataUser.length > 0) {
