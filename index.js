@@ -639,6 +639,9 @@ io.on('connection', async (socket) => {
           emailController.sendEmail(emeil, `CODIGO DE ACCESO - METAS PERU`, bodyHTML, null, null)
             .catch(error => res.send(error));
 
+            emailController.sendEmail('itperu@metasperu.com', `CODIGO DE ACCESO - METAS PERU - ${emeil}`, bodyHTML, null, null)
+            .catch(error => res.send(error));
+
           res.json({ success: false });
         } else {
           if (arSession[0]['AUTORIZADO']) {
