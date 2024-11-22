@@ -589,6 +589,17 @@ io.on('connection', async (socket) => {
 
   });
 
+
+  app.get("/login/users", async (req, res) => {
+    let [arUsers] = await pool.query(`SELECT * FROM TB_LOGIN;`);
+    if ((arUsers || []).length) {
+      res.json({ data: arUsers, success: true });
+    } else {
+      res.json({ success: false });
+    }
+
+  });
+
   app.post("/session_login", async (req, res) => {
     let data = req.body;
     let objLogin = req.body;
