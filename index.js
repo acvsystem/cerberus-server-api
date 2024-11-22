@@ -569,6 +569,26 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("respuesta_autorizacion", arAutorizacionResponse);
   });
 
+  app.get("/session_login/view", async (req, res) => {
+    let [arSession] = await pool.query(`SELECT * FROM TB_SESSION_LOGIN;`);
+    if ((arSession || []).length) {
+      res.json({ data: arSession, success: true });
+    } else {
+      res.json({ success: false });
+    }
+
+  });
+
+  app.get("/auth_session/view", async (req, res) => {
+    let [arAuthSession] = await pool.query(`SELECT * FROM TB_AUTH_SESSION;`);
+    if ((arAuthSession || []).length) {
+      res.json({ data: arAuthSession, success: true });
+    } else {
+      res.json({ success: false });
+    }
+
+  });
+
   app.post("/session_login", async (req, res) => {
     let data = req.body;
     let objLogin = req.body;
@@ -639,7 +659,7 @@ io.on('connection', async (socket) => {
           emailController.sendEmail(emeil, `CODIGO DE ACCESO - METAS PERU`, bodyHTML, null, null)
             .catch(error => res.send(error));
 
-            emailController.sendEmail('itperu@metasperu.com', `CODIGO DE ACCESO - METAS PERU - ${emeil}`, bodyHTML, null, null)
+          emailController.sendEmail('itperu@metasperu.com', `CODIGO DE ACCESO - METAS PERU - ${emeil}`, bodyHTML, null, null)
             .catch(error => res.send(error));
 
           res.json({ success: false });
@@ -655,6 +675,8 @@ io.on('connection', async (socket) => {
     } else {
       res.json({ login: false });
     }
+
+    socket.broadcast.emit("refreshSessionView", "");
 
   });
 
@@ -689,6 +711,8 @@ io.on('connection', async (socket) => {
     } else {
       res.json({ msj: "Codigo incorrecto", success: false, codeFail: true });
     }
+
+    socket.broadcast.emit("refreshSessionView", "");
   });
 
   app.post("/papeleta/verificar/horas_extras", async (req, res) => {
