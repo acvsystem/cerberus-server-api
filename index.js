@@ -691,6 +691,14 @@ io.on('connection', async (socket) => {
 
   });
 
+  app.post("/auth_session/delete", async (req, res) => {
+    let data = ((req || {}).body || []);
+    await pool.query(`DELETE FROM TB_AUTH_SESSION WHERE ID_AUTH_SESSION='${(data || {}).id}';`);
+    let [arSession] = await pool.query(`SELECT * FROM TB_AUTH_SESSION;`);
+ 
+    res.json(arSession)
+  });
+
   app.post("/auth_session", async (req, res) => {
     let data = req.body;
     let objLogin = req.body;
@@ -1136,6 +1144,7 @@ io.on('connection', async (socket) => {
   });
 
 
+
   if (codeTerminal != "SRVFACT" && isIcg != 'true') {
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
     console.log(listSessionConnect);
@@ -1177,6 +1186,8 @@ io.on('connection', async (socket) => {
     socket.to(`${listClient.id}`).emit("reporteHorario", { id: "servGeneral", data: req.body });
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
+
+
 
 
   app.post('/facturas-pendiente', async (req, res) => {
