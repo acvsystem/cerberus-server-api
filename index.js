@@ -1005,38 +1005,43 @@ io.on('connection', async (socket) => {
 
 
 
-      dth['dias'].filter(async (diah) => {
-/*
-        if ((diasHorario || []).length) {
-         
+      if (dth['dias'].length) {
+        dth['dias'].filter(async (diah) => {
+          /*
+                  if ((diasHorario || []).length) {
+                   
+          
+                    let [diaHorarioSelected] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE DIA = '${(diah || {}).dia}' AND ID_DIA_HORARIO = ${(dth || {}).id_dia};`);
+                    await pool.query(`UPDATE TB_DIAS_HORARIO SET FECHA='${diah.fecha}' , FECHA_NUMBER='${diah.fecha_number}' WHERE ID_DIAS = ${(diaHorarioSelected[0] || []).ID_DIAS};`);
+                  } else {
+                    console.log(diah);
+                    await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER)VALUES('${diah.dia}','${diah.fecha}',${(dth || {}).id},${(diah || {}).id_dia},'${(diah || {}).fecha_number}')`);
+                  }*/
 
-          let [diaHorarioSelected] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE DIA = '${(diah || {}).dia}' AND ID_DIA_HORARIO = ${(dth || {}).id_dia};`);
-          await pool.query(`UPDATE TB_DIAS_HORARIO SET FECHA='${diah.fecha}' , FECHA_NUMBER='${diah.fecha_number}' WHERE ID_DIAS = ${(diaHorarioSelected[0] || []).ID_DIAS};`);
-        } else {
-          console.log(diah);
-          await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER)VALUES('${diah.dia}','${diah.fecha}',${(dth || {}).id},${(diah || {}).id_dia},'${(diah || {}).fecha_number}')`);
-        }*/
+        });
+      }
 
-      });
 
       let [idDias] = await pool.query(`SELECT ID_DIAS FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${(dth || {}).id};`);
       let [idRango] = await pool.query(`SELECT ID_RANGO_HORA FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(dth || {}).id};`);
-      dth['dias_trabajo'].filter(async (diat) => {
-        console.log(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${idRango[0]['ID_RANGO_HORA']},${idDias[0]['ID_DIAS']},${(dth || {}).id})`);
 
-        await pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${idRango[0]['ID_RANGO_HORA']},${idDias[0]['ID_DIAS']},${(dth || {}).id})`);
-      });
+      if (dth['dias_trabajo'].length) {
+        dth['dias_trabajo'].filter(async (diat) => {
+          await pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${idRango[0]['ID_RANGO_HORA']},${idDias[0]['ID_DIAS']},${(dth || {}).id})`);
+        });
+      }
 
+      if (dth['dias_libres'].length) {
+        dth['dias_libres'].filter(async (diat) => {
+          await pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${diat.rg},${diat.id_dia},${(dth || {}).id})`);
+        });
+      }
 
-      dth['dias_libres'].filter(async (diat) => {
-        await pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${diat.rg},${diat.id_dia},${(dth || {}).id})`);
-      });
-
-      console.log(dth['observacion']);
-      dth['observacion'].filter(async (obs) => {
-        await pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION)VALUES(${(obs || {}).id_dia},${(dth || {}).id},'${(obs || {}).codigo_tienda}','${(obs || {}).nombre_completo}','${(obs || {}).observacion}')`);
-      });
-
+      if (dth['observacion'].length) {
+        dth['observacion'].filter(async (obs) => {
+          await pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION)VALUES(${(obs || {}).id_dia},${(dth || {}).id},'${(obs || {}).codigo_tienda}','${(obs || {}).nombre_completo}','${(obs || {}).observacion}')`);
+        });
+      }
     });
 
   });
