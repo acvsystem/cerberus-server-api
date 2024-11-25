@@ -1006,7 +1006,7 @@ io.on('connection', async (socket) => {
 
 
       dth['dias'].filter(async (diah) => {
-
+/*
         if ((diasHorario || []).length) {
          
 
@@ -1015,7 +1015,8 @@ io.on('connection', async (socket) => {
         } else {
           console.log(diah);
           await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER)VALUES('${diah.dia}','${diah.fecha}',${(dth || {}).id},${(diah || {}).id_dia},'${(diah || {}).fecha_number}')`);
-        }
+        }*/
+
       });
 
       let [idDias] = await pool.query(`SELECT ID_DIAS FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${(dth || {}).id};`);
