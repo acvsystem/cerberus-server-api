@@ -695,7 +695,7 @@ io.on('connection', async (socket) => {
     let data = ((req || {}).body || []);
     await pool.query(`DELETE FROM TB_AUTH_SESSION WHERE ID_AUTH_SESSION='${(data || {}).id}';`);
     let [arSession] = await pool.query(`SELECT * FROM TB_AUTH_SESSION;`);
- 
+
     res.json(arSession)
   });
 
@@ -924,7 +924,7 @@ io.on('connection', async (socket) => {
         let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.id} ORDER BY POSITION  ASC;`);
 
         await (requestDh || []).filter(async (rdh) => {
-          response[index]['dias'].push({ dia: rdh.DIA, fecha: rdh.FECHA, fecha_number: rdh.FECHA_NUMBER, id: response[index]['dias'].length + 1 });
+          response[index]['dias'].push({ dia: rdh.DIA, fecha: rdh.FECHA, fecha_number: rdh.FECHA_NUMBER, id: rdh.ID_DIAS, position: response[index]['dias'].length + 1 });
         });
 
         let [requestTb] = await pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${dth.id};`);
@@ -1015,10 +1015,10 @@ io.on('connection', async (socket) => {
 
       let [idDias] = await pool.query(`SELECT ID_DIAS FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${(dth || {}).id};`);
       let [idRango] = await pool.query(`SELECT ID_RANGO_HORA FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(dth || {}).id};`);
-      
+
       dth['dias_trabajo'].filter(async (diat) => {
         await pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${idRango[0]['ID_RANGO_HORA']},${idDias[0]['ID_DIAS']},${(dth || {}).id})`);
-      });  
+      });
 
       dth['dias_libres'].filter(async (diat) => {
         await pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${diat.rg},${diat.id_dia},${(dth || {}).id})`);
