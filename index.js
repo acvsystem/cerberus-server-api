@@ -1024,9 +1024,7 @@ io.on('connection', async (socket) => {
       if (dth['dias_trabajo'].length) {
         dth['dias_trabajo'].filter(async (diat) => {
 
-          let [idDias] = await pool.query(`SELECT ID_DIAS FROM TB_DIAS_HORARIO WHERE ID_DIAS = ${(diat || {}).id_dia};`);
-
-          await pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${(diat || {}).rg},${idDias[0]['ID_DIAS']},${(dth || {}).id})`);
+          await pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${(diat || {}).rg},${(diat || {}).id_dia},${(dth || {}).id})`);
         });
       }
 
