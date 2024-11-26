@@ -977,57 +977,7 @@ io.on('connection', async (socket) => {
 
 
   socket.on("actualizarHorario", async (data) => {
-    /* {
-[
-    {
-        "id": 153,
-        "cargo": "Asesores",
-        "codigo_tienda": "9N",
-        "rg_hora": [
-            {
-                "id": 1542,
-                "position": 1,
-                "rg": "9:00 a 10:00"
-            }
-        ],
-        "dias": [
-            {
-                "dia": "Lunes",
-                "fecha": "25 - nov",
-                "fecha_number": "25-11-2024",
-                "id": 507,
-                "position": 1,
-                "isExpired": false
-            }
-        ],
-        "dias_trabajo": [
-            {
-                "id": 1290,
-                "id_cargo": 153,
-                "id_dia": 505,
-                "nombre_completo": "ALISHA A.E",
-                "numero_documento": "70307880",
-                "rg": 1542,
-                "codigo_tienda": "9N"
-            }
-        ],
-        "dias_libres": [],
-        "arListTrabajador": [
-            {
-                "id": 1,
-                "dl": false,
-                "rg": 1542,
-                "id_dia": 507,
-                "id_cargo": 153,
-                "nombre_completo": "DESIREE V.A",
-                "numero_documento": "76582649"
-            }
-        ],
-        "observacion": []
-    }
-]
-     }*/
-
+    
     let dataHorario = data || [];
 
     dataHorario.filter(async (dth) => {
