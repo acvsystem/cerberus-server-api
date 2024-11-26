@@ -1036,24 +1036,20 @@ io.on('connection', async (socket) => {
       await pool.query(`DELETE FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${(dth || {}).id};`);
       await pool.query(`DELETE FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(dth || {}).id};`);
 
-      dth['rg_hora'].filter(async (rangoh) => {
+     /* dth['rg_hora'].filter(async (rangoh) => {
         await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)VALUES('${dth.codigo_tienda}','${rangoh.rg}',${(dth || {}).id})`);
-      });
+      });*/
 
-      console.log(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${(dth || {}).id};`);
       let [diasHorario] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${(dth || {}).id};`);
 
       if (dth['dias'].length) {
         dth['dias'].filter(async (diah) => {
 
           if ((diasHorario || []).length) {
-
-
             let [diaHorarioSelected] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE DIA = '${(diah || {}).dia}' AND ID_DIA_HORARIO = ${(dth || {}).id};`);
             await pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
             await pool.query(`UPDATE TB_DIAS_HORARIO SET FECHA='${diah.fecha}' , FECHA_NUMBER='${diah.fecha_number}' WHERE ID_DIAS = ${(diaHorarioSelected[0] || []).ID_DIAS};`);
           } else {
-            console.log(diah);
             await pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
             await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER)VALUES('${diah.dia}','${diah.fecha}',${(dth || {}).id},${(diah || {}).position},'${(diah || {}).fecha_number}')`);
           }
