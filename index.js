@@ -918,7 +918,7 @@ io.on('connection', async (socket) => {
         let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.id};`);
 
         await (requestRg || []).filter(async (rdh) => {
-          response[index]['rg_hora'].push({ id: rdh.ID_RANGO_HORA, position: response[index]['rg_hora'].length + 1, rg: rdh.RANGO_HORA });
+          response[index]['rg_hora'].push({ id: rdh.ID_RANGO_HORA, position: response[index]['rg_hora'].length + 1, rg: rdh.RANGO_HORA, codigo_tienda: dataReq[0]['codigo_tienda'] });
         });
 
         let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.id} ORDER BY POSITION  ASC;`);
@@ -1040,7 +1040,7 @@ io.on('connection', async (socket) => {
         let data = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rg || {}).codigo_tienda}' AND ID_RG_HORARIO = ${(dth || {}).id} AND ID_RANGO_HORA = ${(rg || {}).id};`);
         console.log(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rg || {}).codigo_tienda}' AND ID_RG_HORARIO = ${(dth || {}).id} AND ID_RANGO_HORA = ${(rg || {}).id};`)
         if ((data || []).length) {
-          
+
           await pool.query(`UPDATE TB_RANGO_HORA SET RANGO_HORA = '${rg.rg}' WHERE ID_RANGO_HORA = ${(rg || {}).id};`);
         } else {
           await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)VALUES('${dth.codigo_tienda}','${rangoh.rg}',${(dth || {}).id})`);
