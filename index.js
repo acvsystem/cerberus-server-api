@@ -978,14 +978,54 @@ io.on('connection', async (socket) => {
 
   socket.on("actualizarHorario", async (data) => {
     /* {
-       id: this.dataHorario.length + 1,
-       cargo: cargo.value,
-       rg_hora: [],
-       dias: this.arListDia,
-       dias_trabajo: [],
-       dias_libres: [],
-       arListTrabajador: [],
-       observacion: []
+[
+    {
+        "id": 153,
+        "cargo": "Asesores",
+        "codigo_tienda": "9N",
+        "rg_hora": [
+            {
+                "id": 1542,
+                "position": 1,
+                "rg": "9:00 a 10:00"
+            }
+        ],
+        "dias": [
+            {
+                "dia": "Lunes",
+                "fecha": "25 - nov",
+                "fecha_number": "25-11-2024",
+                "id": 507,
+                "position": 1,
+                "isExpired": false
+            }
+        ],
+        "dias_trabajo": [
+            {
+                "id": 1290,
+                "id_cargo": 153,
+                "id_dia": 505,
+                "nombre_completo": "ALISHA A.E",
+                "numero_documento": "70307880",
+                "rg": 1542,
+                "codigo_tienda": "9N"
+            }
+        ],
+        "dias_libres": [],
+        "arListTrabajador": [
+            {
+                "id": 1,
+                "dl": false,
+                "rg": 1542,
+                "id_dia": 507,
+                "id_cargo": 153,
+                "nombre_completo": "DESIREE V.A",
+                "numero_documento": "76582649"
+            }
+        ],
+        "observacion": []
+    }
+]
      }*/
 
     let dataHorario = data || [];
@@ -1003,8 +1043,6 @@ io.on('connection', async (socket) => {
       console.log(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${(dth || {}).id};`);
       let [diasHorario] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${(dth || {}).id};`);
 
-
-
       if (dth['dias'].length) {
         dth['dias'].filter(async (diah) => {
 
@@ -1012,10 +1050,10 @@ io.on('connection', async (socket) => {
 
 
             let [diaHorarioSelected] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE DIA = '${(diah || {}).dia}' AND ID_DIA_HORARIO = ${(dth || {}).id};`);
-            await pool.query(`UPDATE TB_DIAS_HORARIO SET FECHA='${diah.fecha}' , FECHA_NUMBER='${diah.fecha_number}' WHERE ID_DIAS = ${(diaHorarioSelected[0] || []).ID_DIAS};`);
+            await pool.query(`SET FOREIGN_KEY_CHECKS=0; UPDATE TB_DIAS_HORARIO SET FECHA='${diah.fecha}' , FECHA_NUMBER='${diah.fecha_number}' WHERE ID_DIAS = ${(diaHorarioSelected[0] || []).ID_DIAS};`);
           } else {
             console.log(diah);
-            await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER)VALUES('${diah.dia}','${diah.fecha}',${(dth || {}).id},${(diah || {}).position},'${(diah || {}).fecha_number}')`);
+            await pool.query(`SET FOREIGN_KEY_CHECKS=0; INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER)VALUES('${diah.dia}','${diah.fecha}',${(dth || {}).id},${(diah || {}).position},'${(diah || {}).fecha_number}')`);
           }
 
         });
@@ -1024,19 +1062,19 @@ io.on('connection', async (socket) => {
       if (dth['dias_trabajo'].length) {
         dth['dias_trabajo'].filter(async (diat) => {
 
-          await pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${(diat || {}).rg},${(diat || {}).id_dia},${(dth || {}).id})`);
+          await pool.query(`SET FOREIGN_KEY_CHECKS=0; INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${(diat || {}).rg},${(diat || {}).id_dia},${(dth || {}).id})`);
         });
       }
 
       if (dth['dias_libres'].length) {
         dth['dias_libres'].filter(async (diat) => {
-          await pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${diat.rg},${diat.id_dia},${(dth || {}).id})`);
+          await pool.query(`SET FOREIGN_KEY_CHECKS=0; INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${diat.rg},${diat.id_dia},${(dth || {}).id})`);
         });
       }
 
       if (dth['observacion'].length) {
         dth['observacion'].filter(async (obs) => {
-          await pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION)VALUES(${(obs || {}).id_dia},${(dth || {}).id},'${(obs || {}).codigo_tienda}','${(obs || {}).nombre_completo}','${(obs || {}).observacion}')`);
+          await pool.query(`SET FOREIGN_KEY_CHECKS=0; INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION)VALUES(${(obs || {}).id_dia},${(dth || {}).id},'${(obs || {}).codigo_tienda}','${(obs || {}).nombre_completo}','${(obs || {}).observacion}')`);
         });
       }
     });
