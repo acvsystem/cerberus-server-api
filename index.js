@@ -1034,11 +1034,11 @@ io.on('connection', async (socket) => {
       await pool.query(`DELETE FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${(dth || {}).id};`);
       await pool.query(`DELETE FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${(dth || {}).id};`);
       await pool.query(`DELETE FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${(dth || {}).id};`);
-      await pool.query(`DELETE FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(dth || {}).id};`);
+      //await pool.query(`DELETE FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(dth || {}).id};`);
 
-      dth['rg_hora'].filter(async (rangoh) => {
+     /* dth['rg_hora'].filter(async (rangoh) => {
         await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)VALUES('${dth.codigo_tienda}','${rangoh.rg}',${(dth || {}).id})`);
-      });
+      });*/
 
       let [diasHorario] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${(dth || {}).id};`);
 
