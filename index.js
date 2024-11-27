@@ -861,28 +861,34 @@ io.on('connection', async (socket) => {
 
         if (i == 3) {
           let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${data[0]['codigo_tienda']}' AND RANGO_DIAS = '${data[0]['rango']}';`);
-          console.log((rs || [])['dias']);
-          (rs || [])['dias'].filter(async (dia) => {
-            await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER)VALUES('${dia.dia}','${dia.fecha}',${rs.id},'${dia.fecha_number}');`);
-          });
-
           if (!(requestSql || []).length) {
             res.json({ msj: "Ocurrio un error al generar horario." });
           } else {
             await (requestSql || []).filter(async (dth, index) => {
+              let arDia = [];
+              (rs || [])['dias'].filter(async (dia) => {
+                await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER)VALUES('${dia.dia}','${dia.fecha}',${dth.ID_HORARIO},'${dia.fecha_number}');`);
+              });
+
+              let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.ID_HORARIO} ORDER BY POSITION  ASC;`);
+              await (requestDh || []).filter(async (rdh) => {
+                arDia.push({ dia: rdh.DIA, fecha: rdh.FECHA, fecha_number: rdh.FECHA_NUMBER, id: rdh.ID_DIAS, position: response[index]['dias'].length + 1 });
+              });
+
+
               (response || []).push({
                 id: dth.ID_HORARIO,
                 cargo: dth.CARGO,
                 codigo_tienda: dth.CODIGO_TIENDA,
                 rg_hora: [],
-                dias: [],
+                dias: arDia || [],
                 dias_trabajo: [],
                 dias_libres: [],
                 arListTrabajador: [],
                 observacion: []
               });
 
-              if ( index == 3) {
+              if (index == 3) {
                 res.json(response);
               }
             });
