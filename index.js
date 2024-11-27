@@ -859,9 +859,9 @@ io.on('connection', async (socket) => {
       if (!(cargosListVerf || []).length) {
         await pool.query(`INSERT INTO TB_HORARIO_PROPERTY(CARGO,CODIGO_TIENDA,FECHA,RANGO_DIAS)VALUES('${rs.cargo}','${rs.codigo_tienda}','${rs.fecha}','${rs.rango}')`);
 
-        if (data.length - 1 == i) {
+        if (i == 3) {
           let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${data[0]['codigo_tienda']}' AND RANGO_DIAS = '${data[0]['rango']}';`);
-
+          console.log((rs || [])['dias']);
           (rs || [])['dias'].filter(async (dia) => {
             await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER)VALUES('${dia.dia}','${dia.fecha}',${dia.id},'${dia.fecha_number}');`);
           });
@@ -882,7 +882,7 @@ io.on('connection', async (socket) => {
                 observacion: []
               });
 
-              if (requestSql.length - 1 == index) {
+              if ( index == 3) {
                 res.json(response);
               }
             });
