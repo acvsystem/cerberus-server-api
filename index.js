@@ -863,7 +863,7 @@ io.on('connection', async (socket) => {
           let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${data[0]['codigo_tienda']}' AND RANGO_DIAS = '${data[0]['rango']}';`);
           console.log((rs || [])['dias']);
           (rs || [])['dias'].filter(async (dia) => {
-            await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER)VALUES('${dia.dia}','${dia.fecha}',${dia.id},'${dia.fecha_number}');`);
+            await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER)VALUES('${dia.dia}','${dia.fecha}',${rs.id},'${dia.fecha_number}');`);
           });
 
           if (!(requestSql || []).length) {
