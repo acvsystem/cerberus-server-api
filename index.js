@@ -862,6 +862,10 @@ io.on('connection', async (socket) => {
         if (data.length - 1 == i) {
           let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${data[0]['codigo_tienda']}' AND RANGO_DIAS = '${data[0]['rango']}';`);
 
+          (rs || [])['dias'].filter(async (dia) => {
+            await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER)VALUES('${dia.dia}','${dia.fecha}',${dia.id},'${dia.fecha_number}');`);
+          });
+
           if (!(requestSql || []).length) {
             res.json({ msj: "Ocurrio un error al generar horario." });
           } else {
