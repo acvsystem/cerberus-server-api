@@ -859,7 +859,7 @@ io.on('connection', async (socket) => {
       if (!(cargosListVerf || []).length) {
         await pool.query(`INSERT INTO TB_HORARIO_PROPERTY(CARGO,CODIGO_TIENDA,FECHA,RANGO_DIAS)VALUES('${rs.cargo}','${rs.codigo_tienda}','${rs.fecha}','${rs.rango}')`);
 
-        if (i == 3) {
+        if (data.length - 1 == i) {
           let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${data[0]['codigo_tienda']}' AND RANGO_DIAS = '${data[0]['rango']}';`);
 
           if (!(requestSql || []).length) {
@@ -878,7 +878,7 @@ io.on('connection', async (socket) => {
                 observacion: []
               });
 
-              if (index == 3) {
+              if (requestSql.length - 1 == index) {
                 res.json(response);
               }
             });
