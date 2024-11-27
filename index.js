@@ -945,7 +945,7 @@ io.on('connection', async (socket) => {
           response[index]['observacion'].push({ id: obs.ID_OBSERVACION, id_dia: obs.ID_OBS_DIAS, nombre_completo: obs.NOMBRE_COMPLETO, observacion: obs.OBSERVACION });
         });
 
-        if (index == 3) {
+        if (requestSql.length - 1 == index) {
           res.json(response);
         }
 
@@ -977,7 +977,7 @@ io.on('connection', async (socket) => {
 
 
   socket.on("actualizarHorario", async (data) => {
-    
+
     let dataHorario = data || [];
 
     dataHorario.filter(async (dth) => {
