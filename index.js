@@ -867,7 +867,7 @@ io.on('connection', async (socket) => {
             await (requestSql || []).filter(async (dth, index) => {
               let arDia = [];
               (rs || [])['dias'].filter(async (dia) => {
-                await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER)VALUES('${dia.dia}','${dia.fecha}',${dth.ID_HORARIO},'${dia.fecha_number}');`);
+                await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER)VALUES('${dia.dia}','${dia.fecha}',${dth.ID_HORARIO},,${dia.id}'${dia.fecha_number}');`);
               });
 
               let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.ID_HORARIO} ORDER BY POSITION  ASC;`);
