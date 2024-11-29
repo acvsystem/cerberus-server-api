@@ -1075,6 +1075,17 @@ io.on('connection', async (socket) => {
   });
 
 
+  socket.on("horario/empleadoEJB", (cntCosto) => {
+    console.log(cntCosto);
+    let configurationList = {
+      socket: (socket || {}).id,
+      cntCosto: cntCosto
+    };
+
+    socket.broadcast.emit("consultarEJB", configurationList);
+  });
+
+
   socket.on("listaEmpleados", (response) => {
     let data = response;
     socket.to(`${(data || [])['configuration']['socket']}`).emit("reporteEmpleadoTienda", { id: data.id, data: JSON.parse((data || {}).serverData || []) });
