@@ -1110,16 +1110,16 @@ io.on('connection', async (socket) => {
 
         parseEJB.push({
           id: "EJB",
-          codigoEJB: ((ejb || {}).CODEJB).trim(),
+          codigoEJB: ((ejb || {}).CODEJB || "").trim(),
           nombre_completo: `${(ejb || {}).APEPAT} ${(ejb || {}).APEMAT} ${(ejb || {}).NOMBRE}`,
-          nro_documento: ((ejb || {}).NUMDOC).trim(),
-          telefono: ((ejb || {}).TELEFO).trim(),
-          email: ((ejb || {}).EMAIL).trim(),
-          fec_nacimiento: ((ejb || {}).FECNAC).trim(),
-          fec_ingreso: ((ejb || {}).FECING).trim(),
-          status: ((ejb || {}).STATUS).trim(),
-          unid_servicio: ((ejb || {}).UNDSERVICIO).trim(),
-          code_unid_servicio: ((ejb || {}).CODUNDSERVICIO).trim(),
+          nro_documento: ((ejb || {}).NUMDOC || "").trim(),
+          telefono: ((ejb || {}).TELEFO || "").trim(),
+          email: ((ejb || {}).EMAIL || "").trim(),
+          fec_nacimiento: ((ejb || {}).FECNAC || "").trim(),
+          fec_ingreso: ((ejb || {}).FECING || "").trim(),
+          status: ((ejb || {}).STATUS || "").trim(),
+          unid_servicio: ((ejb || {}).UNDSERVICIO || "").trim(),
+          code_unid_servicio: ((ejb || {}).CODUNDSERVICIO || "").trim(),
         });
 
       });
