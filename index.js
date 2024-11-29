@@ -15,7 +15,7 @@ import { prop as defaultResponse } from "./const/defaultResponse.js";
 import tokenController from './controllers/csToken.js';
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer, { cors: { origin: "*", methods: ["GET", "POST"], transports: ['websocket'] } });
+const io = new Server(httpServer, { cors: { origin: "*", methods: ["GET", "POST"], transports: ['websocket', 'polling'] } });
 
 app.use(
   cors({
