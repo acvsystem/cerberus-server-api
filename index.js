@@ -179,8 +179,12 @@ io.on('connection', async (socket) => {
 
   socket.on('dateTerminalesFront', async (data) => {
     let response = JSON.parse(data);
-
     socket.to(`${listClient.id}`).emit("toClientDataTerminales", response);
+  });
+
+  socket.on('emitTranferenciaCajas', (data) => {
+    console.log('emitTranferenciaCajas',data);
+    socket.broadcast.emit("exceTranferenciaCajas", 'ready');
   });
 
 

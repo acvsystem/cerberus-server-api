@@ -242,6 +242,7 @@ if len(configuration) > 0:
         for row in rows:
             obj = collections.OrderedDict()
             obj['NOM_TERMINAL'] = row[0]
+            obj['CODIGO_TIENDA'] = serieTienda
             myobj.append(obj)
         j = json.dumps(myobj)
         sio.emit('terminalesFront',j)
@@ -267,7 +268,12 @@ if len(configuration) > 0:
         for row in rows:
             obj = collections.OrderedDict()
             obj['NOM_TERMINAL'] = row[0]
-            obj['CANTIDAD'] = row[0]
+            obj['CANTIDAD'] = row[1]
+            obj['CODIGO_TIENDA'] = serieTienda
+            myobj.append(obj)
+        if len(rows) < 1:
+            obj = collections.OrderedDict()
+            obj['CODIGO_TIENDA'] = serieTienda
             myobj.append(obj)
         j = json.dumps(myobj)
         sio.emit('dateTerminalesFront',j)
