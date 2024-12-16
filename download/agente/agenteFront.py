@@ -50,6 +50,10 @@ if len(configuration) > 0:
         consultingTransaction()
 
     @sio.event
+    def consultingTerminalesFront(data):
+        consultingTerminales()
+
+    @sio.event
     def searchCantCliente(data):
         consultingClient(data)
 
@@ -212,6 +216,31 @@ if len(configuration) > 0:
             myobj.append(obj)
         j = json.dumps(myobj)
         sio.emit('petitionFront',j)
+
+    def consultingTerminales():
+        myobj = []
+        j = {}
+        server = instanciaBD
+        dataBase = nameBD
+        conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=ICGAdmin;PWD=masterkey'
+        print(conexion)
+        nowDate=datetime.today().strftime('%Y-%m-%d')
+        lastDate = datetime.today()+timedelta(days=-1)
+        shift = timedelta(max(1, (lastDate.weekday() + 6) % 7))
+        lastDate = lastDate.strftime('%Y-%m-%d')
+        querySql="SELECT NOMBRE FROM TERMINALES;"
+        connection = pyodbc.connect(conexion)
+        cursor = connection.cursor()
+        cursor.execute("SELECT @@version;")
+        row = cursor.fetchone()
+        cursor.execute(querySql)
+        rows = cursor.fetchall()
+        for row in rows:
+            obj = collections.OrderedDict()
+            obj['NOM_TERMINAL'] = row[0]
+            myobj.append(obj)
+        j = json.dumps(myobj)
+        sio.emit('terminalesFront',j)
     
     def consultingTransaction():
         myobj = []
