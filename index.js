@@ -184,7 +184,7 @@ io.on('connection', async (socket) => {
 
   socket.on('emitTranferenciaCajas', (data) => {
     console.log('emitTranferenciaCajas',data);
-    socket.broadcast.emit("exceTranferenciaCajas", 'ready');
+    socket.broadcast.emit("exceTranferenciaCajas", data);
   });
 
 

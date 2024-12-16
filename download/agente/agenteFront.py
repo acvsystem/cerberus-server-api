@@ -52,6 +52,11 @@ if len(configuration) > 0:
     @sio.event
     def consultingTerminalesFront(data):
         consultingTerminales()
+
+    @sio.event
+    def exceTranferenciaCajas(data):
+        transferenciaColaCaja(data)
+
         
     @sio.event
     def dataTerminalesFront(data):
@@ -220,6 +225,10 @@ if len(configuration) > 0:
             myobj.append(obj)
         j = json.dumps(myobj)
         sio.emit('petitionFront',j)
+
+    def transferenciaColaCaja(data):
+
+        print(data)
 
     def consultingTerminales():
         myobj = []
