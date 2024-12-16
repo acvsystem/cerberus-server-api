@@ -52,6 +52,10 @@ if len(configuration) > 0:
     @sio.event
     def consultingTerminalesFront(data):
         consultingTerminales()
+        
+    @sio.event
+    def dataTerminalesFront(data):
+        consultingCajasFront()
 
     @sio.event
     def searchCantCliente(data):
@@ -241,6 +245,32 @@ if len(configuration) > 0:
             myobj.append(obj)
         j = json.dumps(myobj)
         sio.emit('terminalesFront',j)
+
+    def consultingCajasFront():
+        myobj = []
+        j = {}
+        server = instanciaBD
+        dataBase = nameBD
+        conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=ICGAdmin;PWD=masterkey'
+        print(conexion)
+        nowDate=datetime.today().strftime('%Y-%m-%d')
+        lastDate = datetime.today()+timedelta(days=-1)
+        shift = timedelta(max(1, (lastDate.weekday() + 6) % 7))
+        lastDate = lastDate.strftime('%Y-%m-%d')
+        querySql="SELECT TERMINAL,COUNT(*) AS CANTIDAD FROM REM_TRANSACCIONES WHERE IDCENTRAL = -1 GROUP BY TERMINAL;"
+        connection = pyodbc.connect(conexion)
+        cursor = connection.cursor()
+        cursor.execute("SELECT @@version;")
+        row = cursor.fetchone()
+        cursor.execute(querySql)
+        rows = cursor.fetchall()
+        for row in rows:
+            obj = collections.OrderedDict()
+            obj['NOM_TERMINAL'] = row[0]
+            obj['CANTIDAD'] = row[0]
+            myobj.append(obj)
+        j = json.dumps(myobj)
+        sio.emit('dateTerminalesFront',j)
     
     def consultingTransaction():
         myobj = []

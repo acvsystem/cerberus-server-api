@@ -171,6 +171,19 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("consultingTerminalesFront", 'ready');
   });
 
+
+  socket.on('emitDataTerminalesFront', (data) => {
+    console.log('emitDataTerminalesFront');
+    socket.broadcast.emit("dataTerminalesFront", 'ready');
+  });
+
+  socket.on('dateTerminalesFront', async (data) => {
+    let response = JSON.parse(data);
+
+    socket.to(`${listClient.id}`).emit("toClientDataTerminales", response);
+  });
+
+
   socket.on('emitTransaction', (data) => {
     console.log('emitTransaction');
     socket.broadcast.emit("searchTransaction", 'ready');
