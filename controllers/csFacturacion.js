@@ -74,7 +74,7 @@ class clsFacturacion {
                 .catch(error => res.send(error));
         }
 
-        if ((dataNoFound || []).length > 0) {
+        if ((dataNoFound || []).length >= 10) {
             const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
             const workBook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");

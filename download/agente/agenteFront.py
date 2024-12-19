@@ -227,9 +227,20 @@ if len(configuration) > 0:
         sio.emit('petitionFront',j)
 
     def transferenciaColaCaja(data):
-
-        print(data)
-
+        if data[0]['dataOne']['CODIGO'] == serieTienda and data[0]['dataTwo']['CODIGO'] == serieTienda:
+            server = instanciaBD
+            dataBase = nameBD
+            conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=ICGAdmin;PWD=masterkey'
+            print(conexion)
+            querySql="UPDATE REM_TRANSACCIONES SET TERMINAL = '"+data[0]['dataTwo']['NOM_TERMINAL']+"' WHERE IDCENTRAL = -1 AND TERMINAL = '"+data[0]['dataOne']['NOM_TERMINAL']+"';"
+            print("UPDATE REM_TRANSACCIONES SET TERMINAL = '"+data[0]['dataTwo']['NOM_TERMINAL']+"' WHERE IDCENTRAL = -1 AND TERMINAL = '"+data[0]['dataOne']['NOM_TERMINAL']+"';")
+            connection = pyodbc.connect(conexion)
+            cursor = connection.cursor()
+            cursor.execute("SELECT @@version;")
+            row = cursor.fetchone()
+            cursor.execute(querySql)
+            connection.commit()
+            
     def consultingTerminales():
         myobj = []
         j = {}
