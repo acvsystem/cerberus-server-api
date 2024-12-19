@@ -1248,7 +1248,6 @@ io.on('connection', async (socket) => {
 
   app.post('/facturas-pendiente', async (req, res) => {
     let request = ((req || []).body || [])
-    console.log((((req || []).body || [])));
 
 
     let bodyHTML = `<p>Verificar el servidor, se detecta que hay facturas con estado pendiente.</p>
