@@ -183,7 +183,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('emitTranferenciaCajas', (data) => {
-    console.log('emitTranferenciaCajas',data);
+    console.log('emitTranferenciaCajas', data);
     socket.broadcast.emit("exceTranferenciaCajas", data);
   });
 
@@ -775,6 +775,8 @@ io.on('connection', async (socket) => {
           fecha: dt.fecha,
           hrx_acumulado: dt.hrx_acumulado,
           extra: dt.extra,
+          hrx_tomada: (arHrExtra)[0]['HR_EXTRA_TOMADA'] || 0,
+          hrx_sobrante: (arHrExtra)[0]['HR_EXTRA_SOBRANTE'] || 0,
           estado: (arHrExtra)[0]['ESTADO'],
           aprobado: arHrExtra[0]['APROBADO'] == 1 ? true : false,
           seleccionado: arHrExtra[0]['SELECCIONADO'] == 1 ? true : false,
