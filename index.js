@@ -766,6 +766,29 @@ io.on('connection', async (socket) => {
   app.post("/papeleta/verificar/horas_extras", async (req, res) => {
     let data = req.body;
     let dataResponse = [];
+
+    await (data || []).filter((dt) => {
+      pool.query(`INSERT INTO TB_HORA_EXTRA_EMPLEADO(
+        CODIGO_PAPELETA,
+        NRO_DOCUMENTO_EMPLEADO,
+        HR_EXTRA_ACOMULADO,
+        HR_EXTRA_TOMADA,
+        HR_EXTRA_SOBRANTE,
+        ESTADO,
+        APROBADO,
+        SELECCIONADO,
+        FECHA)VALUES(
+        '${(dt || {}).codigo_papeleta}',
+        '${(dt || {}).documento}',
+        '${(dt || {}).hrx_acumulado || '00:00'}',
+        '${(dt || {}).hrx_tomada || '00:00'}',
+        '${(dt || {}).hrx_sobrante || '00:00'}',
+        '${(dt || {}).estado}',
+        ${(dt || {}).aprobado},
+        ${(dt || {}).seleccionado},
+        '${(dt || {}).fecha}')`);
+    });
+
     (data || []).filter(async (dt, i) => {
       let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${dt['documento']}' AND FECHA = '${dt['fecha']}';`);
 
@@ -789,28 +812,6 @@ io.on('connection', async (socket) => {
       }
 
       if (data.length == dataResponse.length) {
-        (dataResponse || []).filter((dt) => {
-          pool.query(`INSERT INTO TB_HORA_EXTRA_EMPLEADO(
-            CODIGO_PAPELETA,
-            NRO_DOCUMENTO_EMPLEADO,
-            HR_EXTRA_ACOMULADO,
-            HR_EXTRA_TOMADA,
-            HR_EXTRA_SOBRANTE,
-            ESTADO,
-            APROBADO,
-            SELECCIONADO,
-            FECHA)VALUES(
-            '${(dt || {}).codigo_papeleta}',
-            '${(dt || {}).documento}',
-            '${(dt || {}).hrx_acumulado}',
-            '${(dt || {}).hrx_tomada}',
-            '${(dt || {}).hrx_sobrante}',
-            '${(dt || {}).estado}',
-            ${(dt || {}).aprobado},
-            ${(dt || {}).seleccionado},
-            '${(dt || {}).fecha}')`);
-        });
-
         res.json(dataResponse);
       }
     });
