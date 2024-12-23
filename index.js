@@ -436,6 +436,7 @@ io.on('connection', async (socket) => {
     });
   });
 
+
   function fnHoraExtra(codigo_papeleta) {
     return new Promise(async (resolve, reject) => {
       let arHoraExtra = [];
@@ -788,6 +789,28 @@ io.on('connection', async (socket) => {
       }
 
       if (data.length == dataResponse.length) {
+        (dataResponse || []).filter((dt) => {
+          pool.query(`INSERT INTO TB_HORA_EXTRA_EMPLEADO(
+            CODIGO_PAPELETA,
+            NRO_DOCUMENTO_EMPLEADO,
+            HR_EXTRA_ACOMULADO,
+            HR_EXTRA_TOMADA,
+            HR_EXTRA_SOBRANTE,
+            ESTADO,
+            APROBADO,
+            SELECCIONADO,
+            FECHA)VALUES(
+            '${(dt || {}).codigo_papeleta}',
+            '${(dt || {}).documento}',
+            '${(dt || {}).hrx_acumulado}',
+            '${(dt || {}).hrx_tomada}',
+            '${(dt || {}).hrx_sobrante}',
+            '${(dt || {}).estado}',
+            ${(dt || {}).aprobado},
+            ${(dt || {}).seleccionado},
+            '${(dt || {}).fecha}')`);
+        });
+
         res.json(dataResponse);
       }
     });
