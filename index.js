@@ -767,8 +767,12 @@ io.on('connection', async (socket) => {
     let data = req.body;
     let dataResponse = [];
 
-    await (data || []).filter((dt) => {
-      pool.query(`INSERT INTO TB_HORA_EXTRA_EMPLEADO(
+    await (data || []).filter(async (dt) => {
+
+      let [existHrx] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${(dt || {}).documento}' AND FEHCA = '${(dt || {}).fecha}' AND  HR_EXTRA_ACOMULADO = '${(dt || {}).hrx_acumulado}'`);
+
+      if (!(existHrx || []).length && typeof existHrx == 'undefined') {
+        pool.query(`INSERT INTO TB_HORA_EXTRA_EMPLEADO(
         CODIGO_PAPELETA,
         NRO_DOCUMENTO_EMPLEADO,
         HR_EXTRA_ACOMULADO,
@@ -787,6 +791,7 @@ io.on('connection', async (socket) => {
         ${(dt || {}).aprobado},
         ${(dt || {}).seleccionado},
         '${(dt || {}).fecha}')`);
+      }
     });
 
     (data || []).filter(async (dt, i) => {
