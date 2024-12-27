@@ -45,10 +45,7 @@ export const regHorasExtras = async (req, res) => {
                     '${(hrx || {}).aprobado}',
                     '${(hrx || {}).seleccionado}',
                     '${(hrx || {}).fecha}',
-                    '${(hrx || {}).fecha}');`)
-                .catch(() => {
-                    res.json(defaultResponse.error.default);
-                });
+                    '${(hrx || {}).fecha}');`);
 
         }
     });
