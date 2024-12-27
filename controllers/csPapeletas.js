@@ -10,7 +10,7 @@ export const generarCodigo = async (req, res) => {
     let codigo_tienda = (data || {}).serie_tienda;
     let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_PAPELETA = '${data.serie_tienda}';`);
     let newCodigo = `${codigo_tienda}${(arPapeleta || []).length + 1}`;
-    res.json({ codigo: newCodigo })
+    res.json(data)
 }
 
 //SE INSERTA EN LA TABLA HORA EXTRA GENERAL COMO UNA TABLA PRODUCTOS
