@@ -123,6 +123,8 @@ export const regPapeleta = async (req, res) => {
             '${(data || [])[0].descripcion}');`)
         .then(async () => {
             let arHorasExtra = (data || [])[0].arHrExtra;
+            console.log(arHorasExtra);
+            /*
             (arHorasExtra || []).filter(async (hrx) => {
                 let [arHeadPap] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_TIENDA = '${(data || [])[0].codigo_tienda}' ORDER BY ID_HEAD_PAPELETA DESC LIMIT 1;`);
 
@@ -140,6 +142,7 @@ export const regPapeleta = async (req, res) => {
                         console.log(err);
                     });
             });
+            */
         })
         .catch(() => {
             res.json(defaultResponse.error.default);
