@@ -218,6 +218,9 @@ export const seachPapeleta = async (req, res) => {
                 parsePap[0]['horas_extras'].push({
                     codigoGenerado: (hrx || {}).CODIGO_PAPELETA,
                     documento: (hrx || {}).NRO_DOCUMENTO_EMPLEADO,
+                    hrx_acumulado: HR_EXTRA_ACUMULADO,
+                    hrx_solicitado: HR_EXTRA_SOLICITADO,
+                    hrx_sobrante: HR_EXTRA_SOBRANTE,
                     hrx_acumulado: (hrx || {}).HORA_ACUMULADA,
                     estado: (hrx || {}).ESTADO,
                     aprobado: (hrx || {}).APROBADO,
