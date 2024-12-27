@@ -8,7 +8,7 @@ import request from "request";
 export const generarCodigo = async (req, res) => {
     let data = ((req || {}).body || []);
     let codigo_tienda = (data || {}).serie_tienda;
-    let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_PAPELETA = '${codigo_tienda}';`);
+    let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE SERIE = '${codigo_tienda}';`);
     console.log((arPapeleta || []).length );
     let newCodigo = `P${codigo_tienda}${(arPapeleta || []).length + 1}`;
     res.json({ codigo: newCodigo })
@@ -105,7 +105,8 @@ export const regPapeleta = async (req, res) => {
             HORA_SOLICITADA,
             CODIGO_TIENDA,
             FECHA_CREACION,
-            DESCRIPCION
+            DESCRIPCION,
+            SERIE
             )VALUES(
             '${(data || [])[0].codigo_papeleta}',
             '${(data || [])[0].nombre_completo}',
@@ -120,7 +121,8 @@ export const regPapeleta = async (req, res) => {
             '${(data || [])[0].hora_solicitada}',
             '${(data || [])[0].codigo_tienda}',
             '${(data || [])[0].fecha_creacion}',
-            '${(data || [])[0].descripcion}');`)
+            '${(data || [])[0].descripcion}',
+            '${(data || [])[0].codigo_tienda}');`)
         .then(async () => {
             let arHorasExtra = (data || [])[0].arHrExtra;
             (arHorasExtra || []).filter(async (hrx) => {
