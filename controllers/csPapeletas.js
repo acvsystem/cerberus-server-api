@@ -17,13 +17,15 @@ export const generarCodigo = async (req, res) => {
 export const regHorasExtras = async (req, res) => {
     let data = ((req || {}).body || []);
     let dataResponse = [];
-    console.log(data);
-/*
+ 
+
     await (data || []).filter(async (hrx) => {
 
         let [existHrx] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${(hrx || {}).documento}' AND FECHA = '${(hrx || {}).fecha}' AND  HR_EXTRA_ACUMULADO = '${(hrx || {}).hrx_acumulado}'`);
         
         if (!(existHrx || []).length || typeof existHrx == 'undefined') {
+            console.log(hrx);
+            /*
             await pool.query(`INSERT INTO TB_HORA_EXTRA_EMPLEADO(
                     NRO_DOCUMENTO_EMPLEADO,
                     HR_EXTRA_ACUMULADO,
@@ -47,9 +49,10 @@ export const regHorasExtras = async (req, res) => {
                 .catch(() => {
                     res.json(defaultResponse.error.default);
                 });
+                */
         }
     });
-*/
+
     await (data || []).filter(async (hrx, i) => {
         let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${hrx['documento']}' AND FECHA = '${hrx['fecha']}';`);
 
