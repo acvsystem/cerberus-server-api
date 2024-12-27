@@ -182,6 +182,10 @@ export const listPapeleta = async (req, res) => {
 
 export const seachPapeleta = async (req, res) => {
     let data = req.body;
+    console.log(`SELECT * FROM TB_DETALLE_PAPELETA 
+                                        INNER JOIN TB_HEAD_PAPELETA ON TB_DETALLE_PAPELETA.DET_ID_HEAD_PAPELETA = TB_HEAD_PAPELETA.ID_HEAD_PAPELETA
+                                        INNER JOIN TB_HORA_EXTRA_EMPLEADO ON TB_DETALLE_PAPELETA.DET_ID_HR_EXTRA = TB_HORA_EXTRA_EMPLEADO.ID_HR_EXTRA 
+                                        WHERE TB_HEAD_PAPELETA.CODIGO_PAPELETA = '${data[0].codigo_papeleta}';`);
     let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_PAPELETA = '${data[0].codigo_papeleta}';`);
     let parsePap = [];
     let [arHrExtra] = await pool.query(`SELECT * FROM TB_DETALLE_PAPELETA 
