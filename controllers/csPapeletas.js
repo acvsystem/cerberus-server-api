@@ -126,7 +126,7 @@ export const regPapeleta = async (req, res) => {
         .then(async () => {
             let arHorasExtra = (data || [])[0].arHrExtra;
             (arHorasExtra || []).filter(async (hrx) => {
-                let [arHeadPap] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_PAPELETA = '${(data || [])[0].codigo_tienda}' ORDER BY ID_HEAD_PAPELETA DESC LIMIT 1;`);
+                let [arHeadPap] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE SERIE = '${(data || [])[0].codigo_tienda}' ORDER BY ID_HEAD_PAPELETA DESC LIMIT 1;`);
 
                 await pool.query(`INSERT INTO TB_DETALLE_PAPELETA(
                     DET_ID_HEAD_PAPELETA,
