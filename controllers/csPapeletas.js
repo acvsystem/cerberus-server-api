@@ -76,7 +76,7 @@ export const regHorasExtras = async (req, res) => {
         }
 
         if ((data || []).length == (dataResponse || []).length) {
-            res.json(dataResponse);
+            res.json({});
         }
     });
 }
