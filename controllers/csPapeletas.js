@@ -55,9 +55,10 @@ export const regHorasExtras = async (req, res) => {
         if ((data || []).length - 1 == i) {
             await (data || []).filter(async (hrx, i) => {
                 let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${hrx['documento']}' AND FECHA = '${hrx['fecha']}';`);
-                console.log(arHrExtra);
+                
                 if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
                     (dataResponse || []).push({
+                        id: ((arHrExtra || [])[0] || {})['ID_HR_EXTRA'],
                         documento: (hrx || {}).documento,
                         codigo_papeleta: (hrx || {}).codigo_papeleta,
                         fecha: (hrx || {}).fecha,
@@ -113,7 +114,7 @@ export const regPapeleta = async (req, res) => {
             '${(data || {}).fecha_desde}',
             '${(data || {}).fecha_hasta}',
             '${(data || {}).hora_salida}',
-            '${(data || {}).hora.llegada}',
+            '${(data || {}).hora_llegada}',
             '${(data || {}).hora_acumulado}',
             '${(data || {}).hora_solicitada}',
             '${(data || {}).codigo_tienda}',
