@@ -89,36 +89,7 @@ export const regHorasExtras = async (req, res) => {
 //REGISTRO DE PAPELETA TANTO EL HEAD COMO EL DETALLE DONDE SE REGISTRAN O SE ENLAZAN CON LAS HORAS EXTRAS REGISTRADAS
 export const regPapeleta = async (req, res) => {
     let data = ((req || {}).body || []);
-    console.log(`INSERT INTO TB_HEAD_PAPELETA(
-            CODIGO_PAPELETA,
-            NOMBRE_COMPLETO,
-            NRO_DOCUMENTO_EMPLEADO,
-            ID_PAP_TIPO_PAPELETA,
-            CARGO_EMPLEADO,
-            FECHA_DESDE,
-            FECHA_HASTA,
-            HORA_SALIDA,
-            HORA_LLEGADA,
-            HORA_ACUMULADA,
-            HORA_SOLICITADA,
-            CODIGO_TIENDA,
-            FECHA_CREACION,
-            DESCRIPCION
-            )VALUES(
-            '${(data || [])[0].codigo_papeleta}',
-            '${(data || [])[0].nombre_completo}',
-            '${(data || [])[0].documento}',
-            '${(data || [])[0].id_tipo_pap}',
-            '${(data || [])[0].cargo_empleado}',
-            '${(data || [])[0].fecha_desde}',
-            '${(data || [])[0].fecha_hasta}',
-            '${(data || [])[0].hora_salida}',
-            '${(data || [])[0].hora_llegada}',
-            '${(data || [])[0].hora_acumulado}',
-            '${(data || [])[0].hora_solicitada}',
-            '${(data || [])[0].codigo_tienda}',
-            '${(data || [])[0].fecha_creacion}',
-            '${(data || [])[0].descripcion}');`);
+
     await pool.query(`INSERT INTO TB_HEAD_PAPELETA(
             CODIGO_PAPELETA,
             NOMBRE_COMPLETO,
@@ -152,7 +123,7 @@ export const regPapeleta = async (req, res) => {
         .then(async () => {
             let arHorasExtra = (data || []).arHrExtra;
             (arHorasExtra || []).filter(async (hrx) => {
-                let [arHeadPap] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_PAPELETA = '${(data || [])[0].serie_tienda}' ORDER BY ID_HEAD_PAPELETA DESC LIMIT 1;`);
+                let [arHeadPap] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_PAPELETA = '${(data || [])[0].codigo_tienda}' ORDER BY ID_HEAD_PAPELETA DESC LIMIT 1;`);
 
                 await pool.query(`INSERT INTO TB_DETALLE_PAPELETA(
                     DET_ID_HEAD_PAPELETA,
