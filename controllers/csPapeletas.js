@@ -58,7 +58,7 @@ export const regHorasExtras = async (req, res) => {
                 
                 if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
                     (dataResponse || []).push({
-                        id: ((arHrExtra || [])[0] || {})['ID_HR_EXTRA'],
+                        id_hora_extra: ((arHrExtra || [])[0] || {})['ID_HR_EXTRA'],
                         documento: (hrx || {}).documento,
                         codigo_papeleta: (hrx || {}).codigo_papeleta,
                         fecha: (hrx || {}).fecha,
