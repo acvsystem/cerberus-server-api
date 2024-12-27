@@ -19,10 +19,10 @@ export const regHorasExtras = async (req, res) => {
     let dataResponse = [];
 
 
-    await (data || []).filter(async (hrx) => {
+    await (data || []).filter(async (hrx, i) => {
 
         let [existHrx] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${(hrx || {}).documento}' AND FECHA = '${(hrx || {}).fecha}' AND  HR_EXTRA_ACUMULADO = '${(hrx || {}).hrx_acumulado}'`);
-      
+
         if (!(existHrx || []).length || typeof existHrx == 'undefined') {
 
 
@@ -51,34 +51,38 @@ export const regHorasExtras = async (req, res) => {
                 });
 
         }
-    });
 
-    await (data || []).filter(async (hrx, i) => {
-        let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${hrx['documento']}' AND FECHA = '${hrx['fecha']}';`);
-        console.log(arHrExtra);
-        if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
-            (dataResponse || []).push({
-                documento: (hrx || {}).documento,
-                codigo_papeleta: (hrx || {}).codigo_papeleta,
-                fecha: (hrx || {}).fecha,
-                hrx_acumulado: (hrx || {}).hrx_acumulado,
-                extra: (hrx || {}).extra,
-                hrx_solicitado: ((arHrExtra || [])[0] || {})['HR_EXTRA_SOLICITADO'] || 0,
-                hrx_sobrante: ((arHrExtra || [])[0] || {})['HR_EXTRA_SOBRANTE'] || 0,
-                estado: ((arHrExtra || [])[0] || {})['ESTADO'],
-                aprobado: ((arHrExtra || [])[0] || {})['APROBADO'] == 1 ? true : false,
-                seleccionado: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false,
-                verify: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false
+        if ((data || []).length - 1 == i) {
+            await (data || []).filter(async (hrx, i) => {
+                let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${hrx['documento']}' AND FECHA = '${hrx['fecha']}';`);
+                console.log(arHrExtra);
+                if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
+                    (dataResponse || []).push({
+                        documento: (hrx || {}).documento,
+                        codigo_papeleta: (hrx || {}).codigo_papeleta,
+                        fecha: (hrx || {}).fecha,
+                        hrx_acumulado: (hrx || {}).hrx_acumulado,
+                        extra: (hrx || {}).extra,
+                        hrx_solicitado: ((arHrExtra || [])[0] || {})['HR_EXTRA_SOLICITADO'] || 0,
+                        hrx_sobrante: ((arHrExtra || [])[0] || {})['HR_EXTRA_SOBRANTE'] || 0,
+                        estado: ((arHrExtra || [])[0] || {})['ESTADO'],
+                        aprobado: ((arHrExtra || [])[0] || {})['APROBADO'] == 1 ? true : false,
+                        seleccionado: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false,
+                        verify: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false
+                    });
+                } else {
+                    data[i]['verify'] = false;
+                    //(dataResponse || []).push(hrx);
+                }
+
+                if ((data || []).length == (dataResponse || []).length) {
+                    res.json(dataResponse);
+                }
             });
-        } else {
-            data[i]['verify'] = false;
-            (dataResponse || []).push(hrx);
-        }
-
-        if ((data || []).length == (dataResponse || []).length) {
-            res.json(dataResponse);
         }
     });
+
+
 }
 
 //REGISTRO DE PAPELETA TANTO EL HEAD COMO EL DETALLE DONDE SE REGISTRAN O SE ENLAZAN CON LAS HORAS EXTRAS REGISTRADAS
