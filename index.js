@@ -713,38 +713,6 @@ io.on('connection', async (socket) => {
     });
   });
 
-  app.post("/papeleta/lista", async (req, res) => {
-    let data = req.body;
-    let [arPapeleta] = await pool.query(`SELECT * FROM TB_PAPELETA WHERE CODIGO_TIENDA = '${data[0].codigo_tienda}';`);
-    let parsePap = [];
-    if ((arPapeleta || []).length) {
-      await (arPapeleta || []).filter(async (pap) => {
-
-        (parsePap || []).push({
-          codigo_papeleta: (pap || {}).CODIGO_PAPELETA,
-          nombre_completo: (pap || {}).NOMBRE_COMPLETO,
-          documento: (pap || {}).DOCUMENTO,
-          id_tipo_papeleta: (pap || {}).ID_PAP_TIPO_PAPELETA,
-          cargo_empleado: (pap || {}).CARGO_EMPLEADO,
-          fecha_desde: (pap || {}).FECHA_DESDE,
-          fecha_hasta: (pap || {}).FECHA_HASTA,
-          salida_hora: (pap || {}).SALIDA_HORA,
-          llegada_hora: (pap || {}).LLEGADA_HORA,
-          horas_acumuladas: (pap || {}).HORAS_ACUMULADAS,
-          horas_tomadas: (pap || {}).HORAS_TOMADAS,
-          horas_sobrantes: (pap || {}).HORAS_SOBRANTES,
-          codigo_tienda: (pap || {}).CODIGO_TIENDA,
-          fecha_creacion: (pap || {}).FECHA_CREACION,
-          horas_extras: []
-        });
-      });
-
-      res.json(parsePap);
-    } else {
-      res.json(parsePap);
-    }
-  });
-
   app.post("/papeleta/search", async (req, res) => {
     let data = req.body;
     let [arPapeleta] = await pool.query(`SELECT * FROM TB_PAPELETA WHERE CODIGO_PAPELETA = '${data[0].codigo_papeleta}';`);
