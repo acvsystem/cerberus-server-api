@@ -89,7 +89,7 @@ export const regHorasExtras = async (req, res) => {
 //REGISTRO DE PAPELETA TANTO EL HEAD COMO EL DETALLE DONDE SE REGISTRAN O SE ENLAZAN CON LAS HORAS EXTRAS REGISTRADAS
 export const regPapeleta = async (req, res) => {
     let data = ((req || {}).body || []);
-
+    console.log((data || [])[0]);
     await pool.query(`INSERT INTO TB_HEAD_PAPELETA(
             CODIGO_PAPELETA,
             NOMBRE_COMPLETO,
