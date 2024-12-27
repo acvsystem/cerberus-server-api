@@ -134,8 +134,8 @@ export const regPapeleta = async (req, res) => {
                     .then(() => {
                         res.json(defaultResponse.success.default);
                     })
-                    .catch(() => {
-                        res.json(defaultResponse.error.default);
+                    .catch((err) => {
+                        console.log(err);
                     });
             });
         })
