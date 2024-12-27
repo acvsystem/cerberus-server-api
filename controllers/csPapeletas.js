@@ -22,9 +22,9 @@ export const regHorasExtras = async (req, res) => {
     await (data || []).filter(async (hrx) => {
 
         let [existHrx] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${(hrx || {}).documento}' AND FECHA = '${(hrx || {}).fecha}' AND  HR_EXTRA_ACUMULADO = '${(hrx || {}).hrx_acumulado}'`);
-
+        console.log(existHrx);
         if (!(existHrx || []).length || typeof existHrx == 'undefined') {
-            console.log(hrx);
+            
 
             await pool.query(`INSERT INTO TB_HORA_EXTRA_EMPLEADO(
                     NRO_DOCUMENTO_EMPLEADO,
@@ -76,7 +76,7 @@ export const regHorasExtras = async (req, res) => {
         }
 
         if ((data || []).length == (dataResponse || []).length) {
-            res.json({});
+            res.json(dataResponse);
         }
     });
 }
