@@ -105,8 +105,7 @@ export const regPapeleta = async (req, res) => {
             HORA_SOLICITADA,
             CODIGO_TIENDA,
             FECHA_CREACION,
-            DESCRIPCION,
-            SERIE
+            DESCRIPCION
             )VALUES(
             '${(data || [])[0].codigo_papeleta}',
             '${(data || [])[0].nombre_completo}',
