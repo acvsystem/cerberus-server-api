@@ -8,7 +8,8 @@ import request from "request";
 export const generarCodigo = async (req, res) => {
     let data = ((req || {}).body || []);
     let codigo_tienda = (data || {}).serie_tienda;
-    let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_PAPELETA = '${data.serie_tienda}';`);
+    let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_PAPELETA = '${codigo_tienda}';`);
+    console.log((arPapeleta || []).length );
     let newCodigo = `P${codigo_tienda}${(arPapeleta || []).length + 1}`;
     res.json({ codigo: newCodigo })
 }
