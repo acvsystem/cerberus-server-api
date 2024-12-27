@@ -106,24 +106,24 @@ export const regPapeleta = async (req, res) => {
             FECHA_CREACION,
             DESCRIPCION
             )VALUES(
-            '${(data || {}).codigo_papeleta}',
-            '${(data || {}).nombre_completo}',
-            '${(data || {}).documento}',
-            '${(data || {}).id_tipo_pap}',
-            '${(data || {}).cargo_empleado}',
-            '${(data || {}).fecha_desde}',
-            '${(data || {}).fecha_hasta}',
-            '${(data || {}).hora_salida}',
-            '${(data || {}).hora_llegada}',
-            '${(data || {}).hora_acumulado}',
-            '${(data || {}).hora_solicitada}',
-            '${(data || {}).codigo_tienda}',
-            '${(data || {}).fecha_creacion}',
-            '${(data || {}).descripcion}');`)
+            '${(data || [])[0].codigo_papeleta}',
+            '${(data || [])[0].nombre_completo}',
+            '${(data || [])[0].documento}',
+            '${(data || [])[0].id_tipo_pap}',
+            '${(data || [])[0].cargo_empleado}',
+            '${(data || [])[0].fecha_desde}',
+            '${(data || [])[0].fecha_hasta}',
+            '${(data || [])[0].hora_salida}',
+            '${(data || [])[0].hora_llegada}',
+            '${(data || [])[0].hora_acumulado}',
+            '${(data || [])[0].hora_solicitada}',
+            '${(data || [])[0].codigo_tienda}',
+            '${(data || [])[0].fecha_creacion}',
+            '${(data || [])[0].descripcion}');`)
         .then(async () => {
             let arHorasExtra = (data || []).arHrExtra;
             (arHorasExtra || []).filter(async (hrx) => {
-                let [arHeadPap] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_PAPELETA = '${data.serie_tienda}' ORDER BY ID_HEAD_PAPELETA DESC LIMIT 1;`);
+                let [arHeadPap] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_PAPELETA = '${(data || [])[0].serie_tienda}' ORDER BY ID_HEAD_PAPELETA DESC LIMIT 1;`);
 
                 await pool.query(`INSERT INTO TB_DETALLE_PAPELETA(
                     DET_ID_HEAD_PAPELETA,
