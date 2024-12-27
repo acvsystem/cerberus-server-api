@@ -9,7 +9,7 @@ export const generarCodigo = async (req, res) => {
     let data = ((req || {}).body || []);
     let codigo_tienda = (data || {}).serie_tienda;
     let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_TIENDA = '${codigo_tienda}';`);
-    console.log((arPapeleta || []).length );
+    console.log((arPapeleta || []).length);
     let newCodigo = `P${codigo_tienda}${(arPapeleta || []).length + 1}`;
     res.json({ codigo: newCodigo })
 }
@@ -56,7 +56,7 @@ export const regHorasExtras = async (req, res) => {
         if ((data || []).length - 1 == i) {
             await (data || []).filter(async (hrx, i) => {
                 let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${hrx['documento']}' AND FECHA = '${hrx['fecha']}';`);
-                
+
                 if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
                     (dataResponse || []).push({
                         id_hora_extra: ((arHrExtra || [])[0] || {})['ID_HR_EXTRA'],
@@ -123,7 +123,7 @@ export const regPapeleta = async (req, res) => {
             '${(data || [])[0].descripcion}');`)
         .then(async () => {
             let arHorasExtra = (data || [])[0].horas_extras;
-            
+
             (arHorasExtra || []).filter(async (hrx) => {
                 let [arHeadPap] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_TIENDA = '${(data || [])[0].codigo_tienda}' ORDER BY ID_HEAD_PAPELETA DESC LIMIT 1;`);
 
@@ -141,7 +141,7 @@ export const regPapeleta = async (req, res) => {
                         console.log(err);
                     });
             });
-            
+
         })
         .catch(() => {
             res.json(defaultResponse.error.default);
@@ -153,31 +153,82 @@ export const listPapeleta = async (req, res) => {
     let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_TIENDA = '${data[0].codigo_tienda}';`);
     let parsePap = [];
     if ((arPapeleta || []).length) {
-      await (arPapeleta || []).filter(async (pap) => {
+        await (arPapeleta || []).filter(async (pap) => {
 
-        (parsePap || []).push({
-          codigo_papeleta: (pap || {}).CODIGO_PAPELETA,
-          nombre_completo: (pap || {}).NOMBRE_COMPLETO,
-          documento: (pap || {}).NRO_DOCUMENTO_EMPLEADO,
-          id_tipo_papeleta: (pap || {}).ID_PAP_TIPO_PAPELETA,
-          cargo_empleado: (pap || {}).CARGO_EMPLEADO,
-          fecha_desde: (pap || {}).FECHA_DESDE,
-          fecha_hasta: (pap || {}).FECHA_HASTA,
-          hora_salida: (pap || {}).HORA_SALIDA,
-          hora_llegada: (pap || {}).HORA_LLEGADA,
-          hora_acumulado: (pap || {}).HORA_ACUMULADA,
-          hora_solicitada: (pap || {}).HORA_SOLICITADA,
-          codigo_tienda: (pap || {}).CODIGO_TIENDA,
-          fecha_creacion: (pap || {}).FECHA_CREACION,
-          horas_extras: []
+            (parsePap || []).push({
+                codigo_papeleta: (pap || {}).CODIGO_PAPELETA,
+                nombre_completo: (pap || {}).NOMBRE_COMPLETO,
+                documento: (pap || {}).NRO_DOCUMENTO_EMPLEADO,
+                id_tipo_papeleta: (pap || {}).ID_PAP_TIPO_PAPELETA,
+                cargo_empleado: (pap || {}).CARGO_EMPLEADO,
+                fecha_desde: (pap || {}).FECHA_DESDE,
+                fecha_hasta: (pap || {}).FECHA_HASTA,
+                hora_salida: (pap || {}).HORA_SALIDA,
+                hora_llegada: (pap || {}).HORA_LLEGADA,
+                hora_acumulado: (pap || {}).HORA_ACUMULADA,
+                hora_solicitada: (pap || {}).HORA_SOLICITADA,
+                codigo_tienda: (pap || {}).CODIGO_TIENDA,
+                fecha_creacion: (pap || {}).FECHA_CREACION,
+                horas_extras: []
+            });
         });
-      });
 
-      res.json(parsePap);
+        res.json(parsePap);
     } else {
-      res.json(parsePap);
+        res.json(parsePap);
     }
 }
+
+
+export const seachPapeleta = async (req, res) => {
+    let data = req.body;
+    let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_PAPELETA = '${data[0].codigo_papeleta}';`);
+    let parsePap = [];
+    let [arHrExtra] = await pool.query(`SELECT * FROM TB_DETALLE_PAPELETA 
+                                        INNER JOIN TB_HEAD_PAPELETA ON TB_DETALLE_PAPELETA.DET_ID_HEAD_PAPELETA = TB_HEAD_PAPELETA.ID_HEAD_PAPELETA
+                                        INNER JOIN TB_HORA_EXTRA_EMPLEADO ON TB_DETALLE_PAPELETA.DET_ID_HR_EXTRA = TB_HORA_EXTRA_EMPLEADO.ID_HR_EXTRA 
+                                        WHERE TB_HEAD_PAPELETA.CODIGO_PAPELETA = '${data[0].codigo_papeleta}';`);
+
+    if ((arPapeleta || []).length) {
+        await (arPapeleta || []).filter((pap) => {
+            parsePap.push({
+                codigo_papeleta: (pap || {}).CODIGO_PAPELETA,
+                nombre_completo: (pap || {}).NOMBRE_COMPLETO,
+                documento: (pap || {}).NRO_DOCUMENTO_EMPLEADO,
+                id_tipo_papeleta: (pap || {}).ID_PAP_TIPO_PAPELETA,
+                cargo_empleado: (pap || {}).CARGO_EMPLEADO,
+                fecha_desde: (pap || {}).FECHA_DESDE,
+                fecha_hasta: (pap || {}).FECHA_HASTA,
+                hora_salida: (pap || {}).HORA_SALIDA,
+                hora_llegada: (pap || {}).HORA_LLEGADA,
+                hora_acumulado: (pap || {}).HORA_ACUMULADA,
+                hora_solicitada: (pap || {}).HORA_SOLICITADA,
+                codigo_tienda: (pap || {}).CODIGO_TIENDA,
+                fecha_creacion: (pap || {}).FECHA_CREACION,
+                horas_extras: []
+            });
+        });
+
+        if ((arHrExtra || []).length) {
+            await (arHrExtra || []).filter((hrx) => {
+                parsePap[0]['horas_extras'].push({
+                    codigoGenerado: (hrx || {}).CODIGO_PAPELETA,
+                    documento: (hrx || {}).NRO_DOCUMENTO_EMPLEADO,
+                    hrx_acumulado: (hrx || {}).HORA_ACUMULADA,
+                    estado: (hrx || {}).ESTADO,
+                    aprobado: (hrx || {}).APROBADO,
+                    seleccionado: (hrx || {}).SELECCIONADO,
+                    fecha: (hrx || {}).FECHA
+                });
+            });
+        }
+
+        res.json(parsePap);
+    } else {
+        res.json({ msj: "No existe una papeleta con ese codigo." });
+    }
+}
+
 
 
 
