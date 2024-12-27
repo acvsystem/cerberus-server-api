@@ -10,7 +10,7 @@ import { pool } from './conections/conexMysql.js';
 import * as cron from 'node-cron';
 import { EventEmitter } from "events";
 import securityRoutes from "./routes/security.routes.js";
-import frontRetailRoutes from "./routes/frontRetail.routes.js";
+import recursosHumanosRoutes from "./routes/recursosHumanos.routes.js";
 import { prop as defaultResponse } from "./const/defaultResponse.js";
 import tokenController from './controllers/csToken.js';
 const app = express();
@@ -27,7 +27,7 @@ app.use(bodyParser.json({ limit: "1000000mb" }));
 app.use(bodyParser.urlencoded({ limit: "1000000mb", extended: true }));
 
 app.use("/security", securityRoutes);
-
+app.use("/recursos_humanos", recursosHumanosRoutes);
 
 const emiter = new EventEmitter();
 
@@ -294,22 +294,6 @@ io.on('connection', async (socket) => {
     socket.to(`${socketID}`).emit("reporteQuincena", { id: response.id, data: dataEJB });
   });
 
-  function fnGenerarCodigoPap(callback) {
-    return new Promise(async (resolve, reject) => {
-      let min = 1000;
-      let max = 99000;
-
-      let codigoGenerado = Math.floor(Math.random() * (max - min + 1) + min);
-      let [arPapeleta] = await pool.query(`SELECT * FROM TB_PAPELETA WHERE CODIGO_PAPELETA = ${codigoGenerado};`);
-
-      if (!(arPapeleta || []).length && typeof arPapeleta != 'undefined') {
-        resolve(codigoGenerado);
-      } else {
-        callback();
-      }
-    });
-  }
-
   app.get("/papeleta/generar/codigo", async (req, res) => {
     fnGenerarCodigoPap(fnGenerarCodigoPap()).then((codigo) => {
       res.json({ codigo: codigo });
@@ -437,30 +421,6 @@ io.on('connection', async (socket) => {
   });
 
 
-  function fnHoraExtra(codigo_papeleta) {
-    return new Promise(async (resolve, reject) => {
-      let arHoraExtra = [];
-      let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE CODIGO_PAPELETA = '${codigo_papeleta}';`);
-
-      if ((arHrExtra || []).length) {
-        await (arHrExtra || []).filter((hrx) => {
-          (arHoraExtra || []).push({
-            codigoGenerado: (hrx || {}).CODIGO_PAPELETA,
-            documento: (hrx || {}).NRO_DOCUMENTO_EMPLEADO,
-            hrx_acumulado: (hrx || {}).HR_EXTRA_ACOMULADO,
-            estado: (hrx || {}).ESTADO,
-            aprobado: (hrx || {}).APROBADO,
-            seleccionado: (hrx || {}).SELECCIONADO,
-            verify: true
-          });
-        });
-        resolve(arHoraExtra);
-      } else {
-        resolve([]);
-      }
-
-    });
-  }
 
   app.get("/papeleta/lista/tipo_papeleta", async (req, res) => {
     let [arTipoPapeleta] = await pool.query(`SELECT * FROM TB_TIPO_PAPELETA;`);
