@@ -39,7 +39,7 @@ export const regHorasExtras = async (req, res) => {
                     )VALUES(
                     '${(hrx || {}).documento}',
                     '00:00',
-                    '00:00'',
+                    '00:00',
                     '00:00',
                     '${(hrx || {}).estado}',
                     '${(hrx || {}).aprobado}',
@@ -48,7 +48,6 @@ export const regHorasExtras = async (req, res) => {
                     '${(hrx || {}).fecha}');`)
                 .catch((err) => {
                     console.log(err)
-                    res.json(defaultResponse.error.default);
                 });
 
         }
