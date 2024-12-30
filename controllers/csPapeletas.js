@@ -129,10 +129,26 @@ export const regPapeleta = async (req, res) => {
 
                 await pool.query(`INSERT INTO TB_DETALLE_PAPELETA(
                     DET_ID_HEAD_PAPELETA,
-                    DET_ID_HR_EXTRA
+                    DET_ID_HR_EXTRA,
+                    HR_EXTRA_ACUMULADO,
+                    HR_EXTRA_SOLICITADO,
+                    HR_EXTRA_SOBRANTE,
+                    ESTADO,
+                    APROBADO,
+                    SELECCIONADO,
+                    FECHA,
+                    FECHA_MODIFICACION
                     )VALUES(
                     ${arHeadPap[0]['ID_HEAD_PAPELETA']},
-                    ${hrx.id_hora_extra}
+                    ${hrx.id_hora_extra},
+                    ${hrx.hrx_acumulado},
+                    ${hrx.hrx_solicitado},
+                    ${hrx.hrx_sobrante},
+                    ${hrx.estado},
+                    ${hrx.aprobado},
+                    ${hrx.seleccionado},
+                    ${hrx.fecha},
+                    ''
                     );`)
                     .then(() => {
                         res.json(defaultResponse.success.default);
