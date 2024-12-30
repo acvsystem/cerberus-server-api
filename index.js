@@ -458,12 +458,12 @@ io.on('connection', async (socket) => {
 
   socket.on("autorizar_hrx", async (data) => {
 
-    let [arHrExtra] = await pool.query(`SELECT * FROM TB_AROBADO_HR_EXTRA WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
+    let [arHrExtra] = await pool.query(`SELECT * FROM TB_AROBADO_HR_EXTRA WHERE HR_EXTRA_ACUMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
     let aprobado = data.aprobado ? 'aprobado' : 'rechazado';
 
     if (!(arHrExtra || []).length) {
       await pool.query(`INSERT INTO TB_AROBADO_HR_EXTRA(
-        HR_EXTRA_ACOMULADO,
+        HR_EXTRA_ACUMULADO,
         NRO_DOCUMENTO_EMPLEADO,
         NOMBRE_COMPLETO,
         APROBADO,
@@ -472,18 +472,18 @@ io.on('connection', async (socket) => {
         CODIGO_TIENDA)VALUES('${data.hora_extra}','${data.nro_documento}','${data.nombre_completo}',${data.aprobado},${data.rechazado},'${data.fecha}','${data.codigo_tienda}')`);
 
 
-      await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET APROBADO = ${data.aprobado},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
-      await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET ESTADO = '${aprobado}',APROBADO = ${data.aprobado} WHERE FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}' AND HR_EXTRA_ACOMULADO = '${data.hora_extra}';`);
+      await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET APROBADO = ${data.aprobado},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACUMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
+      await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET ESTADO = '${aprobado}',APROBADO = ${data.aprobado} WHERE FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}' AND HR_EXTRA_ACUMULADO = '${data.hora_extra}';`);
 
     } else {
       console.log(data);
-      await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET APROBADO = ${data.aprobado},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
-      await pool.query(`UPDATE TB_AROBADO_HR_EXTRA SET APROBADO = ${data.aprobado},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
-      await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET ESTADO = '${aprobado}',APROBADO = ${data.aprobado} WHERE FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}' AND HR_EXTRA_ACOMULADO = '${data.hora_extra}';`);
+      await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET APROBADO = ${data.aprobado},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACUMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
+      await pool.query(`UPDATE TB_AROBADO_HR_EXTRA SET APROBADO = ${data.aprobado},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACUMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
+      await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET ESTADO = '${aprobado}',APROBADO = ${data.aprobado} WHERE FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}' AND HR_EXTRA_ACUMULADO = '${data.hora_extra}';`);
     }
 
     let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
-    let [arAutorizacionResponse] = await pool.query(`SELECT * FROM TB_AROBADO_HR_EXTRA WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
+    let [arAutorizacionResponse] = await pool.query(`SELECT * FROM TB_AROBADO_HR_EXTRA WHERE HR_EXTRA_ACUMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
 
     socket.broadcast.emit("lista_solicitudes", arAutorizacion);
     socket.broadcast.emit("respuesta_autorizacion", arAutorizacionResponse);
@@ -652,65 +652,6 @@ io.on('connection', async (socket) => {
     }
 
     socket.broadcast.emit("refreshSessionView", "");
-  });
-
-  app.post("/papeleta/verificar/horas_extras", async (req, res) => {
-    let data = req.body;
-    let dataResponse = [];
-
-    await (data || []).filter(async (dt) => {
-
-      let [existHrx] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${(dt || {}).documento}' AND FEHCA = '${(dt || {}).fecha}' AND  HR_EXTRA_ACOMULADO = '${(dt || {}).hrx_acumulado}'`);
-
-      if (!(existHrx || []).length && typeof existHrx == 'undefined') {
-        pool.query(`INSERT INTO TB_HORA_EXTRA_EMPLEADO(
-        CODIGO_PAPELETA,
-        NRO_DOCUMENTO_EMPLEADO,
-        HR_EXTRA_ACOMULADO,
-        HR_EXTRA_TOMADA,
-        HR_EXTRA_SOBRANTE,
-        ESTADO,
-        APROBADO,
-        SELECCIONADO,
-        FECHA)VALUES(
-        '${(dt || {}).codigo_papeleta}',
-        '${(dt || {}).documento}',
-        '${(dt || {}).hrx_acumulado || '00:00'}',
-        '${(dt || {}).hrx_tomada || '00:00'}',
-        '${(dt || {}).hrx_sobrante || '00:00'}',
-        '${(dt || {}).estado}',
-        ${(dt || {}).aprobado},
-        ${(dt || {}).seleccionado},
-        '${(dt || {}).fecha}')`);
-      }
-    });
-
-    (data || []).filter(async (dt, i) => {
-      let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${dt['documento']}' AND FECHA = '${dt['fecha']}';`);
-
-      if ((arHrExtra || []).length && typeof arHrExtra != 'undefined') {
-        (dataResponse || []).push({
-          documento: dt.documento,
-          codigo_papeleta: dt.codigo_papeleta,
-          fecha: dt.fecha,
-          hrx_acumulado: dt.hrx_acumulado,
-          extra: dt.extra,
-          hrx_tomada: ((arHrExtra || [])[0] || {})['HR_EXTRA_TOMADA'] || 0,
-          hrx_sobrante: ((arHrExtra || [])[0] || {})['HR_EXTRA_SOBRANTE'] || 0,
-          estado: ((arHrExtra || [])[0] || {})['ESTADO'],
-          aprobado: ((arHrExtra || [])[0] || {})['APROBADO'] == 1 ? true : false,
-          seleccionado: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false,
-          verify: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false
-        });
-      } else {
-        data[i]['verify'] = false;
-        (dataResponse || []).push(dt);
-      }
-
-      if (data.length == dataResponse.length) {
-        res.json(dataResponse);
-      }
-    });
   });
 
   app.post("/calendario/generar", async (req, res) => {
