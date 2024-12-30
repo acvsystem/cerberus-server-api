@@ -153,9 +153,6 @@ export const regPapeleta = async (req, res) => {
                     .then(() => {
                         res.json(defaultResponse.success.default);
                     })
-                    .catch((err) => {
-                        console.log(err);
-                    });
             });
 
         })
@@ -238,7 +235,7 @@ export const seachPapeleta = async (req, res) => {
 
         if ((arHrExtra || []).length) {
             await (arHrExtra || []).filter((hrx) => {
-                if ((hrx || {}).APROBADO == 1) {
+                if ((hrx || {}).SELECCIONADO == 1) {
                     parsePap[0]['horas_extras'].push({
                         codigoGenerado: (hrx || {}).CODIGO_PAPELETA,
                         documento: (hrx || {}).NRO_DOCUMENTO_EMPLEADO,
