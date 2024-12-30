@@ -145,8 +145,8 @@ export const regPapeleta = async (req, res) => {
                     '${hrx.hrx_solicitado}',
                     '${hrx.hrx_sobrante}',
                     '${hrx.estado}',
-                    '${hrx.aprobado == 1 ? true : false}',
-                    '${hrx.seleccionado == 1 ? true : false}',
+                    '${hrx.aprobado == true ? 1 : 0}',
+                    '${hrx.seleccionado == true ? 1 : 0}',
                     '${hrx.fecha}',
                     ''
                     );`)
