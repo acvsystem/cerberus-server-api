@@ -244,7 +244,6 @@ export const seachPapeleta = async (req, res) => {
                         hrx_acumulado: (hrx || {}).HR_EXTRA_ACUMULADO,
                         hrx_solicitado: (hrx || {}).HR_EXTRA_SOLICITADO,
                         hrx_sobrante: (hrx || {}).HR_EXTRA_SOBRANTE,
-                        hrx_acumulado: (hrx || {}).HORA_ACUMULADA,
                         estado: (hrx || {}).ESTADO,
                         aprobado: (hrx || {}).APROBADO == 1 ? true : false,
                         seleccionado: (hrx || {}).SELECCIONADO == 1 ? true : false,
