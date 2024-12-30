@@ -204,10 +204,17 @@ export const seachPapeleta = async (req, res) => {
                                         WHERE TB_HEAD_PAPELETA.CODIGO_PAPELETA = '${data[0].codigo_papeleta}';`);
     let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_PAPELETA = '${data[0].codigo_papeleta}';`);
     let parsePap = [];
-    let [arHrExtra] = await pool.query(`SELECT * FROM TB_DETALLE_PAPELETA 
-                                        INNER JOIN TB_HEAD_PAPELETA ON TB_DETALLE_PAPELETA.DET_ID_HEAD_PAPELETA = TB_HEAD_PAPELETA.ID_HEAD_PAPELETA
-                                        INNER JOIN TB_HORA_EXTRA_EMPLEADO ON TB_DETALLE_PAPELETA.DET_ID_HR_EXTRA = TB_HORA_EXTRA_EMPLEADO.ID_HR_EXTRA 
-                                        WHERE TB_HEAD_PAPELETA.CODIGO_PAPELETA = '${data[0].codigo_papeleta}';`);
+    let [arHrExtra] = await pool.query(`SELECT    CODIGO_PAPELETA,
+                    TB_HEAD_PAPELETA.NRO_DOCUMENTO_EMPLEADO,
+                    TB_DETALLE_PAPELETA.HR_EXTRA_ACUMULADO,
+                    TB_DETALLE_PAPELETA.HR_EXTRA_SOLICITADO,
+                    TB_DETALLE_PAPELETA.HR_EXTRA_SOBRANTE,
+                    TB_DETALLE_PAPELETA.ESTADO,
+                    TB_DETALLE_PAPELETA.APROBADO,
+                    TB_DETALLE_PAPELETA.SELECCIONADO,
+                    TB_DETALLE_PAPELETA.FECHA FROM  TB_HEAD_PAPELETA 
+                    INNER JOIN TB_DETALLE_PAPELETA ON TB_HEAD_PAPELETA.ID_HEAD_PAPELETA  = TB_DETALLE_PAPELETA.DET_ID_HEAD_PAPELETA
+                    WHERE TB_HEAD_PAPELETA.CODIGO_PAPELETA = '${data[0].codigo_papeleta}';`);
 
     if ((arPapeleta || []).length) {
         await (arPapeleta || []).filter((pap) => {
@@ -239,8 +246,8 @@ export const seachPapeleta = async (req, res) => {
                     hrx_sobrante: (hrx || {}).HR_EXTRA_SOBRANTE,
                     hrx_acumulado: (hrx || {}).HORA_ACUMULADA,
                     estado: (hrx || {}).ESTADO,
-                    aprobado: (hrx || {}).APROBADO,
-                    seleccionado: (hrx || {}).SELECCIONADO,
+                    aprobado: (hrx || {}).APROBADO == 1 ? true : false,
+                    seleccionado: (hrx || {}).SELECCIONADO == 1 ? true : false,
                     fecha: (hrx || {}).FECHA
                 });
             });
