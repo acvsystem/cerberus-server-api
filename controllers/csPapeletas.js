@@ -39,7 +39,7 @@ export const regHorasExtras = async (req, res) => {
                     FECHA_MODIFICACION
                     )VALUES(
                     '${(hrx || {}).documento}',
-                    '00:00',
+                    '${(hrx || {}).hrx_acumulado || '00:00'}',
                     '00:00',
                     '00:00',
                     '${(hrx || {}).estado}',
@@ -153,7 +153,14 @@ export const regPapeleta = async (req, res) => {
                         );`)
                         .then(() => {
                             res.json(defaultResponse.success.default);
-                        })
+                        });
+
+
+                    let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${hrx['documento']}' AND FECHA = '${hrx['fecha']}';`);
+
+                    if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
+                        await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET HR_EXTRA_SOBRANTE = '${hrx.hrx_sobrante}' WHERE ID_HR_EXTRA = ${((arHrExtra || [])[0] || {})['ID_HR_EXTRA']};`);
+                    }
                 }
             });
 
