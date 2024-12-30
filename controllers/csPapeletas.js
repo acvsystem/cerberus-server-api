@@ -141,13 +141,13 @@ export const regPapeleta = async (req, res) => {
                     )VALUES(
                     ${arHeadPap[0]['ID_HEAD_PAPELETA']},
                     ${hrx.id_hora_extra},
-                    ${hrx.hrx_acumulado},
-                    ${hrx.hrx_solicitado},
-                    ${hrx.hrx_sobrante},
-                    ${hrx.estado},
-                    ${hrx.aprobado},
-                    ${hrx.seleccionado},
-                    ${hrx.fecha},
+                    '${hrx.hrx_acumulado}',
+                    '${hrx.hrx_solicitado}',
+                    '${hrx.hrx_sobrante}',
+                    '${hrx.estado}',
+                    '${hrx.aprobado}',
+                    '${hrx.seleccionado}',
+                    '${hrx.fecha}',
                     ''
                     );`)
                     .then(() => {
