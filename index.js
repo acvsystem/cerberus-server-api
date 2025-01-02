@@ -253,7 +253,7 @@ io.on('connection', async (socket) => {
   socket.on("update:file:FrontAgent", (body) => {
     let configurationList = {
       socket: (socket || {}).id,
-      update: "python",
+      update: (body || {}).typeUpdate || 'python',
     };
 
     socket.broadcast.emit("update_file_Agente", configurationList);
