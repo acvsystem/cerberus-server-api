@@ -1114,6 +1114,16 @@ io.on('connection', async (socket) => {
     res.json(arDirectory);
   });
 
+  app.post('/oneListDirectory', async (req, res) => {
+    let arDirectory = [];
+    let request = ((req || []).body || [])
+    fs.readdirSync('EmbarquesCloud/'+request.path).forEach(file => {
+      arDirectory.push(file);
+    });
+
+    res.json(arDirectory);
+  });
+
   app.post('/sunat-notification', async (req, res) => {
 
     let arrDocumento = (((req || []).body || [])[0] || {});
