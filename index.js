@@ -1081,7 +1081,7 @@ io.on('connection', async (socket) => {
 
   });
 
-  app.post('/mkd', async (req, res) => {
+  app.post('/createDirectory', async (req, res) => {
     let request = ((req || []).body || [])
     console.log(request);
     fs.mkdir("EmbarquesCloud/" + (request || {}).route, (error) => {
@@ -1089,6 +1089,18 @@ io.on('connection', async (socket) => {
         res.json({ msj: error.message })
       } else {
         res.json({ msj: "Directorio creado" });
+      }
+    });
+  });
+
+  app.post('/deleteDirectory', async (req, res) => {
+    let request = ((req || []).body || [])
+    console.log(request);
+    fs.rmdir("EmbarquesCloud/" + (request || {}).route, (error) => {
+      if (error) {
+        res.json({ msj: error.message })
+      } else {
+        res.json({ msj: "Directorio borrado" });
       }
     });
   });
