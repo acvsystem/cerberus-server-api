@@ -1107,7 +1107,7 @@ io.on('connection', async (socket) => {
 
   app.get('/listDirectory', async (req, res) => {
     let arDirectory = [];
-    fs.readdirSync(testFolder).forEach(file => {
+    fs.readdirSync('EmbarquesCloud').forEach(file => {
       arDirectory.push(file);
     });
 
