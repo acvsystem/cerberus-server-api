@@ -16,7 +16,7 @@ import tokenController from './controllers/csToken.js';
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: "*", methods: ["GET", "POST"], transports: ['websocket', 'polling'] } });
-//const fs = require('fs');
+const fs = require('fs');
 
 app.use(
   cors({
