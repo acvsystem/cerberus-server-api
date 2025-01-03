@@ -1106,9 +1106,12 @@ io.on('connection', async (socket) => {
   });
 
   app.get('/listDirectory', async (req, res) => {
-    fs.dir((rs) => {
-      console.log(rs);
+    let arDirectory = [];
+    fs.readdirSync(testFolder).forEach(file => {
+      arDirectory.push(file);
     });
+
+    res.json(arDirectory);
   });
 
   app.post('/sunat-notification', async (req, res) => {
