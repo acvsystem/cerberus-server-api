@@ -16,6 +16,7 @@ import tokenController from './controllers/csToken.js';
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: "*", methods: ["GET", "POST"], transports: ['websocket', 'polling'] } });
+const fs = require('fs');
 
 app.use(
   cors({
@@ -245,7 +246,6 @@ io.on('connection', async (socket) => {
     if (isIcg == 'true') {
       socket.broadcast.emit("conexion:serverICG:send", [{ 'code': codeTerminal, 'isConect': '0' }]);
     }
-
 
     console.log('user disconnected');
   });
@@ -1073,6 +1073,22 @@ io.on('connection', async (socket) => {
       .catch(error => res.send(error));
 
     res.send('RECEPCION EXITOSA..!!');
+  });
+
+  app.post('/uploadCloud', async (req, res) => {
+
+  });
+
+  app.post('/mkd', async (req, res) => {
+    let request = ((req || []).body || [])
+    console.log(request);
+    fs.mkdir("EmbarquesCloud/" + (request || {}).route, (error) => {
+      if (error) {
+        res.json({ msj: error.message })
+      } else {
+        res.json({ msj: "Directorio creado" });
+      }
+    });
   });
 
   app.post('/sunat-notification', async (req, res) => {
