@@ -1119,7 +1119,7 @@ io.on('connection', async (socket) => {
     let request = ((req || []).body || []);
     const file = path.resolve('driveCloud/EMBARQUES/', (request || {}).route);
     res.download(file);
-  })
+  });
 
   app.post('/oneListDirectory', async (req, res) => {
     let arDirectory = [];
