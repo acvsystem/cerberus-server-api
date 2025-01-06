@@ -1084,7 +1084,7 @@ io.on('connection', async (socket) => {
   app.post('/createDirectory', async (req, res) => {
     let request = ((req || []).body || [])
     console.log(request);
-    fs.mkdir("driveCloud/" + (request || {}).route, (error) => {
+    fs.mkdir("driveCloud/EMBARQUES/" + (request || {}).route, (error) => {
       if (error) {
         res.json({ msj: error.message })
       } else {
@@ -1096,7 +1096,7 @@ io.on('connection', async (socket) => {
   app.post('/deleteDirectory', async (req, res) => {
     let request = ((req || []).body || [])
     console.log(request);
-    fs.rmdir("driveCloud/" + (request || {}).route, (error) => {
+    fs.rmdir("driveCloud/EMBARQUES/" + (request || {}).route, (error) => {
       if (error) {
         res.json({ msj: error.message })
       } else {
@@ -1107,7 +1107,7 @@ io.on('connection', async (socket) => {
 
   app.get('/listDirectory', async (req, res) => {
     let arDirectory = [];
-    fs.readdirSync('driveCloud').forEach(file => {
+    fs.readdirSync('driveCloud/EMBARQUES').forEach(file => {
       arDirectory.push(file);
     });
 
@@ -1117,7 +1117,7 @@ io.on('connection', async (socket) => {
   app.post('/oneListDirectory', async (req, res) => {
     let arDirectory = [];
     let request = ((req || []).body || [])
-    fs.readdirSync('driveCloud/'+request.path).forEach(file => {
+    fs.readdirSync('driveCloud/EMBARQUES/'+request.path).forEach(file => {
       arDirectory.push(file);
     });
 
