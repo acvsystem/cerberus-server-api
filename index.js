@@ -1115,8 +1115,8 @@ io.on('connection', async (socket) => {
     res.json(arDirectory);
   });
 
-  app.post("/download/driveCloud", (req, res) => {
-
+  app.get("/download/driveCloud", (req, res) => {
+    console.log(req);
     let request = ((req || []).body || []);
     const file = "./driveCloud/EMBARQUES/" + (request || {}).route;
     var fileLocation = path.join('./', file);
