@@ -1119,7 +1119,7 @@ io.on('connection', async (socket) => {
     
     let request = ((req || []).query || []);
     console.log(request);
-    const file = "./driveCloud/EMBARQUES/" + (request || [])[0].value;
+    const file = "./driveCloud/EMBARQUES/" + (request || {}).route;
     var fileLocation = path.join('./', file);
     res.download(fileLocation, file);
   });
