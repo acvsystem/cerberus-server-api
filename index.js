@@ -14,6 +14,7 @@ import recursosHumanosRoutes from "./routes/recursosHumanos.routes.js";
 import { prop as defaultResponse } from "./const/defaultResponse.js";
 import tokenController from './controllers/csToken.js';
 import fs from 'fs';
+import path from 'path';
 
 const app = express();
 const httpServer = createServer(app);
