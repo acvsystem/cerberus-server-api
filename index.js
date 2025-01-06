@@ -1114,10 +1114,17 @@ io.on('connection', async (socket) => {
     res.json(arDirectory);
   });
 
+  app.post("/download/driveCloud", authenticate, (req, res) => {
+
+    let request = ((req || []).body || []);
+    const file = path.resolve('driveCloud/EMBARQUES/', (request || {}).route);
+    res.download(file);
+  })
+
   app.post('/oneListDirectory', async (req, res) => {
     let arDirectory = [];
     let request = ((req || []).body || [])
-    fs.readdirSync('driveCloud/EMBARQUES/'+request.path).forEach(file => {
+    fs.readdirSync('driveCloud/EMBARQUES/' + request.path).forEach(file => {
       arDirectory.push(file);
     });
 
