@@ -1118,8 +1118,9 @@ io.on('connection', async (socket) => {
   app.post("/download/driveCloud", (req, res) => {
 
     let request = ((req || []).body || []);
-    const file = path.resolve('driveCloud/EMBARQUES/', (request || {}).route);
-    res.download(file);
+    const file = "driveCloud/EMBARQUES/" + (request || {}).route;
+    var fileLocation = path.join('./', file);
+    res.download(fileLocation, file);
   });
 
   app.post('/oneListDirectory', async (req, res) => {
