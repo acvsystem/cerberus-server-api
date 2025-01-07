@@ -1114,7 +1114,7 @@ io.on('connection', async (socket) => {
           console.error(err);
           return;
         }
-        console.log(stats.size);
+        console.log(stats);
       });
 
       arDirectory.push(file);
