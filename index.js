@@ -1108,7 +1108,6 @@ io.on('connection', async (socket) => {
 
   app.get('/listDirectory', async (req, res) => {
     let arDirectory = [];
-    console.log(fs.readdirSync('driveCloud/EMBARQUES'));
     fs.readdirSync('driveCloud/EMBARQUES').forEach(async (file, i) => {
       await fs.stat('driveCloud/EMBARQUES/' + file, (err, stats) => {
         arDirectory.push({
@@ -1136,11 +1135,19 @@ io.on('connection', async (socket) => {
   app.post('/oneListDirectory', async (req, res) => {
     let arDirectory = [];
     let request = ((req || []).body || [])
-    fs.readdirSync('driveCloud/EMBARQUES/' + request.path).forEach(file => {
-      arDirectory.push(file);
-    });
+    fs.readdirSync('driveCloud/EMBARQUES/' + request.path).forEach(async file => {
+      await fs.stat('driveCloud/EMBARQUES/' + request.path + "/" + file, (err, stats) => {
+        arDirectory.push({
+          name: file,
+          size: stats.size,
+          mtime: stats.atime
+        });
+        if (fs.readdirSync('driveCloud/EMBARQUES/' + request.path).length - 1 == i) {
+          res.json(arDirectory);
+        }
 
-    res.json(arDirectory);
+      });
+    });
   });
 
   app.post('/sunat-notification', async (req, res) => {
