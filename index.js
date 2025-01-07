@@ -1137,6 +1137,7 @@ io.on('connection', async (socket) => {
     let arDirectory = [];
     let request = ((req || []).body || [])
     fs.readdirSync('driveCloud/EMBARQUES/' + request.path).forEach(file => {
+      console.log('driveCloud/EMBARQUES/' + request.path + "/" + file);
       arDirectory.push(file);
     });
 
