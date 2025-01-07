@@ -1110,19 +1110,15 @@ io.on('connection', async (socket) => {
     let arDirectory = [];
     fs.readdirSync('driveCloud/EMBARQUES').forEach(file => {
       fs.statSync('driveCloud/EMBARQUES/' + file, (err, stats) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
         arDirectory.push({
           name: file,
           size: stats.size,
           mtime: stats.atime
         });
-        console.log(arDirectory);
+        console.log(stats);
       });
     });
-    
+
     res.json(arDirectory);
   });
 
