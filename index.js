@@ -1135,7 +1135,7 @@ io.on('connection', async (socket) => {
   app.post('/oneListDirectory', async (req, res) => {
     let arDirectory = [];
     let request = ((req || []).body || [])
-    fs.readdirSync('driveCloud/EMBARQUES/' + request.path).forEach(async (file,i) => {
+    fs.readdirSync('driveCloud/EMBARQUES/' + request.path).forEach( (file,i) => {
       console.log('driveCloud/EMBARQUES/' + request.path + "/" + file);
     /*  await fs.stat('driveCloud/EMBARQUES/' + request.path + "/" + file, (err, stats) => {
         arDirectory.push({
