@@ -1115,7 +1115,7 @@ io.on('connection', async (socket) => {
           size: stats.size,
           mtime: stats.atime
         });
-        console.log(stats);
+        console.log(arDirectory);
       });
     });
 
