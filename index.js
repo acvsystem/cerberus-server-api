@@ -1108,8 +1108,8 @@ io.on('connection', async (socket) => {
 
   app.get('/listDirectory', async (req, res) => {
     let arDirectory = [];
-    fs.readdirSync('driveCloud/EMBARQUES').forEach(file => {
-      fs.stat('driveCloud/EMBARQUES/' + file, (err, stats) => {
+    fs.readdirSync('driveCloud/EMBARQUES').forEach(async file => {
+     await fs.stat('driveCloud/EMBARQUES/' + file, (err, stats) => {
         arDirectory.push({
           name: file,
           size: stats.size,
