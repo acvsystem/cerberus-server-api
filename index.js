@@ -1109,18 +1109,19 @@ io.on('connection', async (socket) => {
   app.get('/listDirectory', async (req, res) => {
     let arDirectory = [];
     console.log(fs.readdirSync('driveCloud/EMBARQUES'));
-    fs.readdirSync('driveCloud/EMBARQUES').forEach(async file => {
-     await fs.stat('driveCloud/EMBARQUES/' + file, (err, stats) => {
+    fs.readdirSync('driveCloud/EMBARQUES').forEach(async (file, i) => {
+      await fs.stat('driveCloud/EMBARQUES/' + file, (err, stats) => {
         arDirectory.push({
           name: file,
           size: stats.size,
           mtime: stats.atime
         });
-      });
-      
-    });
+        if (fs.readdirSync('driveCloud/EMBARQUES').length - 1 == i) {
+          res.json(arDirectory);
+        }
 
-    res.json(arDirectory);
+      });
+    });
   });
 
   app.get("/download/driveCloud", (req, res) => {
