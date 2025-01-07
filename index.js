@@ -1114,10 +1114,13 @@ io.on('connection', async (socket) => {
           console.error(err);
           return;
         }
-        console.log(stats);
+        arDirectory.push({
+          name: file,
+          size: stats.size,
+          mtime: stats.atime
+        });
+        console.log(arDirectory);
       });
-
-      arDirectory.push(file);
     });
 
     res.json(arDirectory);
