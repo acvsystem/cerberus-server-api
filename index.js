@@ -796,12 +796,32 @@ io.on('connection', async (socket) => {
   });
 
   app.get("/papeleta/listarPapeleta", async (req, res) => {
-    let [arPapeletas] = await pool.query(`SELECT * FROM TB_PAPELETA;`);
-    console.log(arPapeletas);
-    if ((arPapeletas || []).length) {
-      res.json(arPapeletas);
+    let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA;`);
+    let parsePap = [];
+    if ((arPapeleta || []).length) {
+        await (arPapeleta || []).filter(async (pap) => {
+
+            (parsePap || []).push({
+                codigo_papeleta: (pap || {}).CODIGO_PAPELETA,
+                nombre_completo: (pap || {}).NOMBRE_COMPLETO,
+                documento: (pap || {}).NRO_DOCUMENTO_EMPLEADO,
+                id_tipo_papeleta: (pap || {}).ID_PAP_TIPO_PAPELETA,
+                cargo_empleado: (pap || {}).CARGO_EMPLEADO,
+                fecha_desde: (pap || {}).FECHA_DESDE,
+                fecha_hasta: (pap || {}).FECHA_HASTA,
+                hora_salida: (pap || {}).HORA_SALIDA,
+                hora_llegada: (pap || {}).HORA_LLEGADA,
+                hora_acumulado: (pap || {}).HORA_ACUMULADA,
+                hora_solicitada: (pap || {}).HORA_SOLICITADA,
+                codigo_tienda: (pap || {}).CODIGO_TIENDA,
+                fecha_creacion: (pap || {}).FECHA_CREACION,
+                horas_extras: []
+            });
+        });
+
+        res.json(parsePap);
     } else {
-      res.json({ success: false });
+        res.json(parsePap);
     }
   });
 
@@ -872,7 +892,7 @@ io.on('connection', async (socket) => {
 
 
   socket.on("consultaHorasTrab", (configuracion) => {
-    console.log(configuracion);
+    console.log("consultaHorasTrab", configuracion);
     let configurationList = {
       socket: (socket || {}).id,
       fechain: configuracion[0].fechain,
@@ -1031,6 +1051,7 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/frontRetail/search/horario", async (req, res) => {
+    console.log(req.body);
     socket.to(`${listClient.id}`).emit("reporteHorario", { id: "servGeneral", data: req.body });
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
