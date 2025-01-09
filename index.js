@@ -772,7 +772,7 @@ io.on('connection', async (socket) => {
         });
 
         await pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${dth.id};`).then(async (requestObs) => {
-
+          console.log([requestObs]);
           await ([requestObs] || []).filter(async (obs) => {
             response[index]['observacion'].push({ id: obs.ID_OBSERVACION, id_dia: obs.ID_OBS_DIAS, nombre_completo: obs.NOMBRE_COMPLETO, observacion: obs.OBSERVACION });
           });
