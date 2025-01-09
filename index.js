@@ -774,10 +774,14 @@ io.on('connection', async (socket) => {
         await (requestObs || []).filter(async (obs) => {
           response[index]['observacion'].push({ id: obs.ID_OBSERVACION, id_dia: obs.ID_OBS_DIAS, nombre_completo: obs.NOMBRE_COMPLETO, observacion: obs.OBSERVACION });
         });
+
+        Promise.all([requestRg, requestDh, requestTb, requestTd, requestObs]).then((values) => {
+          console.log("response");
+          res.json(response);
+        });
       });
 
-      console.log("response");
-      res.json(response);
+
     } else {
       res.json({ msj: "No hay ningun calendario en este rago de fecha." });
     }
