@@ -159,7 +159,7 @@ export const regPapeleta = async (req, res) => {
                     let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${hrx['documento']}' AND FECHA = '${hrx['fecha']}';`);
 
                     if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
-                        await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET HR_EXTRA_SOLICITADO = '${hrx.hrx_solicitado}', ESTADO = "'${hrx.estado}'", HR_EXTRA_SOBRANTE = '${hrx.hrx_sobrante}' WHERE ID_HR_EXTRA = ${((arHrExtra || [])[0] || {})['ID_HR_EXTRA']};`);
+                        await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET HR_EXTRA_SOLICITADO = '${hrx.hrx_solicitado}', ESTADO = '${hrx.estado}', HR_EXTRA_SOBRANTE = '${hrx.hrx_sobrante}' WHERE ID_HR_EXTRA = ${((arHrExtra || [])[0] || {})['ID_HR_EXTRA']};`);
                     }
                 }
             });

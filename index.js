@@ -799,29 +799,29 @@ io.on('connection', async (socket) => {
     let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA;`);
     let parsePap = [];
     if ((arPapeleta || []).length) {
-        await (arPapeleta || []).filter(async (pap) => {
+      await (arPapeleta || []).filter(async (pap) => {
 
-            (parsePap || []).push({
-                codigo_papeleta: (pap || {}).CODIGO_PAPELETA,
-                nombre_completo: (pap || {}).NOMBRE_COMPLETO,
-                documento: (pap || {}).NRO_DOCUMENTO_EMPLEADO,
-                id_tipo_papeleta: (pap || {}).ID_PAP_TIPO_PAPELETA,
-                cargo_empleado: (pap || {}).CARGO_EMPLEADO,
-                fecha_desde: (pap || {}).FECHA_DESDE,
-                fecha_hasta: (pap || {}).FECHA_HASTA,
-                hora_salida: (pap || {}).HORA_SALIDA,
-                hora_llegada: (pap || {}).HORA_LLEGADA,
-                hora_acumulado: (pap || {}).HORA_ACUMULADA,
-                hora_solicitada: (pap || {}).HORA_SOLICITADA,
-                codigo_tienda: (pap || {}).CODIGO_TIENDA,
-                fecha_creacion: (pap || {}).FECHA_CREACION,
-                horas_extras: []
-            });
+        (parsePap || []).push({
+          codigo_papeleta: (pap || {}).CODIGO_PAPELETA,
+          nombre_completo: (pap || {}).NOMBRE_COMPLETO,
+          documento: (pap || {}).NRO_DOCUMENTO_EMPLEADO,
+          id_tipo_papeleta: (pap || {}).ID_PAP_TIPO_PAPELETA,
+          cargo_empleado: (pap || {}).CARGO_EMPLEADO,
+          fecha_desde: (pap || {}).FECHA_DESDE,
+          fecha_hasta: (pap || {}).FECHA_HASTA,
+          hora_salida: (pap || {}).HORA_SALIDA,
+          hora_llegada: (pap || {}).HORA_LLEGADA,
+          hora_acumulado: (pap || {}).HORA_ACUMULADA,
+          hora_solicitada: (pap || {}).HORA_SOLICITADA,
+          codigo_tienda: (pap || {}).CODIGO_TIENDA,
+          fecha_creacion: (pap || {}).FECHA_CREACION,
+          horas_extras: []
         });
+      });
 
-        res.json(parsePap);
+      res.json(parsePap);
     } else {
-        res.json(parsePap);
+      res.json(parsePap);
     }
   });
 
@@ -837,13 +837,14 @@ io.on('connection', async (socket) => {
 
 
       dth['rg_hora'].filter(async (rg, i) => {
+
         let data = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rg || {}).codigo_tienda}' AND ID_RG_HORARIO = ${(dth || {}).id} AND ID_RANGO_HORA = ${(rg || {}).id};`);
-        console.log(data[0]);
+        console.log(rg);
+        console.log(data[0], Object.values(data[0]).length);
         if (Object.values(data[0]).length) {
 
           await pool.query(`UPDATE TB_RANGO_HORA SET RANGO_HORA = '${rg.rg}' WHERE ID_RANGO_HORA = ${(rg || {}).id};`);
         } else {
-          console.log(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)VALUES('${dth.codigo_tienda}','${rg.rg}',${(dth || {}).id})`);
           await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)VALUES('${dth.codigo_tienda}','${rg.rg}',${(dth || {}).id})`);
         }
 
