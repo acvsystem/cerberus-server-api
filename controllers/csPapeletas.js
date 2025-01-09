@@ -156,8 +156,13 @@ export const regPapeleta = async (req, res) => {
                                 res.json(defaultResponse.success.default);
                             });
 
-
-                        await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET HR_EXTRA_SOLICITADO = '${hrx.hrx_solicitado}', ESTADO = '${hrx.estado}', HR_EXTRA_SOBRANTE = '${hrx.hrx_sobrante}' WHERE ID_HR_EXTRA = ${hrx.id_hora_extra};`);
+                            console.log(`UPDATE TB_HORA_EXTRA_EMPLEADO SET HR_EXTRA_SOLICITADO = '${hrx.hrx_solicitado}',
+                             ESTADO = '${hrx.estado}', HR_EXTRA_SOBRANTE = '${hrx.hrx_sobrante}'
+                             WHERE ID_HR_EXTRA = ${hrx.id_hora_extra};`);
+                             
+                        await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET HR_EXTRA_SOLICITADO = '${hrx.hrx_solicitado}',
+                             ESTADO = '${hrx.estado}', HR_EXTRA_SOBRANTE = '${hrx.hrx_sobrante}'
+                             WHERE ID_HR_EXTRA = ${hrx.id_hora_extra};`);
 
                     }
                 });
