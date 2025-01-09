@@ -770,12 +770,13 @@ io.on('connection', async (socket) => {
         });
 
         let [requestObs] = await pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${dth.id};`);
-
+        console.lg("process", requestObs[0]);
         await (requestObs || []).filter(async (obs) => {
           response[index]['observacion'].push({ id: obs.ID_OBSERVACION, id_dia: obs.ID_OBS_DIAS, nombre_completo: obs.NOMBRE_COMPLETO, observacion: obs.OBSERVACION });
         });
 
         if (requestSql.length - 1 == index) {
+          console.lg("response", requestObs[0]);
           res.json(response);
         }
 
@@ -835,7 +836,7 @@ io.on('connection', async (socket) => {
       await pool.query(`DELETE FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${(dth || {}).id};`);
       await pool.query(`DELETE FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${(dth || {}).id};`);
 
-      
+
 
       dth['rg_hora'].filter(async (rg, i) => {
 
