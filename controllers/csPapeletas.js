@@ -90,37 +90,6 @@ export const regHorasExtras = async (req, res) => {
 //REGISTRO DE PAPELETA TANTO EL HEAD COMO EL DETALLE DONDE SE REGISTRAN O SE ENLAZAN CON LAS HORAS EXTRAS REGISTRADAS
 export const regPapeleta = async (req, res) => {
     let data = ((req || {}).body || []);
-    
-    console.log(`INSERT INTO TB_HEAD_PAPELETA(
-            CODIGO_PAPELETA,
-            NOMBRE_COMPLETO,
-            NRO_DOCUMENTO_EMPLEADO,
-            ID_PAP_TIPO_PAPELETA,
-            CARGO_EMPLEADO,
-            FECHA_DESDE,
-            FECHA_HASTA,
-            HORA_SALIDA,
-            HORA_LLEGADA,
-            HORA_ACUMULADA,
-            HORA_SOLICITADA,
-            CODIGO_TIENDA,
-            FECHA_CREACION,
-            DESCRIPCION
-            )VALUES(
-            '${(data || [])[0].codigo_papeleta}',
-            '${(data || [])[0].nombre_completo}',
-            '${(data || [])[0].documento}',
-            '${(data || [])[0].id_tipo_pap}',
-            '${(data || [])[0].cargo_empleado}',
-            '${(data || [])[0].fecha_desde}',
-            '${(data || [])[0].fecha_hasta}',
-            '${(data || [])[0].hora_salida}',
-            '${(data || [])[0].hora_llegada}',
-            '${(data || [])[0].hora_acumulado}',
-            '${(data || [])[0].hora_solicitada}',
-            '${(data || [])[0].codigo_tienda}',
-            '${(data || [])[0].fecha_creacion}',
-            '${(data || [])[0].descripcion}');`);
 
     await pool.query(`INSERT INTO TB_HEAD_PAPELETA(
             CODIGO_PAPELETA,
@@ -155,45 +124,50 @@ export const regPapeleta = async (req, res) => {
         .then(async () => {
             let arHorasExtra = (data || [])[0].horas_extras;
 
-            (arHorasExtra || []).filter(async (hrx) => {
-                if (hrx.checked) {
-                    let [arHeadPap] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_TIENDA = '${(data || [])[0].codigo_tienda}' ORDER BY ID_HEAD_PAPELETA DESC LIMIT 1;`);
+            if ((arHorasExtra || []).length) {
+                (arHorasExtra || []).filter(async (hrx) => {
+                    if (hrx.checked) {
+                        let [arHeadPap] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_TIENDA = '${(data || [])[0].codigo_tienda}' ORDER BY ID_HEAD_PAPELETA DESC LIMIT 1;`);
 
-                    await pool.query(`INSERT INTO TB_DETALLE_PAPELETA(
-                        DET_ID_HEAD_PAPELETA,
-                        DET_ID_HR_EXTRA,
-                        HR_EXTRA_ACUMULADO,
-                        HR_EXTRA_SOLICITADO,
-                        HR_EXTRA_SOBRANTE,
-                        ESTADO,
-                        APROBADO,
-                        SELECCIONADO,
-                        FECHA,
-                        FECHA_MODIFICACION
-                        )VALUES(
-                        ${arHeadPap[0]['ID_HEAD_PAPELETA']},
-                        ${hrx.id_hora_extra},
-                        '${hrx.hrx_acumulado}',
-                        '${hrx.hrx_solicitado}',
-                        '${hrx.hrx_sobrante}',
-                        '${hrx.estado}',
-                        '${hrx.aprobado == true ? 1 : 0}',
-                        '${hrx.checked == true ? 1 : 0}',
-                        '${hrx.fecha}',
-                        ''
-                        );`)
-                        .then(() => {
-                            res.json(defaultResponse.success.default);
-                        });
+                        await pool.query(`INSERT INTO TB_DETALLE_PAPELETA(
+                            DET_ID_HEAD_PAPELETA,
+                            DET_ID_HR_EXTRA,
+                            HR_EXTRA_ACUMULADO,
+                            HR_EXTRA_SOLICITADO,
+                            HR_EXTRA_SOBRANTE,
+                            ESTADO,
+                            APROBADO,
+                            SELECCIONADO,
+                            FECHA,
+                            FECHA_MODIFICACION
+                            )VALUES(
+                            ${arHeadPap[0]['ID_HEAD_PAPELETA']},
+                            ${hrx.id_hora_extra},
+                            '${hrx.hrx_acumulado}',
+                            '${hrx.hrx_solicitado}',
+                            '${hrx.hrx_sobrante}',
+                            '${hrx.estado}',
+                            '${hrx.aprobado == true ? 1 : 0}',
+                            '${hrx.checked == true ? 1 : 0}',
+                            '${hrx.fecha}',
+                            ''
+                            );`)
+                            .then(() => {
+                                res.json(defaultResponse.success.default);
+                            });
 
 
-                    let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${hrx['documento']}' AND FECHA = '${hrx['fecha']}';`);
+                        let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${hrx['documento']}' AND FECHA = '${hrx['fecha']}';`);
 
-                    if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
-                        await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET HR_EXTRA_SOLICITADO = '${hrx.hrx_solicitado}', ESTADO = '${hrx.estado}', HR_EXTRA_SOBRANTE = '${hrx.hrx_sobrante}' WHERE ID_HR_EXTRA = ${((arHrExtra || [])[0] || {})['ID_HR_EXTRA']};`);
+                        if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
+                            await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET HR_EXTRA_SOLICITADO = '${hrx.hrx_solicitado}', ESTADO = '${hrx.estado}', HR_EXTRA_SOBRANTE = '${hrx.hrx_sobrante}' WHERE ID_HR_EXTRA = ${((arHrExtra || [])[0] || {})['ID_HR_EXTRA']};`);
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                res.json(defaultResponse.success.default);
+            }
+
 
         })
         .catch((err) => {
