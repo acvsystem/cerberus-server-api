@@ -772,13 +772,13 @@ io.on('connection', async (socket) => {
         });
 
         await pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${dth.id};`).then((requestObs) => {
-          arObservation.push(true);
+          console.log("requestObs");
           ([requestObs] || []).filter(async (obs) => {
             response[index]['observacion'].push({ id: obs.ID_OBSERVACION, id_dia: obs.ID_OBS_DIAS, nombre_completo: obs.NOMBRE_COMPLETO, observacion: obs.OBSERVACION });
           });
         });
 
-        if (requestSql.length - 1 == index && arObservation.length == 4) {
+        if (requestSql.length - 1 == index) {
           res.json(response);
         }
 
