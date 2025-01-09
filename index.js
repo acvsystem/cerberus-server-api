@@ -838,9 +838,9 @@ io.on('connection', async (socket) => {
 
       dth['rg_hora'].filter(async (rg, i) => {
 
-        let data = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rg || {}).codigo_tienda}' AND ID_RG_HORARIO = ${(dth || {}).id_cargo} AND ID_RANGO_HORA = ${(rg || {}).id};`);
-        console.log(rg);
-        console.log(data[0], Object.values(data[0]).length);
+        let data = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rg || {}).codigo_tienda}' AND ID_RG_HORARIO = ${(rg || {}).id_cargo} AND ID_RANGO_HORA = ${(rg || {}).id};`);
+        console.log(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rg || {}).codigo_tienda}' AND ID_RG_HORARIO = ${(rg || {}).id_cargo} AND ID_RANGO_HORA = ${(rg || {}).id};`);
+        console.log(data[0]);
         if (Object.values(data[0]).length) {
 
           await pool.query(`UPDATE TB_RANGO_HORA SET RANGO_HORA = '${rg.rg}' WHERE ID_RANGO_HORA = ${(rg || {}).id};`);
