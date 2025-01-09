@@ -835,7 +835,7 @@ io.on('connection', async (socket) => {
       await pool.query(`DELETE FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${(dth || {}).id};`);
       await pool.query(`DELETE FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${(dth || {}).id};`);
 
-      console.log(dth.cargo,dth['rg_hora']);
+      console.log(dth.cargo, dth['rg_hora']);
 
       dth['rg_hora'].filter(async (rg, i) => {
 
@@ -845,7 +845,11 @@ io.on('connection', async (socket) => {
 
           await pool.query(`UPDATE TB_RANGO_HORA SET RANGO_HORA = '${rg.rg}' WHERE ID_RANGO_HORA = ${(rg || {}).id};`);
         } else {
-          await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)VALUES('${dth.codigo_tienda}','${rg.rg}',${(dth || {}).id})`);
+          let dataRg = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rg || {}).codigo_tienda}' AND ID_RG_HORARIO = ${(dth || {}).id} AND RANGO_HORA = '${rg.rg}';`);
+
+          if (!Object.values(dataRg[0]).length) {
+            await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)VALUES('${dth.codigo_tienda}','${rg.rg}',${(dth || {}).id})`);
+          }
         }
 
       });
