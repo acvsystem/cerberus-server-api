@@ -129,6 +129,30 @@ export const regPapeleta = async (req, res) => {
                     if (hrx.checked) {
                         let [arHeadPap] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_TIENDA = '${(data || [])[0].codigo_tienda}' ORDER BY ID_HEAD_PAPELETA DESC LIMIT 1;`);
 
+                        console.log(`INSERT INTO TB_DETALLE_PAPELETA(
+                            DET_ID_HEAD_PAPELETA,
+                            DET_ID_HR_EXTRA,
+                            HR_EXTRA_ACUMULADO,
+                            HR_EXTRA_SOLICITADO,
+                            HR_EXTRA_SOBRANTE,
+                            ESTADO,
+                            APROBADO,
+                            SELECCIONADO,
+                            FECHA,
+                            FECHA_MODIFICACION
+                            )VALUES(
+                            ${arHeadPap[0]['ID_HEAD_PAPELETA']},
+                            ${hrx.id_hora_extra},
+                            '${hrx.hrx_acumulado}',
+                            '${hrx.hrx_solicitado}',
+                            '${hrx.hrx_sobrante}',
+                            '${hrx.estado}',
+                            '${hrx.aprobado == true ? 1 : 0}',
+                            '${hrx.checked == true ? 1 : 0}',
+                            '${hrx.fecha}',
+                            ''
+                            );`);
+                            
                         await pool.query(`INSERT INTO TB_DETALLE_PAPELETA(
                             DET_ID_HEAD_PAPELETA,
                             DET_ID_HR_EXTRA,
@@ -159,7 +183,7 @@ export const regPapeleta = async (req, res) => {
                             console.log(`UPDATE TB_HORA_EXTRA_EMPLEADO SET HR_EXTRA_SOLICITADO = '${hrx.hrx_solicitado}',
                              ESTADO = '${hrx.estado}', HR_EXTRA_SOBRANTE = '${hrx.hrx_sobrante}'
                              WHERE ID_HR_EXTRA = ${hrx.id_hora_extra};`);
-                             
+
                         await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET HR_EXTRA_SOLICITADO = '${hrx.hrx_solicitado}',
                              ESTADO = '${hrx.estado}', HR_EXTRA_SOBRANTE = '${hrx.hrx_sobrante}'
                              WHERE ID_HR_EXTRA = ${hrx.id_hora_extra};`);
