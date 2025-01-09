@@ -244,6 +244,7 @@ export const seachPapeleta = async (req, res) => {
                 hora_solicitada: (pap || {}).HORA_SOLICITADA,
                 codigo_tienda: (pap || {}).CODIGO_TIENDA,
                 fecha_creacion: (pap || {}).FECHA_CREACION,
+                descripcion: (pap || {}).DESCRIPCION,
                 horas_extras: []
             });
         });
