@@ -776,7 +776,7 @@ io.on('connection', async (socket) => {
 
         Promise.all([requestRg, requestDh, requestTb, requestTd, [requestObs]]).then((values) => {
           console.log("response",[requestObs]);
-          res.json(response);
+          res.status(200).json(response);
         });
       });
 
