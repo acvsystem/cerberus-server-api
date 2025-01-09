@@ -771,14 +771,14 @@ io.on('connection', async (socket) => {
           response[index]['dias_libres'].push({ id: rdb.ID_DIA_LBR, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA, codigo_tienda: rdb.CODIGO_TIENDA });
         });
 
-        await pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${dth.id};`).then(async (requestObs) => {
-          
-          await ([requestObs] || []).filter(async (obs) => {
-            console.log([obs]);
-            response[index]['observacion'].push({ id: obs.ID_OBSERVACION, id_dia: obs.ID_OBS_DIAS, nombre_completo: obs.NOMBRE_COMPLETO, observacion: obs.OBSERVACION });
+        pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${dth.id};`,
+          (err, resultados) => {
+            console.log(resultados);
+            await(resultados || []).filter(async (obs) => {
+              response[index]['observacion'].push({ id: obs.ID_OBSERVACION, id_dia: obs.ID_OBS_DIAS, nombre_completo: obs.NOMBRE_COMPLETO, observacion: obs.OBSERVACION });
+            });
+            arObservation.push("true");
           });
-          arObservation.push("true");
-        });
 
         console.log(arObservation);
         if (requestSql.length - 1 == index && arObservation.length == 4) {
