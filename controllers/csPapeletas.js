@@ -55,31 +55,37 @@ export const regHorasExtras = async (req, res) => {
 
         if ((data || []).length - 1 == i) {
             await (data || []).filter(async (hrx, i) => {
-                let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${hrx['documento']}' AND FECHA = '${hrx['fecha']}';`);
 
-                if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
-                    (dataResponse || []).push({
-                        id_hora_extra: ((arHrExtra || [])[0] || {})['ID_HR_EXTRA'],
-                        documento: (hrx || {}).documento,
-                        codigo_papeleta: (hrx || {}).codigo_papeleta,
-                        fecha: (hrx || {}).fecha,
-                        hrx_acumulado: (hrx || {}).hrx_acumulado,
-                        extra: (hrx || {}).extra,
-                        hrx_solicitado: ((arHrExtra || [])[0] || {})['HR_EXTRA_SOLICITADO'] || '00:00',
-                        hrx_sobrante: ((arHrExtra || [])[0] || {})['HR_EXTRA_SOBRANTE'] || '00:00',
-                        estado: ((arHrExtra || [])[0] || {})['ESTADO'],
-                        aprobado: ((arHrExtra || [])[0] || {})['APROBADO'] == 1 ? true : false,
-                        seleccionado: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false,
-                        verify: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false
+
+                await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${hrx['documento']}' AND FECHA = '${hrx['fecha']}';`).then(async (requestEmp) => {
+                    const [row, field] = requestEmp;
+
+                    await (row || []).filter(async (hrx) => {
+                        if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
+                            (dataResponse || []).push({
+                                id_hora_extra: ((arHrExtra || [])[0] || {})['ID_HR_EXTRA'],
+                                documento: (hrx || {}).documento,
+                                codigo_papeleta: (hrx || {}).codigo_papeleta,
+                                fecha: (hrx || {}).fecha,
+                                hrx_acumulado: (hrx || {}).hrx_acumulado,
+                                extra: (hrx || {}).extra,
+                                hrx_solicitado: ((arHrExtra || [])[0] || {})['HR_EXTRA_SOLICITADO'] || '00:00',
+                                hrx_sobrante: ((arHrExtra || [])[0] || {})['HR_EXTRA_SOBRANTE'] || '00:00',
+                                estado: ((arHrExtra || [])[0] || {})['ESTADO'],
+                                aprobado: ((arHrExtra || [])[0] || {})['APROBADO'] == 1 ? true : false,
+                                seleccionado: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false,
+                                verify: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false
+                            });
+                        }
+                    }).catch(() => {
+                        data[i]['verify'] = false;
+                        (dataResponse || []).push(hrx);
                     });
-                } else {
-                    data[i]['verify'] = false;
-                    (dataResponse || []).push(hrx);
-                }
 
-                if ((data || []).length == (dataResponse || []).length) {
-                    res.json(dataResponse);
-                }
+                    if ((data || []).length == (dataResponse || []).length) {
+                        res.json(dataResponse);
+                    }
+                });
             });
         }
     });
