@@ -727,6 +727,7 @@ io.on('connection', async (socket) => {
     let dataReq = req.body;
 
     let response = [];
+    let arObservation = [];
     let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${dataReq[0]['codigo_tienda']}' AND RANGO_DIAS = '${dataReq[0]['rango_dias']}';`);
 
     await (requestSql || []).filter(async (dth) => {
@@ -744,8 +745,8 @@ io.on('connection', async (socket) => {
     });
 
     if (response.length) {
-      await (response || []).filter(async (dth, index) => {
-        
+      (response || []).filter(async (dth, index) => {
+
         let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.id};`);
 
         await (requestRg || []).filter(async (rdh) => {
@@ -771,13 +772,17 @@ io.on('connection', async (socket) => {
         });
 
         await pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${dth.id};`).then((requestObs) => {
+          arObservation.push(true);
           ([requestObs] || []).filter(async (obs) => {
             response[index]['observacion'].push({ id: obs.ID_OBSERVACION, id_dia: obs.ID_OBS_DIAS, nombre_completo: obs.NOMBRE_COMPLETO, observacion: obs.OBSERVACION });
           });
         });
-      });
 
-      res.json(response);
+        if (requestSql.length - 1 == index && arObservation.length == 4) {
+          res.json(response);
+        }
+
+      });
     } else {
       res.json({ msj: "No hay ningun calendario en este rago de fecha." });
     }
