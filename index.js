@@ -744,7 +744,7 @@ io.on('connection', async (socket) => {
     });
 
     if (response.length) {
-      await (response || []).filter(async (dth, index) => {
+      (response || []).filter(async (dth, index) => {
         let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.id};`);
 
         await (requestRg || []).filter(async (rdh) => {
@@ -770,17 +770,17 @@ io.on('connection', async (socket) => {
         });
 
         let [requestObs] = await pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${dth.id};`);
+        console.log("process", requestObs[0]);
         await (requestObs || []).filter(async (obs) => {
           response[index]['observacion'].push({ id: obs.ID_OBSERVACION, id_dia: obs.ID_OBS_DIAS, nombre_completo: obs.NOMBRE_COMPLETO, observacion: obs.OBSERVACION });
         });
 
-        Promise.all([requestRg, requestDh, requestTb, requestTd, [requestObs]]).then((values) => {
-          console.log("response",[requestObs]);
-          res.status(200).json(response);
-        });
+        if (requestSql.length - 1 == index) {
+          console.log("response", requestObs[0]);
+          res.json(response);
+        }
+
       });
-
-
     } else {
       res.json({ msj: "No hay ningun calendario en este rago de fecha." });
     }
