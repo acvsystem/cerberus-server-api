@@ -835,7 +835,7 @@ io.on('connection', async (socket) => {
       await pool.query(`DELETE FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${(dth || {}).id};`);
       await pool.query(`DELETE FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${(dth || {}).id};`);
 
-      console.log(dth['rg_hora']);
+      console.log(dth.cargo,dth['rg_hora']);
 
       dth['rg_hora'].filter(async (rg, i) => {
 
