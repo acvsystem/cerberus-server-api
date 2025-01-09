@@ -782,7 +782,7 @@ io.on('connection', async (socket) => {
         });
 
         console.log(arObservation);
-        if (requestSql.length - 1 == index && arObservation.length == 4) {
+        if (requestSql.length - 1 == index) {
           res.json(response);
         }
 
