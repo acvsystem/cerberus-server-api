@@ -1065,7 +1065,7 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/frontRetail/search/horario", async (req, res) => {
-    console.log(req.body);
+    console.log(listClient.id);
     socket.to(`${listClient.id}`).emit("reporteHorario", { id: "servGeneral", data: req.body });
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
