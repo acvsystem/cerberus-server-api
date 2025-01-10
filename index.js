@@ -1048,12 +1048,10 @@ io.on('connection', async (socket) => {
   app.post("/frontRetail/search/configuration/agente", async (req, res) => {
     let data = ((req || {}).body || []);
     let [configuration] = await pool.query(`SELECT * FROM TB_PARAMETROS_TIENDA WHERE MAC='${((data || {}).mac).toUpperCase()}';`);
-    console.log(configuration);
     res.json(configuration)
   });
 
   app.post("/frontRetail/search/stock", async (req, res) => {
-    console.log(req.body);
     socket.to(`${listClient.id}`).emit("dataStockParse", req.body);
 
     res.json({ mensaje: 'Archivo recibido con éxito' });
@@ -1065,8 +1063,8 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/frontRetail/search/horario", async (req, res) => {
-    console.log(listClient.id);
-    socket.to(`${listClient.id}`).emit("reporteHorario", { id: "servGeneral", data: req.body });
+    console.log(req.body);
+    socket.to(`${req.body[0]['socket']}`).emit("reporteHorario", { id: "servGeneral", data: req.body });
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
 
