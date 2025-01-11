@@ -14,6 +14,7 @@ import recursosHumanosRoutes from "./routes/recursosHumanos.routes.js";
 import { prop as defaultResponse } from "./const/defaultResponse.js";
 import tokenController from './controllers/csToken.js';
 import fs from 'fs';
+import path from 'path';
 
 const app = express();
 const httpServer = createServer(app);
@@ -726,6 +727,7 @@ io.on('connection', async (socket) => {
     let dataReq = req.body;
 
     let response = [];
+    let arObservation = [];
     let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${dataReq[0]['codigo_tienda']}' AND RANGO_DIAS = '${dataReq[0]['rango_dias']}';`);
 
     await (requestSql || []).filter(async (dth) => {
@@ -744,6 +746,7 @@ io.on('connection', async (socket) => {
 
     if (response.length) {
       (response || []).filter(async (dth, index) => {
+
         let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.id};`);
 
         await (requestRg || []).filter(async (rdh) => {
@@ -768,12 +771,17 @@ io.on('connection', async (socket) => {
           response[index]['dias_libres'].push({ id: rdb.ID_DIA_LBR, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA, codigo_tienda: rdb.CODIGO_TIENDA });
         });
 
-        let [requestObs] = await pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${dth.id};`);
-
-        await (requestObs || []).filter(async (obs) => {
-          response[index]['observacion'].push({ id: obs.ID_OBSERVACION, id_dia: obs.ID_OBS_DIAS, nombre_completo: obs.NOMBRE_COMPLETO, observacion: obs.OBSERVACION });
+        await pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${dth.id};`).then(async (requestObs) => {
+          const [row, field] = requestObs;
+          
+          await (row || []).filter(async (obs) => {
+            console.log(obs);
+            response[index]['observacion'].push({ id: obs.ID_OBSERVACION, id_dia: obs.ID_OBS_DIAS, nombre_completo: obs.NOMBRE_COMPLETO, observacion: obs.OBSERVACION });
+          });
+          arObservation.push("true");
         });
 
+        console.log(arObservation);
         if (requestSql.length - 1 == index) {
           res.json(response);
         }
@@ -795,12 +803,32 @@ io.on('connection', async (socket) => {
   });
 
   app.get("/papeleta/listarPapeleta", async (req, res) => {
-    let [arPapeletas] = await pool.query(`SELECT * FROM TB_PAPELETA;`);
-    console.log(arPapeletas);
-    if ((arPapeletas || []).length) {
-      res.json(arPapeletas);
+    let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA;`);
+    let parsePap = [];
+    if ((arPapeleta || []).length) {
+      await (arPapeleta || []).filter(async (pap) => {
+
+        (parsePap || []).push({
+          codigo_papeleta: (pap || {}).CODIGO_PAPELETA,
+          nombre_completo: (pap || {}).NOMBRE_COMPLETO,
+          documento: (pap || {}).NRO_DOCUMENTO_EMPLEADO,
+          id_tipo_papeleta: (pap || {}).ID_PAP_TIPO_PAPELETA,
+          cargo_empleado: (pap || {}).CARGO_EMPLEADO,
+          fecha_desde: (pap || {}).FECHA_DESDE,
+          fecha_hasta: (pap || {}).FECHA_HASTA,
+          hora_salida: (pap || {}).HORA_SALIDA,
+          hora_llegada: (pap || {}).HORA_LLEGADA,
+          hora_acumulado: (pap || {}).HORA_ACUMULADA,
+          hora_solicitada: (pap || {}).HORA_SOLICITADA,
+          codigo_tienda: (pap || {}).CODIGO_TIENDA,
+          fecha_creacion: (pap || {}).FECHA_CREACION,
+          horas_extras: []
+        });
+      });
+
+      res.json(parsePap);
     } else {
-      res.json({ success: false });
+      res.json(parsePap);
     }
   });
 
@@ -815,15 +843,22 @@ io.on('connection', async (socket) => {
       await pool.query(`DELETE FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${(dth || {}).id};`);
 
 
+
       dth['rg_hora'].filter(async (rg, i) => {
+
         let data = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rg || {}).codigo_tienda}' AND ID_RG_HORARIO = ${(dth || {}).id} AND ID_RANGO_HORA = ${(rg || {}).id};`);
-        console.log(data[0]);
+
         if (Object.values(data[0]).length) {
 
           await pool.query(`UPDATE TB_RANGO_HORA SET RANGO_HORA = '${rg.rg}' WHERE ID_RANGO_HORA = ${(rg || {}).id};`);
         } else {
-          console.log(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)VALUES('${dth.codigo_tienda}','${rg.rg}',${(dth || {}).id})`);
-          await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)VALUES('${dth.codigo_tienda}','${rg.rg}',${(dth || {}).id})`);
+          let dataRg = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rg || {}).codigo_tienda}' AND ID_RG_HORARIO = ${(dth || {}).id} AND RANGO_HORA = '${rg.rg}';`);
+
+          if (!Object.values(dataRg[0]).length) {
+            console.log(dth.cargo, `SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rg || {}).codigo_tienda}' AND ID_RG_HORARIO = ${(dth || {}).id} AND RANGO_HORA = '${rg.rg}';`);
+            console.log(!Object.values(dataRg[0]).length);
+            await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)VALUES('${dth.codigo_tienda}','${rg.rg}',${(dth || {}).id})`);
+          }
         }
 
       });
@@ -871,7 +906,7 @@ io.on('connection', async (socket) => {
 
 
   socket.on("consultaHorasTrab", (configuracion) => {
-    console.log(configuracion);
+    console.log("consultaHorasTrab", configuracion);
     let configurationList = {
       socket: (socket || {}).id,
       fechain: configuracion[0].fechain,
@@ -1013,12 +1048,10 @@ io.on('connection', async (socket) => {
   app.post("/frontRetail/search/configuration/agente", async (req, res) => {
     let data = ((req || {}).body || []);
     let [configuration] = await pool.query(`SELECT * FROM TB_PARAMETROS_TIENDA WHERE MAC='${((data || {}).mac).toUpperCase()}';`);
-    console.log(configuration);
     res.json(configuration)
   });
 
   app.post("/frontRetail/search/stock", async (req, res) => {
-    console.log(req.body);
     socket.to(`${listClient.id}`).emit("dataStockParse", req.body);
 
     res.json({ mensaje: 'Archivo recibido con éxito' });
@@ -1030,7 +1063,8 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/frontRetail/search/horario", async (req, res) => {
-    socket.to(`${listClient.id}`).emit("reporteHorario", { id: "servGeneral", data: req.body });
+    console.log(req.body);
+    socket.to(`${req.body[0]['socket']}`).emit("reporteHorario", { id: "servGeneral", data: req.body });
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
 
@@ -1084,7 +1118,7 @@ io.on('connection', async (socket) => {
   app.post('/createDirectory', async (req, res) => {
     let request = ((req || []).body || [])
     console.log(request);
-    fs.mkdir("EmbarquesCloud/" + (request || {}).route, (error) => {
+    fs.mkdir("driveCloud/EMBARQUES/" + (request || {}).route, (error) => {
       if (error) {
         res.json({ msj: error.message })
       } else {
@@ -1096,7 +1130,7 @@ io.on('connection', async (socket) => {
   app.post('/deleteDirectory', async (req, res) => {
     let request = ((req || []).body || [])
     console.log(request);
-    fs.rmdir("EmbarquesCloud/" + (request || {}).route, (error) => {
+    fs.rmdir("driveCloud/EMBARQUES/" + (request || {}).route, (error) => {
       if (error) {
         res.json({ msj: error.message })
       } else {
@@ -1107,21 +1141,47 @@ io.on('connection', async (socket) => {
 
   app.get('/listDirectory', async (req, res) => {
     let arDirectory = [];
-    fs.readdirSync('EmbarquesCloud').forEach(file => {
-      arDirectory.push(file);
-    });
+    fs.readdirSync('driveCloud/EMBARQUES').forEach(async (file, i) => {
+      console.log(file);
+      await fs.stat('driveCloud/EMBARQUES/' + file, (err, stats) => {
+        arDirectory.push({
+          name: file,
+          size: stats.size,
+          mtime: stats.atime
+        });
+        if (fs.readdirSync('driveCloud/EMBARQUES').length == arDirectory.length) {
+          res.json(arDirectory);
+        }
 
-    res.json(arDirectory);
+      });
+    });
+  });
+
+  app.get("/download/driveCloud", (req, res) => {
+
+    let request = ((req || []).query || []);
+    console.log(request);
+    const file = "./driveCloud/EMBARQUES/" + (request || {}).route;
+    var fileLocation = path.join('./', file);
+    res.download(fileLocation, file);
   });
 
   app.post('/oneListDirectory', async (req, res) => {
     let arDirectory = [];
     let request = ((req || []).body || [])
-    fs.readdirSync('EmbarquesCloud/'+request.path).forEach(file => {
-      arDirectory.push(file);
-    });
+    fs.readdirSync('driveCloud/EMBARQUES/' + request.path).forEach(async (file, i) => {
+      await fs.stat('driveCloud/EMBARQUES/' + request.path + "/" + file, (err, stats) => {
+        arDirectory.push({
+          name: file,
+          size: stats.size,
+          mtime: stats.atime
+        });
+        if (fs.readdirSync('driveCloud/EMBARQUES/' + request.path).length == arDirectory.length) {
+          res.json(arDirectory);
+        }
 
-    res.json(arDirectory);
+      });
+    });
   });
 
   app.post('/sunat-notification', async (req, res) => {
