@@ -70,7 +70,8 @@ export const regHorasExtras = async (req, res) => {
                         estado: (hrx || {}).estado || ((arHrExtra || [])[0] || {})['ESTADO'],
                         aprobado: ((arHrExtra || [])[0] || {})['APROBADO'] == 1 ? true : false,
                         seleccionado: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false,
-                        verify: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false
+                        verify: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false,
+                        arFechas: (hrx || {}).arFechas || []
                     });
                 } else {
                     data[i]['verify'] = false;
