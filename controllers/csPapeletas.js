@@ -26,6 +26,12 @@ export const regHorasExtras = async (req, res) => {
 
         if (!(existHrx || []).length || typeof existHrx == 'undefined') {
 
+            let [arFeriado] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE 
+                INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIA_HORARIO = TB_DIAS_LIBRE.ID_TRB_HORARIO
+                WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(hrx || {}).documento}'
+                AND FECHA_NUMBER = '${(hrx || {}).fecha}';`);
+
+            let hrxAcomulado = arFeriado.length ? (hrx || {}).hr_trabajadas : (hrx || {}).hrx_acumulado;
 
             await pool.query(`INSERT INTO TB_HORA_EXTRA_EMPLEADO(
                     NRO_DOCUMENTO_EMPLEADO,
@@ -39,7 +45,7 @@ export const regHorasExtras = async (req, res) => {
                     FECHA_MODIFICACION
                     )VALUES(
                     '${(hrx || {}).documento}',
-                    '${(hrx || {}).hrx_acumulado || '00:00'}',
+                    '${hrxAcomulado || '00:00'}',
                     '00:00',
                     '00:00',
                     '${(hrx || {}).estado}',
@@ -58,6 +64,7 @@ export const regHorasExtras = async (req, res) => {
                 let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${hrx['documento']}' AND FECHA = '${hrx['fecha']}';`);
 
                 if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
+
                     (dataResponse || []).push({
                         id_hora_extra: ((arHrExtra || [])[0] || {})['ID_HR_EXTRA'],
                         documento: (hrx || {}).documento,
@@ -71,7 +78,8 @@ export const regHorasExtras = async (req, res) => {
                         aprobado: ((arHrExtra || [])[0] || {})['APROBADO'] == 1 ? true : false,
                         seleccionado: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false,
                         verify: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false,
-                        arFechas: (hrx || {}).arFechas || []
+                        arFechas: (hrx || {}).arFechas || [],
+                        hrx_trabajadas
                     });
                 } else {
                     data[i]['verify'] = false;
@@ -186,7 +194,7 @@ export const regPapeleta = async (req, res) => {
                              ESTADO = '${hrx.estado}', HR_EXTRA_SOBRANTE = '${sobrante}'
                              WHERE ID_HR_EXTRA = ${hrx.id_hora_extra};`);
 
-                         pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET HR_EXTRA_SOLICITADO = '${hrx.hrx_solicitado}',
+                        pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET HR_EXTRA_SOLICITADO = '${hrx.hrx_solicitado}',
                              ESTADO = '${hrx.estado}', HR_EXTRA_SOBRANTE = '${sobrante}'
                              WHERE ID_HR_EXTRA = ${hrx.id_hora_extra};`);
 
