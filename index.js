@@ -839,11 +839,8 @@ io.on('connection', async (socket) => {
     (arHorario || []).filter(async (hrr) => {
 
       await pool.query(`CALL SP_HORARIO_PROPERTY('${(hrr || {}).fecha}','${(hrr || {}).rango}','${(hrr || {}).cargo}','${(hrr || {}).codigo_tienda}',@output);`).then(async () => {
-/*
-        await pool.query(`SELECT ID_HORARIO FROM TB_HORARIO_PROPERTY WHERE FECHA = '${(hrr || {}).fecha}' 
-                AND RANGO_DIAS = '${(hrr || {}).rango}' 
-                AND CARGO = '${(hrr || {}).cargo}'
-                AND CODIGO_TIENDA = '${(hrr || {}).codigo_tienda}';`).then(([results]) => {
+
+        await pool.query(`SELECT ID_HORARIO FROM TB_HORARIO_PROPERTY WHERE FECHA = '${(hrr || {}).fecha}' AND RANGO_DIAS = '${(hrr || {}).rango}' AND CARGO = '${(hrr || {}).cargo}' AND CODIGO_TIENDA = '${(hrr || {}).codigo_tienda}';`).then(([results]) => {
 
           let id_horario = results[0]['ID_HORARIO']
           let arRangoHorario = (hrr || {}).rg_hora || [];
@@ -851,7 +848,7 @@ io.on('connection', async (socket) => {
           let arDiasTrbHorario = (hrr || {}).dias_trabajo || [];
           let arDiasLibHorario = (hrr || {}).dias_libres || [];
           let arObservacion = (hrr || {}).observacion || [];
-
+/*
           await(arRangoHorario || []).filter(async (rango, index) => {
             await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)
                       VALUES('${(rango || {}).codigo_tienda}','${(rango || {}).rg}',${id_horario})`).then(() => {
@@ -906,10 +903,10 @@ io.on('connection', async (socket) => {
             await pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION)
                                 VALUES(${(objDia || {}).id_dia_mysql},${id_horario},'${(observacion || {}).codigo_tienda}','${(observacion || {}).nombre_completo}','${(observacion || {}).observacion}')`);
           });
-
+*/
 
         });
-*/
+
       });
 
       //console.log(arHorario);
