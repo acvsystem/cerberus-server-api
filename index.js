@@ -849,10 +849,10 @@ io.on('connection', async (socket) => {
           let arDiasLibHorario = (hrr || {}).dias_libres || [];
           let arObservacion = (hrr || {}).observacion || [];
 
-          await(arRangoHorario || []).filter(async (rango, index) => {
-            await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO) VALUES('${(rango || {}).codigo_tienda}','${(rango || {}).rg}',${id_horario})`).then(async (a) => {
+          await(arRangoHorario || []).filter((rango, index) => {
+            pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO) VALUES('${(rango || {}).codigo_tienda}','${(rango || {}).rg}',${id_horario})`).then(async (a) => {
 
-              await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rango || {}).codigo_tienda}' AND RANGO_HORA = '${(rango || {}).rg}' AND ID_RG_HORARIO = ${id_horario})`).then(([rangoResult]) => {
+              pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rango || {}).codigo_tienda}' AND RANGO_HORA = '${(rango || {}).rg}' AND ID_RG_HORARIO = ${id_horario})`).then(([rangoResult]) => {
                 let id_rango = rangoResult[0]['ID_RANGO_HORA'];
                 arRangoHorario[index][id_rango_mysql] = id_rango;
               });
