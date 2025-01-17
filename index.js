@@ -861,7 +861,7 @@ io.on('connection', async (socket) => {
               });
             });
           });
-
+/*
           await(arDiasHorario || []).filter(async (dia, index) => {
             await pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
             await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER)
@@ -905,7 +905,7 @@ io.on('connection', async (socket) => {
               VALUES(${(objDia || {}).id_dia_mysql},${id_horario},'${(observacion || {}).codigo_tienda}','${(observacion || {}).nombre_completo}','${(observacion || {}).observacion}')`);
           });
 
-
+*/
         });
       });
     });
