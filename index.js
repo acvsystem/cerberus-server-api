@@ -842,7 +842,7 @@ io.on('connection', async (socket) => {
         AND RANGO_DIAS = '${(hrr || {}).rango}' 
         AND CARGO = '${(hrr || {}).cargo}'
         AND CODIGO_TIENDA = '${(hrr || {}).codigo_tienda}';`).then((error, results, fields) => {
-          console.log(fields);
+          console.log(results);
         });
       });
     });
