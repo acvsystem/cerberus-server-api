@@ -837,11 +837,12 @@ io.on('connection', async (socket) => {
   app.post("/horario/registrar", async (req, res) => {
     let arHorario = req.body;
     (arHorario || []).filter((hrr) => {
-      let id_cargo_horario = 0;
-      pool.query(`CALL SP_HORARIO_PROPERTY('${(hrr || {}).fecha}','${(hrr || {}).rango}','${(hrr || {}).cargo}','${(hrr || {}).codigo_tienda}',@output);`).then((rs) => {
-        pool.query(`SELECT @output as idProperty;`).then((rs) => {
-          //console.log(id_cargo_horario);
-          console.log(rs);
+      pool.query(`CALL SP_HORARIO_PROPERTY('${(hrr || {}).fecha}','${(hrr || {}).rango}','${(hrr || {}).cargo}','${(hrr || {}).codigo_tienda}',@output);`).then(() => {
+        pool.query(`SELECT ID_HORARIO FROM TB_HORARIO_PROPERTY WHERE FECHA = '${(hrr || {}).fecha}' 
+        AND RANGO_DIAS = '${(hrr || {}).rango}' 
+        AND CARGO = '${(hrr || {}).cargo}',
+        AND CODIGO_TIENDA = '${(hrr || {}).codigo_tienda}';`).then((rs) => {
+          console.log(rs[0]["ID_HORARIO"]);
         });
       });
     });
