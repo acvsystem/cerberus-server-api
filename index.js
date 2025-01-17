@@ -837,6 +837,7 @@ io.on('connection', async (socket) => {
   app.post("/horario/registrar", async (req, res) => {
     let arHorario = req.body;
     console.log(arHorario);
+    res.json({ success: true });
   });
 
   
