@@ -836,11 +836,18 @@ io.on('connection', async (socket) => {
 
   app.post("/horario/registrar", async (req, res) => {
     let arHorario = req.body;
-    console.log(arHorario);
+    (arHorario || []).filter((hrr) => {
+      let id_cargo_horario = 0;
+      pool.query(`CALL SP_HORARIO_PROPERTY(${(hrr || {}).fecha},${(hrr || {}).rango},${(hrr || {}).cargo},${(hrr || {}).codigo_tienda},ID_CARGO_HORARIO);`).then(() => {
+        console.log(id_cargo_horario);
+      });
+    });
+
+    //console.log(arHorario);
     res.json({ success: true });
   });
 
-  
+
   socket.on("actualizarHorario", async (data) => {
 
     let dataHorario = data || [];
