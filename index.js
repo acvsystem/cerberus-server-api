@@ -839,7 +839,7 @@ io.on('connection', async (socket) => {
     (arHorario || []).filter(async (hrr) => {
 
       await pool.query(`CALL SP_HORARIO_PROPERTY('${(hrr || {}).fecha}','${(hrr || {}).rango}','${(hrr || {}).cargo}','${(hrr || {}).codigo_tienda}',@output);`).then(async () => {
-
+/*
         await pool.query(`SELECT ID_HORARIO FROM TB_HORARIO_PROPERTY WHERE FECHA = '${(hrr || {}).fecha}' 
                 AND RANGO_DIAS = '${(hrr || {}).rango}' 
                 AND CARGO = '${(hrr || {}).cargo}'
@@ -909,6 +909,7 @@ io.on('connection', async (socket) => {
 
 
         });
+*/
       });
 
       //console.log(arHorario);
