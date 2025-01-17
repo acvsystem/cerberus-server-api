@@ -838,7 +838,7 @@ io.on('connection', async (socket) => {
     let arHorario = req.body;
     (arHorario || []).filter((hrr) => {
       let id_cargo_horario = 0;
-      pool.query(`CALL SP_HORARIO_PROPERTY(${(hrr || {}).fecha},${(hrr || {}).rango},${(hrr || {}).cargo},${(hrr || {}).codigo_tienda},ID_CARGO_HORARIO);`).then(() => {
+      pool.query(`CALL SP_HORARIO_PROPERTY('${(hrr || {}).fecha}','${(hrr || {}).rango}','${(hrr || {}).cargo}','${(hrr || {}).codigo_tienda}',${id_cargo_horario});`).then(() => {
         console.log(id_cargo_horario);
       });
     });
