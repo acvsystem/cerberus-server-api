@@ -840,7 +840,7 @@ io.on('connection', async (socket) => {
       pool.query(`CALL SP_HORARIO_PROPERTY('${(hrr || {}).fecha}','${(hrr || {}).rango}','${(hrr || {}).cargo}','${(hrr || {}).codigo_tienda}',@output);`).then(() => {
         pool.query(`SELECT ID_HORARIO FROM TB_HORARIO_PROPERTY WHERE FECHA = '${(hrr || {}).fecha}' 
         AND RANGO_DIAS = '${(hrr || {}).rango}' 
-        AND CARGO = '${(hrr || {}).cargo}',
+        AND CARGO = '${(hrr || {}).cargo}'
         AND CODIGO_TIENDA = '${(hrr || {}).codigo_tienda}';`).then((rs) => {
           console.log(rs[0]["ID_HORARIO"]);
         });
