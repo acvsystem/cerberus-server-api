@@ -607,7 +607,7 @@ io.on('connection', async (socket) => {
           emailController.sendEmail('itperu@metasperu.com', `CODIGO DE ACCESO - METAS PERU - ${emeil}`, bodyHTML, null, null)
             .catch(error => res.send(error));
 
-          res.json({ isSendCode: true  });
+          res.json({ isSendCode: true });
         } else {
           if (arSession[0]['AUTORIZADO']) {
             res.json({ success: true });
@@ -773,7 +773,7 @@ io.on('connection', async (socket) => {
 
         await pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${dth.id};`).then(async (requestObs) => {
           const [row, field] = requestObs;
-          
+
           await (row || []).filter(async (obs) => {
             console.log(obs);
             response[index]['observacion'].push({ id: obs.ID_OBSERVACION, id_dia: obs.ID_OBS_DIAS, nombre_completo: obs.NOMBRE_COMPLETO, observacion: obs.OBSERVACION });
@@ -833,6 +833,13 @@ io.on('connection', async (socket) => {
   });
 
 
+
+  app.post("/horario/registrar", async (req, res) => {
+    let arHorario = req.body;
+    console.log(arHorario);
+  });
+
+  
   socket.on("actualizarHorario", async (data) => {
 
     let dataHorario = data || [];
