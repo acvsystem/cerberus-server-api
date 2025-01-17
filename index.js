@@ -844,7 +844,7 @@ io.on('connection', async (socket) => {
         AND CARGO = '${(hrr || {}).cargo}'
         AND CODIGO_TIENDA = '${(hrr || {}).codigo_tienda}';`).then(([results]) => {
 
-          let id_horario = results[0]['ID_HORARIO']
+          //let id_horario = results[0]['ID_HORARIO']
           let arRangoHorario = (hrr || {}).rg_hora || [];
           let arDiasHorario = (hrr || {}).dias || [];
           let arDiasTrbHorario = (hrr || {}).dias_trabajo || [];
