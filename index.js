@@ -903,14 +903,9 @@ io.on('connection', async (socket) => {
         });
 
       });
-
-      //console.log(arHorario);
-      setTimeout(() => {
-        res.json({ success: true });
-      },1000);
-      
     });
 
+    res.json({ success: true });
   });
 
 
