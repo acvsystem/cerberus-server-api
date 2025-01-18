@@ -849,7 +849,7 @@ io.on('connection', async (socket) => {
           let arDiasLibHorario = (hrr || {}).dias_libres || [];
           let arObservacion = (hrr || {}).observacion || [];
 
-          await(arRangoHorario || []).filter(async (rango, index) => {
+          (arRangoHorario || []).filter(async (rango, index) => {
             await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO) VALUES('${(rango || {}).codigo_tienda}','${(rango || {}).rg}',${id_horario})`).then((a) => {
 
               pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rango || {}).codigo_tienda}' AND RANGO_HORA = '${(rango || {}).rg}' AND ID_RG_HORARIO = ${id_horario};`).then(([rangoResult]) => {
@@ -860,7 +860,7 @@ io.on('connection', async (socket) => {
           });
 
 
-          await(arDiasHorario || []).filter(async (dia, index) => {
+          (arDiasHorario || []).filter(async (dia, index) => {
             pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
             await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER) VALUES('${(dia || {}).dia}','${(dia || {}).fecha}',${id_horario},${(dia || {}).id},'${(dia || {}).fecha_number}')`).then(() => {
 
