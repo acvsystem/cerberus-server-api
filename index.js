@@ -854,7 +854,7 @@ io.on('connection', async (socket) => {
 
               pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rango || {}).codigo_tienda}' AND RANGO_HORA = '${(rango || {}).rg}' AND ID_RG_HORARIO = ${id_horario};`).then(([rangoResult]) => {
                 let id_rango = rangoResult[0]['ID_RANGO_HORA'];
-                arRangoHorario[index][id_rango_mysql] = id_rango;
+                arRangoHorario[index]["id_rango_mysql"] = id_rango;
               });
             });
           });
