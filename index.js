@@ -859,7 +859,7 @@ io.on('connection', async (socket) => {
             });
           });
 
-
+/*
           (arDiasHorario || []).filter(async (dia, index) => {
             pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
             await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER) VALUES('${(dia || {}).dia}','${(dia || {}).fecha}',${id_horario},${(dia || {}).id},'${(dia || {}).fecha_number}')`).then(() => {
@@ -871,7 +871,7 @@ io.on('connection', async (socket) => {
 
             });
           });
-/*
+
           (arDiasTrbHorario || []).filter((diaTrb) => {
 
             let objDia = (arDiasHorario || []).find((dia) => (dia || {}).id == (diaTrb || {}).id_dia);
