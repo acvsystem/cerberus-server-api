@@ -871,7 +871,7 @@ io.on('connection', async (socket) => {
 
             });
           });
-
+/*
           (arDiasTrbHorario || []).filter((diaTrb) => {
 
             let objDia = (arDiasHorario || []).find((dia) => (dia || {}).id == (diaTrb || {}).id_dia);
@@ -898,7 +898,7 @@ io.on('connection', async (socket) => {
             pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION) VALUES(${(objDia || {}).id_dia_mysql},${id_horario},'${(observacion || {}).codigo_tienda}','${(observacion || {}).nombre_completo}','${(observacion || {}).observacion}')`);
           });
 
-
+*/
         });
 
       });
