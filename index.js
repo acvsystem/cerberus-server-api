@@ -872,15 +872,19 @@ io.on('connection', async (socket) => {
             });
           });
 
-          (arDiasTrbHorario || []).filter((diaTrb) => {
+          setTimeout(() => {
+            (arDiasTrbHorario || []).filter((diaTrb) => {
 
-            let objDia = (arDiasHorario || []).find((dia) => (dia || {}).id == (diaTrb || {}).id_dia);
-            let objRango = (arRangoHorario || []).find((rango) => (rango || {}).id == (diaTrb || {}).rg);
-            console.log(objDia);
-            console.log(objRango);
-            pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
-            //pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(diaTrb || {}).codigo_tienda}','${(diaTrb || {}).numero_documento}','${(diaTrb || {}).nombre_completo}',${(objRango || {}).id_rango_mysql},${(objDia || {}).id_dia_mysql},${id_horario})`);
-          });
+              let objDia = (arDiasHorario || []).find((dia) => (dia || {}).id == (diaTrb || {}).id_dia);
+              let objRango = (arRangoHorario || []).find((rango) => (rango || {}).id == (diaTrb || {}).rg);
+              console.log(objDia);
+              console.log(objRango);
+              pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
+              //pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(diaTrb || {}).codigo_tienda}','${(diaTrb || {}).numero_documento}','${(diaTrb || {}).nombre_completo}',${(objRango || {}).id_rango_mysql},${(objDia || {}).id_dia_mysql},${id_horario})`);
+            });
+          }, 1000);
+
+
           /*
                     (arDiasLibHorario || []).filter((diaLbr) => {
           
