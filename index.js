@@ -881,31 +881,34 @@ io.on('connection', async (socket) => {
             pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
             //pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(diaTrb || {}).codigo_tienda}','${(diaTrb || {}).numero_documento}','${(diaTrb || {}).nombre_completo}',${(objRango || {}).id_rango_mysql},${(objDia || {}).id_dia_mysql},${id_horario})`);
           });
-/*
-          (arDiasLibHorario || []).filter((diaLbr) => {
-
-            let objDia = (arDiasHorario || []).find((dia) => (dia || {}).id == (diaLbr || {}).id_dia);
-            let objRango = (arRangoHorario || []).find((rango) => (rango || {}).id == (diaLbr || {}).rg);
-
-            pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
-            pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(diaLbr || {}).codigo_tienda}','${(diaLbr || {}).numero_documento}','${(diaLbr || {}).nombre_completo}',${(objRango || {}).id_rango_mysql},${(objDia || {}).id_dia_mysql},${id_horario})`);
-          });
-
-          (arObservacion || []).filter((observacion) => {
-
-            let objDia = (arDiasHorario || []).find((dia) => (dia || {}).id == (observacion || {}).id_dia);
-
-            pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
-            pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION) VALUES(${(objDia || {}).id_dia_mysql},${id_horario},'${(observacion || {}).codigo_tienda}','${(observacion || {}).nombre_completo}','${(observacion || {}).observacion}')`);
-          });
-
-*/
+          /*
+                    (arDiasLibHorario || []).filter((diaLbr) => {
+          
+                      let objDia = (arDiasHorario || []).find((dia) => (dia || {}).id == (diaLbr || {}).id_dia);
+                      let objRango = (arRangoHorario || []).find((rango) => (rango || {}).id == (diaLbr || {}).rg);
+          
+                      pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
+                      pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(diaLbr || {}).codigo_tienda}','${(diaLbr || {}).numero_documento}','${(diaLbr || {}).nombre_completo}',${(objRango || {}).id_rango_mysql},${(objDia || {}).id_dia_mysql},${id_horario})`);
+                    });
+          
+                    (arObservacion || []).filter((observacion) => {
+          
+                      let objDia = (arDiasHorario || []).find((dia) => (dia || {}).id == (observacion || {}).id_dia);
+          
+                      pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
+                      pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION) VALUES(${(objDia || {}).id_dia_mysql},${id_horario},'${(observacion || {}).codigo_tienda}','${(observacion || {}).nombre_completo}','${(observacion || {}).observacion}')`);
+                    });
+          
+          */
         });
 
       });
 
       //console.log(arHorario);
-      res.json({ success: true });
+      setTimeout(() => {
+        res.json({ success: true });
+      },1000);
+      
     });
 
   });
