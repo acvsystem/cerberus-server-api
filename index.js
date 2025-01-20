@@ -846,7 +846,7 @@ io.on('connection', async (socket) => {
   //EDITAR RANGO HORARIO EN SEARCH
   app.post("/horario/update/rangoHorario", async (req, res) => {
     let row = (req || {}).body || {};
-    await pool.query(`UPDATE TB_RANGO_HORA SET RANGO_HORA = '${(row || {}).rg}' WHERE ID_RG_HORARIO = ${(row || {}).id}`).then((a) => {
+    await pool.query(`UPDATE TB_RANGO_HORA SET RANGO_HORA = '${(row || {}).rg}' WHERE ID_RANGO_HORA = ${(row || {}).id}`).then((a) => {
       res.json({ success: true });
     }).catch((err) => {
       res.json({ msj: err });
