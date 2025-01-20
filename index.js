@@ -837,10 +837,10 @@ io.on('connection', async (socket) => {
   app.post("/horario/insert/rangoHorario", async (req, res) => {
     let row = (req || {}).body || {};
     pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).rg}',${(row || {}).id})`).then((a) => {
-      pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(row || {}).id}`).then(([arRango]) => {
+      pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(row || {}).id} ORDER by ID_RANGO_HORA DESC LIMIT 1;`).then(([arRango]) => {
         res.json({
           success: true,
-          data: arRango
+          id: arRango[0]['ID_RANGO_HORA']
         });
       });
     }).catch((err) => {
@@ -889,10 +889,10 @@ io.on('connection', async (socket) => {
     let row = (req || {}).body || {};
     pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
     pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).numero_documento}','${(row || {}).nombre_completo}',${(row || {}).id_rango},${(row || {}).id_dia},${(row || {}).id_horario})`).then(() => {
-      pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${(row || {}).id_horario}`).then(([arLibre]) => {
+      pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${(row || {}).id_horario} ORDER by ID_DIA_LBR DESC LIMIT 1;`).then(([arTrabajo]) => {
         res.json({
           success: true,
-          data: arLibre
+          id: arTrabajo[0]['ID_DIA_LBR']
         });
       });
     }).catch((err) => {
@@ -915,10 +915,10 @@ io.on('connection', async (socket) => {
     let row = (req || {}).body || {};
     pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
     pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION) VALUES(${(row || {}).id_dia},${(row || {}).id_horario},'${((row || {}) || {}).codigo_tienda}','${((row || {}) || {}).nombre_completo}','${((row || {}) || {}).observacion}')`).then(() => {
-      pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_DIAS = ${(row || {}).id_dia} AND ID_OBS_HORARIO = ${(row || {}).id}`).then(([arObservacion]) => {
+      pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_DIAS = ${(row || {}).id_dia} AND ID_OBS_HORARIO = ${(row || {}).id}  ORDER by ID_OBSERVACION DESC LIMIT 1;`).then(([arObservacion]) => {
         res.json({
           success: true,
-          data: arObservacion
+          id: arObservacion[0]['ID_OBSERVACION']
         });
       });
     }).catch((err) => {
