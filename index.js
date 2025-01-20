@@ -863,7 +863,7 @@ io.on('connection', async (socket) => {
     let row = (req || {}).body || {};
     pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
     pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).numero_documento}','${(row || {}).nombre_completo}',${(row || {}).id_rango},${(row || {}).id_dia},${(row || {}).id_horario})`).then(() => {
-      pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${(row || {}).id})`).then(([arTrabajo]) => {
+      pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${(row || {}).id}`).then(([arTrabajo]) => {
         res.json({
           success: true,
           data: arTrabajo
@@ -889,7 +889,7 @@ io.on('connection', async (socket) => {
     let row = (req || {}).body || {};
     pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
     pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).numero_documento}','${(row || {}).nombre_completo}',${(row || {}).id_rango},${(row || {}).id_dia},${(row || {}).id_horario})`).then(() => {
-      pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${(row || {}).id})`).then(([arLibre]) => {
+      pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${(row || {}).id}`).then(([arLibre]) => {
         res.json({
           success: true,
           data: arLibre
