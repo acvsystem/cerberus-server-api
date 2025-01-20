@@ -833,6 +833,38 @@ io.on('connection', async (socket) => {
   });
 
 
+  //INSERTAR RANGO HORARIO EN SEARCH
+  app.post("/horario/insert/rangoHorario", async (req, res) => {
+    let row = (req || {}).body || {};
+    await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).rg}',${(row || {}).id})`).then((a) => {
+      res.json({ success: true });
+    }).catch((err) => {
+      res.json({ msj: err });
+    });
+  });
+
+  //EDITAR RANGO HORARIO EN SEARCH
+  app.post("/horario/update/rangoHorario", async (req, res) => {
+    let row = (req || {}).body || {};
+    await pool.query(`UPDATE TB_RANGO_HORA SET RANGO_HORA = '${(row || {}).rg}' WHERE ID_RG_HORARIO = ${(row || {}).id}`).then((a) => {
+      res.json({ success: true });
+    }).catch((err) => {
+      res.json({ msj: err });
+    });
+  });
+
+  //INSERTAR DIA DE TRABAJO EN SEARCH
+  app.post("/horario/insert/diaTrabajo", async (req, res) => {
+    let row = (req || {}).body || {};
+    pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
+    pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).numero_documento}','${(row || {}).nombre_completo}',${(row || {}).id_rango},${(row || {}).id_dia},${(row || {}).id_horario})`).then(() => {
+      res.json({ success: true });
+    }).catch((err) => {
+      res.json({ msj: err });
+    });
+  });
+
+  //ELIMINAR DIA DE TRABAJO EN SEARCH
   app.post("/horario/delete/diaTrabajo", async (req, res) => {
     let id_registro = ((req || {}).body || {})['id'];
     pool.query(`DELETE FROM TB_DIAS_TRABAJO WHERE ID_DIA_TRB = ${id_registro};`).then(() => {
@@ -841,6 +873,61 @@ io.on('connection', async (socket) => {
       res.json({ msj: err });
     });
   });
+
+  //INSERTAR DIA DE LIBRE EN SEARCH
+  app.post("/horario/insert/diaLibre", async (req, res) => {
+    let row = (req || {}).body || {};
+    pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
+    pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).numero_documento}','${(row || {}).nombre_completo}',${(row || {}).id_rango},${(row || {}).id_dia},${(row || {}).id_horario})`).then(() => {
+      res.json({ success: true });
+    }).catch((err) => {
+      res.json({ msj: err });
+    });
+  });
+
+  //ELIMINAR DIA LIBRE DE SEARCH
+  app.post("/horario/delete/diaLibre", async (req, res) => {
+    let id_registro = ((req || {}).body || {})['id'];
+    pool.query(`DELETE FROM TB_DIAS_LIBRE WHERE ID_DIA_LBR = ${id_registro};`).then(() => {
+      res.json({ success: true });
+    }).catch((err) => {
+      res.json({ msj: err });
+    });
+  });
+
+  //INSERTAR OBSERVACION DE SEARCH
+  app.post("/horario/insert/observacion", async (req, res) => {
+    let row = (req || {}).body || {};
+    pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
+    pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION) VALUES(${(row || {}).id_dia},${(row || {}).id_horario},'${((row || {}) || {}).codigo_tienda}','${((row || {}) || {}).nombre_completo}','${((row || {}) || {}).observacion}')`).then(() => {
+      res.json({ success: true });
+    }).catch((err) => {
+      res.json({ msj: err });
+    });
+  });
+
+  //EDITAR OBSERVACION DE SEARCH
+  app.post("/horario/update/observacion", async (req, res) => {
+    let id_registro = ((req || {}).body || {})['id'];
+    let observacion = ((req || {}).body || {})['observacion'];
+
+    pool.query(`UPDATE TB_OBSERVACION SET OBSERVACION = '${observacion}' WHERE ID_OBSERVACION = ${id_registro};`).then(() => {
+      res.json({ success: true });
+    }).catch((err) => {
+      res.json({ msj: err });
+    });
+  });
+
+  //ELIMINAR OBSERVACION DE SEARCH
+  app.post("/horario/delete/observacion", async (req, res) => {
+    let id_registro = ((req || {}).body || {})['id'];
+    pool.query(`DELETE FROM TB_OBSERVACION WHERE ID_OBSERVACION = ${id_registro};`).then(() => {
+      res.json({ success: true });
+    }).catch((err) => {
+      res.json({ msj: err });
+    });
+  });
+
 
   app.post("/horario/registrar", async (req, res) => {
     let arHorario = req.body;
