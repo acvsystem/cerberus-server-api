@@ -843,7 +843,7 @@ io.on('connection', async (socket) => {
       if ((calendario || []).length) {
         //EDITA EL CALENDARIO
         console.log("EDITAR CALENDARIO");
-        let id_horario = results[0]['ID_HORARIO'];
+        let id_horario = calendario[0]['ID_HORARIO'];
 
         let arRangoHorario = (hrr || {}).rg_hora || [];
         let arDiasTrbHorario = (hrr || {}).dias_trabajo || [];
@@ -857,10 +857,10 @@ io.on('connection', async (socket) => {
           } else if ((rango || {}).isEdit) {
             pool.query(`UPDATE TB_RANGO_HORA SET RANGO_HORA = ${(rango || {}).rg} WHERE ID_RANGO_HORA = ${(rango || {}).id};`)
           } else {
-            let [diaTrabajo] = await pool.query(`SELECT ID_RANGO_HORA FROM TB_RANGO_HORA WHERE ID_RANGO_HORA = ${(rango || {}).id};`);
+            let [ragoHorario] = await pool.query(`SELECT ID_RANGO_HORA FROM TB_RANGO_HORA WHERE ID_RANGO_HORA = ${(rango || {}).id};`);
 
-            if (!(diaTrabajo || []).length) {
-              pool.query(`DELETE FROM TB_DIAS_TRABAJO WHERE ID_DIA_TRB = ${(diaTrb || {}).id};`)
+            if (!(ragoHorario || []).length) {
+              pool.query(`DELETE FROM TB_DIAS_TRABAJO WHERE ID_DIA_TRB = ${(rango || {}).id};`)
             }
           }
         });
