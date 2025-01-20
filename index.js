@@ -843,10 +843,74 @@ io.on('connection', async (socket) => {
       if ((calendario || []).length) {
         //EDITA EL CALENDARIO
         console.log("EDITAR CALENDARIO");
+        let id_horario = results[0]['ID_HORARIO'];
+
+        let arRangoHorario = (hrr || {}).rg_hora || [];
+        let arDiasTrbHorario = (hrr || {}).dias_trabajo || [];
+        let arDiasLibHorario = (hrr || {}).dias_libres || [];
+        let arObservacion = (hrr || {}).observacion || [];
+
+        (arRangoHorario || []).filter(async (rango, index) => {
+
+          if ((rango || {}).isNew) {
+            await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO) VALUES('${(rango || {}).codigo_tienda}','${(rango || {}).rg}',${id_horario})`);
+          } else if ((rango || {}).isEdit) {
+            pool.query(`UPDATE TB_RANGO_HORA SET RANGO_HORA = ${(rango || {}).rg} WHERE ID_RANGO_HORA = ${(rango || {}).id};`)
+          } else {
+            let [diaTrabajo] = await pool.query(`SELECT ID_RANGO_HORA FROM TB_RANGO_HORA WHERE ID_RANGO_HORA = ${(rango || {}).id};`);
+
+            if (!(diaTrabajo || []).length) {
+              pool.query(`DELETE FROM TB_DIAS_TRABAJO WHERE ID_DIA_TRB = ${(diaTrb || {}).id};`)
+            }
+          }
+        });
+
+
+        (arDiasTrbHorario || []).filter(async (diaTrb) => {
+
+          if ((diaTrb || {}).isNew) {
+            pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
+            pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(diaTrb || {}).codigo_tienda}','${(diaTrb || {}).numero_documento}','${(diaTrb || {}).nombre_completo}',${(diaTrb || {}).diaTrb},${(diaTrb || {}).id_dia},${id_horario})`);
+          } else {
+            let [diaTrabajo] = await pool.query(`SELECT ID_DIA_TRB FROM TB_DIAS_TRABAJO WHERE ID_DIA_TRB = ${(diaTrb || {}).id};`);
+
+            if (!(diaTrabajo || []).length) {
+              pool.query(`DELETE FROM TB_DIAS_TRABAJO WHERE ID_DIA_TRB = ${(diaTrb || {}).id};`)
+            }
+          }
+        });
+
+        (arDiasLibHorario || []).filter(async (diaLbr) => {
+
+          if ((diaLbr || {}).isNew) {
+            pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
+            pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(diaLbr || {}).codigo_tienda}','${(diaLbr || {}).numero_documento}','${(diaLbr || {}).nombre_completo}',${(diaLbr || {}).rg},${(diaLbr || {}).id_dia},${id_horario})`);
+          } else {
+            let [diaLibre] = await pool.query(`SELECT ID_DIA_LBR FROM TB_DIAS_LIBRE WHERE ID_DIA_LBR = ${(diaLbr || {}).id};`);
+
+            if (!(diaLibre || []).length) {
+              pool.query(`DELETE FROM TB_DIAS_LIBRE WHERE ID_DIA_LBR = ${(diaLbr || {}).id};`)
+            }
+          }
+        });
+
+        (arObservacion || []).filter((observacion) => {
+
+          if ((observacion || {}).isNew) {
+            pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
+            pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION) VALUES(${(observacion || {}).id_dia},${id_horario},'${(observacion || {}).codigo_tienda}','${(observacion || {}).nombre_completo}','${(observacion || {}).observacion}')`);
+          } else if ((observacion || {}).isEdit) {
+            pool.query(`UPDATE TB_OBSERVACION SET OBSERVACION = '${(observacion || {}).observacion}' WHERE ID_OBSERVACION = ${(observacion || {}).ID_OBSERVACION};`);
+          } else {
+            pool.query(`DELETE FROM TB_OBSERVACION WHERE ID_OBSERVACION = ${(observacion || {}).ID_OBSERVACION};`);
+          }
+        });
+
+
       } else {
         //REGISTRA UN NUEVO CALENDARIO
         console.log("REGISTRAR CALENDARIO");
-        
+
         await pool.query(`CALL SP_HORARIO_PROPERTY('${(hrr || {}).fecha}','${(hrr || {}).rango}','${(hrr || {}).cargo}','${(hrr || {}).codigo_tienda}',@output);`).then((a) => {
 
           pool.query(`SELECT ID_HORARIO FROM TB_HORARIO_PROPERTY WHERE FECHA = '${(hrr || {}).fecha}' AND RANGO_DIAS = '${(hrr || {}).rango}' AND CARGO = '${(hrr || {}).cargo}' AND CODIGO_TIENDA = '${(hrr || {}).codigo_tienda}';`).then(([results]) => {
@@ -914,7 +978,7 @@ io.on('connection', async (socket) => {
           });
 
         });
-        
+
       }
 
     });
