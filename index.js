@@ -836,8 +836,13 @@ io.on('connection', async (socket) => {
   //INSERTAR RANGO HORARIO EN SEARCH
   app.post("/horario/insert/rangoHorario", async (req, res) => {
     let row = (req || {}).body || {};
-    await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).rg}',${(row || {}).id})`).then((a) => {
-      res.json({ success: true });
+    pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).rg}',${(row || {}).id})`).then((a) => {
+      pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(row || {}).id})`).then(([arRango]) => {
+        res.json({
+          success: true,
+          data: arRango
+        });
+      });
     }).catch((err) => {
       res.json({ msj: err });
     });
@@ -858,7 +863,12 @@ io.on('connection', async (socket) => {
     let row = (req || {}).body || {};
     pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
     pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).numero_documento}','${(row || {}).nombre_completo}',${(row || {}).id_rango},${(row || {}).id_dia},${(row || {}).id_horario})`).then(() => {
-      res.json({ success: true });
+      pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${(row || {}).id})`).then(([arTrabajo]) => {
+        res.json({
+          success: true,
+          data: arTrabajo
+        });
+      });
     }).catch((err) => {
       res.json({ msj: err });
     });
@@ -879,7 +889,12 @@ io.on('connection', async (socket) => {
     let row = (req || {}).body || {};
     pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
     pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).numero_documento}','${(row || {}).nombre_completo}',${(row || {}).id_rango},${(row || {}).id_dia},${(row || {}).id_horario})`).then(() => {
-      res.json({ success: true });
+      pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${(row || {}).id})`).then(([arLibre]) => {
+        res.json({
+          success: true,
+          data: arLibre
+        });
+      });
     }).catch((err) => {
       res.json({ msj: err });
     });
@@ -900,7 +915,12 @@ io.on('connection', async (socket) => {
     let row = (req || {}).body || {};
     pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
     pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION) VALUES(${(row || {}).id_dia},${(row || {}).id_horario},'${((row || {}) || {}).codigo_tienda}','${((row || {}) || {}).nombre_completo}','${((row || {}) || {}).observacion}')`).then(() => {
-      res.json({ success: true });
+      pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_DIAS = ${(row || {}).id_dia} AND ID_OBS_HORARIO = ${(row || {}).id}`).then(([arObservacion]) => {
+        res.json({
+          success: true,
+          data: arObservacion
+        });
+      });
     }).catch((err) => {
       res.json({ msj: err });
     });
