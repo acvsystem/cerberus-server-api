@@ -866,7 +866,7 @@ io.on('connection', async (socket) => {
       pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${(row || {}).id_horario} ORDER by ID_DIA_TRB DESC LIMIT 1;`).then(([arTrabajo]) => {
         res.json({
           success: true,
-          data: arTrabajo
+          id: arTrabajo[0]['ID_DIA_TRB']
         });
       });
     }).catch((err) => {
