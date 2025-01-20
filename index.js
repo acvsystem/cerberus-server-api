@@ -903,11 +903,17 @@ io.on('connection', async (socket) => {
   //ELIMINAR DIA LIBRE DE SEARCH
   app.post("/horario/delete/diaLibre", async (req, res) => {
     let id_registro = ((req || {}).body || {})['id'];
-    pool.query(`DELETE FROM TB_DIAS_LIBRE WHERE ID_DIA_LBR = ${id_registro};`).then(() => {
-      res.json({ success: true });
-    }).catch((err) => {
-      res.json({ msj: err });
-    });
+
+
+    pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE NUMERO_DOCUMENTO = ${(row || {}).numero_documento};`).then(([arTrabajo]) => {
+      pool.query(`DELETE FROM TB_DIAS_LIBRE WHERE ID_DIA_LBR = ${arTrabajo[0]['ID_DIA_LBR']};`).then(() => {
+        res.json({ success: true });
+      }).catch((err) => {
+        res.json({ msj: err });
+      });
+    })
+
+
   });
 
   //INSERTAR OBSERVACION DE SEARCH
