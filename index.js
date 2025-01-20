@@ -837,7 +837,7 @@ io.on('connection', async (socket) => {
   app.post("/horario/insert/rangoHorario", async (req, res) => {
     let row = (req || {}).body || {};
     pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).rg}',${(row || {}).id})`).then((a) => {
-      pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(row || {}).id})`).then(([arRango]) => {
+      pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${(row || {}).id}`).then(([arRango]) => {
         res.json({
           success: true,
           data: arRango
