@@ -845,6 +845,8 @@ io.on('connection', async (socket) => {
         console.log("EDITAR CALENDARIO");
       } else {
         //REGISTRA UN NUEVO CALENDARIO
+        console.log("REGISTRAR CALENDARIO");
+        /*
         await pool.query(`CALL SP_HORARIO_PROPERTY('${(hrr || {}).fecha}','${(hrr || {}).rango}','${(hrr || {}).cargo}','${(hrr || {}).codigo_tienda}',@output);`).then((a) => {
 
           pool.query(`SELECT ID_HORARIO FROM TB_HORARIO_PROPERTY WHERE FECHA = '${(hrr || {}).fecha}' AND RANGO_DIAS = '${(hrr || {}).rango}' AND CARGO = '${(hrr || {}).cargo}' AND CODIGO_TIENDA = '${(hrr || {}).codigo_tienda}';`).then(([results]) => {
@@ -912,6 +914,7 @@ io.on('connection', async (socket) => {
           });
 
         });
+        */
       }
 
     });
