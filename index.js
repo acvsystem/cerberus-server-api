@@ -905,7 +905,7 @@ io.on('connection', async (socket) => {
     let id_registro = ((req || {}).body || {})['id'];
 
 
-    pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE NUMERO_DOCUMENTO = ${(row || {}).numero_documento};`).then(([arTrabajo]) => {
+    pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_DIA_LBR = ${id_registro};`).then(([arTrabajo]) => {
       pool.query(`DELETE FROM TB_DIAS_LIBRE WHERE ID_DIA_LBR = ${arTrabajo[0]['ID_DIA_LBR']};`).then(() => {
         res.json({ success: true });
       }).catch((err) => {
