@@ -919,7 +919,7 @@ io.on('connection', async (socket) => {
   //INSERTAR OBSERVACION DE SEARCH
   app.post("/horario/insert/observacion", async (req, res) => {
     let row = (req || {}).body || {};
-    pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
+    await pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
     pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION) VALUES(${(row || {}).id_dia},${(row || {}).id_horario},'${((row || {}) || {}).codigo_tienda}','${((row || {}) || {}).nombre_completo}','${((row || {}) || {}).observacion}')`).then(() => {
       pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_DIAS = ${(row || {}).id_dia} AND ID_OBS_HORARIO = ${(row || {}).id} AND CODIGO_TIENDA = '${((row || {}) || {}).codigo_tienda}' AND NOMBRE_COMPLETO = '${((row || {}) || {}).nombre_completo}' AND OBSERVACION = '${((row || {}) || {}).observacion}' ORDER by ID_OBSERVACION DESC LIMIT 1;`).then(([arObservacion]) => {
         res.json({
