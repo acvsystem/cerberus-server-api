@@ -777,7 +777,9 @@ io.on('connection', async (socket) => {
                   arObservation.push("true");
 
                   if (requestSql.length - 1 == index) {
-                    res.json(response);
+                    setTimeout(() => {
+                      res.json(response);
+                    }, 3000);
                   }
                 });
               });
