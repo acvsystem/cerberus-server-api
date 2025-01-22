@@ -779,7 +779,7 @@ io.on('connection', async (socket) => {
                   if (requestSql.length - 1 == index) {
                     setTimeout(() => {
                       res.json(response);
-                    }, 3000);
+                    }, 2000);
                   }
                 });
               });
