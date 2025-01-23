@@ -1034,9 +1034,9 @@ io.on('connection', async (socket) => {
         setTimeout(async () => {
           let response = [];
           let arObservation = [];
-          console.log(arHorario);
-          let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${arHorario[0]['codigo_tienda']}' AND RANGO_DIAS = '${arHorario[0]['rango_dias']}';`);
-          console.log(arHorario[0]);
+          console.log(arHorario[0]['codigo_tienda'], arHorario[0]['rango']);
+          let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${arHorario[0]['codigo_tienda']}' AND RANGO_DIAS = '${arHorario[0]['rango']}';`);
+
           await (requestSql || []).filter(async (dth) => {
             (response || []).push({
               id: dth.ID_HORARIO,
