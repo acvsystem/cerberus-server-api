@@ -439,21 +439,21 @@ io.on('connection', async (socket) => {
                 </tbody>
             </table>`;
 
-    let correo = ['itperu@metasperu.com'];
+    let correo = ['itperu@metasperu.com','johnnygermano@metasperu.com'];
 
-    /*
+    
         if (data.codigo_tienda == '7I' || data.codigo_tienda == '9P' || data.codigo_tienda == '9N' || data.codigo_tienda == '7J') {
           correo.push('carlosmoron@metasperu.com');
         }
-    
+    /*
         if (data.codigo_tienda == '9M' || data.codigo_tienda == '7F') {
           correo.push('johnnygermano@metasperu.com');
         }
-    
+    */
         if (data.codigo_tienda != '7I' && data.codigo_tienda != '9P' && data.codigo_tienda != '9N' && data.codigo_tienda != '7J' && data.codigo_tienda != '9M' && data.codigo_tienda != '7F') {
           correo.push('josecarreno@metasperu.com ');
         }
-    */
+    
     emailController.sendEmail(correo, `SOLICITUD DE APROBACION DE HORA EXTRA - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
       .catch(error => res.send(error));
 
