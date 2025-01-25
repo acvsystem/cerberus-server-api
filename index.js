@@ -293,7 +293,7 @@ io.on('connection', async (socket) => {
     let socketID = (response || {}).configuration.socket;
     let dataEJB = [];
     dataEJB = JSON.parse((response || {}).serverData || []);
-    console.log(dataEJB);
+    //console.log(dataEJB);
     socket.to(`${socketID}`).emit("reporteQuincena", { id: response.id, data: dataEJB });
   });
 
@@ -350,7 +350,7 @@ io.on('connection', async (socket) => {
 
     if (dataRes.length) {
 
-      socket.to(`${socketID}`).emit("reporteQuincena", { id: 'EJB', data: dataRes });
+      //socket.to(`${socketID}`).emit("reporteQuincena", { id: 'EJB', data: dataRes });
     }
 
     res.json({ mensaje: 'Archivo recibido con éxito' });
@@ -607,7 +607,7 @@ io.on('connection', async (socket) => {
           emailController.sendEmail('itperu@metasperu.com', `CODIGO DE ACCESO - METAS PERU - ${emeil}`, bodyHTML, null, null)
             .catch(error => res.send(error));
 
-          res.json({ isSendCode: true  });
+          res.json({ isSendCode: true });
         } else {
           if (arSession[0]['AUTORIZADO']) {
             res.json({ success: true });
@@ -747,45 +747,45 @@ io.on('connection', async (socket) => {
     if (response.length) {
       (response || []).filter(async (dth, index) => {
 
-        let [requestRg] = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.id};`);
-
-        await (requestRg || []).filter(async (rdh) => {
-          response[index]['rg_hora'].push({ id: rdh.ID_RANGO_HORA, position: response[index]['rg_hora'].length + 1, rg: rdh.RANGO_HORA, codigo_tienda: dataReq[0]['codigo_tienda'] });
-        });
-
-        let [requestDh] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.id} ORDER BY POSITION  ASC;`);
-        console.log(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.id} ORDER BY POSITION  ASC;`);
-        await (requestDh || []).filter(async (rdh) => {
-          response[index]['dias'].push({ dia: rdh.DIA, fecha: rdh.FECHA, fecha_number: rdh.FECHA_NUMBER, id: rdh.ID_DIAS, position: response[index]['dias'].length + 1 });
-        });
-
-        let [requestTb] = await pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${dth.id};`);
-
-        await (requestTb || []).filter(async (rdb) => {
-          response[index]['dias_trabajo'].push({ id: rdb.ID_DIA_TRB, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA, codigo_tienda: rdb.CODIGO_TIENDA });
-        });
-
-        let [requestTd] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${dth.id};`);
-
-        await (requestTd || []).filter(async (rdb) => {
-          response[index]['dias_libres'].push({ id: rdb.ID_DIA_LBR, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA, codigo_tienda: rdb.CODIGO_TIENDA });
-        });
-
-        await pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${dth.id};`).then(async (requestObs) => {
-          const [row, field] = requestObs;
-          
-          await (row || []).filter(async (obs) => {
-            console.log(obs);
-            response[index]['observacion'].push({ id: obs.ID_OBSERVACION, id_dia: obs.ID_OBS_DIAS, nombre_completo: obs.NOMBRE_COMPLETO, observacion: obs.OBSERVACION });
+        pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.id};`).then(([requestRg]) => {
+          (requestRg || []).filter(async (rdh) => {
+            response[index]['rg_hora'].push({ id: rdh.ID_RANGO_HORA, position: response[index]['rg_hora'].length + 1, rg: rdh.RANGO_HORA, codigo_tienda: dataReq[0]['codigo_tienda'] });
           });
-          arObservation.push("true");
+
+          pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.id} ORDER BY POSITION  ASC;`).then(([requestDh]) => {
+            (requestDh || []).filter(async (rdh) => {
+              response[index]['dias'].push({ dia: rdh.DIA, fecha: rdh.FECHA, fecha_number: rdh.FECHA_NUMBER, id: rdh.ID_DIAS, position: response[index]['dias'].length + 1 });
+            });
+
+            pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${dth.id};`).then(([requestTb]) => {
+              (requestTb || []).filter(async (rdb) => {
+                response[index]['dias_trabajo'].push({ id: rdb.ID_DIA_TRB, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA, codigo_tienda: rdb.CODIGO_TIENDA });
+              });
+
+              pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${dth.id};`).then(([requestTd]) => {
+                (requestTd || []).filter(async (rdb) => {
+                  response[index]['dias_libres'].push({ id: rdb.ID_DIA_LBR, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA, codigo_tienda: rdb.CODIGO_TIENDA });
+                });
+
+
+                pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${dth.id};`).then(async (requestObs) => {
+                  const [row, field] = requestObs;
+
+                  await (row || []).filter(async (obs) => {
+                    response[index]['observacion'].push({ id: obs.ID_OBSERVACION, id_dia: obs.ID_OBS_DIAS, nombre_completo: obs.NOMBRE_COMPLETO, observacion: obs.OBSERVACION });
+                  });
+                  arObservation.push("true");
+
+                  if (requestSql.length - 1 == index) {
+                    setTimeout(() => {
+                      res.json(response);
+                    }, 2000);
+                  }
+                });
+              });
+            });
+          });
         });
-
-        console.log(arObservation);
-        if (requestSql.length - 1 == index) {
-          res.json(response);
-        }
-
       });
     } else {
       res.json({ msj: "No hay ningun calendario en este rago de fecha." });
@@ -832,6 +832,274 @@ io.on('connection', async (socket) => {
     }
   });
 
+
+  //INSERTAR RANGO HORARIO EN SEARCH
+  app.post("/horario/insert/rangoHorario", async (req, res) => {
+    let row = (req || {}).body || {};
+    pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).rg}',${(row || {}).id})`).then((a) => {
+      pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(row || {}).codigo_tienda}' AND RANGO_HORA = '${(row || {}).rg}' AND ID_RG_HORARIO = ${(row || {}).id} ORDER by ID_RANGO_HORA DESC LIMIT 1;`).then(([arRango]) => {
+        res.json({
+          success: true,
+          id: arRango[0]['ID_RANGO_HORA']
+        });
+      });
+    }).catch((err) => {
+      res.json({ msj: err });
+    });
+  });
+
+  //EDITAR RANGO HORARIO EN SEARCH
+  app.post("/horario/update/rangoHorario", async (req, res) => {
+    let row = (req || {}).body || {};
+    await pool.query(`UPDATE TB_RANGO_HORA SET RANGO_HORA = '${(row || {}).rg}' WHERE ID_RANGO_HORA = ${(row || {}).id}`).then((a) => {
+      res.json({ success: true });
+    }).catch((err) => {
+      res.json({ msj: err });
+    });
+  });
+
+  //INSERTAR DIA DE TRABAJO EN SEARCH
+  app.post("/horario/insert/diaTrabajo", async (req, res) => {
+    let row = (req || {}).body || {};
+    pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
+    pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).numero_documento}','${(row || {}).nombre_completo}',${(row || {}).id_rango},${(row || {}).id_dia},${(row || {}).id_horario})`).then(() => {
+      pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE CODIGO_TIENDA = '${(row || {}).codigo_tienda}' AND NUMERO_DOCUMENTO = '${(row || {}).numero_documento}' AND NOMBRE_COMPLETO = '${(row || {}).nombre_completo}' AND ID_TRB_RANGO_HORA = ${(row || {}).id_rango} AND ID_TRB_DIAS = ${(row || {}).id_dia} AND ID_TRB_HORARIO = ${(row || {}).id_horario} ORDER by ID_DIA_TRB DESC LIMIT 1;`).then(([arTrabajo]) => {
+        res.json({
+          success: true,
+          id: arTrabajo[0]['ID_DIA_TRB']
+        });
+      });
+    }).catch((err) => {
+      res.json({ msj: err });
+    });
+  });
+
+  //ELIMINAR DIA DE TRABAJO EN SEARCH
+  app.post("/horario/delete/diaTrabajo", async (req, res) => {
+    let id_registro = ((req || {}).body || {})['id'];
+    pool.query(`DELETE FROM TB_DIAS_TRABAJO WHERE ID_DIA_TRB = ${id_registro};`).then(() => {
+      res.json({ success: true });
+    }).catch((err) => {
+      res.json({ msj: err });
+    });
+  });
+
+  //INSERTAR DIA DE LIBRE EN SEARCH
+  app.post("/horario/insert/diaLibre", async (req, res) => {
+    let row = (req || {}).body || {};
+    pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
+    pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).numero_documento}','${(row || {}).nombre_completo}',${(row || {}).id_rango},${(row || {}).id_dia},${(row || {}).id_horario})`).then(() => {
+      pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE CODIGO_TIENDA = '${(row || {}).codigo_tienda}' AND NUMERO_DOCUMENTO = '${(row || {}).numero_documento}' AND NOMBRE_COMPLETO = '${(row || {}).nombre_completo}' AND ID_TRB_RANGO_HORA = ${(row || {}).id_rango} AND ID_TRB_DIAS = ${(row || {}).id_dia} AND ID_TRB_HORARIO = ${(row || {}).id_horario} ORDER by ID_DIA_LBR DESC LIMIT 1;`).then(([arTrabajo]) => {
+        res.json({
+          success: true,
+          id: arTrabajo[0]['ID_DIA_LBR']
+        });
+      });
+    }).catch((err) => {
+      res.json({ msj: err });
+    });
+  });
+
+  //ELIMINAR DIA LIBRE DE SEARCH
+  app.post("/horario/delete/diaLibre", async (req, res) => {
+    let id_registro = ((req || {}).body || {})['id'];
+
+
+    pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_DIA_LBR = ${id_registro};`).then(([arTrabajo]) => {
+      pool.query(`DELETE FROM TB_DIAS_LIBRE WHERE ID_DIA_LBR = ${arTrabajo[0]['ID_DIA_LBR']};`).then(() => {
+        res.json({ success: true });
+      }).catch((err) => {
+        res.json({ msj: err });
+      });
+    })
+
+
+  });
+
+  //INSERTAR OBSERVACION DE SEARCH
+  app.post("/horario/insert/observacion", async (req, res) => {
+    let row = (req || {}).body || {};
+    await pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
+    pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION) VALUES(${(row || {}).id_dia},${(row || {}).id_horario},'${((row || {}) || {}).codigo_tienda}','${((row || {}) || {}).nombre_completo}','${((row || {}) || {}).observacion}')`).then(() => {
+      pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_DIAS = ${(row || {}).id_dia} AND ID_OBS_HORARIO = ${(row || {}).id_horario} AND CODIGO_TIENDA = '${((row || {}) || {}).codigo_tienda}' AND NOMBRE_COMPLETO = '${((row || {}) || {}).nombre_completo}' AND OBSERVACION = '${((row || {}) || {}).observacion}' ORDER by ID_OBSERVACION DESC LIMIT 1;`).then(([arObservacion]) => {
+        res.json({
+          success: true,
+          id: arObservacion[0]['ID_OBSERVACION']
+        });
+      });
+    }).catch((err) => {
+      res.json({ msj: err });
+    });
+  });
+
+  //EDITAR OBSERVACION DE SEARCH
+  app.post("/horario/update/observacion", async (req, res) => {
+    let id_registro = ((req || {}).body || {})['id'];
+    let observacion = ((req || {}).body || {})['observacion'];
+
+    pool.query(`UPDATE TB_OBSERVACION SET OBSERVACION = '${observacion}' WHERE ID_OBSERVACION = ${id_registro};`).then(() => {
+      res.json({ success: true });
+    }).catch((err) => {
+      res.json({ msj: err });
+    });
+  });
+
+  //ELIMINAR OBSERVACION DE SEARCH
+  app.post("/horario/delete/observacion", async (req, res) => {
+    let id_registro = ((req || {}).body || {})['id'];
+    pool.query(`DELETE FROM TB_OBSERVACION WHERE ID_OBSERVACION = ${id_registro};`).then(() => {
+      res.json({ success: true });
+    }).catch((err) => {
+      res.json({ msj: err });
+    });
+  });
+
+
+  app.post("/horario/registrar", async (req, res) => {
+    let arHorario = req.body;
+
+    (arHorario || []).filter(async (hrr, index) => {
+      //REGISTRA UN NUEVO CALENDARIO
+      console.log("REGISTRAR CALENDARIO");
+
+      await pool.query(`CALL SP_HORARIO_PROPERTY('${(hrr || {}).fecha}','${(hrr || {}).rango}','${(hrr || {}).cargo}','${(hrr || {}).codigo_tienda}',@output);`).then((a) => {
+
+        pool.query(`SELECT ID_HORARIO FROM TB_HORARIO_PROPERTY WHERE FECHA = '${(hrr || {}).fecha}' AND RANGO_DIAS = '${(hrr || {}).rango}' AND CARGO = '${(hrr || {}).cargo}' AND CODIGO_TIENDA = '${(hrr || {}).codigo_tienda}';`).then(([results]) => {
+
+          let id_horario = results[0]['ID_HORARIO']
+          let arRangoHorario = (hrr || {}).rg_hora || [];
+          let arDiasHorario = (hrr || {}).dias || [];
+          let arDiasTrbHorario = (hrr || {}).dias_trabajo || [];
+          let arDiasLibHorario = (hrr || {}).dias_libres || [];
+          let arObservacion = (hrr || {}).observacion || [];
+
+          (arRangoHorario || []).filter(async (rango, index) => {
+            await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO) VALUES('${(rango || {}).codigo_tienda}','${(rango || {}).rg}',${id_horario})`).then((a) => {
+
+              pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rango || {}).codigo_tienda}' AND RANGO_HORA = '${(rango || {}).rg}' AND ID_RG_HORARIO = ${id_horario};`).then(([rangoResult]) => {
+                let id_rango = rangoResult[0]['ID_RANGO_HORA'];
+                arRangoHorario[index]["id_rango_mysql"] = id_rango;
+              });
+            });
+          });
+
+
+          (arDiasHorario || []).filter(async (dia, index) => {
+            pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
+            await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER) VALUES('${(dia || {}).dia}','${(dia || {}).fecha}',${id_horario},${(dia || {}).id},'${(dia || {}).fecha_number}')`).then(() => {
+
+              pool.query(`SELECT * FROM  TB_DIAS_HORARIO WHERE DIA = '${(dia || {}).dia}' AND FECHA = '${(dia || {}).fecha}' AND ID_DIA_HORARIO = ${id_horario} AND POSITION = ${(dia || {}).id} AND FECHA_NUMBER = '${(dia || {}).fecha_number}';`).then(([diaResult]) => {
+                let id_dia = diaResult[0]['ID_DIAS'];
+                arDiasHorario[index]["id_dia_mysql"] = id_dia;
+              });
+
+            });
+          });
+
+          setTimeout(() => {
+            (arDiasTrbHorario || []).filter((diaTrb) => {
+
+              let objDia = (arDiasHorario || []).find((dia) => (dia || {}).id == (diaTrb || {}).id_dia);
+              let objRango = (arRangoHorario || []).find((rango) => (rango || {}).id == (diaTrb || {}).rg);
+              console.log(objDia);
+              console.log(objRango);
+              pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
+              pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(diaTrb || {}).codigo_tienda}','${(diaTrb || {}).numero_documento}','${(diaTrb || {}).nombre_completo}',${(objRango || {}).id_rango_mysql},${(objDia || {}).id_dia_mysql},${id_horario})`);
+            });
+
+            (arDiasLibHorario || []).filter((diaLbr) => {
+
+              let objDia = (arDiasHorario || []).find((dia) => (dia || {}).id == (diaLbr || {}).id_dia);
+              let objRango = (arRangoHorario || []).find((rango) => (rango || {}).id == (diaLbr || {}).rg);
+
+              pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
+              pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(diaLbr || {}).codigo_tienda}','${(diaLbr || {}).numero_documento}','${(diaLbr || {}).nombre_completo}',${(objRango || {}).id_rango_mysql},${(objDia || {}).id_dia_mysql},${id_horario})`);
+            });
+
+            (arObservacion || []).filter((observacion) => {
+
+              let objDia = (arDiasHorario || []).find((dia) => (dia || {}).id == (observacion || {}).id_dia);
+
+              pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
+              pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION) VALUES(${(objDia || {}).id_dia_mysql},${id_horario},'${(observacion || {}).codigo_tienda}','${(observacion || {}).nombre_completo}','${(observacion || {}).observacion}')`);
+            });
+
+          }, 1000);
+
+        });
+
+      });
+
+      if (arHorario.length - 1 == index) {
+        setTimeout(async () => {
+          let response = [];
+          let arObservation = [];
+          console.log(arHorario[0]['codigo_tienda'], arHorario[0]['rango']);
+          let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${arHorario[0]['codigo_tienda']}' AND RANGO_DIAS = '${arHorario[0]['rango']}';`);
+
+          await (requestSql || []).filter(async (dth) => {
+            (response || []).push({
+              id: dth.ID_HORARIO,
+              cargo: dth.CARGO,
+              codigo_tienda: dth.CODIGO_TIENDA,
+              rg_hora: [],
+              dias: [],
+              dias_trabajo: [],
+              dias_libres: [],
+              arListTrabajador: [],
+              observacion: []
+            });
+          });
+
+          if (response.length) {
+            (response || []).filter(async (dth, index) => {
+
+              pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.id};`).then(([requestRg]) => {
+                (requestRg || []).filter(async (rdh) => {
+                  response[index]['rg_hora'].push({ id: rdh.ID_RANGO_HORA, position: response[index]['rg_hora'].length + 1, rg: rdh.RANGO_HORA, codigo_tienda: arHorario[0]['codigo_tienda'] });
+                });
+
+                pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.id} ORDER BY POSITION  ASC;`).then(([requestDh]) => {
+                  (requestDh || []).filter(async (rdh) => {
+                    response[index]['dias'].push({ dia: rdh.DIA, fecha: rdh.FECHA, fecha_number: rdh.FECHA_NUMBER, id: rdh.ID_DIAS, position: response[index]['dias'].length + 1 });
+                  });
+
+                  pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${dth.id};`).then(([requestTb]) => {
+                    (requestTb || []).filter(async (rdb) => {
+                      response[index]['dias_trabajo'].push({ id: rdb.ID_DIA_TRB, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA, codigo_tienda: rdb.CODIGO_TIENDA });
+                    });
+
+                    pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${dth.id};`).then(([requestTd]) => {
+                      (requestTd || []).filter(async (rdb) => {
+                        response[index]['dias_libres'].push({ id: rdb.ID_DIA_LBR, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA, codigo_tienda: rdb.CODIGO_TIENDA });
+                      });
+
+
+                      pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${dth.id};`).then(async (requestObs) => {
+                        const [row, field] = requestObs;
+
+                        await (row || []).filter(async (obs) => {
+                          response[index]['observacion'].push({ id: obs.ID_OBSERVACION, id_dia: obs.ID_OBS_DIAS, nombre_completo: obs.NOMBRE_COMPLETO, observacion: obs.OBSERVACION });
+                        });
+                        arObservation.push("true");
+
+                        if (requestSql.length - 1 == index) {
+                          setTimeout(() => {
+                            res.json({ success: true, data: response });
+                          }, 2000);
+                        }
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          }
+        }, 2000);
+      }
+    });
+
+  });
 
   socket.on("actualizarHorario", async (data) => {
 
