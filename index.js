@@ -350,7 +350,7 @@ io.on('connection', async (socket) => {
 
     if (dataRes.length) {
 
-      //socket.to(`${socketID}`).emit("reporteQuincena", { id: 'EJB', data: dataRes });
+      socket.to(`${socketID}`).emit("reporteQuincena", { id: 'EJB', data: dataRes });
     }
 
     res.json({ mensaje: 'Archivo recibido con éxito' });
