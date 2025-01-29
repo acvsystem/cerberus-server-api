@@ -135,7 +135,7 @@ export const regPapeleta = async (req, res) => {
             '${(data || [])[0].fecha_creacion}',
             '${(data || [])[0].descripcion}');`)
         .then(async () => {
-            let arHorasExtra = ((data || [])[0] || {}).horas_extras || ;
+            let arHorasExtra = ((data || [])[0] || {}).horas_extras || [];
 
             if ((arHorasExtra || []).length) {
                 (arHorasExtra || []).filter(async (hrx) => {
