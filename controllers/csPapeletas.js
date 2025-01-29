@@ -76,10 +76,10 @@ export const regHorasExtras = async (req, res) => {
                         codigo_papeleta: (hrx || {}).codigo_papeleta,
                         fecha: (hrx || {}).fecha,
                         hrx_acumulado: (hrx || {}).hrx_acumulado,
-                        extra: (hrx || {}).extra ,
+                        extra: ((arHrExtra || [])[0] || {})['HR_EXTRA_ACUMULADO'] == (hrx || {}).extra ? (hrx || {}).extra : ((arHrExtra || [])[0] || {})['HR_EXTRA_ACUMULADO'],
                         hrx_solicitado: ((arHrExtra || [])[0] || {})['HR_EXTRA_SOLICITADO'] || '00:00',
                         hrx_sobrante: ((arHrExtra || [])[0] || {})['HR_EXTRA_SOBRANTE'] || '00:00',
-                        estado: ((arHrExtra || [])[0] || {})['ESTADO'] || (hrx || {}).estado,
+                        estado: (hrx || {}).estado || ((arHrExtra || [])[0] || {})['ESTADO'],
                         aprobado: ((arHrExtra || [])[0] || {})['APROBADO'] == 1 ? true : false,
                         seleccionado: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false,
                         verify: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false,
@@ -135,7 +135,7 @@ export const regPapeleta = async (req, res) => {
             '${(data || [])[0].fecha_creacion}',
             '${(data || [])[0].descripcion}');`)
         .then(async () => {
-            let arHorasExtra = ((data || [])[0] || {}).horas_extras || [];
+            let arHorasExtra = ((data || [])[0] || {}).horas_extras || ;
 
             if ((arHorasExtra || []).length) {
                 (arHorasExtra || []).filter(async (hrx) => {
