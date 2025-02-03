@@ -119,7 +119,8 @@ export const regPapeleta = async (req, res) => {
             HORA_SOLICITADA,
             CODIGO_TIENDA,
             FECHA_CREACION,
-            DESCRIPCION
+            DESCRIPCION,
+            ESTADO_PAPELETA
             )VALUES(
             '${(data || [])[0].codigo_papeleta}',
             '${(data || [])[0].nombre_completo}',
@@ -134,7 +135,8 @@ export const regPapeleta = async (req, res) => {
             '${(data || [])[0].hora_solicitada}',
             '${(data || [])[0].codigo_tienda}',
             '${(data || [])[0].fecha_creacion}',
-            '${(data || [])[0].descripcion}');`)
+            '${(data || [])[0].descripcion}',
+            'aceptado');`)
         .then(async () => {
             let arHorasExtra = ((data || [])[0] || {}).horas_extras || [];
 
@@ -191,7 +193,7 @@ export const regPapeleta = async (req, res) => {
 
 export const listPapeleta = async (req, res) => {
     let data = req.body;
-    let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_TIENDA = '${data[0].codigo_tienda}';`);
+    let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND CODIGO_TIENDA = '${data[0].codigo_tienda}';`);
     let parsePap = [];
     if ((arPapeleta || []).length) {
         await (arPapeleta || []).filter(async (pap) => {
