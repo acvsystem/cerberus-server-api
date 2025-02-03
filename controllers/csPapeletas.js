@@ -30,7 +30,7 @@ export const regHorasExtras = async (req, res) => {
             let fechaHr = `${fh[2]}-${parseInt(fecha.split("-")[1].substr(0, 1)) == 0 ? fecha.split("-")[1].substr(1, 2) : fecha.split("-")[1].substr(0, 2)}-${fh[0]}`;
 
             let [arFeriado] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE 
-                INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIA_HORARIO = TB_DIAS_LIBRE.ID_TRB_HORARIO
+                TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
                 WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(hrx || {}).documento}'
                 AND FECHA_NUMBER = '${fechaHr}';`);
 
