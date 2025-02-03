@@ -36,8 +36,8 @@ export const regHorasExtras = async (req, res) => {
 
             console.log(fechaHr,arFeriado, (hrx || {}).hr_trabajadas);
 
-            //let hrxAcomulado = arFeriado.length ? (hrx || {}).hr_trabajadas : (hrx || {}).hrx_acumulado;
-            let hrxAcomulado = (hrx || {}).hrx_acumulado;
+            let hrxAcomulado = arFeriado.length ? (hrx || {}).hr_trabajadas : (hrx || {}).hrx_acumulado;
+            //let hrxAcomulado = (hrx || {}).hrx_acumulado;
 
             await pool.query(`INSERT INTO TB_HORA_EXTRA_EMPLEADO(
                     NRO_DOCUMENTO_EMPLEADO,
