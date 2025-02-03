@@ -1450,7 +1450,7 @@ io.on('connection', async (socket) => {
   // Set saved storage options:
   const upload = multer({ storage: storage })
 
-  app.post('/upload/driveCloud', upload.array("files"), (req, res) => {
+  app.post('/upload/driveCloud', upload.single('fileUpload'), (req, res) => {
     console.log(req.files);;
 
     // All good
