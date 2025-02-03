@@ -191,7 +191,7 @@ export const regPapeleta = async (req, res) => {
 
 export const listPapeleta = async (req, res) => {
     let data = req.body;
-    let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_TIENDA = '${data[0].codigo_tienda}';`);
+    let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTDO_PAPELETA != 'rechazado' AND CODIGO_TIENDA = '${data[0].codigo_tienda}';`);
     let parsePap = [];
     if ((arPapeleta || []).length) {
         await (arPapeleta || []).filter(async (pap) => {
