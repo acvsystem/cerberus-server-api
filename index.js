@@ -1437,24 +1437,21 @@ io.on('connection', async (socket) => {
 
 
   const storage = multer.diskStorage({
-    destination: function (req, file, callback) {
-      callback(null, './driveCloud/EMBARQUES/');
-    },
-    // Sets file(s) to be saved in uploads folder in same directory
-    filename: function (req, file, callback) {
-      callback(null, file.originalname);
+
+    destination: './driveCloud/EMBARQUES/',
+    filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const ext = path.extname(file.originalname);
+      cb(null, file.fieldname + '-' + uniqueSuffix + ext);
     }
-    // Sets saved filename(s) to be original filename(s)
+
   })
 
   // Set saved storage options:
   const upload = multer({ storage: storage })
 
   app.post('/upload/driveCloud', upload.single('fileUpload'), (req, res) => {
-    console.log(req.files);;
-
-    // All good
-    res.sendStatus(200);
+    res.json({ message: 'Upload success' });
   });
 
   app.post('/oneListDirectory', async (req, res) => {
