@@ -15,7 +15,7 @@ import { prop as defaultResponse } from "./const/defaultResponse.js";
 import tokenController from './controllers/csToken.js';
 import fs from 'fs';
 import path from 'path';
-const multer = require('multer');
+import multer from 'multer';
 
 const app = express();
 const httpServer = createServer(app);
@@ -1451,7 +1451,7 @@ io.on('connection', async (socket) => {
   const upload = multer({ storage: storage })
 
   app.post('/upload/driveCloud', upload.array("files"), (req, res) => {
-    console.log(req.files); ;
+    console.log(req.files);;
 
     // All good
     res.sendStatus(200);
