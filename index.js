@@ -1435,18 +1435,22 @@ io.on('connection', async (socket) => {
   });
 
 
-  app.post('/upload/driveCloud', (req, res) => {
-    // Get the file that was set to our field named "image"
-    const { image } = req.files;
+  const storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+      callback(null, './driveCloud/EMBARQUES/' + image.name);
+    },
+    // Sets file(s) to be saved in uploads folder in same directory
+    filename: function (req, file, callback) {
+      callback(null, file.originalname);
+    }
+    // Sets saved filename(s) to be original filename(s)
+  })
 
-    // If no image submitted, exit
-    if (!image) return res.sendStatus(400);
+  // Set saved storage options:
+  const upload = multer({ storage: storage })
 
-    // If doesn't have image mime type prevent from uploading
-    if (!/^image/.test(image.mimetype)) return res.sendStatus(400);
-
-    // Move the uploaded image to our upload folder
-    image.mv('./driveCloud/EMBARQUES/' + image.name);
+  app.post('/upload/driveCloud', upload.array("files"), (req, res) => {
+    console.log(req.files); ;
 
     // All good
     res.sendStatus(200);
