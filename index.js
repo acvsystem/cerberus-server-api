@@ -1438,7 +1438,7 @@ io.on('connection', async (socket) => {
 
   const storage = multer.diskStorage({
     destination: function (req, file, callback) {
-      callback(null, './driveCloud/EMBARQUES/' + image.name);
+      callback(null, './driveCloud/EMBARQUES/');
     },
     // Sets file(s) to be saved in uploads folder in same directory
     filename: function (req, file, callback) {
