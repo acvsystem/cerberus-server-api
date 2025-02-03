@@ -439,21 +439,21 @@ io.on('connection', async (socket) => {
                 </tbody>
             </table>`;
 
-    let correo = ['itperu@metasperu.com','johnnygermano@metasperu.com'];
+    let correo = ['itperu@metasperu.com', 'johnnygermano@metasperu.com'];
 
-    
-        if (data.codigo_tienda == '7I' || data.codigo_tienda == '9P' || data.codigo_tienda == '9N' || data.codigo_tienda == '7J') {
-          correo.push('carlosmoron@metasperu.com');
-        }
+
+    if (data.codigo_tienda == '7I' || data.codigo_tienda == '9P' || data.codigo_tienda == '9N' || data.codigo_tienda == '7J') {
+      correo.push('carlosmoron@metasperu.com');
+    }
     /*
         if (data.codigo_tienda == '9M' || data.codigo_tienda == '7F') {
           correo.push('johnnygermano@metasperu.com');
         }
     */
-        if (data.codigo_tienda != '7I' && data.codigo_tienda != '9P' && data.codigo_tienda != '9N' && data.codigo_tienda != '7J' && data.codigo_tienda != '9M' && data.codigo_tienda != '7F') {
-          correo.push('josecarreno@metasperu.com ');
-        }
-    
+    if (data.codigo_tienda != '7I' && data.codigo_tienda != '9P' && data.codigo_tienda != '9N' && data.codigo_tienda != '7J' && data.codigo_tienda != '9M' && data.codigo_tienda != '7F') {
+      correo.push('josecarreno@metasperu.com ');
+    }
+
     emailController.sendEmail(correo, `SOLICITUD DE APROBACION DE HORA EXTRA - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
       .catch(error => res.send(error));
 
@@ -1432,6 +1432,24 @@ io.on('connection', async (socket) => {
     const file = "./driveCloud/EMBARQUES/" + (request || {}).route;
     var fileLocation = path.join('./', file);
     res.download(fileLocation, file);
+  });
+
+
+  app.post('/upload/driveCloud', (req, res) => {
+    // Get the file that was set to our field named "image"
+    const { image } = req.files;
+
+    // If no image submitted, exit
+    if (!image) return res.sendStatus(400);
+
+    // If doesn't have image mime type prevent from uploading
+    if (!/^image/.test(image.mimetype)) return res.sendStatus(400);
+
+    // Move the uploaded image to our upload folder
+    image.mv('./driveCloud/EMBARQUES/' + image.name);
+
+    // All good
+    res.sendStatus(200);
   });
 
   app.post('/oneListDirectory', async (req, res) => {
