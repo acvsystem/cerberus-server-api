@@ -1500,7 +1500,7 @@ io.on('connection', async (socket) => {
       { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
     ];
     console.log((arrDocumento || {}).ESTADO_SUNAT);
-    if (((arrDocumento || {}).ESTADO_SUNAT).trim() == "RECHAZADO") {
+    if (((arrDocumento || {}).ESTADO_SUNAT || "").trim() == "RECHAZADO") {
       console.log(arrDocumento);
       let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = '${(arrDocumento || {}).CODIGO_DOCUMENTO}';`);
       console.log((arrDocumento || {}).ESTADO_SUNAT);
