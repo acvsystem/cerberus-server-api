@@ -1461,7 +1461,7 @@ io.on('connection', async (socket) => {
   // Create a multer instance with the storage strategy
   const upload = multer({ storage: storage });
   // Route to handle single file upload
-  app.post('/upload/driveCloud', upload.single('file'), (req, res) => {
+  app.post('/upload/driveCloud', upload.array('file', 5), (req, res) => {
     console.log(req);
     // The uploaded file is available in req.file
     res.json({ message: 'Single file uploaded successfully!' });
