@@ -1437,7 +1437,7 @@ io.on('connection', async (socket) => {
 
 
   const storage = multer.diskStorage({
-    
+
     destination: function (req, file, callback) {
       callback(null, './driveCloud/EMBARQUES/');
     },
@@ -1620,7 +1620,10 @@ io.on('connection', async (socket) => {
   console.log('a user connected');
 });
 
-
+const requestListener = function (req, res) {
+  res.writeHead(200);
+  res.end("My first server!");
+};
 
 httpServer.listen(3700, async () => {
   console.log('listening on *:3700');
