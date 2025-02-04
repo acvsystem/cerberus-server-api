@@ -5,7 +5,7 @@ export const pool = createPool({
     user: 'dbserver',
     port: 3306,
     password: 'J4s0nd34d$$',
-    database: 'BD_METASPERU',
+    database: 'BD_METASPERU_DEV',
     waitForConnections : true , 
     connectionLimit : 100 , 
     maxIdle : 100 ,  
