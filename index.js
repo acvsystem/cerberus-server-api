@@ -1435,24 +1435,11 @@ io.on('connection', async (socket) => {
     res.download(fileLocation, file);
   });
 
-
-  const storage = multer.diskStorage({
-
-    destination: function (req, file, callback) {
-      callback(null, './driveCloud/EMBARQUES/');
-    },
-    // Sets file(s) to be saved in uploads folder in same directory
-    filename: function (req, file, callback) {
-      callback(null, file.originalname);
-    }
-    // Sets saved filename(s) to be original filename(s)
-  })
-
   const multi_upload = multer({
     storage,// 1MB
     fileFilter: (req, file, cb) => {
       if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
-        cb(null, true);
+        cb(null, './driveCloud/EMBARQUES/');
       } else {
         cb(null, false);
         const err = new Error('Only .png, .jpg and .jpeg format allowed!')
