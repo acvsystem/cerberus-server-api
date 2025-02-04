@@ -1460,7 +1460,7 @@ io.on('connection', async (socket) => {
         return cb(err);
       }
     },
-  }).array('uploadedImages', 10)
+  }).array('file', 10)
 
   app.post('/upload/driveCloud', (req, res) => {
     multi_upload(req, res, function (err) {
