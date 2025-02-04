@@ -1435,51 +1435,51 @@ io.on('connection', async (socket) => {
     res.download(fileLocation, file);
   });
 
-  const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, path.join(__dirname, './driveCloud/EMBARQUES/'))
+
+  const storageEngine = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, './driveCloud/EMBARQUES/')
     },
-    filename: function (req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now() + file.originalname.match(/\..*$/)[0])
+    filename: (req, file, cb) => {
+      cb(null, file.originalname)
     }
   });
 
-  const multi_upload = multer({
-    storage,// 1MB
-    fileFilter: (req, file, cb) => {
-      if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
-        cb(null, true);
-      } else {
-        cb(null, false);
-        const err = new Error('Only .png, .jpg and .jpeg format allowed!')
-        err.name = 'ExtensionError'
-        return cb(err);
-      }
-    },
-  }).array('file', 10)
 
-  app.post('/upload/driveCloud', (req, res) => {
-    multi_upload(req, res, function (err) {
-      if (err instanceof multer.MulterError) {
-        // A Multer error occurred when uploading.
-        res.status(500).send({ error: { message: `Multer uploading error: ${err.message}` } }).end();
-        return;
-      } else if (err) {
-        // An unknown error occurred when uploading.
-        if (err.name == 'ExtensionError') {
-          res.status(413).send({ error: { message: err.message } }).end();
-        } else {
-          res.status(500).send({ error: { message: `unknown uploading error: ${err.message}` } }).end();
-        }
-        return;
-      }
 
-      // Everything went fine.
-      // show file `req.files`
-      // show body `req.body`
-      res.status(200).end('Your files uploaded.');
-    })
-  });
+    const storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+      // Specify the upload directory
+      cb(null, './driveCloud/EMBARQUES/');
+      },
+      filename: function (req, file, cb) {
+      // Define the file name format
+      cb(null, file.originalname);
+      }
+     });
+     // Create a multer instance with the storage strategy
+     const upload = multer({ storage: storage });
+     // Route to handle single file upload
+     app.post('/upload/driveCloud', upload.single('file'), (req, res) => {
+      // The uploaded file is available in req.file
+      res.json({ message: 'Single file uploaded successfully!' });
+     });
+     // Route to handle multiple file uploads from a single field
+     app.post('/uploadMultipleSingleField', upload.array('multipleFiles', 5), (req, res) => {
+      // The uploaded files are available in req.files
+      res.json({ message: 'Multiple files from a single field uploaded successfully!' });
+     });
+     // Route to handle multiple file uploads from multiple fields
+     app.post('/uploadMultipleFields', upload.fields([
+      { name: 'field1Files', maxCount: 5 },
+      { name: 'field2Files', maxCount: 5 }
+     ]), (req, res) => {
+      // The uploaded files are available in req.files
+      // Use req.files['field1Files'] for files from the first field
+      // Use req.files['field2Files'] for files from the second field
+      res.json({ message: 'Multiple files from multiple fields uploaded successfully!' });
+     });
+
 
   app.post('/oneListDirectory', async (req, res) => {
     let arDirectory = [];
