@@ -18,12 +18,7 @@ import path from 'path';
 import multer from 'multer';
 
 const app = express();
-const httpServer = createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('This is My First Nodejs App!\n');
-});
-
+const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: "*", methods: ["GET", "POST"], transports: ['websocket', 'polling'] } });
 
 
