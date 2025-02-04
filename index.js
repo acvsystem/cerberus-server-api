@@ -18,7 +18,7 @@ import path from 'path';
 import multer from 'multer';
 
 const app = express();
-const httpServer = createServer(app);
+const httpServer = createServer(app)
 const io = new Server(httpServer, { cors: { origin: "*", methods: ["GET", "POST"], transports: ['websocket', 'polling'] } });
 
 
@@ -27,6 +27,11 @@ app.use(
     origin: "*",
   })
 );
+
+app.get("/test", async (req, res) => {
+  res.writeHead(200);
+  res.end("My first server!");
+});
 
 app.use(bodyParser.json({ limit: "1000000mb" }));
 app.use(bodyParser.urlencoded({ limit: "1000000mb", extended: true }));
@@ -1620,10 +1625,7 @@ io.on('connection', async (socket) => {
   console.log('a user connected');
 });
 
-app.post("/test", async (req, res) => {
-  res.writeHead(200);
-  res.end("My first server!");
-});
+
 
 httpServer.listen(3700, async () => {
   console.log('listening on *:3700');
