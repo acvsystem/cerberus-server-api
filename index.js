@@ -1461,7 +1461,7 @@ io.on('connection', async (socket) => {
 
   app.post('/upload/driveCloud', upload.array('file', 10), (req, res) => {
     console.log(req);
-    res.status(200);
+    res.json({ message: 'success' });
   });
 
   /*
