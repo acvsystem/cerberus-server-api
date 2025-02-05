@@ -367,7 +367,7 @@ io.on('connection', async (socket) => {
     res.json(arAutorizacion);
   });
 
-
+/*
   socket.on("solicitar_aprobacion_hrx", async (data) => {
 
     let [arHrExtra] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
@@ -446,11 +446,7 @@ io.on('connection', async (socket) => {
     if (data.codigo_tienda == '7I' || data.codigo_tienda == '9P' || data.codigo_tienda == '9N' || data.codigo_tienda == '7J') {
       correo.push('carlosmoron@metasperu.com');
     }
-    /*
-        if (data.codigo_tienda == '9M' || data.codigo_tienda == '7F') {
-          correo.push('johnnygermano@metasperu.com');
-        }
-    */
+
     if (data.codigo_tienda != '7I' && data.codigo_tienda != '9P' && data.codigo_tienda != '9N' && data.codigo_tienda != '7J' && data.codigo_tienda != '9M' && data.codigo_tienda != '7F') {
       correo.push('josecarreno@metasperu.com ');
     }
@@ -459,7 +455,8 @@ io.on('connection', async (socket) => {
       .catch(error => res.send(error));
 
   });
-
+  */
+/*
   socket.on("autorizar_hrx", async (data) => {
 
     let [arHrExtra] = await pool.query(`SELECT * FROM TB_AROBADO_HR_EXTRA WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
@@ -503,7 +500,7 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("lista_solicitudes", arAutorizacion);
     socket.broadcast.emit("respuesta_autorizacion", arAutorizacionResponse);
   });
-
+*/
   app.get("/session_login/view", async (req, res) => {
     let [arSession] = await pool.query(`SELECT * FROM TB_SESSION_LOGIN;`);
     if ((arSession || []).length) {
@@ -794,7 +791,7 @@ io.on('connection', async (socket) => {
   })
 
   app.get("/calendario/listarHorario", async (req, res) => {
-    let [arHorarios] = await pool.query(`SELECT RANGO_DIAS,CODIGO_TIENDA FROM TB_HORARIO_PROPERTY GROUP BY RANGO_DIAS,CODIGO_TIENDA;`);
+    let [arHorarios] = await pool.query(`SELECT  *  FROM TB_HORARIO_PROPERTY ORDER BY ID_HORARIO DESC;`);
     console.log(arHorarios);
     if ((arHorarios || []).length) {
       res.json(arHorarios);
