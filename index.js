@@ -1192,7 +1192,7 @@ io.on('connection', async (socket) => {
       socket: (socket || {}).id,
       cntCosto: cntCosto
     };
-
+    console.log(configurationList);
     socket.broadcast.emit("consultarEJB", configurationList);
     socket.broadcast.emit("consultarEmpleados", configurationList);
   });
