@@ -1207,8 +1207,8 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("consultarEJB", configurationList);
     socket.broadcast.emit("consultarEmpleados", configurationList);
 
-    socket.on("resEmpleadosHTTP", (response) => {
-      console.log(response);
+    io.on("resEmpleadosHTTP", (response) => {
+      console.log("resEmpleadosHTTP");
       let data = response;
       let parseEJB = [];
       let parseHuellero = [];
