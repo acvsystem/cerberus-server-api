@@ -1186,6 +1186,10 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("consultaHoras", configurationList);
   });
 
+  socket.on("comunicationEnlace", (enlace) => {
+    
+  });
+
   socket.on("consultaListaEmpleado", (cntCosto) => {
     console.log(cntCosto);
     let configurationList = {
