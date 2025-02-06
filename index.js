@@ -361,13 +361,14 @@ io.on('connection', async (socket) => {
     let [arTipoPapeleta] = await pool.query(`SELECT * FROM TB_TIPO_PAPELETA;`);
     res.json(arTipoPapeleta);
   });
-
+  
+/*
   app.get("/papeleta/lista/horas_autorizacion", async (req, res) => {
     let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
     res.json(arAutorizacion);
   });
 
-/*
+
   socket.on("solicitar_aprobacion_hrx", async (data) => {
 
     let [arHrExtra] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
