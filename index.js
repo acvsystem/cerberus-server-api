@@ -1266,14 +1266,14 @@ io.on('connection', async (socket) => {
 
       }
 
-      if ((data || {}).serverData.length && parseEJB.length) {
+    
         req.json([
           {
             reporteHuellero: (data || {}).serverData || [],
             reporteEmpleadoTienda: parseEJB
           }
         ]);
-      }
+      
 
       //socket.to(`${listClient.id}`).emit("reporteHuellero", { id: data.id, data: JSON.parse((data || {}).serverData || []) });
       //socket.to(`${listClient.id}`).emit("reporteEmpleadoTienda", { id: data.id, data: parseEJB });
