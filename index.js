@@ -1208,6 +1208,7 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("consultarEmpleados", configurationList);
 
     socket.on("resEmpleadosHTTP", (response) => {
+      console.log(response);
       let data = response;
       let parseEJB = [];
       let parseHuellero = [];
