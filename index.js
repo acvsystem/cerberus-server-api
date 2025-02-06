@@ -1197,90 +1197,6 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("consultarEmpleados", configurationList);
   });
 
-  app.post("/consulta/lista/empleado", async (req, res) => {
-    let inp = req.body;
-    let configurationList = {
-      socket: (socket || {}).id,
-      cntCosto: (inp || {}).cntCosto
-    };
-    console.log(configurationList);
-    socket.broadcast.emit("consultarEJB", configurationList);
-    socket.broadcast.emit("consultarEmpleados", configurationList);
-
-    io.on("resEmpleadosHTTP", (response) => {
-      console.log("resEmpleadosHTTP");
-      let data = response;
-      let parseEJB = [];
-      let parseHuellero = [];
-      let dataResponse = [];
-      let IDSocket = data.socket;
-
-      if (data.id == "EJB") {
-        let dataEJB = [];
-        dataEJB = JSON.parse((data || {}).serverData || []);
-
-        if (data.id == "EJB" && dataEJB.length) {
-          console.log("EJB", true);
-        }
-
-        (dataEJB || []).filter((ejb) => {
-
-          parseEJB.push({
-            id: "EJB",
-            codigoEJB: ((ejb || {}).CODEJB || "").trim(),
-            nombre_completo: `${(ejb || {}).APEPAT} ${(ejb || {}).APEMAT} ${(ejb || {}).NOMBRE}`,
-            nro_documento: ((ejb || {}).NUMDOC || "").trim(),
-            telefono: ((ejb || {}).TELEFO || "").trim(),
-            email: ((ejb || {}).EMAIL || "").trim(),
-            fec_nacimiento: ((ejb || {}).FECNAC || "").trim(),
-            fec_ingreso: ((ejb || {}).FECING || "").trim(),
-            status: ((ejb || {}).STATUS || "").trim(),
-            unid_servicio: ((ejb || {}).UNDSERVICIO || "").trim(),
-            code_unid_servicio: ((ejb || {}).CODUNDSERVICIO || "").trim(),
-          });
-
-        });
-
-      }
-
-      if (data.id == "servGeneral") {
-        let dataServGeneral = [];
-        dataServGeneral = JSON.parse((data || {}).serverData || []);
-
-        if (data.id == "servGeneral" && dataServGeneral.length) {
-          console.log("servGeneral", true);
-          console.log(dataServGeneral);
-        }
-
-        (dataServGeneral || []).filter((huellero) => {
-          parseHuellero.push({
-            id: "servGeneral",
-            nro_documento: (huellero || {}).nroDocumento,
-            dia: (huellero || {}).dia,
-            hr_ingreso: (huellero || {}).hrIn,
-            hr_salida: (huellero || {}).hrOut,
-            hr_trabajadas: (huellero || {}).hrWorking,
-            caja: (huellero || {}).caja
-          });
-        });
-
-      }
-
-    
-        req.json([
-          {
-            reporteHuellero: (data || {}).serverData || [],
-            reporteEmpleadoTienda: parseEJB
-          }
-        ]);
-      
-
-      //socket.to(`${listClient.id}`).emit("reporteHuellero", { id: data.id, data: JSON.parse((data || {}).serverData || []) });
-      //socket.to(`${listClient.id}`).emit("reporteEmpleadoTienda", { id: data.id, data: parseEJB });
-    });
-  });
-
-
   socket.on("horario/empleadoEJB", (cntCosto) => {
     console.log(cntCosto);
     let configurationList = {
@@ -1520,7 +1436,7 @@ io.on('connection', async (socket) => {
 
 
   const storage = multer.diskStorage({
-
+    
     destination: function (req, file, callback) {
       callback(null, './driveCloud/EMBARQUES/');
     },
