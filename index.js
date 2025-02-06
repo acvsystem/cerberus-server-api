@@ -1198,9 +1198,10 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/consulta/lista/empleado", async (req, res) => {
+    let inp = req.body;
     let configurationList = {
       socket: (socket || {}).id,
-      cntCosto: cntCosto
+      cntCosto: (inp || {}).cntCosto
     };
     console.log(configurationList);
     socket.broadcast.emit("consultarEJB", configurationList);
