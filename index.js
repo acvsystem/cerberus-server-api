@@ -804,7 +804,7 @@ io.on('connection', async (socket) => {
   });
 
   app.get("/papeleta/listarPapeleta", async (req, res) => {
-    let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado';`);
+    let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' ORDER BY FECHA_CREACION DESC;`);
     let parsePap = [];
     if ((arPapeleta || []).length) {
       await (arPapeleta || []).filter(async (pap) => {
