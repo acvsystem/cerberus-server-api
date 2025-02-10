@@ -1334,12 +1334,12 @@ io.on('connection', async (socket) => {
     (dataServGeneral || []).filter((huellero, i) => {
       pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ID_PAP_TIPO_PAPELETA = 7 AND FECHA_DESDE = '${(huellero || {}).dia}';`).then(([papeleta]) => {
         ((dataServGeneral || [])[i] || {})['papeleta'] = papeleta || [];
-      });
 
-      if (dataServGeneral.length - 1 == i) {
-        console.log(dataServGeneral);
-        socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: dataServGeneral , rs:'new'});
-      }
+        if (dataServGeneral.length - 1 == i) {
+          console.log(dataServGeneral);
+          socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: dataServGeneral , rs:'new'});
+        }
+      });
     });
 
     
