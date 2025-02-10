@@ -1262,17 +1262,14 @@ io.on('connection', async (socket) => {
       }
 
       (dataServGeneral || []).filter((huellero) => {
-        pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ID_PAP_TIPO_PAPELETA = 7 AND FECHA_DESDE = '${(huellero || {}).dia}';`).then(([papeleta]) => {
-          parseHuellero.push({
-            id: "servGeneral",
-            nro_documento: (huellero || {}).nroDocumento,
-            dia: (huellero || {}).dia,
-            hr_ingreso: (huellero || {}).hrIn,
-            hr_salida: (huellero || {}).hrOut,
-            hr_trabajadas: (huellero || {}).hrWorking,
-            caja: (huellero || {}).caja,
-            papeleta: papeleta || []
-          });
+        parseHuellero.push({
+          id: "servGeneral",
+          nro_documento: (huellero || {}).nroDocumento,
+          dia: (huellero || {}).dia,
+          hr_ingreso: (huellero || {}).hrIn,
+          hr_salida: (huellero || {}).hrOut,
+          hr_trabajadas: (huellero || {}).hrWorking,
+          caja: (huellero || {}).caja
         });
       });
 
@@ -1333,6 +1330,22 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/frontRetail/search/huellero", async (req, res) => {
+    let dataServGeneral = (req || {}).body;
+    (dataServGeneral || []).filter((huellero) => {
+      pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ID_PAP_TIPO_PAPELETA = 7 AND FECHA_DESDE = '${(huellero || {}).dia}';`).then(([papeleta]) => {
+        parseHuellero.push({
+          id: "servGeneral",
+          nro_documento: (huellero || {}).nroDocumento,
+          dia: (huellero || {}).dia,
+          hr_ingreso: (huellero || {}).hrIn,
+          hr_salida: (huellero || {}).hrOut,
+          hr_trabajadas: (huellero || {}).hrWorking,
+          caja: (huellero || {}).caja,
+          papeleta: papeleta || []
+        });
+      });
+    });
+
     socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: req.body });
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
