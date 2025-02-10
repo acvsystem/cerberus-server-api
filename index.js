@@ -1338,7 +1338,7 @@ io.on('connection', async (socket) => {
 
       if (dataServGeneral.length - 1 == i) {
         console.log(dataServGeneral);
-        socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: dataServGeneral });
+        socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: dataServGeneral , rs:'new'});
       }
     });
 
