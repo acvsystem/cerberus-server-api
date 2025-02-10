@@ -1271,7 +1271,7 @@ io.on('connection', async (socket) => {
             hr_salida: (huellero || {}).hrOut,
             hr_trabajadas: (huellero || {}).hrWorking,
             caja: (huellero || {}).caja,
-            papeleta: papeleta
+            papeleta: papeleta || []
           });
         });
       });
