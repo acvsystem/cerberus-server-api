@@ -1337,7 +1337,7 @@ io.on('connection', async (socket) => {
       });
     });
 
-    socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: req.body });
+    socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: dataServGeneral });
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
 
