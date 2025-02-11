@@ -380,7 +380,8 @@ io.on('connection', async (socket) => {
         APROBADO,
         RECHAZADO,
         FECHA,
-        CODIGO_TIENDA)VALUES('${data.hora_extra}','${data.nro_documento}','${data.nombre_completo}',${data.aprobado},false,'${data.fecha}','${data.codigo_tienda}')`);
+        USUARIO_MODF
+        CODIGO_TIENDA)VALUES('${(data || {}).hora_extra}','${(data || {}).nro_documento}','${(data || {}).nombre_completo}',${(data || {}).aprobado},false,'${(data || {}).fecha}','${(data || {}).codigo_tienda}','${data.usuario}')`);
     }
 
     let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
@@ -473,9 +474,10 @@ io.on('connection', async (socket) => {
         APROBADO,
         RECHAZADO,
         FECHA,
-        CODIGO_TIENDA)VALUES('${data.hora_extra}','${data.nro_documento}','${data.nombre_completo}',${data.aprobado},${data.rechazado},'${data.fecha}','${data.codigo_tienda}')`);
+        USUARIO_MODF
+        CODIGO_TIENDA)VALUES('${data.hora_extra}','${data.nro_documento}','${data.nombre_completo}',${data.aprobado},${data.rechazado},'${data.fecha}','${data.codigo_tienda}','${data.usuario}')`);
 
-      await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET APROBADO = ${data.aprobado == true ? 1 : 0},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
+      await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET USUARIO_MODF = '${data.usuario}', APROBADO = ${data.aprobado == true ? 1 : 0},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
       let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}' AND HR_EXTRA_ACUMULADO = '${data.hora_extra}';`);
 
       if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
@@ -491,7 +493,7 @@ io.on('connection', async (socket) => {
         await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET ESTADO = '${aprobado}',APROBADO = ${data.aprobado == true ? 1 : 0} WHERE ID_HR_EXTRA = ${((arHrExtra || [])[0] || {})['ID_HR_EXTRA']};`);
       }
 
-      await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET APROBADO = ${data.aprobado == true ? 1 : 0},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
+      await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET USUARIO_MODF = '${data.usuario}', APROBADO = ${data.aprobado == true ? 1 : 0},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
       await pool.query(`UPDATE TB_AROBADO_HR_EXTRA SET APROBADO = ${data.aprobado == true ? 1 : 0},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
 
 
@@ -1337,12 +1339,12 @@ io.on('connection', async (socket) => {
 
         if (dataServGeneral.length - 1 == i) {
           console.log(dataServGeneral);
-          socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: dataServGeneral , rs:'new'});
+          socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: dataServGeneral, rs: 'new' });
         }
       });
     });
 
-    
+
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
 
