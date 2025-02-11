@@ -363,7 +363,7 @@ io.on('connection', async (socket) => {
   });
 
   app.get("/papeleta/lista/horas_autorizacion", async (req, res) => {
-    let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
+    let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA ORDER BY FECHA DESC;`);
     res.json(arAutorizacion);
   });
 
