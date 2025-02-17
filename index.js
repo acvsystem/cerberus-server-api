@@ -1473,13 +1473,13 @@ io.on('connection', async (socket) => {
     }
   });
 
-  var __dirName = "";
+  
 
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      
+      let __dirName = req.query.path || "";
       let dr = __dirName.length ? __dirName + "/" : "";
-      console.log(req.query);
+      console.log('./driveCloud/EMBARQUES/' + dr);
       cb(null, './driveCloud/EMBARQUES/' + dr);
     },
     filename: function (req, file, cb) {
