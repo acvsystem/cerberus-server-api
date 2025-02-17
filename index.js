@@ -1415,7 +1415,7 @@ io.on('connection', async (socket) => {
   app.post('/deleteDirectory', async (req, res) => {
     let request = ((req || []).body || [])
     console.log(request);
-    fs.rmdir("driveCloud/EMBARQUES/" + (request || {}).route, (error) => {
+    fs.unlink("driveCloud/EMBARQUES/" + (request || {}).route, (error) => {
       if (error) {
         res.json({ msj: error.message })
       } else {
