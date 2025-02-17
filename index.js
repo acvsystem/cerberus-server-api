@@ -1477,34 +1477,20 @@ io.on('connection', async (socket) => {
 
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      console.log(file);
+      
       cb(null, './driveCloud/EMBARQUES/');
     },
     filename: function (req, file, cb) {
-
+      
       cb(null, file.originalname);
     }
   });
 
-  //const upload = multer({ storage: storage });
+  const upload = multer({ storage: storage });
 
-  const upload = multer({
-    storage: storage,
-  }).array('file', 10);
-
-
-  app.post('/upload/driveCloud', (req, res) => {
-    upload(req, res, (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: err });
-      }
-      if (!req.file) {
-        return res.status(400).json({ error: 'Please send file' });
-      }
-      console.log(req.file);
-      res.json({ message: 'success' });
-    });
+  app.post('/upload/driveCloud', upload.array('file', 10), (req, res) => {
+    
+    res.json({ message: 'success' });
   });
 
   /*
