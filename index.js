@@ -1473,7 +1473,7 @@ io.on('connection', async (socket) => {
     }
   });
 
-  
+
 
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -1491,7 +1491,7 @@ io.on('connection', async (socket) => {
   const upload = multer({ storage: storage });
 
   app.post('/upload/driveCloud', upload.array('file', 10), (req, res) => {
-   
+
     res.json({ message: 'success' });
   });
 
@@ -1515,21 +1515,25 @@ io.on('connection', async (socket) => {
   app.post('/oneListDirectory', async (req, res) => {
     let arDirectory = [];
     let request = ((req || []).body || [])
-    console.log(fs.readdirSync('driveCloud/EMBARQUES/' + request.path));
-    fs.readdirSync('driveCloud/EMBARQUES/' + request.path).forEach(async (file, i) => {
-      await fs.stat('driveCloud/EMBARQUES/' + request.path + "/" + file, (err, stats) => {
-        arDirectory.push({
-          name: file,
-          size: stats.size,
-          mtime: stats.atime
+    if (fs.readdirSync('driveCloud/EMBARQUES/' + request.path).length) {
+      fs.readdirSync('driveCloud/EMBARQUES/' + request.path).forEach(async (file, i) => {
+        await fs.stat('driveCloud/EMBARQUES/' + request.path + "/" + file, (err, stats) => {
+          arDirectory.push({
+            name: file,
+            size: stats.size,
+            mtime: stats.atime
+          });
+
+          if (fs.readdirSync('driveCloud/EMBARQUES/' + request.path).length == arDirectory.length) {
+            res.json(arDirectory || []);
+          }
+
         });
-
-        if (fs.readdirSync('driveCloud/EMBARQUES/' + request.path).length == arDirectory.length) {
-          res.json(arDirectory || []);
-        }
-
       });
-    });
+    } else {
+      res.json([]);
+    }
+
   });
 
   app.post('/sunat-notification', async (req, res) => {
