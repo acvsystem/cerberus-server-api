@@ -1479,7 +1479,7 @@ io.on('connection', async (socket) => {
     destination: function (req, file, cb) {
       
       let dr = __dirName.length ? __dirName + "/" : "";
-      console.log("destination",__dirName,'./driveCloud/EMBARQUES/' + dr);
+      console.log(req.query);
       cb(null, './driveCloud/EMBARQUES/' + dr);
     },
     filename: function (req, file, cb) {
