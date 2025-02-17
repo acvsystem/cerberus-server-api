@@ -1522,8 +1522,9 @@ io.on('connection', async (socket) => {
           size: stats.size,
           mtime: stats.atime
         });
+        
         if (fs.readdirSync('driveCloud/EMBARQUES/' + request.path).length == arDirectory.length) {
-          res.json(arDirectory);
+          res.json(arDirectory || []);
         }
 
       });
