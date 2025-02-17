@@ -443,7 +443,7 @@ io.on('connection', async (socket) => {
     let correo = ['itperu@metasperu.com', 'johnnygermano@metasperu.com'];
 
 
-    if (data.codigo_tienda == '7I' || data.codigo_tienda == '9P' || data.codigo_tienda == '9N' || data.codigo_tienda == '7J') {
+    if (data.codigo_tienda == '7I' || data.codigo_tienda == '9P' || data.codigo_tienda == '9N' || data.codigo_tienda == '7J' || data.codigo_tienda == '9F') {
       correo.push('carlosmoron@metasperu.com');
     }
     /*
