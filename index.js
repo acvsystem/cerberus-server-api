@@ -364,7 +364,7 @@ io.on('connection', async (socket) => {
   
 /*
   app.get("/papeleta/lista/horas_autorizacion", async (req, res) => {
-    let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
+    let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA ORDER BY FECHA DESC;`);
     res.json(arAutorizacion);
   });
 
@@ -381,7 +381,7 @@ io.on('connection', async (socket) => {
         APROBADO,
         RECHAZADO,
         FECHA,
-        CODIGO_TIENDA)VALUES('${data.hora_extra}','${data.nro_documento}','${data.nombre_completo}',${data.aprobado},false,'${data.fecha}','${data.codigo_tienda}')`);
+        CODIGO_TIENDA)VALUES('${(data || {}).hora_extra}','${(data || {}).nro_documento}','${(data || {}).nombre_completo}',${(data || {}).aprobado},false,'${(data || {}).fecha}','${(data || {}).codigo_tienda}')`);
     }
 
     let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
@@ -444,7 +444,7 @@ io.on('connection', async (socket) => {
     let correo = ['itperu@metasperu.com', 'johnnygermano@metasperu.com'];
 
 
-    if (data.codigo_tienda == '7I' || data.codigo_tienda == '9P' || data.codigo_tienda == '9N' || data.codigo_tienda == '7J') {
+    if (data.codigo_tienda == '7I' || data.codigo_tienda == '9P' || data.codigo_tienda == '9N' || data.codigo_tienda == '7J' || data.codigo_tienda == '9F') {
       correo.push('carlosmoron@metasperu.com');
     }
 
@@ -473,7 +473,7 @@ io.on('connection', async (socket) => {
         FECHA,
         CODIGO_TIENDA)VALUES('${data.hora_extra}','${data.nro_documento}','${data.nombre_completo}',${data.aprobado},${data.rechazado},'${data.fecha}','${data.codigo_tienda}')`);
 
-      await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET APROBADO = ${data.aprobado == true ? 1 : 0},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
+      await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET COMENTARIO = '${((data || {}).comentario || "")}', USUARIO_MODF = '${data.usuario}', APROBADO = ${data.aprobado == true ? 1 : 0},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
       let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}' AND HR_EXTRA_ACUMULADO = '${data.hora_extra}';`);
 
       if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
@@ -489,7 +489,7 @@ io.on('connection', async (socket) => {
         await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET ESTADO = '${aprobado}',APROBADO = ${data.aprobado == true ? 1 : 0} WHERE ID_HR_EXTRA = ${((arHrExtra || [])[0] || {})['ID_HR_EXTRA']};`);
       }
 
-      await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET APROBADO = ${data.aprobado == true ? 1 : 0},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
+      await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET COMENTARIO = '${((data || {}).comentario || "")}', USUARIO_MODF = '${data.usuario}', APROBADO = ${data.aprobado == true ? 1 : 0},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
       await pool.query(`UPDATE TB_AROBADO_HR_EXTRA SET APROBADO = ${data.aprobado == true ? 1 : 0},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
 
 
@@ -792,7 +792,7 @@ io.on('connection', async (socket) => {
   })
 
   app.get("/calendario/listarHorario", async (req, res) => {
-    let [arHorarios] = await pool.query(`SELECT * FROM (SELECT FECHA,RANGO_DIAS,CODIGO_TIENDA FROM TB_HORARIO_PROPERTY GROUP BY RANGO_DIAS,CODIGO_TIENDA) AS TEMP ORDER BY SUBSTRING_INDEX(RANGO_DIAS,' ',-1) DESC;`);
+    let [arHorarios] = await pool.query(`SELECT RANGO_DIAS,CODIGO_TIENDA FROM TB_HORARIO_PROPERTY GROUP BY RANGO_DIAS,CODIGO_TIENDA ORDER BY SUBSTRING_INDEX(RANGO_DIAS,' ',1) ASC;`);
     console.log(arHorarios);
     if ((arHorarios || []).length) {
       res.json(arHorarios);
@@ -1184,17 +1184,20 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("consultaHoras", configurationList);
   });
 
+  socket.on("comunicationEnlace", (enlace) => {
+
+  });
+
   socket.on("consultaListaEmpleado", (cntCosto) => {
     console.log(cntCosto);
     let configurationList = {
       socket: (socket || {}).id,
       cntCosto: cntCosto
     };
-
+    console.log(configurationList);
     socket.broadcast.emit("consultarEJB", configurationList);
     socket.broadcast.emit("consultarEmpleados", configurationList);
   });
-
 
   socket.on("horario/empleadoEJB", (cntCosto) => {
     console.log(cntCosto);
@@ -1325,7 +1328,19 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/frontRetail/search/huellero", async (req, res) => {
-    socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: req.body });
+    let dataServGeneral = (req || {}).body;
+    (dataServGeneral || []).filter((huellero, i) => {
+      pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${(huellero || {}).nroDocumento}' AND FECHA_DESDE = '${(huellero || {}).dia}';`).then(([papeleta]) => {
+        ((dataServGeneral || [])[i] || {})['papeleta'] = papeleta || [];
+
+        if (dataServGeneral.length - 1 == i) {
+          console.log(dataServGeneral);
+          socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: dataServGeneral, rs: 'new' });
+        }
+      });
+    });
+
+
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
 
