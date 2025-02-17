@@ -1395,7 +1395,7 @@ io.on('connection', async (socket) => {
     res.send('RECEPCION EXITOSA..!!');
   });
 
-  
+
   app.post('/uploadCloud', async (req, res) => {
 
   });
@@ -1415,13 +1415,25 @@ io.on('connection', async (socket) => {
   app.post('/deleteDirectory', async (req, res) => {
     let request = ((req || []).body || [])
     console.log(request);
-    fs.unlink("driveCloud/EMBARQUES/" + (request || {}).route, (error) => {
-      if (error) {
-        res.json({ msj: error.message })
-      } else {
-        res.json({ msj: "Directorio borrado" });
-      }
-    });
+    let evalueDir = ((request || {}).route || "").split(".");
+    if (evalueDir.length >= 2) {
+      fs.unlink("driveCloud/EMBARQUES/" + (request || {}).route, (error) => {
+        if (error) {
+          res.json({ msj: error.message })
+        } else {
+          res.json({ msj: "Directorio borrado" });
+        }
+      });
+    } else {
+      fs.rmdir("driveCloud/EMBARQUES/" + (request || {}).route, (error) => {
+        if (error) {
+          res.json({ msj: error.message })
+        } else {
+          res.json({ msj: "Directorio borrado" });
+        }
+      });
+    }
+
   });
 
   app.get('/listDirectory', async (req, res) => {
