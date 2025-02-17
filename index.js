@@ -1477,7 +1477,7 @@ io.on('connection', async (socket) => {
 
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      console.log(req.params, __dirName);
+    
       cb(null, './driveCloud/EMBARQUES/');
     },
     filename: function (req, file, cb) {
@@ -1489,7 +1489,7 @@ io.on('connection', async (socket) => {
   const upload = multer({ storage: storage });
 
   app.post('/upload/driveCloud', upload.array('file', 10), (req, res) => {
-    __dirName = req.params[0]['value'];
+    console.log(req.params);
     res.json({ message: 'success' });
   });
 
