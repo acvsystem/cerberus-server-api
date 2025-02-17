@@ -1473,15 +1473,15 @@ io.on('connection', async (socket) => {
     }
   });
 
-
+  var __dirName = "";
 
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      console.log(req.params);
+      console.log(req.params, __dirName);
       cb(null, './driveCloud/EMBARQUES/');
     },
     filename: function (req, file, cb) {
-      
+
       cb(null, file.originalname);
     }
   });
@@ -1489,7 +1489,7 @@ io.on('connection', async (socket) => {
   const upload = multer({ storage: storage });
 
   app.post('/upload/driveCloud', upload.array('file', 10), (req, res) => {
-    
+    __dirName = req.params[0]['value'];
     res.json({ message: 'success' });
   });
 
