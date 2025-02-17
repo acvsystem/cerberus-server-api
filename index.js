@@ -1477,7 +1477,7 @@ io.on('connection', async (socket) => {
 
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, './driveCloud/EMBARQUES/');
+      cb(null, './driveCloud/EMBARQUES/' + file);
     },
     filename: function (req, file, cb) {
       console.log(file);
