@@ -1480,7 +1480,7 @@ io.on('connection', async (socket) => {
       cb(null, './driveCloud/EMBARQUES/');
     },
     filename: function (req, file, cb) {
-      console.log(req);
+      console.log(file);
       cb(null, file.originalname);
     }
   });
