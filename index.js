@@ -1515,6 +1515,7 @@ io.on('connection', async (socket) => {
   app.post('/oneListDirectory', async (req, res) => {
     let arDirectory = [];
     let request = ((req || []).body || [])
+    console.log(fs.readdirSync('driveCloud/EMBARQUES/' + request.path));
     fs.readdirSync('driveCloud/EMBARQUES/' + request.path).forEach(async (file, i) => {
       await fs.stat('driveCloud/EMBARQUES/' + request.path + "/" + file, (err, stats) => {
         arDirectory.push({
@@ -1522,7 +1523,7 @@ io.on('connection', async (socket) => {
           size: stats.size,
           mtime: stats.atime
         });
-        
+
         if (fs.readdirSync('driveCloud/EMBARQUES/' + request.path).length == arDirectory.length) {
           res.json(arDirectory || []);
         }
