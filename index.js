@@ -1395,6 +1395,7 @@ io.on('connection', async (socket) => {
     res.send('RECEPCION EXITOSA..!!');
   });
 
+  
   app.post('/uploadCloud', async (req, res) => {
 
   });
@@ -1451,24 +1452,50 @@ io.on('connection', async (socket) => {
   });
 
 
-  const storage = multer.diskStorage({
-
-    destination: function (req, file, callback) {
-      callback(null, './driveCloud/EMBARQUES/');
+  const storageEngine = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, './driveCloud/EMBARQUES/')
     },
-    // Sets file(s) to be saved in uploads folder in same directory
-    filename: function (req, file, callback) {
-      callback(null, file.originalname);
+    filename: (req, file, cb) => {
+      cb(null, file.originalname)
     }
-    // Sets saved filename(s) to be original filename(s)
-  })
-
-  // Set saved storage options:
-  const upload = multer({ storage: storage })
-
-  app.post('/upload/driveCloud', upload.single('file'), (req, res) => {
-    res.json({ message: 'Upload success' });
   });
+
+
+
+  const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, './driveCloud/EMBARQUES/');
+    },
+    filename: function (req, file, cb) {
+      console.log(file);
+      cb(null, file.originalname);
+    }
+  });
+
+  const upload = multer({ storage: storage });
+
+  app.post('/upload/driveCloud', upload.array('file', 10), (req, res) => {
+    console.log(req);
+    res.json({ message: 'success' });
+  });
+
+  /*
+   app.post('/uploadMultipleSingleField', upload.array('multipleFiles', 5), (req, res) => {
+     // The uploaded files are available in req.files
+     res.json({ message: 'Multiple files from a single field uploaded successfully!' });
+   });
+ 
+   app.post('/uploadMultipleFields', upload.fields([
+     { name: 'field1Files', maxCount: 5 },
+     { name: 'field2Files', maxCount: 5 }
+   ]), (req, res) => {
+     // The uploaded files are available in req.files
+     // Use req.files['field1Files'] for files from the first field
+     // Use req.files['field2Files'] for files from the second field
+     res.json({ message: 'Multiple files from multiple fields uploaded successfully!' });
+   });
+ */
 
   app.post('/oneListDirectory', async (req, res) => {
     let arDirectory = [];
