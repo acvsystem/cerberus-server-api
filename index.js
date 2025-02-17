@@ -1491,7 +1491,7 @@ io.on('connection', async (socket) => {
   const upload = multer({ storage: storage });
 
   app.post('/upload/driveCloud', upload.array('file', 10), (req, res) => {
-    __dirName = req.query.path || "";
+   
     res.json({ message: 'success' });
   });
 
