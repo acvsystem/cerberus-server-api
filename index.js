@@ -1564,7 +1564,7 @@ io.on('connection', async (socket) => {
       { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
     ];
 
-    (arrDocumento || []).filer(async (doc) => {
+    (arrDocumento || []).filter(async (doc) => {
       if (((doc || {}).ESTADO_SUNAT || "").trim() == "ACEPTADO" || ((doc || {}).ESTADO_SUNAT || "").trim() == "GENERADO") {
 
         let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = '${(doc || {}).CODIGO_DOCUMENTO}';`);
