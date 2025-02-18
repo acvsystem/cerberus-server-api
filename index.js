@@ -206,6 +206,7 @@ io.on('connection', async (socket) => {
 
   socket.on('comunicationFront', (data) => {
     console.log('comunicationFront');
+    socket.broadcast.emit('consultingSUNAT', 'sunat');
     socket.broadcast.emit("consultingToFront", 'ready');
   });
 
