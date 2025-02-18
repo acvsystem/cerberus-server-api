@@ -1578,7 +1578,7 @@ io.on('connection', async (socket) => {
                                   '${(doc || {}).NOM_ADQUIRIENTE}',
                                   '${(doc || {}).NRO_DOCUMENTO}',
                                   '',
-                                  '',
+                                  '${(doc || {}).OBSERVACION}',
                                   '${(doc || {}).ESTADO_SUNAT}',
                                   '${(doc || {}).ESTADO_COMPROBANTE}',
                                   '${(doc || {}).CODIGO_ERROR_SUNAT}',
@@ -1590,7 +1590,7 @@ io.on('connection', async (socket) => {
           await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET
                                   NOM_ADQUIRIENTE ='${(doc || {}).NOM_ADQUIRIENTE}',
                                   NRO_DOCUMENTO = '${(doc || {}).NRO_DOCUMENTO}',
-                                  OBSERVACION = '',
+                                  OBSERVACION = '${(doc || {}).OBSERVACION}',
                                   ESTADO_SUNAT = '${(doc || {}).ESTADO_SUNAT}',
                                   ESTADO_COMPROBANTE = '${(doc || {}).ESTADO_COMPROBANTE}',
                                   CODIGO_ERROR_SUNAT = '${(doc || {}).CODIGO_ERROR_SUNAT}' WHERE CODIGO_DOCUMENTO = ${(doc || {}).CODIGO_DOCUMENTO};`);
