@@ -206,7 +206,6 @@ io.on('connection', async (socket) => {
 
   socket.on('comunicationFront', (data) => {
     console.log('comunicationFront');
-    socket.broadcast.emit('consultingSUNAT', 'sunat');
     socket.broadcast.emit("consultingToFront", 'ready');
   });
 
@@ -1565,7 +1564,7 @@ io.on('connection', async (socket) => {
     ];
 
     (arrDocumento || []).filter(async (doc) => {
-      if (((doc || {}).ESTADO_SUNAT || "").trim() == "ACEPTADO" || ((doc || {}).ESTADO_SUNAT || "").trim() == "GENERADO") {
+      if (((doc || {}).ESTADO_SUNAT || "").trim() == "RECHAZADO" || ((doc || {}).ESTADO_SUNAT || "").trim() == "GENERADO") {
 
         let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = '${(doc || {}).CODIGO_DOCUMENTO}';`);
 
@@ -1671,9 +1670,9 @@ io.on('connection', async (socket) => {
           console.log("sunat:tienda", selectedLocal);
 
           await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET ENVIO_EMAIL ='true' WHERE CODIGO_DOCUMENTO = ${(doc || {}).CODIGO_DOCUMENTO};`);
-          /*
+          
                   emailController.sendEmail([(selectedLocal || {}).email || '', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com'], `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
-                    .catch(error => res.send(error));*/
+                    .catch(error => res.send(error));
 
           res.send('RECEPCION EXITOSA..!!');
         }
