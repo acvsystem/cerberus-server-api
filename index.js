@@ -1585,7 +1585,7 @@ io.on('connection', async (socket) => {
                                   'false',
                                   '${(doc || {}).FECHA_EMISION}');`);
 
-          res.send('RECEPCION EXITOSA..!!');
+          // res.send('RECEPCION EXITOSA..!!');
         } else {
           await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET
                                   NOM_ADQUIRIENTE ='${(doc || {}).NOM_ADQUIRIENTE}',
@@ -1594,7 +1594,7 @@ io.on('connection', async (socket) => {
                                   ESTADO_SUNAT = '${(doc || {}).ESTADO_SUNAT}',
                                   ESTADO_COMPROBANTE = '${(doc || {}).ESTADO_COMPROBANTE}',
                                   CODIGO_ERROR_SUNAT = '${(doc || {}).CODIGO_ERROR_SUNAT}' WHERE CODIGO_DOCUMENTO = ${(doc || {}).CODIGO_DOCUMENTO};`);
-          res.send('RECEPCION EXITOSA..!!');
+          //res.send('RECEPCION EXITOSA..!!');
         }
 
         let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
@@ -1674,6 +1674,8 @@ io.on('connection', async (socket) => {
           /*
                   emailController.sendEmail([(selectedLocal || {}).email || '', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com'], `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
                     .catch(error => res.send(error));*/
+
+          res.send('RECEPCION EXITOSA..!!');
         }
       }
     });
