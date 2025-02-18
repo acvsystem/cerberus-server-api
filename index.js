@@ -1562,12 +1562,11 @@ io.on('connection', async (socket) => {
       { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com' },
       { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
     ];
-    console.log((arrDocumento || {}).ESTADO_SUNAT);
-    if (((arrDocumento || {}).ESTADO_SUNAT).trim() == "RECHAZADO") {
-      console.log(arrDocumento);
+    
+    if (((arrDocumento || {}).ESTADO_SUNAT || "").trim() == "ACEPTADO" || ((arrDocumento || {}).ESTADO_SUNAT || "").trim() == "GENERADO") {
+      
       let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = '${(arrDocumento || {}).CODIGO_DOCUMENTO}';`);
-      console.log((arrDocumento || {}).ESTADO_SUNAT);
-      console.log(verifyDocument);
+ 
       let isEmailEnvio = ((verifyDocument || [])[0] || {}).ENVIO_EMAIL || 'false';
       console.log('verifyDocument', (verifyDocument || []).length);
 
