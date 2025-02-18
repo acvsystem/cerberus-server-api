@@ -1540,7 +1540,7 @@ io.on('connection', async (socket) => {
   app.post('/sunat-notification', async (req, res) => {
 
     let arrDocumento = (((req || []).body || [])[0] || {});
-
+    console.log((req || []).body);
     let tiendasList = [
       { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
       { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
