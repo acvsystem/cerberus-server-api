@@ -1360,12 +1360,11 @@ io.on('connection', async (socket) => {
         INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
         WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(dt || {}).nroDocumento}'
         AND FECHA_NUMBER = '${parseDate}';`);
-        console.log(`SELECT * FROM TB_DIAS_LIBRE 
-        INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
-        WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(dt || {}).nroDocumento}'
-        AND FECHA_NUMBER = '${parseDate}';`);
+        
       if ((arFeriado || []).length) {
         data[i]['isException'] = true;
+      } else {
+        data[i]['isException'] = false;
       }
 
       if (data.length - 1 == i) {
