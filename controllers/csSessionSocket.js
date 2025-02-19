@@ -51,8 +51,9 @@ class clsSessionSocket {
     }
 
     async disconnectServer() {
+        /*
         emailController.sendEmail('johnnygermano@metasperu.com', `SERVIDOR FACTURACION DESCONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
-            .catch(error => res.send(error));
+            .catch(error => res.send(error));*/
     }
 
     async sessionList() {

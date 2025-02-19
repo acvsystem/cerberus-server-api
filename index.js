@@ -1309,10 +1309,12 @@ io.on('connection', async (socket) => {
       console.log('SERVIDOR', codeTerminal);
       let [conexionList] = await pool.query(`SELECT * FROM TB_ESTATUS_SERVER_BACKUP;`);
       await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET ESTATUS_CONEXION = 1 WHERE ID_ESTATUS_SERVER = 1;`);
+      /*
       if (!((conexionList || [])[0] || {}).OLD_ESTATUS) {
         emailController.sendEmail('johnnygermano@metasperu.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
           .catch(error => res.send(error));
       }
+*/
       await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET OLD_ESTATUS = 1 WHERE ID_ESTATUS_SERVER = 1;`);
 
     }
@@ -1360,7 +1362,7 @@ io.on('connection', async (socket) => {
         INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
         WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(dt || {}).nroDocumento}'
         AND FECHA_NUMBER = '${parseDate}';`);
-        
+
       if ((arFeriado || []).length) {
         data[i]['isException'] = true;
       } else {
