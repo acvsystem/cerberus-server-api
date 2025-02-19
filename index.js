@@ -1369,13 +1369,16 @@ io.on('connection', async (socket) => {
         data[i]['isException'] = false;
       }
 
-      if (data.length - 1 == i) {
-        setTimeout(() => {
-          socket.to(`${req.body[0]['socket']}`).emit("reporteHorario", { id: "servGeneral", data: req.body });
-          res.json({ mensaje: 'Archivo recibido con éxito' });
-        }, 500);
-      }
+      pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${(huellero || {}).nroDocumento}' AND FECHA_DESDE = '${(huellero || {}).dia}';`).then(([papeleta]) => {
+        ((dataServGeneral || [])[i] || {})['papeleta'] = papeleta || [];
 
+        if (data.length - 1 == i) {
+          setTimeout(() => {
+            socket.to(`${req.body[0]['socket']}`).emit("reporteHorario", { id: "servGeneral", data: req.body });
+            res.json({ mensaje: 'Archivo recibido con éxito' });
+          }, 500);
+        }
+      });
     });
 
   });
