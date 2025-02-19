@@ -1353,7 +1353,7 @@ io.on('connection', async (socket) => {
     let data = req.body;
 
     (data || []).filter(async (dt, i) => {
-      let date = (dt || {}).dia;
+      let date = new Date((dt || {}).dia).toLocaleDateString().split('/');
       let parseDate = `${date[2]}-${date[1]}-${date[0]}`;
 
       let [arFeriado] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE 
