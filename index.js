@@ -1314,7 +1314,7 @@ io.on('connection', async (socket) => {
         emailController.sendEmail('johnnygermano@metasperu.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
           .catch(error => res.send(error));
       }
-*/
+      */
       await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET OLD_ESTATUS = 1 WHERE ID_ESTATUS_SERVER = 1;`);
 
     }
@@ -1363,6 +1363,10 @@ io.on('connection', async (socket) => {
         WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(dt || {}).nroDocumento}'
         AND FECHA_NUMBER = '${parseDate}';`);
 
+        console.log(`SELECT * FROM TB_DIAS_LIBRE 
+        INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
+        WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(dt || {}).nroDocumento}'
+        AND FECHA_NUMBER = '${parseDate}';`);
       if ((arFeriado || []).length) {
         data[i]['isException'] = true;
       } else {
