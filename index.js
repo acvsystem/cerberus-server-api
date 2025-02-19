@@ -1349,8 +1349,27 @@ io.on('connection', async (socket) => {
 
   app.post("/frontRetail/search/horario", async (req, res) => {
     console.log(req.body);
-    socket.to(`${req.body[0]['socket']}`).emit("reporteHorario", { id: "servGeneral", data: req.body });
-    res.json({ mensaje: 'Archivo recibido con éxito' });
+
+    let data = req.body;
+
+    (data || []).filter(async (dt, i) => {
+      let [arFeriado] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE 
+        INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
+        WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(dt || {}).nroDocumento}'
+        AND FECHA_NUMBER = '${(dt || {}).dia}';`);
+
+      if ((arFeriado || []).length) {
+        data[i]['isException'] = true;
+      }
+
+      if (data.length - 1 == i) {
+
+        socket.to(`${req.body[0]['socket']}`).emit("reporteHorario", { id: "servGeneral", data: req.body });
+        res.json({ mensaje: 'Archivo recibido con éxito' });
+      }
+
+    });
+
   });
 
 
