@@ -1369,7 +1369,7 @@ io.on('connection', async (socket) => {
         data[i]['isException'] = false;
       }
 
-      pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${(huellero || {}).nroDocumento}' AND FECHA_DESDE = '${(huellero || {}).dia}';`).then(([papeleta]) => {
+      pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${(dt || {}).nroDocumento}' AND FECHA_DESDE = '${(dt || {}).dia}';`).then(([papeleta]) => {
         ((dataServGeneral || [])[i] || {})['papeleta'] = papeleta || [];
 
         if (data.length - 1 == i) {
