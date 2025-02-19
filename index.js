@@ -492,7 +492,8 @@ io.on('connection', async (socket) => {
       }
 
       await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET COMENTARIO = '${((data || {}).comentario || "")}', USUARIO_MODF = '${data.usuario}', APROBADO = ${data.aprobado == true ? 1 : 0},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
-      await pool.query(`UPDATE TB_AROBADO_HR_EXTRA SET APROBADO = ${data.aprobado == true ? 1 : 0},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
+      let comentario = data.aprobado == true ? "" : `${((data || {}).comentario || "")}`;
+      await pool.query(`UPDATE TB_AROBADO_HR_EXTRA SET COMENTARIO = ${comentario}, APROBADO = ${data.aprobado == true ? 1 : 0}, RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
 
 
     }
@@ -1670,9 +1671,9 @@ io.on('connection', async (socket) => {
           console.log("sunat:tienda", selectedLocal);
 
           await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET ENVIO_EMAIL ='true' WHERE CODIGO_DOCUMENTO = ${(doc || {}).CODIGO_DOCUMENTO};`);
-          
-                  emailController.sendEmail([(selectedLocal || {}).email || '', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com'], `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
-                    .catch(error => res.send(error));
+
+          emailController.sendEmail([(selectedLocal || {}).email || '', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com'], `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
+            .catch(error => res.send(error));
 
           res.send('RECEPCION EXITOSA..!!');
         }
