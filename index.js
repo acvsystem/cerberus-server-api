@@ -1353,10 +1353,13 @@ io.on('connection', async (socket) => {
     let data = req.body;
 
     (data || []).filter(async (dt, i) => {
+      let date = (dt || {}).dia;
+      let parseDate = `${date[2]}-${date[1]}-${date[0]}`;
+
       let [arFeriado] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE 
         INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
         WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(dt || {}).nroDocumento}'
-        AND FECHA_NUMBER = '${(dt || {}).dia}';`);
+        AND FECHA_NUMBER = '${parseDate}';`);
 
       if ((arFeriado || []).length) {
         data[i]['isException'] = true;
