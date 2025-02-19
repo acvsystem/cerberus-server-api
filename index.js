@@ -1354,7 +1354,7 @@ io.on('connection', async (socket) => {
 
     (data || []).filter(async (dt, i) => {
       let date = new Date((dt || {}).dia).toLocaleDateString().split('/');
-      let parseDate = `${date[2]}-${date[1]}-${date[0]}`;
+      let parseDate = `${date[0]}-${date[1]}-${date[2]}`;
 
       let [arFeriado] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE 
         INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
