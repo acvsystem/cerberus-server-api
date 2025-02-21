@@ -193,7 +193,7 @@ export const regPapeleta = async (req, res) => {
 
 export const listPapeleta = async (req, res) => {
     let data = req.body;
-    let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND CODIGO_TIENDA = '${data[0].codigo_tienda}' ORDER BY FECHA_CREACION DESC;`);
+    let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND CODIGO_TIENDA = '${data[0].codigo_tienda}' ORDER BY DATEDIFF(DATE(FECHA_CREACION), CURDATE()) ASC;`);
     let parsePap = [];
     if ((arPapeleta || []).length) {
         await (arPapeleta || []).filter(async (pap) => {
