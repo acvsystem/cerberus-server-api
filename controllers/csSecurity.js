@@ -67,7 +67,8 @@ export const EmailList = async (req, res) => {
     { mail: "josecarreno@metasperu.com" },
     { mail: "itperu@metasperu.com" },
     { mail: "johnnygermano@metasperu.com" },
-    { mail: "logisticaperu@metasperu.com" }
+    { mail: "logisticaperu@metasperu.com" },
+    { mail: "carlosmoron@metasperu.com" }
   ]);
 };
 
