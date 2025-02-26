@@ -34,7 +34,7 @@ export const regHorasExtras = async (req, res) => {
                 WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(hrx || {}).documento}'
                 AND FECHA_NUMBER = '${fechaHr}';`);
 
-            console.log(fechaHr,arFeriado, (hrx || {}).hr_trabajadas);
+            console.log(fechaHr, arFeriado, (hrx || {}).hr_trabajadas);
 
             let hrxAcomulado = arFeriado.length ? (hrx || {}).hr_trabajadas : (hrx || {}).hrx_acumulado;
             //let hrxAcomulado = (hrx || {}).hrx_acumulado;
@@ -71,21 +71,26 @@ export const regHorasExtras = async (req, res) => {
 
                 if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
 
-                    (dataResponse || []).push({
-                        id_hora_extra: ((arHrExtra || [])[0] || {})['ID_HR_EXTRA'],
-                        documento: (hrx || {}).documento,
-                        codigo_papeleta: (hrx || {}).codigo_papeleta,
-                        fecha: (hrx || {}).fecha,
-                        hrx_acumulado: (hrx || {}).hrx_acumulado,
-                        extra: ((arHrExtra || [])[0] || {})['HR_EXTRA_ACUMULADO'] == (hrx || {}).extra ? (hrx || {}).extra : ((arHrExtra || [])[0] || {})['HR_EXTRA_ACUMULADO'],
-                        hrx_solicitado: ((arHrExtra || [])[0] || {})['HR_EXTRA_SOLICITADO'] || '00:00',
-                        hrx_sobrante: ((arHrExtra || [])[0] || {})['HR_EXTRA_SOBRANTE'] || '00:00',
-                        estado: ((arHrExtra || [])[0] || {})['ESTADO'] || (hrx || {}).estado,
-                        aprobado: ((arHrExtra || [])[0] || {})['APROBADO'] == 1 ? true : false,
-                        seleccionado: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false,
-                        verify: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false,
-                        arFechas: (hrx || {}).arFechas || []
+                    await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA WHERE NRO_DOCUMENTO_EMPLEADO = '${(hrx || {}).documento}' AND HR_EXTRA_ACOMULADO = '${((arHrExtra || [])[0] || {})['HR_EXTRA_ACUMULADO']}';`).then(([comentario]) => {
+                        (dataResponse || []).push({
+                            id_hora_extra: ((arHrExtra || [])[0] || {})['ID_HR_EXTRA'],
+                            documento: (hrx || {}).documento,
+                            codigo_papeleta: (hrx || {}).codigo_papeleta,
+                            fecha: (hrx || {}).fecha,
+                            hrx_acumulado: (hrx || {}).hrx_acumulado,
+                            extra: ((arHrExtra || [])[0] || {})['HR_EXTRA_ACUMULADO'] == (hrx || {}).extra ? (hrx || {}).extra : ((arHrExtra || [])[0] || {})['HR_EXTRA_ACUMULADO'],
+                            hrx_solicitado: ((arHrExtra || [])[0] || {})['HR_EXTRA_SOLICITADO'] || '00:00',
+                            hrx_sobrante: ((arHrExtra || [])[0] || {})['HR_EXTRA_SOBRANTE'] || '00:00',
+                            estado: ((arHrExtra || [])[0] || {})['ESTADO'] || (hrx || {}).estado,
+                            aprobado: ((arHrExtra || [])[0] || {})['APROBADO'] == 1 ? true : false,
+                            seleccionado: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false,
+                            verify: ((arHrExtra || [])[0] || {})['SELECCIONADO'] == 1 ? true : false,
+                            comentario: (comentario || []).length ? comentario : [],
+                            arFechas: (hrx || {}).arFechas || []
+                        });
                     });
+
+
                 } else {
                     data[i]['verify'] = false;
                     (dataResponse || []).push(hrx);
