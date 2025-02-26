@@ -424,10 +424,10 @@ io.on('connection', async (socket) => {
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:10px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
+                                        <td style="text-align: center;padding:10px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
                                             <p>Hola, tienes horas extras pendientes de aprobar.</p> 
 
-                                            <table align="left" cellspacing="0">
+                                            <table align="left" cellspacing="0" style="width: 100%;border: solid 1px;">
                                                 <thead>
                                                     <tr>
                                                         <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">FECHA</th>
