@@ -426,6 +426,25 @@ io.on('connection', async (socket) => {
                                     <tr>
                                         <td style="padding:10px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
                                             <p>Hola, tienes horas extras pendientes de aprobar.</p> 
+
+                                            <table align="left" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">FECHA</th>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">NOMBRE COMPLETO</th>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">H.EXTRA</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(data || {}).fecha}</td>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(data || {}).nombre_completo}</td>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(data || {}).hora_extra}</td>
+                                                    </tr>
+                                            
+                                                </tbody>
+                                            </table>
+
                                         </td>
                                     </tr>
                                     <tr>
