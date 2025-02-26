@@ -71,7 +71,7 @@ export const regHorasExtras = async (req, res) => {
 
                 if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
 
-                    await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA WHERE NRO_DOCUMENTO_EMPLEADO = '${(hrx || {}).documento}' AND HR_EXTRA_ACOMULADO = '${((arHrExtra || [])[0] || {})['HR_EXTRA_ACUMULADO']}';`).then(([comentario]) => {
+                    await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA WHERE FECHA = '${hrx['fecha']}' AND NRO_DOCUMENTO_EMPLEADO = '${(hrx || {}).documento}' AND HR_EXTRA_ACOMULADO = '${((arHrExtra || [])[0] || {})['HR_EXTRA_ACUMULADO']}';`).then(([comentario]) => {
                         (dataResponse || []).push({
                             id_hora_extra: ((arHrExtra || [])[0] || {})['ID_HR_EXTRA'],
                             documento: (hrx || {}).documento,
