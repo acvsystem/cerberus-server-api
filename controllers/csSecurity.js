@@ -37,7 +37,7 @@ export const Login = async (req, res) => {
       { code: '9K', user: 'vsmep', nameTienda: 'VS MEGA PLAZA' },
       { code: '9L', user: 'vsmnk', nameTienda: 'VS MINKA' },
       { code: '9F', user: 'vsfajoc', nameTienda: 'VSFA JOCKEY FULL' },
-      { code: '7A7', user: 'bbwasia', nameTienda: 'BBW ASIA'  },
+      { code: '7A7', user: 'bbwasia', nameTienda: 'BBW ASIA' },
       { code: '9P', user: 'vsmptru', nameTienda: 'VS MALL PLAZA' },
       { code: '7I', user: 'bbwmptru', nameTienda: 'BBW MALL PLAZA' }
     ];
@@ -176,3 +176,13 @@ export const validationAccessPostulant = async (req, res) => {
     res.status(401).send(defaultResponse.error.default);
   }
 };
+
+export const onRegistrarTienda = async (req, res) => {
+  let data = ((req || {}).body || []);
+  await pool.query(`INSERT INTO TB_PARAMETROS_TIENDA(NUM_CAJA,MAC,SERIE_TIENDA,DATABASE_INSTANCE,DATABASE_NAME,COD_TIPO_FAC,COD_TIPO_BOL,PROPERTY_STOCK,ASUNTO_EMAIL_REPORT_STOCK,NAME_EXCEL_REPORT_STOCK,RUTA_DOWNLOAD_PY,RUTA_DOWNLOAD_SUNAT)
+    VALUES(${(data || {}).nro_caja},'${(data || {}).mac}','${(data || {}).serie_tienda}','${(data || {}).database_instance}','${(data || {}).database_name}','${(data || {}).cod_tipo_factura}','${(data || {}).cod_tipo_boleta}','${(data || {}).property_stock}','${(data || {}).asunto_email_stock}','${(data || {}).name_excel_stock}','${(data || {}).ruta_download_agente}','${(data || {}).ruta_download_sunat}');`)
+    .then((rs) => {
+      res.json(prop.success)
+    });
+
+}
