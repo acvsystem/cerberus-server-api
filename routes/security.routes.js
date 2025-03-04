@@ -31,8 +31,14 @@ router.post('/add/tienda', async (req, res) => {
         .then((rs) => {
             res.json(defaultResponse.success.default);
         });
+});
 
-   
+router.post('/lista/tienda', async (req, res) => {
+    let data = ((req || {}).body || [])[0];
+    await pool.query(`SELECT * FROM TB_PARAMETROS_TIENDA;`)
+        .then(([rs]) => {
+            res.json({ data: rs });
+        });
 });
 
 
