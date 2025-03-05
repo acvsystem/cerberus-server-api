@@ -99,7 +99,8 @@ io.on('connection', async (socket) => {
   socket.on('verifyDocument', async (resData) => {
     //console.log("'verifyDocument'", resData);
     if ((resData || "").id == "server") {
-
+      let tiendasList = [];
+      
       pool.query(`SELECT * FROM TB_LISTA_TIENDA;`).then(([tienda]) => {
         (tienda || []).filter(async (td, i) => {
           tiendasList.push({ code: (td || {}).SERIE_TIENDA, name: (td || {}).DESCRIPCION });
