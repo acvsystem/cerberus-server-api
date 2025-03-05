@@ -41,6 +41,14 @@ router.get('/lista/tienda', async (req, res) => {
         });
 });
 
+router.get('/lista/registro/tiendas', async (req, res) => {
+    let data = ((req || {}).body || [])[0];
+    await pool.query(`SELECT * FROM TB_LISTA_TIENDA;`)
+        .then(([rs]) => {
+            res.json({ data: rs });
+        });
+});
+
 
 
 
