@@ -102,12 +102,12 @@ io.on('connection', async (socket) => {
       let tiendasList = [];
 
       pool.query(`SELECT * FROM TB_LISTA_TIENDA;`).then(([tienda]) => {
-        console.log(tienda);
+
         (tienda || []).filter(async (td, i) => {
           tiendasList.push({ code: (td || {}).SERIE_TIENDA, name: (td || {}).DESCRIPCION });
 
           if (tienda.length - 1 == i) {
-            let listSessionConnect = await facturacionController.verificacionDocumentos(resData);
+            let listSessionConnect = await facturacionController.verificacionDocumentos(resData, tiendasList);
             socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
           }
 
