@@ -49,6 +49,14 @@ router.get('/lista/registro/tiendas', async (req, res) => {
         });
 });
 
+router.post('/add/registro/tiendas', async (req, res) => {
+    let data = ((req || {}).body || [])[0];
+    await pool.query(`INSERT INTO TB_LISTA_TIENDA (SERIE_TIENDA,DESCRIPCION)VALUES('${(data || {}).serie_tienda}','${(data || {}).nombre_tienda}');`)
+        .then((rs) => {
+            res.json(defaultResponse.success.default);
+        });
+});
+
 
 
 
