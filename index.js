@@ -99,8 +99,20 @@ io.on('connection', async (socket) => {
   socket.on('verifyDocument', async (resData) => {
     //console.log("'verifyDocument'", resData);
     if ((resData || "").id == "server") {
-      let listSessionConnect = await facturacionController.verificacionDocumentos(resData);
-      socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
+
+      pool.query(`SELECT * FROM TB_LISTA_TIENDA;`).then(([tienda]) => {
+        (tienda || []).filter(async (td, i) => {
+          tiendasList.push({ code: (td || {}).SERIE_TIENDA, name: (td || {}).DESCRIPCION });
+
+          if (tienda.length - 1 == i) {
+            let listSessionConnect = await facturacionController.verificacionDocumentos(resData);
+            socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
+          }
+
+        });
+      });
+
+
     }
   });
 

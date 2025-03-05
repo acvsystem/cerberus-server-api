@@ -14,7 +14,9 @@ class clsFacturacion {
         return `${day}-${month}-${year}`;
     }
 
-    async verificacionDocumentos(dataVerify) {
+    async verificacionDocumentos(dataVerify, vTiendaList) {
+
+        /*
         let tiendasList = [
             { code: '7A', name: 'BBW JOCKEY' },
             { code: '9N', name: 'VS MALL AVENTURA' },
@@ -36,7 +38,10 @@ class clsFacturacion {
             { code: '7A7', name: 'BBW ASIA' },
             { code: '9P', name: 'VS MALL PLAZA' },
             { code: '7I', name: 'BBW MALL PLAZA' }
-        ];
+        ];*/
+
+        let tiendasList = vTiendaList;
+
         var dataNoFound = [];
         var paseDataList = [];
         var serverData = JSON.parse((dataVerify || {}).serverData);
