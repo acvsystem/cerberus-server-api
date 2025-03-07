@@ -88,7 +88,7 @@ function onVerificarCalendario() {
   now.setDate(now.getDate() + 1);
   let day = new Date(now).toLocaleDateString().split('/');
 
-  pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE SUBSTRING(RANGO_DIAS,1,9) = '${day[0]}-${day[1]}-${day[2]}' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
+  pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE SUBSTRING(RANGO_DIAS,1,9) = '10-3-2025' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
     let arCalendarios = calendarios || [];
     console.log(arCalendarios);
     pool.query(`SELECT * FROM TB_LISTA_TIENDA;`).then(([tiendas]) => {
