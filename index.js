@@ -61,10 +61,16 @@ const task_4 = cron.schedule('*/15 * * * *', () => {
   emitVerificationSUNAT();
 });
 
+const task_5 = cron.schedule('00 9 * * 0', () => {
+  console.log('00 9 * * 0');
+  onVerificarCalendario();
+});
+
 task_1.start();
 task_2.start();
 task_3.start();
 task_4.start();
+task_5.start();
 
 function emitVerificationSUNAT() {
   io.emit('consultingSUNAT', 'sunat');
@@ -72,6 +78,57 @@ function emitVerificationSUNAT() {
 
 function emitVerificationDoc() {
   io.emit('consultingToFront', 'emitVerificationDoc');
+}
+
+onVerificarCalendario();
+
+function onVerificarCalendario() {
+
+  const now = new Date();
+  now.setDate(now.getDate() + 1);
+  let day = new Date(now).toLocaleDateString().split('/');
+
+  pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE SUBSTRING(RANGO_DIAS,1,9) = '${day[0]}-${day[1]}-${day[2]}' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
+    let arCalendarios = calendarios || [];
+    console.log(arCalendarios);
+    pool.query(`SELECT * FROM TB_LISTA_TIENDA;`).then(([tiendas]) => {
+
+      let arTiendas = tiendas || [];
+      let arTiendasFaltantes = [];
+
+      (arTiendas || []).filter((tienda, i) => {
+        if (!arCalendarios.includes((tienda || {}).SERIE_TIENDA)) {
+          arTiendasFaltantes.push((tienda || {}).DESCRIPCION);
+        }
+
+        if ((arTiendas || []).length - 1 == i) {
+          console.log('arTiendasFaltantes', arTiendasFaltantes);
+          if ((arTiendasFaltantes || []).length) {
+            let bodyHTML = `<p>Tiendas sin el horario creado.</p>
+        
+            <table align="left" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">TIENDA</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+            (arTiendasFaltantes || []).filter((tienda) => {
+              bodyHTML += `
+                      <tr>
+                          <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(tienda || {}).DESCRIPCION}</td>
+                      </tr>`;
+            });
+
+            bodyHTML += `
+                </tbody>
+            </table>`;
+          }
+        }
+      });
+    });
+  });
 }
 
 io.on('connection', async (socket) => {
