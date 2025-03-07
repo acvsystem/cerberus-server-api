@@ -62,7 +62,7 @@ const task_4 = cron.schedule('*/15 * * * *', () => {
 });
 
 const task_5 = cron.schedule('00 9 * * 0', () => {
-  console.log('00 9 * * 0');
+  console.log('00 10 * * 0');
   onVerificarCalendario();
 });
 
@@ -79,10 +79,6 @@ function emitVerificationSUNAT() {
 function emitVerificationDoc() {
   io.emit('consultingToFront', 'emitVerificationDoc');
 }
-
-setTimeout(() => {
-  onVerificarCalendario();
-}, 2000)
 
 function onVerificarCalendario() {
 
@@ -111,10 +107,10 @@ function onVerificarCalendario() {
           if ((arTiendasFaltantes || []).length) {
             let bodyHTML = `<p>Tiendas sin el horario creado.</p>
         
-            <table align="left" cellspacing="0">
+            <table align="left" cellspacing="0" style="border-right: 1px solid #9e9e9e;">
                 <thead>
                     <tr>
-                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">TIENDA</th>
+                        <th style="border: 1px solid #9E9E9E;border-right:0px;width: 250px;" width="110px">TIENDA</th>
                     </tr>
                 </thead>
                 <tbody>`;
