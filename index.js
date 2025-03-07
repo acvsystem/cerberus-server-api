@@ -80,7 +80,9 @@ function emitVerificationDoc() {
   io.emit('consultingToFront', 'emitVerificationDoc');
 }
 
-onVerificarCalendario();
+setTimeout(()=>{
+  onVerificarCalendario();
+},2000)
 
 function onVerificarCalendario() {
 
