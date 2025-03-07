@@ -126,7 +126,7 @@ function onVerificarCalendario() {
                 </tbody>
             </table>`;
 
-            emailController.sendEmail(['itperu@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
+            emailController.sendEmail(['itperu@metasperu.com','carlosmoron@metasperu.com','johnnygermano@metasperu.com', 'josecarreno@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
               .catch(error => res.send(error));
           }
         }
