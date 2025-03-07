@@ -89,8 +89,11 @@ function onVerificarCalendario() {
   let day = new Date(now).toLocaleDateString().split('/');
 
   pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE SUBSTRING(RANGO_DIAS,1,9) = '10-3-2025' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
-    let arCalendarios = calendarios || [];
-    console.log(arCalendarios);
+    let arCalendarios = [];
+    (calendarios || []).filter((c) => {
+      arCalendarios.push((c || {}).CODIGO_TIENDA);
+    });
+
     pool.query(`SELECT * FROM TB_LISTA_TIENDA;`).then(([tiendas]) => {
 
       let arTiendas = tiendas || [];
