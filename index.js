@@ -80,9 +80,9 @@ function emitVerificationDoc() {
   io.emit('consultingToFront', 'emitVerificationDoc');
 }
 
-setTimeout(()=>{
+setTimeout(() => {
   onVerificarCalendario();
-},2000)
+}, 2000)
 
 function onVerificarCalendario() {
 
@@ -122,13 +122,16 @@ function onVerificarCalendario() {
             (arTiendasFaltantes || []).filter((tienda) => {
               bodyHTML += `
                       <tr>
-                          <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(tienda || {}).DESCRIPCION}</td>
+                          <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${tienda}</td>
                       </tr>`;
             });
 
             bodyHTML += `
                 </tbody>
             </table>`;
+
+            emailController.sendEmail(['itperu@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
+              .catch(error => res.send(error));
           }
         }
       });
