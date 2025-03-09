@@ -29,7 +29,7 @@ jobs:
         run: |
           docker login ghcr.io -u acvsystem -p ${{secrets.GITHUBTOKENMT}}
           docker pull ghcr.io/acvsystem/cerberus-server-api:latest
-          docker stop 
+          docker stop cerberus-server-api && docker rm cerberus-server-api
           docker run -d \
             --name cerberus-server-api \
             -p 3200:3200 \
