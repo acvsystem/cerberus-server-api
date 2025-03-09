@@ -36,6 +36,6 @@ jobs:
             -w /app-node \
             --restart always \
             ghcr.io/acvsystem/cerberus-server-api:latest
-          EOF
+          
 
 
