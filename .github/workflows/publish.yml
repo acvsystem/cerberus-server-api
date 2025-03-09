@@ -1,0 +1,41 @@
+name: metasperu-backend-actions
+on: 
+    push:
+        branches: ["master"]
+jobs:
+  create-docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+            registry: ghcr.io
+            username: ${{github.actor}}
+            password: ${{secrets.GITHUBTOKENMT}}
+    
+      - name: Build image
+        run: |
+          docker build . --tag ghcr.io/acvsystem/cerberus-server-api:latest
+          docker push ghcr.io/acvsystem/cerberus-server-api:latest
+  
+  deploy:
+    needs: create-docker-image
+    runs-on: ubuntu-latest
+    steps:
+      - name: into Server
+        run: |
+          docker login ghcr.io -u acvsystem -p ${{secrets.GITHUBTOKENMT}}
+          docker pull ghcr.io/acvsystem/cerberus-server-api:latest
+          docker stop 
+          docker run -d \
+            --name cerberus-server-api \
+            -p 3200:3200 \
+            -w /app-node \
+            --restart always \
+            ghcr.io/acvsystem/cerberus-server-api:latest
+          EOF
+
+
