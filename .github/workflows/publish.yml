@@ -29,9 +29,9 @@ jobs:
         run: |
           docker login ghcr.io -u acvsystem -p ${{secrets.GITHUBTOKENMT}}
           docker pull ghcr.io/acvsystem/cerberus-server-api:latest
-          docker stop cerberus-server-api && docker rm cerberus-server-api
+          docker stop metasperu-backend && docker rm metasperu-backend
           docker run -d \
-            --name cerberus-server-api \
+            --name metasperu-backend \
             -p 3200:3200 \
             -w /app-node \
             --restart always \
