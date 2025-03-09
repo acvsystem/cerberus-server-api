@@ -1818,4 +1818,5 @@ io.on('connection', async (socket) => {
 
 httpServer.listen(3200, async () => {
   console.log('listening on *:3200');
+  console.log('ACTUALIZADO');
 });
