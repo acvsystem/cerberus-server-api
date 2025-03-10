@@ -57,6 +57,14 @@ router.post('/add/registro/tiendas', async (req, res) => {
         });
 });
 
+router.get('/configuracion/permisos/hp', async (req, res) => {
+    let data = ((req || {}).body || [])[0];
+    await pool.query(`SELECT ID_CONF_HP,ID_TIENDA,SERIE_TIENDA,DESCRIPCION,IS_FREE_HORARIO,IS_FREE_PAPELETA FROM TB_CONFIGURACION_HORARIO_PAP INNER JOIN TB_LISTA_TIENDA ON TB_LISTA_TIENDA.ID_TIENDA = TB_CONFIGURACION_HORARIO_PAP.ID_TIENDA_HP;`)
+        .then(([rs]) => {
+            res.json(rs);
+        });
+});
+
 
 
 

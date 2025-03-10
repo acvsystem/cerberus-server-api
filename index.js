@@ -444,6 +444,8 @@ io.on('connection', async (socket) => {
     res.json(arAutorizacion);
   });
 
+ 
+
 
   socket.on("solicitar_aprobacion_hrx", async (data) => {
 
