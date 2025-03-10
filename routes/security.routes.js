@@ -64,7 +64,7 @@ router.get('/configuracion/permisos/hp', async (req, res) => {
         });
 });
 
-router.put('/configuracion/permisos/hp', async (req, res) => {
+router.post('/configuracion/permisos/hp', async (req, res) => {
     let data = ((req || {}).body || [])[0];
     await pool.query(`UPDATE TB_CONFIGURACION_HORARIO_PAP SET IS_FREE_HORARIO = ${(data || {}).isPermiso_h}, IS_FREE_PAPELETA = ${(data || {}).isPermiso_p} WHERE ID_CONF_HP = ${(data || {}).id};`)
         .then(([rs]) => {
