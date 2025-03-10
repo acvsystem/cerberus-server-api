@@ -27,7 +27,7 @@ jobs:
     steps:
       - name: into Server
         run: |
-          docker login ghcr.io -u acvsystem -p ${{secrets.GITHUBTOKENMT}}
+          docker login ghcr.io -u andrecanalesv@gmail.com -p ${{secrets.GITHUBTOKENMT}}
           docker pull ghcr.io/acvsystem/cerberus-server-api:latest
           docker stop mt-backend && docker rm mt-backend
           docker run -d \
