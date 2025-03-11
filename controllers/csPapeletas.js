@@ -22,12 +22,17 @@ export const regHorasExtras = async (req, res) => {
 
     await (data || []).filter(async (hrx, i) => {
 
-        let [existHrx] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${(hrx || {}).documento}' AND FECHA = '${(hrx || {}).fecha}' AND  HR_EXTRA_ACUMULADO = '${(hrx || {}).hrx_acumulado}'`);
+        let [existHrx] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${(hrx || {}).documento}' AND FECHA = '${(hrx || {}).fecha}' AND  HR_EXTRA_ACUMULADO = '${(hrx || {}).hrx_acumulado}';`);
 
         if (!(existHrx || []).length || typeof existHrx == 'undefined') {
             let fh = ((hrx || {}).fecha || "").split("-");
             let fecha = (hrx || {}).fecha;
             let fechaHr = `${parseInt(fh[2])}-${parseInt(fecha.split("-")[1].substr(0, 1)) == 0 ? fecha.split("-")[1].substr(1, 2) : fecha.split("-")[1].substr(0, 2)}-${fh[0]}`;
+            
+            console.log(`SELECT * FROM TB_DIAS_LIBRE 
+                INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
+                WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(hrx || {}).documento}'
+                AND FECHA_NUMBER = '${fechaHr}';`);
 
             let [arFeriado] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE 
                 INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
