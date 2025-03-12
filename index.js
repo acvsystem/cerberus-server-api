@@ -86,7 +86,7 @@ function onVerificarCalendario() {
   now.setDate(now.getDate() + 1);
   let day = new Date(now).toLocaleDateString().split('/');
 
-  pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE SUBSTRING(RANGO_DIAS,1,9) = '${day[0]-day[1]-day[2]}' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
+  pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE SUBSTRING(RANGO_DIAS,1,9) = '${day[0] - day[1] - day[2]}' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
     let arCalendarios = [];
     (calendarios || []).filter((c) => {
       arCalendarios.push((c || {}).CODIGO_TIENDA);
@@ -126,7 +126,7 @@ function onVerificarCalendario() {
                 </tbody>
             </table>`;
 
-            emailController.sendEmail(['itperu@metasperu.com','carlosmoron@metasperu.com','fieldleaderbbw@metasperu.com','fieldleadervs@metasperu.com','johnnygermano@metasperu.com', 'josecarreno@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
+            emailController.sendEmail(['itperu@metasperu.com', 'carlosmoron@metasperu.com', 'fieldleaderbbw@metasperu.com', 'fieldleadervs@metasperu.com', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
               .catch(error => res.send(error));
           }
         }
@@ -444,7 +444,7 @@ io.on('connection', async (socket) => {
     res.json(arAutorizacion);
   });
 
- 
+
 
 
   socket.on("solicitar_aprobacion_hrx", async (data) => {
@@ -1368,7 +1368,9 @@ io.on('connection', async (socket) => {
           hr_ingreso: (huellero || {}).hrIn,
           hr_salida: (huellero || {}).hrOut,
           hr_trabajadas: (huellero || {}).hrWorking,
-          caja: (huellero || {}).caja
+          caja: (huellero || {}).caja,
+          rango_horario: '',
+          isTardanza: false
         });
       });
 
