@@ -1439,6 +1439,7 @@ io.on('connection', async (socket) => {
         ((dataServGeneral || [])[i] || {})['papeleta'] = papeleta || [];
 
         pool.query(`SELECT TB_DIAS_TRABAJO.CODIGO_TIENDA,TB_DIAS_TRABAJO.NOMBRE_COMPLETO,TB_DIAS_TRABAJO.NUMERO_DOCUMENTO,TB_RANGO_HORA.RANGO_HORA,TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '${(huellero || {}).dia}' AND NUMERO_DOCUMENTO = '${(huellero || {}).nro_documento}';`).then(([rs]) => {
+          console.log(rs);
           ((dataServGeneral || [])[i] || {})['rango_horario'] = rs[0]['RANGO_HORA'] || "";
           ((dataServGeneral || [])[i] || {})['isTardanza'] = false;
 
