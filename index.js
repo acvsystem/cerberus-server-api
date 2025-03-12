@@ -1436,7 +1436,7 @@ io.on('connection', async (socket) => {
     let dataServGeneral = (req || {}).body;
     (dataServGeneral || []).filter((huellero, i) => {
       pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${(huellero || {}).nroDocumento}' AND FECHA_DESDE = '${(huellero || {}).dia}';`).then(([papeleta]) => {
-        ((dataServGeneral || [])[i] || {})['papeleta'] = papeleta || [];
+        ((dataServGeneral || [])[i] || {})['papeleta2'] = papeleta || [];
 
         if (dataServGeneral.length - 1 == i) {
           console.log(dataServGeneral);
