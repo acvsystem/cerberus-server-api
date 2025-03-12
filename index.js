@@ -1434,21 +1434,20 @@ io.on('connection', async (socket) => {
 
   app.post("/frontRetail/search/huellero", async (req, res) => {
     let dataServGeneral = (req || {}).body;
-    (dataServGeneral || []).filter((huellero, i) => {
-      pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${(huellero || {}).nroDocumento}' AND FECHA_DESDE = '${(huellero || {}).dia}';`).then(([papeleta]) => {
+    (dataServGeneral || []).filter(async (huellero, i) => {
+      await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${(huellero || {}).nroDocumento}' AND FECHA_DESDE = '${(huellero || {}).dia}';`).then(([papeleta]) => {
         ((dataServGeneral || [])[i] || {})['papeleta'] = papeleta || [];
+      });
 
-        pool.query(`SELECT TB_DIAS_TRABAJO.CODIGO_TIENDA,TB_DIAS_TRABAJO.NOMBRE_COMPLETO,TB_DIAS_TRABAJO.NUMERO_DOCUMENTO,TB_RANGO_HORA.RANGO_HORA,TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '${(huellero || {}).dia}' AND NUMERO_DOCUMENTO = '${(huellero || {}).nro_documento}';`).then(([rs]) => {
-          console.log(rs);
-          ((dataServGeneral || [])[i] || {})['rango_horario'] = rs[0]['RANGO_HORA'] || "";
-          ((dataServGeneral || [])[i] || {})['isTardanza'] = false;
+      await pool.query(`SELECT TB_DIAS_TRABAJO.CODIGO_TIENDA,TB_DIAS_TRABAJO.NOMBRE_COMPLETO,TB_DIAS_TRABAJO.NUMERO_DOCUMENTO,TB_RANGO_HORA.RANGO_HORA,TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '${(huellero || {}).dia}' AND NUMERO_DOCUMENTO = '${(huellero || {}).nro_documento}';`).then(([rs]) => {
+        console.log(rs);
+        ((dataServGeneral || [])[i] || {})['rango_horario'] = ((rs || [])[0] || {})['RANGO_HORA'] || "";
+        ((dataServGeneral || [])[i] || {})['isTardanza'] = false;
 
-          if (dataServGeneral.length - 1 == i) {
-            console.log(dataServGeneral);
-            socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: dataServGeneral, rs: 'new' });
-          }
-        });
-
+        if (dataServGeneral.length - 1 == i) {
+          console.log(dataServGeneral);
+          socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: dataServGeneral, rs: 'new' });
+        }
       });
     });
 
