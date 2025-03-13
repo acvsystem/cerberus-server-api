@@ -184,5 +184,5 @@ export const onRegistrarTienda = async (req, res) => {
     .then((rs) => {
       res.json(prop.success)
     });
-
 }
+

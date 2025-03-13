@@ -105,6 +105,13 @@ router.post('/create/hash/agente', (req, res) => {
 
 });
 
+router.post('/configuracion/tiempo/tolerancia', (req, res) => {
+    let data = ((req || {}).body || []);
+    pool.query(`INSERT INTO TB_CONFIGURACION_TOLERANCIA_HORA(REFERENCIA,TIEMPO_TOLERANCIA)VALUES('${(data || {}).referencia}','${(data || {}).tiempo_tolerancia}')`).then(() => {
+        res.json(prop.success)
+    });
+});
+
 router.get('/download', (req, res) => {
 
     /*  let token = req.header('Authorization');
