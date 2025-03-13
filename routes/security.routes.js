@@ -108,6 +108,7 @@ router.post('/create/hash/agente', (req, res) => {
 router.post('/configuracion/tiempo/tolerancia', async (req, res) => {
     let data = ((req || {}).body || []);
     pool.query(`SELECT * FROM TB_CONFIGURACION_TOLERANCIA_HORA WHERE REFERENCIA = '${(data || {}).referencia}';`).then(([registro]) => {
+        console.log(registro);
         if (!(registro || []).length) {
             pool.query(`INSERT INTO TB_CONFIGURACION_TOLERANCIA_HORA(REFERENCIA,TIEMPO_TOLERANCIA)VALUES('${(data || {}).referencia}','${(data || {}).tiempo_tolerancia}')`).then(() => {
                 res.json(defaultResponse.success.default);
