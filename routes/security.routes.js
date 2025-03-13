@@ -115,7 +115,7 @@ router.post('/configuracion/tiempo/tolerancia', async (req, res) => {
                 res.json(defaultResponse.success.default);
             });
         } else {
-            pool.query(`UPDATE TB_CONFIGURACION_TOLERANCIA_HORA SET TIEMPO_TOLERANCIA = '${(data || {}).tiempo_tolerancia}' WHERE ID_TOLERANCIA = ${((registro || [])[0] || {}).tiempo_tolerancia}`).then(() => {
+            pool.query(`UPDATE TB_CONFIGURACION_TOLERANCIA_HORA SET TIEMPO_TOLERANCIA = '${(data || {}).tiempo_tolerancia}' WHERE ID_TOLERANCIA = ${((registro || [])[0] || {}).ID_TOLERANCIA}`).then(() => {
                 res.json(defaultResponse.success.default);
             });
         }
