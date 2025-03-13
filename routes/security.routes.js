@@ -110,11 +110,11 @@ router.post('/configuracion/tiempo/tolerancia', async (req, res) => {
     pool.query(`SELECT * FROM TB_CONFIGURACION_TOLERANCIA_HORA WHERE REFERENCIA = '${(data || {}).referencia}';`).then(([registro]) => {
         if (!(registro || []).length) {
             pool.query(`INSERT INTO TB_CONFIGURACION_TOLERANCIA_HORA(REFERENCIA,TIEMPO_TOLERANCIA)VALUES('${(data || {}).referencia}','${(data || {}).tiempo_tolerancia}')`).then(() => {
-                res.json(prop.success)
+                res.json(defaultResponse.success.default);
             });
         } else {
             pool.query(`UPDATE TB_CONFIGURACION_TOLERANCIA_HORA SET TIEMPO_TOLERANCIA = '${(data || {}).tiempo_tolerancia}' WHERE ID_TOLERANCIA = ${((registro || [])[0] || {}).tiempo_tolerancia}`).then(() => {
-                res.json(prop.success)
+                res.json(defaultResponse.success.default);
             });
         }
     });
