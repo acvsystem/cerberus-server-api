@@ -117,9 +117,13 @@ router.post('/configuracion/tiempo/tolerancia', async (req, res) => {
                 res.json(prop.success)
             });
         }
-
     });
+});
 
+router.get('/configuracion/tiempo/tolerancia', async (req, res) => {
+    pool.query(`SELECT * FROM TB_CONFIGURACION_TOLERANCIA_HORA;`).then(([registro]) => {
+        res.json(registro)
+    });
 });
 
 router.get('/download', (req, res) => {
