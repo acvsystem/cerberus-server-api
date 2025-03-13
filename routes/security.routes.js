@@ -105,11 +105,21 @@ router.post('/create/hash/agente', (req, res) => {
 
 });
 
-router.post('/configuracion/tiempo/tolerancia', (req, res) => {
+router.post('/configuracion/tiempo/tolerancia', async (req, res) => {
     let data = ((req || {}).body || []);
-    pool.query(`INSERT INTO TB_CONFIGURACION_TOLERANCIA_HORA(REFERENCIA,TIEMPO_TOLERANCIA)VALUES('${(data || {}).referencia}','${(data || {}).tiempo_tolerancia}')`).then(() => {
-        res.json(prop.success)
+    pool.query(`SELECT * FROM TB_CONFIGURACION_TOLERANCIA_HORA WHERE REFERENCIA = '${(data || {}).referencia}';`).then(([registro]) => {
+        if (!(registro || []).length) {
+            pool.query(`INSERT INTO TB_CONFIGURACION_TOLERANCIA_HORA(REFERENCIA,TIEMPO_TOLERANCIA)VALUES('${(data || {}).referencia}','${(data || {}).tiempo_tolerancia}')`).then(() => {
+                res.json(prop.success)
+            });
+        } else {
+            pool.query(`UPDATE TB_CONFIGURACION_TOLERANCIA_HORA SET TIEMPO_TOLERANCIA = '${(data || {}).tiempo_tolerancia}' WHERE ID_TOLERANCIA = ${((registro || [])[0] || {}).tiempo_tolerancia}`).then(() => {
+                res.json(prop.success)
+            });
+        }
+
     });
+
 });
 
 router.get('/download', (req, res) => {
