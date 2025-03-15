@@ -282,7 +282,7 @@ io.on('connection', async (socket) => {
 
   socket.on('cleanColaFront', (data) => {
     console.log('clearColaUpdatePanama');
-   // socket.broadcast.emit("clearColaUpdatePanama", data);
+    socket.broadcast.emit("clearColaUpdatePanama", data);
   });
 
 
