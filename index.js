@@ -280,6 +280,11 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("searchCantCliente", data);
   });
 
+  socket.on('cleanColaFront', (data) => {
+    console.log('clearColaUpdatePanama');
+   // socket.broadcast.emit("clearColaUpdatePanama", data);
+  });
+
 
   socket.on('comunicationFront', (data) => {
     console.log('comunicationFront');
