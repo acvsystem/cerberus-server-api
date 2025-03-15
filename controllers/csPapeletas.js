@@ -14,6 +14,15 @@ export const generarCodigo = async (req, res) => {
     res.json({ codigo: newCodigo })
 }
 
+
+export const recalcularHorasExtras = async (req, res) => {
+    let data = ((req || {}).body || [])[0];
+     pool.query(`DELETE FROM TB_HORA_EXTRA_EMPLEADO WHERE ID_HR_EXTRA = ${(data || "").id_hora_extra};`).then(()=>{
+        res.json(defaultResponse.success.default);
+     });
+
+};
+
 //SE INSERTA EN LA TABLA HORA EXTRA GENERAL COMO UNA TABLA PRODUCTOS
 export const regHorasExtras = async (req, res) => {
     let data = ((req || {}).body || []);
