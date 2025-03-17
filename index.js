@@ -79,7 +79,7 @@ function emitVerificationSUNAT() {
 function emitVerificationDoc() {
   io.emit('consultingToFront', 'emitVerificationDoc');
 }
-
+//YO AMO A NINI
 function onVerificarCalendario() {
 
   const now = new Date();
