@@ -92,7 +92,7 @@ function onVerificarCalendario() {
       arCalendarios.push((c || {}).CODIGO_TIENDA);
     });
 
-    pool.query(`SELECT * FROM TB_LISTA_TIENDA WHERE SERIE_TIENDA != '9M';`).then(([tiendas]) => {
+    pool.query(`SELECT * FROM TB_LISTA_TIENDA;`).then(([tiendas]) => {
 
       let arTiendas = tiendas || [];
       let arTiendasFaltantes = [];
