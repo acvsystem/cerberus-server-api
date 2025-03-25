@@ -452,7 +452,7 @@ io.on('connection', async (socket) => {
   app.post("/oficina/marcacion", async (req, res) => {
     let response = req.body;
     let socketID = (response[0] || {}).socketID;
-    console.log('oficina',socketID);
+    //console.log('oficina',socketID);
     socket.to(`${socketID}`).emit("marcacionOficina", [{ id: 'OF', data: response }]);
     res.json({ success: true });
   });
