@@ -449,7 +449,7 @@ io.on('connection', async (socket) => {
     res.json(arAutorizacion);
   });
 
-  app.post("/oficina/marcacions", async (req, res) => {
+  app.post("/oficina/marcacion", async (req, res) => {
     let response = req.body;
     let socketID = (response[0] || {}).socketID;
     //console.log('oficina',socketID);
