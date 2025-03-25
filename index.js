@@ -449,6 +449,18 @@ io.on('connection', async (socket) => {
     res.json(arAutorizacion);
   });
 
+  app.post("/oficina/marcacion", async (req, res) => {
+    let response = req.body;
+    let socketID = (response[0] || {}).socketID;
+    console.log(response);
+    socket.to(`${socketID}`).emit("marcacionOficina", { id: 'OF', data: response });
+    res.json({ success: true });
+  });
+
+
+  socket.on("marcacion_of", async (data) => {
+    socket.broadcast.emit("solicitar_marcacion_of", { socketID: (socket || {}).id });
+  });
 
 
 
