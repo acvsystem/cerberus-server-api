@@ -454,20 +454,16 @@ io.on('connection', async (socket) => {
     let socketID = (response[0] || {}).socketID;
 
     (response || []).filter(async (mc, i) => {
-      console.log(mc.checkinout.split(' ')[0]);
       let date = new Date(mc.checkinout.split(' ')[0]).toLocaleDateString().split('/');
       let parseDate = `${date[0]}-${date[1]}-${date[2]}`;
-      console.log(parseDate,(mc || {}).documento);
-      await pool.query(`SELECT TB_DIAS_TRABAJO.CODIGO_TIENDA,TB_DIAS_TRABAJO.NOMBRE_COMPLETO,TB_DIAS_TRABAJO.NUMERO_DOCUMENTO,TB_RANGO_HORA.RANGO_HORA,TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '27-03-2025' AND NUMERO_DOCUMENTO = '47162396';`).then(([rs]) => {
-       
+      await pool.query(`SELECT TB_DIAS_TRABAJO.CODIGO_TIENDA,TB_DIAS_TRABAJO.NOMBRE_COMPLETO,TB_DIAS_TRABAJO.NUMERO_DOCUMENTO,TB_RANGO_HORA.RANGO_HORA,TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '${parseDate}' AND NUMERO_DOCUMENTO = '${mc.documento}';`).then(([rs]) => {
+
         ((response || [])[i] || {})['rango_horario'] = ((rs || [])[0] || {})['RANGO_HORA'] || "";
         ((response || [])[i] || {})['isTardanza'] = false;
 
         if (response.length - 1 == i) {
-          setTimeout(() => {
-            socket.to(`${socketID}`).emit("marcacionOficina", { id: 'OF', data: response });
-            res.json({ success: true });
-          }, 2000);
+          socket.to(`${socketID}`).emit("marcacionOficina", { id: 'OF', data: response });
+          res.json({ success: true });
         }
       });
     });
