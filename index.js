@@ -881,7 +881,7 @@ io.on('connection', async (socket) => {
     if (response.length) {
       (response || []).filter(async (dth, index) => {
 
-        pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.id};`).then(([requestRg]) => {
+        pool.query(`c = ${dth.id};`).then(([requestRg]) => {
           (requestRg || []).filter(async (rdh) => {
             response[index]['rg_hora'].push({ id: rdh.ID_RANGO_HORA, position: response[index]['rg_hora'].length + 1, rg: rdh.RANGO_HORA, codigo_tienda: dataReq[0]['codigo_tienda'] });
           });
