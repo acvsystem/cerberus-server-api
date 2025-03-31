@@ -389,10 +389,11 @@ io.on('connection', async (socket) => {
 
   app.post("/comparacion/bdTienda", async (req, res) => {
     io.timeout(2000).emit("comparacionServer", 'PERUBK', (err, responses) => {
+      console.log("comparacionServer",responses)
       if (err) {
         // some clients did not acknowledge the event in the given delay
       } else {
-        res.json({ data: response }); // one response per client
+        res.json({ data: responses }); // one response per client
       }
     });
   });
