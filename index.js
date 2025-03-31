@@ -388,10 +388,12 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/comparacion/bdTienda", async (req, res) => {
-    socket.broadcast.emit("comparacionServer", 'PERUBK');
-    socket.on("comparacionResponse", (response) => {
-      console.log(response);
-      res.json({ data: response });
+    io.timeout(2000).emit("comparacionServer", (err, responses) => {
+      if (err) {
+        // some clients did not acknowledge the event in the given delay
+      } else {
+        res.json({ data: response }); // one response per client
+      }
     });
   });
 
