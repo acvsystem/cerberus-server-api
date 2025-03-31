@@ -83,7 +83,7 @@ function emitVerificationDoc() {
 function onVerificarCalendario() {
 
   const now = new Date();
-  now.setDate(now.getDate() + 1);
+  now.setDate(now.getDate());
   let day = new Date(now).toLocaleDateString().split('/');
   
   pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE SUBSTRING(RANGO_DIAS,1,9) = '${day[0] - day[1] - day[2]}' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
