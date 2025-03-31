@@ -387,6 +387,13 @@ io.on('connection', async (socket) => {
     })
   });
 
+  app.get("/comparacion/bdTienda", async (req, res) => {
+    socket.broadcast.emit("comparacionServer", 'PERUBK');
+    socket.on("comparacionResponse", (response) => {
+      res.json({ data: response });
+    });
+  });
+
   app.post("/planilla/FDM", async (req, res) => {
     let response = req.body;
     var serverData = JSON.parse((response[0] || []).serverData);
