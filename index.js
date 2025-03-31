@@ -396,6 +396,15 @@ io.on('connection', async (socket) => {
     });
   });
 
+  app.post("/comparacion/bdTienda2", async (req, res) => {
+    io.timeout(2000).emit("comparacionServer", 'TEST', (err, responses) => {
+      console.log("comparacionServer", responses)
+     
+        res.json({ data: responses }); // one response per client
+      
+    });
+  });
+
   app.post("/planilla/FDM", async (req, res) => {
     let response = req.body;
     var serverData = JSON.parse((response[0] || []).serverData);
