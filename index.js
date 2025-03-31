@@ -393,7 +393,7 @@ io.on('connection', async (socket) => {
 
       (response || []).filter((d, i) => {
         if (typeof d != 'undefined') {
-          dataResponse.push(response);
+          dataResponse = response || [];
           if ((response || []).length - 1 == i) {
             res.json({ data: dataResponse }); // one response per client
           }
