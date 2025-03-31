@@ -388,7 +388,7 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/comparacion/bdTienda", async (req, res) => {
-    io.timeout(2000).emit("comparacionServer", (err, responses) => {
+    io.timeout(2000).emit("comparacionServer", 'PERUBK', (err, responses) => {
       if (err) {
         // some clients did not acknowledge the event in the given delay
       } else {
