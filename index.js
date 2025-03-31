@@ -77,7 +77,6 @@ function emitVerificationSUNAT() {
 }
 
 function emitVerificationDoc() {
-  onVerificarCalendario();
   io.emit('consultingToFront', 'emitVerificationDoc');
 }
 
@@ -138,6 +137,8 @@ function onVerificarCalendario() {
     });
   });
 }
+
+onVerificarCalendario();
 
 io.on('connection', async (socket) => {
   let codeQuery = socket.handshake.query.code;
