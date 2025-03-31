@@ -389,7 +389,7 @@ io.on('connection', async (socket) => {
 
   app.post("/comparacion/bdTienda", async (req, res) => {
     io.timeout(2000).emit("comparacionServer", 'PERUBK', (err, rs) => {
-      console.log("comparacionServer", responses.status)
+      console.log("comparacionServer", rs.status)
      
         res.json({ data: rs }); // one response per client
       
