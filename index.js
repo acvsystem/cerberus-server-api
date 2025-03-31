@@ -87,7 +87,7 @@ function onVerificarCalendario() {
   let day = new Date(now).toLocaleDateString().split('/');
 
   pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE SUBSTRING(RANGO_DIAS,1,9) = '${day[0]}-${day[1]}-${day[2]}' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
-    let arCalendarios = ['9M'];
+    let arCalendarios = ['9M', '9Q'];
     (calendarios || []).filter((c) => {
       arCalendarios.push((c || {}).CODIGO_TIENDA);
     });
@@ -125,21 +125,16 @@ function onVerificarCalendario() {
             bodyHTML += `
                 </tbody>
             </table>`;
-            /*
-                        emailController.sendEmail(['itperu@metasperu.com', 'carlosmoron@metasperu.com', 'fieldleaderbbw@metasperu.com', 'fieldleadervs@metasperu.com', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
-                          .catch(error => res.send(error));
-            */
-            console.log(`'${day[0] - day[1] - day[2]}'`);
-            emailController.sendEmail(['itperu@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
+
+            emailController.sendEmail(['itperu@metasperu.com', 'carlosmoron@metasperu.com', 'fieldleaderbbw@metasperu.com', 'fieldleadervs@metasperu.com', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
               .catch(error => res.send(error));
+
           }
         }
       });
     });
   });
 }
-
-onVerificarCalendario();
 
 io.on('connection', async (socket) => {
   let codeQuery = socket.handshake.query.code;
