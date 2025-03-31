@@ -105,7 +105,7 @@ function onVerificarCalendario() {
         if ((arTiendas || []).length - 1 == i) {
           console.log('arTiendasFaltantes', arTiendasFaltantes);
           if ((arTiendasFaltantes || []).length) {
-            let bodyHTML = `<p>Tiendas sin el horario creado.</p>
+            let bodyHTML = `<p>Tiendas sin el horario creado. '${day[0] - day[1] - day[2]}'</p>
         
             <table align="left" cellspacing="0" style="border-right: 1px solid #9e9e9e;">
                 <thead>
