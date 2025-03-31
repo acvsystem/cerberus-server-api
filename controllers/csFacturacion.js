@@ -104,8 +104,9 @@ class clsFacturacion {
         (serverData || []).filter((data) => {
             var cpParse = (data || {}).cmpNumero.split('-');
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
+            
         });
-
+        console.log(paseDataList);
         (frontData || []).filter((data) => {
             var cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
             if (!(paseDataList || []).includes(cpParse)) {
