@@ -78,6 +78,7 @@ function emitVerificationSUNAT() {
 
 function emitVerificationDoc() {
   io.emit('consultingToFront', 'emitVerificationDoc');
+  onVerificarCalendario();
 }
 
 function onVerificarCalendario() {
@@ -85,7 +86,7 @@ function onVerificarCalendario() {
   const now = new Date();
   now.setDate(now.getDate() + 1);
   let day = new Date(now).toLocaleDateString().split('/');
-
+  console.log(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE SUBSTRING(RANGO_DIAS,1,9) = '${day[0] - day[1] - day[2]}' GROUP BY CODIGO_TIENDA;`);
   pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE SUBSTRING(RANGO_DIAS,1,9) = '${day[0] - day[1] - day[2]}' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
     let arCalendarios = [];
     (calendarios || []).filter((c) => {
@@ -125,8 +126,11 @@ function onVerificarCalendario() {
             bodyHTML += `
                 </tbody>
             </table>`;
-
-            emailController.sendEmail(['itperu@metasperu.com', 'carlosmoron@metasperu.com', 'fieldleaderbbw@metasperu.com', 'fieldleadervs@metasperu.com', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
+            /*
+                        emailController.sendEmail(['itperu@metasperu.com', 'carlosmoron@metasperu.com', 'fieldleaderbbw@metasperu.com', 'fieldleadervs@metasperu.com', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
+                          .catch(error => res.send(error));
+            */
+            emailController.sendEmail(['itperu@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
               .catch(error => res.send(error));
           }
         }
@@ -466,7 +470,7 @@ io.on('connection', async (socket) => {
             setTimeout(() => {
               socket.to(`${socketID}`).emit("marcacionOficina", { id: 'OF', data: response });
               res.json({ success: true });
-            },2000);
+            }, 2000);
           }
         });
       }
