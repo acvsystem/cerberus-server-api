@@ -93,6 +93,32 @@ class clsFacturacion {
         let listSession = await sessionSocket.sessionOneList(codigoFront);
         return listSession;
     }
+
+    async verificacionCoeData(dataVerify) {
+
+        var dataNoFound = [];
+        var paseDataList = [];
+        var serverData = JSON.parse((dataVerify || {}).coeData);
+        var frontData = JSON.parse((dataVerify || {}).databk);
+
+        (serverData || []).filter((data) => {
+            var cpParse = (data || {}).cmpNumero.split('-');
+            (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
+        });
+
+        (frontData || []).filter((data) => {
+            var cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
+            if (!(paseDataList || []).includes(cpParse)) {
+                (dataNoFound || []).push({
+                    "CORRELATIVO": cpParse,
+                    "FECHA": (data || {}).cmpFecha
+                });
+            }
+        });
+
+    
+        return listSession;
+    }
 }
 
 const facturacionController = new clsFacturacion;
