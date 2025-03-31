@@ -387,7 +387,7 @@ io.on('connection', async (socket) => {
     })
   });
 
-  app.get("/comparacion/bdTienda", async (req, res) => {
+  app.post("/comparacion/bdTienda", async (req, res) => {
     socket.broadcast.emit("comparacionServer", 'PERUBK');
     socket.on("comparacionResponse", (response) => {
       res.json({ data: response });
