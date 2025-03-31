@@ -85,7 +85,7 @@ function onVerificarCalendario() {
   const now = new Date();
   now.setDate(now.getDate() + 1);
   let day = new Date(now).toLocaleDateString().split('/');
-  console.log(`'${day[0] - day[1] - day[2]}'`);
+  
   pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE SUBSTRING(RANGO_DIAS,1,9) = '${day[0] - day[1] - day[2]}' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
     let arCalendarios = [];
     (calendarios || []).filter((c) => {
@@ -129,6 +129,7 @@ function onVerificarCalendario() {
                         emailController.sendEmail(['itperu@metasperu.com', 'carlosmoron@metasperu.com', 'fieldleaderbbw@metasperu.com', 'fieldleadervs@metasperu.com', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
                           .catch(error => res.send(error));
             */
+            console.log(`'${day[0] - day[1] - day[2]}'`);
             emailController.sendEmail(['itperu@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
               .catch(error => res.send(error));
           }
