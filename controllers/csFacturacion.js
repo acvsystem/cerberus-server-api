@@ -117,7 +117,7 @@ class clsFacturacion {
         });
 
     
-        return listSession;
+        return dataNoFound;
     }
 }
 

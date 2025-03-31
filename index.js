@@ -390,7 +390,7 @@ io.on('connection', async (socket) => {
   app.post("/comparacion/bdTienda", async (req, res) => {
     io.timeout(2000).emit("comparacionServer", 'DATA', async (err, response) => {
       let dataPlugin = (response || []).find((r) => typeof r != 'undefined');
-      console.log("comparacionServer",dataPlugin[0]);
+      console.log("comparacionServer",dataPlugin.DATA);
       let dataResponse = await facturacionController.verificacionCoeData(dataPlugin.DATA);
 
       res.json({ data: dataResponse });
