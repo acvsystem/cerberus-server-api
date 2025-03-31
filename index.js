@@ -87,7 +87,7 @@ function onVerificarCalendario() {
   let day = new Date(now).toLocaleDateString().split('/');
 
   pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE SUBSTRING(RANGO_DIAS,1,9) = '${day[0]}-${day[1]}-${day[2]}' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
-    let arCalendarios = ['9M','9Q'];
+    let arCalendarios = ['9M'];
     (calendarios || []).filter((c) => {
       arCalendarios.push((c || {}).CODIGO_TIENDA);
     });
