@@ -388,11 +388,20 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/comparacion/bdTienda", async (req, res) => {
-    io.timeout(2000).emit("comparacionServer", 'PERUBK', (err, rs) => {
-      console.log("comparacionServer", rs.status)
-     
-        res.json({ data: rs }); // one response per client
-      
+    io.timeout(2000).emit("comparacionServer", 'PERUBK', (err, response) => {
+      let dataResponse = [];
+
+      (response || []).filter((d, i) => {
+        if (typeof d != 'undefined') {
+          dataResponse.push(response);
+          if ((response || []).length - 1 == i) {
+            res.json({ data: dataResponse }); // one response per client
+          }
+        }
+      });
+
+
+
     });
   });
 
