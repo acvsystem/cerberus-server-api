@@ -388,19 +388,10 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/comparacion/bdTienda", async (req, res) => {
-    io.timeout(2000).emit("comparacionServer", 'PERUBK', (err, responses) => {
-      console.log("comparacionServer", responses)
+    io.timeout(2000).emit("comparacionServer", 'PERUBK', (err, rs) => {
+      console.log("comparacionServer", responses.status)
      
-        res.json({ data: responses }); // one response per client
-      
-    });
-  });
-
-  app.post("/comparacion/bdTienda2", async (req, res) => {
-    io.timeout(2000).emit("comparacionServer", 'TEST', (err, responses) => {
-      console.log("comparacionServer", responses)
-     
-        res.json({ data: responses }); // one response per client
+        res.json({ data: rs }); // one response per client
       
     });
   });
