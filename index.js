@@ -389,19 +389,8 @@ io.on('connection', async (socket) => {
 
   app.post("/comparacion/bdTienda", async (req, res) => {
     io.timeout(2000).emit("comparacionServer", 'PERUBK', (err, response) => {
-      let dataResponse = [];
-
-      (response || []).filter((d, i) => {
-        if (typeof d != 'undefined') {
-          dataResponse = response || [];
-          if ((response || []).length - 1 == i) {
-            res.json({ data: dataResponse }); // one response per client
-          }
-        }
-      });
-
-
-
+      let dataResponse = response.find((r) => typeof r != 'undefined');
+      res.json({ data: dataResponse });
     });
   });
 
