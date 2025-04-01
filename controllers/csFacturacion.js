@@ -100,14 +100,14 @@ class clsFacturacion {
         var paseDataList = ['JAC8-11111'];
         var coeDatabd = JSON.parse((dataVerify || {}).coeData);
         var dataBk = JSON.parse((dataVerify || {}).databk);
-        console.log("verificacionCoeData", dataVerify);
+        
         await (coeDatabd || []).filter((data, i) => {
             var cpParse = (data || {}).cmpNumero.split('-');
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
            
             if (coeDatabd.length - 1 == i) {
                 
-
+                console.log("verificacionCoeData", paseDataList);
                 (dataBk || []).filter((data, j) => {
                     var cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
                     if (!(paseDataList || []).includes(cpParse)) {
