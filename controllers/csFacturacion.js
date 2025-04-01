@@ -95,38 +95,38 @@ class clsFacturacion {
     }
 
     async verificacionCoeData(dataVerify) {
+        new Promise((resolve, reject) => {
+            var dataNoFound = [];
+            var paseDataList = [];
+            var coeDatabd = JSON.parse((dataVerify || {}).coeData);
+            var dataBk = JSON.parse((dataVerify || {}).databk);
+            dataBk.push('JAC8-11111');
+            await(coeDatabd || []).filter((data, i) => {
+                var cpParse = (data || {}).cmpNumero.split('-');
+                (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
 
-        var dataNoFound = [];
-        var paseDataList = [];
-        var coeDatabd = JSON.parse((dataVerify || {}).coeData);
-        var dataBk = JSON.parse((dataVerify || {}).databk);
-        dataBk.push('JAC8-11111');
-        await (coeDatabd || []).filter((data, i) => {
-            var cpParse = (data || {}).cmpNumero.split('-');
-            (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
+                if (coeDatabd.length - 1 == i) {
 
-            if (coeDatabd.length - 1 == i) {
+                    (dataBk || []).filter((data, j) => {
+                        var cpParse = (data || {}).cmpNumero;
+                        let parse1 = (cpParse || '').split('-');
+                        let subparse = parse1[0].substring(3, 4);
+                        let subparse2 = parse1[0].substring(0, 3);
+                        let comp = subparse + subparse2 + '-' + parse1[1];
+                        if (!(paseDataList || []).includes(comp)) {
+                            (dataNoFound || []).push({
+                                "CORRELATIVO": comp,
+                                "FECHA": (data || {}).cmpFecha
+                            });
+                        }
 
-                (dataBk || []).filter((data, j) => {
-                    var cpParse = (data || {}).cmpNumero;
-                    let parse1 = (cpParse || '').split('-');
-                    let subparse = parse1[0].substring(3, 4);
-                    let subparse2 = parse1[0].substring(0, 3);
-                    let comp = subparse + subparse2 + '-' + parse1[1];
-                    if (!(paseDataList || []).includes(comp)) {
-                        (dataNoFound || []).push({
-                            "CORRELATIVO": comp,
-                            "FECHA": (data || {}).cmpFecha
-                        });
-                    }
-
-                    if (dataBk.length - 1 == j) {
-                        return dataNoFound;
-                    }
-                });
-            }
+                        if (dataBk.length - 1 == j) {
+                            resolve(dataNoFound);
+                        }
+                    });
+                }
+            });
         });
-
     }
 }
 
