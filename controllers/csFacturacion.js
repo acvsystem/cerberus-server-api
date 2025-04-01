@@ -101,7 +101,7 @@ class clsFacturacion {
             var coeDatabd = JSON.parse((dataVerify || {}).coeData);
             var dataBk = JSON.parse((dataVerify || {}).databk);
             dataBk.push('JAC8-11111');
-            await(coeDatabd || []).filter((data, i) => {
+            (coeDatabd || []).filter((data, i) => {
                 var cpParse = (data || {}).cmpNumero.split('-');
                 (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
 
