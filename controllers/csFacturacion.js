@@ -113,14 +113,14 @@ class clsFacturacion {
                     let subparse = parse1[0].substring(3, 4);
                     let subparse2 = parse1[0].substring(0, 3);
                     let comp = subparse + subparse2 + '-' + parse1[1];
-                    console.log(comp);
-                    //console.log(toString(cpParse || '').split('-')[0].substring(3, 4) + (toString(cpParse || '').split('-')[0].substring(0, 3)));
                     if (!(paseDataList || []).includes(comp)) {
-                        console.log("verificacionCoeData", cpParse);
+                        console.log("verificacionCoeData", comp);
                         (dataNoFound || []).push({
-                            "CORRELATIVO": cpParse,
+                            "CORRELATIVO": comp,
                             "FECHA": (data || {}).cmpFecha
                         });
+
+                        console.log("verificacionCoeData", dataNoFound);
                     }
 
                     if (dataBk.length - 1 == j) {
