@@ -97,10 +97,9 @@ class clsFacturacion {
     async verificacionCoeData(dataVerify) {
 
         var dataNoFound = [];
-        var coeDatabd = [];
         var paseDataList = ['JAC8-11111'];
         var coeDatabd = JSON.parse((dataVerify || {}).coeData);
-        var dataBk = (dataVerify || {}).databk;
+        var dataBk = JSON.parse((dataVerify || {}).databk);
         console.log("verificacionCoeData", dataVerify);
         await (coeDatabd || []).filter((data, i) => {
             var cpParse = (data || {}).cmpNumero.split('-');
