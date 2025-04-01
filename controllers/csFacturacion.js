@@ -98,8 +98,8 @@ class clsFacturacion {
 
         var dataNoFound = [];
         var paseDataList = [];
-        var serverData = JSON.parse((dataVerify || {}).coeData);
-        var frontData = JSON.parse((dataVerify || {}).databk);
+        var serverData = (dataVerify || {}).coeData;
+        var frontData = (dataVerify || {}).databk;
 
         (serverData || []).filter((data) => {
             var cpParse = (data || {}).cmpNumero.split('-');
