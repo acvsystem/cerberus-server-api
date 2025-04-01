@@ -94,8 +94,8 @@ class clsFacturacion {
         return listSession;
     }
 
-    async verificacionCoeData(dataVerify) {
-        new Promise((resolve, reject) => {
+    verificacionCoeData(dataVerify) {
+        return new Promise((resolve, reject) => {
             var dataNoFound = [];
             var paseDataList = [];
             var coeDatabd = JSON.parse((dataVerify || {}).coeData);
