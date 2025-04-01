@@ -391,7 +391,7 @@ io.on('connection', async (socket) => {
     io.timeout(10000).emit("comparacionServer", 'DATA', async (err, response) => {
       let dataPlugin = (response || []).find((r) => typeof r != 'undefined');
       let dataResponse = await facturacionController.verificacionCoeData((dataPlugin || {}).DATA);
-
+      console.log("verificacionCoeData", dataResponse);
       res.json({ data: dataResponse });
     });
   });

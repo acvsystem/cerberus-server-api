@@ -114,7 +114,6 @@ class clsFacturacion {
                     let subparse2 = parse1[0].substring(0, 3);
                     let comp = subparse + subparse2 + '-' + parse1[1];
                     if (!(paseDataList || []).includes(comp)) {
-                        console.log("verificacionCoeData", comp);
                         (dataNoFound || []).push({
                             "CORRELATIVO": comp,
                             "FECHA": (data || {}).cmpFecha
@@ -122,7 +121,6 @@ class clsFacturacion {
                     }
 
                     if (dataBk.length - 1 == j) {
-                        console.log("verificacionCoeData", dataNoFound);
                         return dataNoFound;
                     }
                 });
