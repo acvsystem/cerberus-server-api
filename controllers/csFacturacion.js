@@ -105,7 +105,7 @@ class clsFacturacion {
             var cpParse = (data || {}).cmpNumero.split('-');
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
             if (coeDatabd.length - 1 == i) {
-                console.log(paseDataList);
+                console.log("paseDataList", paseDataList);
 
                 (dataBk || []).filter((data, j) => {
                     var cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
