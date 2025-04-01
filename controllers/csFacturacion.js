@@ -97,17 +97,17 @@ class clsFacturacion {
     async verificacionCoeData(dataVerify) {
 
         var dataNoFound = [];
-        var paseDataList = [];
-        var serverData = (dataVerify || {}).coeData;
-        var frontData = (dataVerify || {}).databk;
+        var paseDataList = ['BAC8-11111'];
+        var coeDatabd = (dataVerify || {}).coeData;
+        var dataBk = (dataVerify || {}).databk;
 
-        (serverData || []).filter((data) => {
+        (coeDatabd || []).filter((data) => {
             var cpParse = (data || {}).cmpNumero.split('-');
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
             
         });
      
-        (frontData || []).filter((data) => {
+        (dataBk || []).filter((data) => {
             var cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
             if (!(paseDataList || []).includes(cpParse)) {
                 (dataNoFound || []).push({
