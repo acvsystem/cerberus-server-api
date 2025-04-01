@@ -101,24 +101,28 @@ class clsFacturacion {
         var coeDatabd = (dataVerify || {}).coeData;
         var dataBk = (dataVerify || {}).databk;
 
-        (coeDatabd || []).filter((data) => {
+        await (coeDatabd || []).filter((data, i) => {
             var cpParse = (data || {}).cmpNumero.split('-');
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
-            
-        });
-        console.log(paseDataList);
-        (dataBk || []).filter((data) => {
-            var cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
-            if (!(paseDataList || []).includes(cpParse)) {
-                (dataNoFound || []).push({
-                    "CORRELATIVO": cpParse,
-                    "FECHA": (data || {}).cmpFecha
+            if (coeDatabd.length - 1 == i) {
+                console.log(paseDataList);
+
+                (dataBk || []).filter((data, j) => {
+                    var cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
+                    if (!(paseDataList || []).includes(cpParse)) {
+                        (dataNoFound || []).push({
+                            "CORRELATIVO": cpParse,
+                            "FECHA": (data || {}).cmpFecha
+                        });
+                    }
+
+                    if (dataBk.length - 1 == j) {
+                        return dataNoFound;
+                    }
                 });
             }
         });
 
-    
-        return dataNoFound;
     }
 }
 
