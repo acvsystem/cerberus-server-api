@@ -97,7 +97,7 @@ class clsFacturacion {
     async verificacionCoeData(dataVerify) {
 
         var dataNoFound = [];
-        var paseDataList = ['BAC8-11111'];
+        var paseDataList = ['JAC8-11111'];
         var coeDatabd = (dataVerify || {}).coeData;
         var dataBk = (dataVerify || {}).databk;
 
@@ -106,7 +106,7 @@ class clsFacturacion {
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
             
         });
-     
+        console.log(paseDataList);
         (dataBk || []).filter((data) => {
             var cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
             if (!(paseDataList || []).includes(cpParse)) {
