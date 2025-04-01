@@ -107,10 +107,11 @@ class clsFacturacion {
            
             if (coeDatabd.length - 1 == i) {
                 
-                console.log("verificacionCoeData", (paseDataList || []).includes('JAC8-11111'));
+                
                 (dataBk || []).filter((data, j) => {
                     var cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
                     if (!(paseDataList || []).includes(cpParse)) {
+                        console.log("verificacionCoeData", cpParse);
                         (dataNoFound || []).push({
                             "CORRELATIVO": cpParse,
                             "FECHA": (data || {}).cmpFecha
