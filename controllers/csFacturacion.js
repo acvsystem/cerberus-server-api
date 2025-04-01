@@ -109,9 +109,13 @@ class clsFacturacion {
 
                 (dataBk || []).filter((data, j) => {
                     var cpParse = (data || {}).cmpNumero;
-                    console.log((cpParse || '').split('-')[0].substring(3, 4));
+                    let parse1 = (cpParse || '').split('-');
+                    let subparse = parse1[0].substring(3, 4);
+                    let subparse2 = parse1[0].substring(0, 3);
+                    let comp = subparse +'-'+ subparse2;
+                    console.log(comp);
                     //console.log(toString(cpParse || '').split('-')[0].substring(3, 4) + (toString(cpParse || '').split('-')[0].substring(0, 3)));
-                    if (!(paseDataList || []).includes(cpParse)) {
+                    if (!(paseDataList || []).includes(comp)) {
                         console.log("verificacionCoeData", cpParse);
                         (dataNoFound || []).push({
                             "CORRELATIVO": cpParse,
