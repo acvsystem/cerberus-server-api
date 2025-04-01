@@ -113,6 +113,7 @@ class clsFacturacion {
                         let subparse = parse1[0].substring(3, 4);
                         let subparse2 = parse1[0].substring(0, 3);
                         let comp = subparse + subparse2 + '-' + parse1[1];
+                        console.log(paseDataList);
                         if (!(paseDataList || []).includes(comp)) {
                             (dataNoFound || []).push({
                                 "CORRELATIVO": comp,
