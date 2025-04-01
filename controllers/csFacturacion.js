@@ -119,11 +119,10 @@ class clsFacturacion {
                             "CORRELATIVO": comp,
                             "FECHA": (data || {}).cmpFecha
                         });
-
-                        console.log("verificacionCoeData", dataNoFound);
                     }
 
                     if (dataBk.length - 1 == j) {
+                        console.log("verificacionCoeData", dataNoFound);
                         return dataNoFound;
                     }
                 });
