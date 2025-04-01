@@ -100,7 +100,7 @@ class clsFacturacion {
         var paseDataList = ['JAC8-11111'];
         var coeDatabd = (dataVerify || {}).coeData;
         var dataBk = (dataVerify || {}).databk;
-        console.log("verificacionCoeData", coeDatabd);
+        console.log("verificacionCoeData", dataVerify);
         await (coeDatabd || []).filter((data, i) => {
             var cpParse = (data || {}).cmpNumero.split('-');
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
