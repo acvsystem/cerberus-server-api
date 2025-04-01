@@ -104,12 +104,12 @@ class clsFacturacion {
         await (coeDatabd || []).filter((data, i) => {
             var cpParse = (data || {}).cmpNumero.split('-');
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
-           
+
             if (coeDatabd.length - 1 == i) {
-                
-                
+
+
                 (dataBk || []).filter((data, j) => {
-                    var cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
+                    var cpParse = (data || {}).cmpNumero.split('-')[0].substring(3, 4) + (data || {}).cmpNumero.split('-')[0].substring(0, 3);
                     if (!(paseDataList || []).includes(cpParse)) {
                         console.log("verificacionCoeData", cpParse);
                         (dataNoFound || []).push({
