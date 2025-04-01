@@ -106,7 +106,7 @@ class clsFacturacion {
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
             
         });
-        console.log(frontData);
+     
         (frontData || []).filter((data) => {
             var cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
             if (!(paseDataList || []).includes(cpParse)) {
