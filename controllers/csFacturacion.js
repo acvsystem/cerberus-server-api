@@ -109,6 +109,7 @@ class clsFacturacion {
 
                     (dataBk || []).filter((data, j) => {
                         var cpParse = (data || {}).cmpNumero;
+                        console.log(cpParse);
                         let parse1 = (cpParse || '').split('-');
                         let subparse = parse1[0].substring(3, 4);
                         let subparse2 = parse1[0].substring(0, 3);
