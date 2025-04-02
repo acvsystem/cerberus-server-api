@@ -114,7 +114,8 @@ class clsFacturacion {
                                 let parse1 = (cpParse || '').split('-');
                                 let subparse = parse1[0].substring(3, 4);
                                 let subparse2 = parse1[0].substring(0, 3);
-                                let comp = subparse + subparse2 + '-' + parse1[1];
+                                let letterNC = subparse == 'N' ? 'B' : subparse == 'H' ? 'F' : subparse;
+                                let comp = letterNC + subparse2 + '-' + parse1[1];
 
                                 if (!(paseDataList || []).includes(comp)) {
                                     (dataNoFound || []).push({
