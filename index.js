@@ -388,11 +388,13 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/comparacion/bdTienda", async (req, res) => {
-    io.timeout(12000).emit("comparacionServer", 'DATA', async (err, response) => {
+    io.emit("comparacionServer", 'DATA', async (err, response) => {
       let dataPlugin = (response || []).find((r) => typeof r != 'undefined');
       facturacionController.verificacionCoeData((dataPlugin || {}).DATA).then((dataResponse) => {
         res.json({ data: dataResponse });
-      });
+      }).catch((err) => {
+        console.log(err);
+      })
     });
   });
 
