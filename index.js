@@ -1484,15 +1484,14 @@ io.on('connection', async (socket) => {
 
       let date = new Date((huellero || {}).dia).toLocaleDateString().split('/');
       let parseDate = `${date[0]}-${date[1]}-${date[2]}`;
-/*
+
       await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${(huellero || {}).nroDocumento}' AND FECHA_DESDE = '${(huellero || {}).dia}';`).then(([papeleta]) => {
         ((dataServGeneral || [])[i] || {})['papeleta'] = papeleta || [];
-      });*/
+      });
 
-    //  await pool.query(`SELECT TB_DIAS_TRABAJO.CODIGO_TIENDA,TB_DIAS_TRABAJO.NOMBRE_COMPLETO,TB_DIAS_TRABAJO.NUMERO_DOCUMENTO,TB_RANGO_HORA.RANGO_HORA,TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '${parseDate}' AND NUMERO_DOCUMENTO = '${(huellero || {}).nroDocumento}';`).then(([rs]) => {
-       
-    
-        ((dataServGeneral || [])[i] || {})['rango_horario'] =  "";
+      await pool.query(`SELECT TB_DIAS_TRABAJO.CODIGO_TIENDA,TB_DIAS_TRABAJO.NOMBRE_COMPLETO,TB_DIAS_TRABAJO.NUMERO_DOCUMENTO,TB_RANGO_HORA.RANGO_HORA,TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '${parseDate}' AND NUMERO_DOCUMENTO = '${(huellero || {}).nroDocumento}';`).then(([rs]) => {
+        console.log(rs, parseDate, (huellero || {}).nroDocumento);
+        ((dataServGeneral || [])[i] || {})['rango_horario'] = ((rs || [])[0] || {})['RANGO_HORA'] || "";
         ((dataServGeneral || [])[i] || {})['isTardanza'] = false;
 
         if (dataServGeneral.length - 1 == i) {
@@ -1500,7 +1499,7 @@ io.on('connection', async (socket) => {
             socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: dataServGeneral, rs: 'new' });
           }, 2000);
         }
-     // });
+      });
     });
 
 
