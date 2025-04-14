@@ -16,30 +16,6 @@ class clsFacturacion {
 
     async verificacionDocumentos(dataVerify, vTiendaList) {
 
-        /*
-        let tiendasList = [
-            { code: '7A', name: 'BBW JOCKEY' },
-            { code: '9N', name: 'VS MALL AVENTURA' },
-            { code: '7J', name: 'BBW MALL AVENTURA' },
-            { code: '7E', name: 'BBW LA RAMBLA' },
-            { code: '9D', name: 'VS LA RAMBLA' },
-            { code: '9B', name: 'VS PLAZA NORTE' },
-            { code: '7C', name: 'BBW SAN MIGUEL' },
-            { code: '9C', name: 'VS SAN MIGUEL' },
-            { code: '7D', name: 'BBW SALAVERRY' },
-            { code: '9I', name: 'VS SALAVERRY' },
-            { code: '9G', name: 'VS MALL DEL SUR' },
-            { code: '9H', name: 'VS PURUCHUCO' },
-            { code: '9M', name: 'VS ECOMMERCE' },
-            { code: '7F', name: 'BBW ECOMMERCE' },
-            { code: '9K', name: 'VS MEGA PLAZA' },
-            { code: '9L', name: 'VS MINKA' },
-            { code: '9F', name: 'VSFA JOCKEY FULL' },
-            { code: '7A7', name: 'BBW ASIA' },
-            { code: '9P', name: 'VS MALL PLAZA' },
-            { code: '7I', name: 'BBW MALL PLAZA' }
-        ];*/
-
         let tiendasList = vTiendaList;
 
         var dataNoFound = [];
@@ -55,7 +31,18 @@ class clsFacturacion {
         });
 
         (frontData || []).filter((data) => {
-            var cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
+            let cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
+            let identify = (data || {}).cmpSerie.split("");
+            if (identify[0] == "N") {
+                newSerie = (data || {}).cmpSerie.slice(1, 4);
+                cpParse = `B${newSerie}` + '-' + (data || {}).cmpNumero;
+            }
+
+            if (identify[0] == "H") {
+                newSerie = (data || {}).cmpSerie.slice(1, 4);
+                cpParse = `F${newSerie}` + '-' + (data || {}).cmpNumero;
+            }
+
             if (!(paseDataList || []).includes(cpParse)) {
                 (dataNoFound || []).push({
                     "CORRELATIVO": cpParse,
@@ -68,7 +55,7 @@ class clsFacturacion {
 
 
         let selectedLocal = tiendasList.find((data) => data.code == codigoFront);
-        console.log(`${this.getDate()} - ${codigoFront} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length} - `,dataNoFound);
+        console.log(`${this.getDate()} - ${codigoFront} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length} - `, dataNoFound);
 
         if ((dataNoFound || []).length >= 10) {
             const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
