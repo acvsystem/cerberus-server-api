@@ -158,10 +158,16 @@ io.on('connection', async (socket) => {
 
   }
 
+  const transport = socket.io.engine.transport.name; // in most cases, "polling"
+
+  socket.io.engine.on("upgrade", () => {
+    const upgradedTransport = socket.io.engine.transport.name; // in most cases, "websocket"
+    console.log(upgradedTransport);
+  });
+
   socket.on('verifyDocument', async (resData) => {
     //console.log("'verifyDocument'", resData);
-    const sockets = await io.fetchSockets();
-    console.log(sockets[0].data);
+ 
     if ((resData || "").id == "server") {
       let tiendasList = [];
 
