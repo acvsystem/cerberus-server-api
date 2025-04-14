@@ -161,7 +161,7 @@ io.on('connection', async (socket) => {
   socket.on('verifyDocument', async (resData) => {
     //console.log("'verifyDocument'", resData);
     const sockets = await io.fetchSockets();
-    console.log(sockets);
+    console.log(sockets[0].data);
     if ((resData || "").id == "server") {
       let tiendasList = [];
 
