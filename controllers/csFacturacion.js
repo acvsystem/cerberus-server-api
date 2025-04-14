@@ -68,7 +68,7 @@ class clsFacturacion {
 
 
         let selectedLocal = tiendasList.find((data) => data.code == codigoFront);
-        console.log(`${this.getDate()} - ${codigoFront} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length}`);
+        console.log(`${this.getDate()} - ${codigoFront} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length} - `,dataNoFound);
 
         if ((dataNoFound || []).length >= 10) {
             const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));

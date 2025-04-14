@@ -362,6 +362,25 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("consultarServGen", configurationList);
   });
 
+  socket.on("bkeFrontAlbaran", (configuracion) => {
+    console.log(configuracion);
+    let configurationList = {
+      socket: (socket || {}).id,
+      dateList: configuracion.dateList
+    };
+
+    socket.broadcast.emit("pyFrontAlbaran", configurationList);
+  });
+
+  socket.on("pyRsFrontAlbaran", (response) => {
+    let socketID = (response || {}).configuration.socket;
+    let data = [];
+    data = JSON.parse((response || {}).front || []);
+    console.log(data);
+    socket.to(`${socketID}`).emit("bkeRsFrontAlbaran", { id: response.id, data: data });
+  });
+
+
   socket.on("consultaPlanilla", (configuracion) => {
     console.log(configuracion);
     let configurationList = {
