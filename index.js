@@ -158,10 +158,10 @@ io.on('connection', async (socket) => {
 
   }
 
-  const transport = socket.io.engine.transport.name; // in most cases, "polling"
+  const transport = socket.conn.transport.name; // in most cases, "polling"
 
-  socket.io.engine.on("upgrade", () => {
-    const upgradedTransport = socket.io.engine.transport.name; // in most cases, "websocket"
+  socket.conn.on("upgrade", () => {
+    const upgradedTransport = socket.conn.transport.name; // in most cases, "websocket"
     console.log(upgradedTransport);
   });
 
