@@ -170,6 +170,7 @@ io.on('connection', async (socket) => {
 
           if (tienda.length - 1 == i) {
             let listSessionConnect = await facturacionController.verificacionDocumentos(resData, tiendasList);
+            console.log(listClient);
             socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
           }
 
@@ -1039,7 +1040,7 @@ io.on('connection', async (socket) => {
     });
   });
 
-  //ELIMINAR DIA DE TRABAJO EN SEARCH
+  //ELIMINAR DIA DE TRABAJO EN SEARCH|
   app.post("/horario/delete/diaTrabajo", async (req, res) => {
     let id_registro = ((req || {}).body || {})['id'];
     pool.query(`DELETE FROM TB_DIAS_TRABAJO WHERE ID_DIA_TRB = ${id_registro};`).then(() => {
