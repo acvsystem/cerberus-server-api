@@ -56,7 +56,7 @@ class clsFacturacion {
 
         let selectedLocal = tiendasList.find((data) => data.code == codigoFront);
         console.log(`${this.getDate()} - ${codigoFront} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length} - `, dataNoFound);
-
+/*
         if ((dataNoFound || []).length >= 10) {
             const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
             const workBook = XLSX.utils.book_new();
@@ -75,7 +75,7 @@ class clsFacturacion {
                 .catch(error => res.send(error));
         }
 
-
+*/
         await pool.query(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
         let listSession = await sessionSocket.sessionOneList(codigoFront);
         return listSession;
