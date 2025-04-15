@@ -162,12 +162,12 @@ io.on('connection', async (socket) => {
 
   socket.conn.on("upgrade", () => {
     const upgradedTransport = socket.conn.transport.name; // in most cases, "websocket"
-    console.log(upgradedTransport);
+    console.log("upgradedTransport", upgradedTransport);
   });
 
   socket.on('verifyDocument', async (resData) => {
     //console.log("'verifyDocument'", resData);
- 
+
     if ((resData || "").id == "server") {
       let tiendasList = [];
 
@@ -178,14 +178,12 @@ io.on('connection', async (socket) => {
 
           if (tienda.length - 1 == i) {
             let listSessionConnect = await facturacionController.verificacionDocumentos(resData, tiendasList);
-            console.log(listClient);
+            console.log("verifyDocument", listClient);
             socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
           }
 
         });
       });
-
-
     }
   });
 
