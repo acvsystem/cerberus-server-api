@@ -1,8 +1,17 @@
 /*MENU COMPROBANTES
 
-FRONTEND: backend:comprobantes
-BACKEND: pyComprobantes
-PYTHON: backendRscomprobantes
-SERVIDOR BACKUP: pyRscomprobantes
-BACKEND: frontEnd:rscomprobantes
+-----INIT SOLICITUD
+FRONTEND: comprobantes:get
+-----ENVIO A FRONT RETAIL 
+BACKEND: comprobantesGetFR
+-----ENVIO RESPUESTA DE FRONT RETAIL A BACKEND
+FRONT RETAIL: comprobantes:get:fr:response
+-----ENVIO SOLICITUD A SERVIDOR BACKUP
+BACKEND: comprobantesGetSBK
+-----ENVIO RESPUESTA DE SERVIDOR BACKUP A BACKEND
+SERVIDOR BACKUP: comprobantes:get:sbk:response
+-----ENVIO RESPUESTA A FRONTEND
+BACKEND: comprobantes:get:response
+
+
 */

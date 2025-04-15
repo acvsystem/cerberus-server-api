@@ -290,23 +290,24 @@ io.on('connection', async (socket) => {
 
   /* CONSULTAR DOCUMENTOS FALTANTES */
 
-  socket.on('backend:comprobantes', (data) => {
+  socket.on('comprobantes:get', (data) => {
     let configuration = {
       socket: (socket || {}).id
     };
 
-    socket.broadcast.emit("pyComprobantes", configuration); //SE ENVIA AL PYTHON DEL FRONT RETAIL
+    socket.broadcast.emit("comprobantesGetFR", configuration); //SE ENVIA AL PYTHON DEL FRONT RETAIL
   });
 
 
-  socket.on('backendRsComprobantes', (data) => {
+  socket.on('comprobantes:get:fr:response', (data) => {
     let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
     if (typeof codeTerminal != 'undefined' && codeTerminal != '') {
-      socket.broadcast.emit("servidorBKComprobantes", data, codeTerminal); // SE ENVIA AL PYTHON DEL SERVIDOR BACKUP
+      socket.broadcast.emit("comprobantes:get:SBK", data, codeTerminal); // SE ENVIA AL PYTHON DEL SERVIDOR BACKUP
     }
   });
 
-  socket.on('pyRscomprobantes', async (resData) => { // RESPUESTA DESDE EL SERVIDOR BACKUP
+  socket.on('comprobantes:get:sbk:response', async (resData) => { // RESPUESTA DESDE EL SERVIDOR BACKUP
+    console.log("SERVIDOR BACKUP",resData);
     if ((resData || "").id == "server") {
       let tiendasList = [];
       let socketID = resData['frontData']['configuration']['socket'];
@@ -318,7 +319,7 @@ io.on('connection', async (socket) => {
 
           if (tienda.length - 1 == i) {
             let listSessionConnect = await facturacionController.verificacionDocumentos(resData, tiendasList);
-            socket.to(`${socketID}`).emit("frontEnd:rscomprobantes", listSessionConnect); // SE ENVIA A FRONTEND
+            socket.to(`${socketID}`).emit("comprobantes:get:response", listSessionConnect); // SE ENVIA A FRONTEND
           }
 
         });
