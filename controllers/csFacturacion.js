@@ -31,6 +31,7 @@ class clsFacturacion {
         });
 
         (frontData || []).filter((data) => {
+            console.log(data);
             let cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
             let identify = ((data || {}).cmpSerie || "").split("");
             if (identify[0] == "N") {
