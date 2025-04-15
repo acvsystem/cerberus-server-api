@@ -291,6 +291,10 @@ io.on('connection', async (socket) => {
   /* CONSULTAR DOCUMENTOS FALTANTES */
 
   socket.on('comprobantes:get', (data) => {
+    console.log(
+      `-----INIT SOLICITUD
+       FRONTEND: comprobantes:get`
+    );
     let configuration = {
       socket: (socket || {}).id
     };
@@ -300,6 +304,11 @@ io.on('connection', async (socket) => {
 
 
   socket.on('comprobantes:get:fr:response', (data) => {
+    console.log(
+      `-----ENVIO RESPUESTA DE FRONT RETAIL A BACKEND
+       FRONT RETAIL: comprobantes:get:fr:response`
+    );
+
     let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
     if (typeof codeTerminal != 'undefined' && codeTerminal != '') {
       socket.broadcast.emit("comprobantes:get:SBK", data, codeTerminal); // SE ENVIA AL PYTHON DEL SERVIDOR BACKUP
@@ -307,7 +316,10 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('comprobantes:get:sbk:response', async (resData) => { // RESPUESTA DESDE EL SERVIDOR BACKUP
-    console.log("SERVIDOR BACKUP",resData);
+    console.log(
+      `-----ENVIO RESPUESTA DE SERVIDOR BACKUP A BACKEND
+       SERVIDOR BACKUP: comprobantes:get:sbk:response`
+    );
     if ((resData || "").id == "server") {
       let tiendasList = [];
       let socketID = resData['frontData']['configuration']['socket'];
@@ -319,6 +331,10 @@ io.on('connection', async (socket) => {
 
           if (tienda.length - 1 == i) {
             let listSessionConnect = await facturacionController.verificacionDocumentos(resData, tiendasList);
+            console.log(
+              `-----ENVIO RESPUESTA A FRONTEND
+               BACKEND: comprobantes:get:response`
+            );
             socket.to(`${socketID}`).emit("comprobantes:get:response", listSessionConnect); // SE ENVIA A FRONTEND
           }
 
