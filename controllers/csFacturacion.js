@@ -22,19 +22,18 @@ class clsFacturacion {
         var paseDataList = [];
         var serverData = JSON.parse((dataVerify || {}).serverData);
         var frontData = JSON.parse((dataVerify || {}).frontData);
-       
-   
+
+
         var codigoFront = (dataVerify || {}).codigoFront;
         //console.log(codigoFront, dataNoFound);
 
         (serverData || []).filter((data) => {
-            console.log(data);
             var cpParse = ((data || {}).cmpNumero || "").split('-');
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
         });
-
+        console.log(paseDataList);
         (frontData || []).filter((data) => {
-            
+
             let cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
             let identify = ((data || {}).cmpSerie || "").split("");
             if (identify[0] == "N") {
@@ -60,26 +59,26 @@ class clsFacturacion {
 
         let selectedLocal = tiendasList.find((data) => data.code == codigoFront);
         console.log(`${this.getDate()} - ${codigoFront} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length} - `, dataNoFound);
-/*
-        if ((dataNoFound || []).length >= 10) {
-            const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
-            const workBook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
-            const xlsFile = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
-            emailController.sendEmail('johnnygermano@metasperu.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, null, xlsFile, (selectedLocal || {}).name)
-                .catch(error => res.send(error));
-        }
-
-        if ((dataNoFound || []).length >= 10) {
-            const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
-            const workBook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
-            const xlsFile = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
-            emailController.sendEmail('', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, null, xlsFile, (selectedLocal || {}).name)
-                .catch(error => res.send(error));
-        }
-
-*/
+        /*
+                if ((dataNoFound || []).length >= 10) {
+                    const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
+                    const workBook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
+                    const xlsFile = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
+                    emailController.sendEmail('johnnygermano@metasperu.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, null, xlsFile, (selectedLocal || {}).name)
+                        .catch(error => res.send(error));
+                }
+        
+                if ((dataNoFound || []).length >= 10) {
+                    const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
+                    const workBook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
+                    const xlsFile = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
+                    emailController.sendEmail('', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, null, xlsFile, (selectedLocal || {}).name)
+                        .catch(error => res.send(error));
+                }
+        
+        */
         await pool.query(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
         let listSession = await sessionSocket.sessionOneList(codigoFront);
         return listSession;
