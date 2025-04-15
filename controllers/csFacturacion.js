@@ -31,21 +31,22 @@ class clsFacturacion {
             var cpParse = ((data || {}).cmpNumero || "").split('-');
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
         });
-        console.log(paseDataList);
+       
         (frontData || []).filter((data) => {
 
             let cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
             let identify = ((data || {}).cmpSerie || "").split("");
+
             if (identify[0] == "N") {
                 let newSerie = (data || {}).cmpSerie.slice(1, 4);
-                cpParse = `B${newSerie}` + '-' + (data || {}).cmpNumero;
+              //  cpParse = `B${newSerie}` + '-' + (data || {}).cmpNumero;
             }
 
             if (identify[0] == "H") {
                 let newSerie = (data || {}).cmpSerie.slice(1, 4);
-                cpParse = `F${newSerie}` + '-' + (data || {}).cmpNumero;
+             //   cpParse = `F${newSerie}` + '-' + (data || {}).cmpNumero;
             }
-
+            console.log(cpParse);
             if (!(paseDataList || []).includes(cpParse)) {
                 (dataNoFound || []).push({
                     "CORRELATIVO": cpParse,
