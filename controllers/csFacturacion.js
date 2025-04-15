@@ -22,16 +22,19 @@ class clsFacturacion {
         var paseDataList = [];
         var serverData = JSON.parse((dataVerify || {}).serverData);
         var frontData = JSON.parse((dataVerify || {}).frontData);
+       
+        console.log(data);
         var codigoFront = (dataVerify || {}).codigoFront;
         //console.log(codigoFront, dataNoFound);
 
         (serverData || []).filter((data) => {
+            console.log(serverData);
             var cpParse = ((data || {}).cmpNumero || "").split('-');
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
         });
 
         (frontData || []).filter((data) => {
-            console.log(data);
+            
             let cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
             let identify = ((data || {}).cmpSerie || "").split("");
             if (identify[0] == "N") {
