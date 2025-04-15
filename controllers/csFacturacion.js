@@ -26,13 +26,13 @@ class clsFacturacion {
         //console.log(codigoFront, dataNoFound);
 
         (serverData || []).filter((data) => {
-            var cpParse = (data || {}).cmpNumero.split('-');
+            var cpParse = ((data || {}).cmpNumero || "").split('-');
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
         });
 
         (frontData || []).filter((data) => {
             let cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
-            let identify = (data || {}).cmpSerie.split("");
+            let identify = ((data || {}).cmpSerie || "").split("");
             if (identify[0] == "N") {
                 let newSerie = (data || {}).cmpSerie.slice(1, 4);
                 cpParse = `B${newSerie}` + '-' + (data || {}).cmpNumero;
