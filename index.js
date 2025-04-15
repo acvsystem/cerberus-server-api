@@ -311,7 +311,7 @@ io.on('connection', async (socket) => {
 
     let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
     if (typeof codeTerminal != 'undefined' && codeTerminal != '') {
-      socket.broadcast.emit("comprobantes:get:SBK", data, codeTerminal); // SE ENVIA AL PYTHON DEL SERVIDOR BACKUP
+      socket.broadcast.emit("comprobantesGetSBK", data, codeTerminal); // SE ENVIA AL PYTHON DEL SERVIDOR BACKUP
     }
   });
 
