@@ -320,6 +320,7 @@ io.on('connection', async (socket) => {
       `-----ENVIO RESPUESTA DE SERVIDOR BACKUP A BACKEND
        SERVIDOR BACKUP: comprobantes:get:sbk:response`
     );
+    console.log(resData);
     if ((resData || "").id == "server") {
       let tiendasList = [];
       let socketID = resData['frontData']['configuration']['socket'];
