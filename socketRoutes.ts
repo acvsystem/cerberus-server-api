@@ -1,7 +1,8 @@
 /*MENU COMPROBANTES
 
-FRONTEND: servidor:getComprobantes
-SERVIDOR: pythonGetComprobantes
-PYTHON: servidor:rs:getComprobantes
-SERVIDOR: frontend:rs:getComprobantes
+FRONTEND: backend:comprobantes
+BACKEND: pyComprobantes
+PYTHON: backendRscomprobantes
+SERVIDOR BACKUP: pyRscomprobantes
+BACKEND: frontEnd:rscomprobantes
 */

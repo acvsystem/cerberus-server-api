@@ -167,7 +167,6 @@ io.on('connection', async (socket) => {
 
   socket.on('verifyDocument', async (resData) => {
     //console.log("'verifyDocument'", resData);
-
     if ((resData || "").id == "server") {
       let tiendasList = [];
 
@@ -178,12 +177,13 @@ io.on('connection', async (socket) => {
 
           if (tienda.length - 1 == i) {
             let listSessionConnect = await facturacionController.verificacionDocumentos(resData, tiendasList);
-            console.log("verifyDocument", listClient);
             socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
           }
 
         });
       });
+
+
     }
   });
 
@@ -201,12 +201,7 @@ io.on('connection', async (socket) => {
     }
   });
 
-  socket.on('petitionFront', (data) => {
-    let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
-    if (typeof codeTerminal != 'undefined' && codeTerminal != '') {
-      socket.broadcast.emit("sendDataFront", data, codeTerminal);
-    }
-  });
+
 
   socket.on('responseStock', (data) => {
     console.log(data);
@@ -293,11 +288,45 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("clearColaUpdatePanama", data);
   });
 
+  /* CONSULTAR DOCUMENTOS FALTANTES */
 
-  socket.on('comunicationFront', (data) => {
-    console.log('comunicationFront');
-    socket.broadcast.emit("consultingToFront", 'ready');
+  socket.on('backend:comprobantes', (data) => {
+    let configuration = {
+      socket: (socket || {}).id
+    };
+
+    socket.broadcast.emit("pyComprobantes", configuration); //SE ENVIA AL PYTHON DEL FRONT RETAIL
   });
+
+
+  socket.on('backendRsComprobantes', (data) => {
+    let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
+    if (typeof codeTerminal != 'undefined' && codeTerminal != '') {
+      socket.broadcast.emit("servidorBKComprobantes", data, codeTerminal); // SE ENVIA AL PYTHON DEL SERVIDOR BACKUP
+    }
+  });
+
+  socket.on('pyRscomprobantes', async (resData) => { // RESPUESTA DESDE EL SERVIDOR BACKUP
+    if ((resData || "").id == "server") {
+      let tiendasList = [];
+      let socketID = resData['frontData']['configuration']['socket'];
+      console.log(socketID);
+      pool.query(`SELECT * FROM TB_LISTA_TIENDA;`).then(([tienda]) => {
+
+        (tienda || []).filter(async (td, i) => {
+          tiendasList.push({ code: (td || {}).SERIE_TIENDA, name: (td || {}).DESCRIPCION });
+
+          if (tienda.length - 1 == i) {
+            let listSessionConnect = await facturacionController.verificacionDocumentos(resData, tiendasList);
+            socket.to(`${socketID}`).emit("frontEnd:rscomprobantes", listSessionConnect); // SE ENVIA A FRONTEND
+          }
+
+        });
+      });
+    }
+  });
+
+
 
   socket.on('comunicationStock', (email, arrCodeTienda) => {
     console.log('comunicationStock');
