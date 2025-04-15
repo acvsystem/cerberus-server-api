@@ -208,19 +208,7 @@ io.on('connection', async (socket) => {
     socket.to(`${listClient.id}`).emit("dataStock", data);
   });
 
-  socket.on('resTransaction', (data) => {
-    console.log(data);
-    let response = JSON.parse(data);
-    let body = [
-      {
-        code: codeTerminal,
-        transaciones: response[0]['remCount']
-      }
-    ];
 
-    socket.to(`${listClient.id}`).emit("dataTransaction", body);
-
-  });
 
   socket.on('resClient', async (data) => {
     console.log('resClient', data);
@@ -244,38 +232,9 @@ io.on('connection', async (socket) => {
 
   });
 
-  socket.on('terminalesFront', async (data) => {
-    let response = JSON.parse(data);
-
-    socket.to(`${listClient.id}`).emit("toClientTerminales", response);
-  });
-
-
-  socket.on('emitTerminalesFront', (data) => {
-    console.log('emitTerminalesFront');
-    socket.broadcast.emit("consultingTerminalesFront", 'ready');
-  });
-
-
-  socket.on('emitDataTerminalesFront', (data) => {
-    console.log('emitDataTerminalesFront');
-    socket.broadcast.emit("dataTerminalesFront", 'ready');
-  });
-
-  socket.on('dateTerminalesFront', async (data) => {
-    let response = JSON.parse(data);
-    socket.to(`${listClient.id}`).emit("toClientDataTerminales", response);
-  });
-
   socket.on('emitTranferenciaCajas', (data) => {
     console.log('emitTranferenciaCajas', data);
     socket.broadcast.emit("exceTranferenciaCajas", data);
-  });
-
-
-  socket.on('emitTransaction', (data) => {
-    console.log('emitTransaction');
-    socket.broadcast.emit("searchTransaction", 'ready');
   });
 
   socket.on('cleanClient', (data) => {
@@ -301,7 +260,6 @@ io.on('connection', async (socket) => {
 
     socket.broadcast.emit("comprobantesGetFR", configuration); //SE ENVIA AL PYTHON DEL FRONT RETAIL
   });
-
 
   socket.on('comprobantes:get:fr:response', (data) => {
     console.log(
@@ -343,6 +301,92 @@ io.on('connection', async (socket) => {
       });
     }
   });
+
+  /* VERIFICACION DE TRANSACCIONES */
+
+  socket.on('transacciones:get', (data) => { //ENVIA A FRONT RETAIL
+    console.log(
+      `-----INIT SOLICITUD
+      FRONTEND: transacciones:get`
+    );
+
+    let configuration = {
+      socket: (socket || {}).id
+    };
+
+    socket.broadcast.emit("transaccionesGetFR", configuration);
+  });
+
+  socket.on('transacciones:get:fr:response', (data) => { //RECIBE DE FRONT RETAIL
+    console.log(
+      `-----ENVIO RESPUESTA A FRONTEND
+       BACKEND: transacciones:get:response`
+    );
+
+    let socketID = data['configuration']['socket'];
+    let response = JSON.parse(data['data']);
+    let body = [
+      {
+        code: codeTerminal,
+        transaciones: response[0]['remCount']
+      }
+    ];
+
+    socket.to(`${socketID}`).emit("transacciones:get:response", body); // ENVIA A FRONTEND
+  });
+
+  /* CONSULTA NOMBRES DE TERMINALES FRONT RETAIL */
+
+  socket.on('terminales:get:name', (data) => {
+    console.log(
+      `-----INIT SOLICITUD
+       FRONTEND: terminales:get:name`
+    );
+
+    let configuration = {
+      socket: (socket || {}).id
+    };
+
+    socket.broadcast.emit("terminalesGetNameFR", configuration);
+  });
+
+  socket.on('terminales:get:name:fr:response', async (data) => {
+    console.log(
+      `-----ENVIO RESPUESTA DE FRONT RETAIL A BACKEND
+       FRONT RETAIL: terminales:get:name:fr:response`
+    );
+    let socketID = data['configuration']['socket'];
+    let response = JSON.parse(data['data']);
+    socket.to(`${socketID}`).emit("terminales:get:name:response", response); // ENVIA A FRONTEND
+  });
+
+  /* CONSULTA CANTIDAD EN TERMINALES FRONT RETAIL */
+
+  socket.on('terminales:get:cantidad', (data) => {
+    console.log(
+      `-----INIT SOLICITUD
+       FRONTEND: terminales:get:cantidad`
+    );
+
+    let configuration = {
+      socket: (socket || {}).id
+    };
+
+    socket.broadcast.emit("terminalesGetCantFR", configuration);
+  });
+
+  socket.on('terminales:get:cantidad:fr:response', async (data) => {
+    console.log(
+      `-----ENVIO RESPUESTA A FRONTEND
+       BACKEND: terminales:get:cantidad:response`
+    );
+
+    let socketID = data['configuration']['socket'];
+    let response = JSON.parse(data['data']);
+    socket.to(`${socketID}`).emit("terminales:get:cantidad:response", response);
+  });
+
+  
 
 
 
