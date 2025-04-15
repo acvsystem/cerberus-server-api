@@ -323,14 +323,14 @@ io.on('connection', async (socket) => {
     if ((resData || "").id == "server") {
       let tiendasList = [];
       let socketID = resData['frontData']['configuration']['socket'];
-      console.log(socketID);
+
       pool.query(`SELECT * FROM TB_LISTA_TIENDA;`).then(([tienda]) => {
 
         (tienda || []).filter(async (td, i) => {
           tiendasList.push({ code: (td || {}).SERIE_TIENDA, name: (td || {}).DESCRIPCION });
 
           if (tienda.length - 1 == i) {
-            let listSessionConnect = await facturacionController.verificacionDocumentos(resData, tiendasList);
+            let listSessionConnect = await facturacionController.verificacionDocumentos({ serverData: resData['serverData'], frontData: resData['serverData'] }, tiendasList);
             console.log(
               `-----ENVIO RESPUESTA A FRONTEND
                BACKEND: comprobantes:get:response`
