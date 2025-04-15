@@ -320,7 +320,7 @@ io.on('connection', async (socket) => {
       `-----ENVIO RESPUESTA DE SERVIDOR BACKUP A BACKEND
        SERVIDOR BACKUP: comprobantes:get:sbk:response`
     );
-    
+
     if ((resData || "").id == "server") {
       let tiendasList = [];
       let socketID = resData['frontData']['configuration']['socket'];
@@ -331,7 +331,7 @@ io.on('connection', async (socket) => {
           tiendasList.push({ code: (td || {}).SERIE_TIENDA, name: (td || {}).DESCRIPCION });
 
           if (tienda.length - 1 == i) {
-            let listSessionConnect = await facturacionController.verificacionDocumentos({ serverData: resData['serverData'], frontData: resData['frontData']['data'] }, tiendasList);
+            let listSessionConnect = await facturacionController.verificacionDocumentos({ serverData: resData['serverData'], frontData: resData['frontData']['data'], codigoFront: resData['codigoFront'] }, tiendasList);
             console.log(
               `-----ENVIO RESPUESTA A FRONTEND
                BACKEND: comprobantes:get:response`
