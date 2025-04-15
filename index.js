@@ -311,7 +311,7 @@ io.on('connection', async (socket) => {
 
     let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
     if (typeof codeTerminal != 'undefined' && codeTerminal != '') {
-      socket.broadcast.emit("comprobantesGetSBK", data['data'], codeTerminal); // SE ENVIA AL PYTHON DEL SERVIDOR BACKUP
+      socket.broadcast.emit("comprobantesGetSBK", data, codeTerminal); // SE ENVIA AL PYTHON DEL SERVIDOR BACKUP
     }
   });
 
@@ -330,7 +330,7 @@ io.on('connection', async (socket) => {
           tiendasList.push({ code: (td || {}).SERIE_TIENDA, name: (td || {}).DESCRIPCION });
 
           if (tienda.length - 1 == i) {
-            let listSessionConnect = await facturacionController.verificacionDocumentos({ serverData: resData['serverData'], frontData: resData['serverData'] }, tiendasList);
+            let listSessionConnect = await facturacionController.verificacionDocumentos({ serverData: resData['serverData'], frontData: resData['data']['frontData'] }, tiendasList);
             console.log(
               `-----ENVIO RESPUESTA A FRONTEND
                BACKEND: comprobantes:get:response`
