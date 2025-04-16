@@ -425,7 +425,7 @@ io.on('connection', async (socket) => {
     } else if (isIcg != 'true') {
       console.log(`disconnect ${codeTerminal} - idApp`, listClient.id);
       let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
-      socket.to(`${listClient.id}`).emit("sessionConnect", listSessionDisconnet);
+      socket.broadcast.emit("sessionConnect", listSessionDisconnet);
     }
 
     if (isIcg == 'true') {
