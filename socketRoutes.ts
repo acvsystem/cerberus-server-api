@@ -60,7 +60,7 @@ BACKEND: transaccionesPostFR
 
 -----INIT SOLICITUD
 FRONTEND: comparacion:get:bd
------ENVIO A FRONT RETAIL 
+-----ENVIO A SERVIDOR BACKUP 
 BACKEND: comparacionGetBdSBK
 -----ENVIO RESPUESTA DE SERVIDOR A BACKEND
 SERVIDOR: comparacion:get:sbk:response

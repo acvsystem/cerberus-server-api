@@ -366,6 +366,10 @@ io.on('connection', async (socket) => {
   /* VERIFICACION DE BASES DE DATOS CON COE_DATA */
 
   socket.on('comparacion:get:bd', (response) => {
+    console.log(
+      `-----ENVIO A SERVIDOR BACKUP 
+       BACKEND: comparacionGetBdSBK`
+    );
 
     let configuration = {
       socket: (socket || {}).id
@@ -375,6 +379,11 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('comparacion:get:sbk:response', (dataRs) => {
+
+    console.log(
+      `-----ENVIO RESPUESTA A FRONTEND
+       BACKEND: comparacion:get:bd:response`
+    );
 
     let socketID = dataRs['configuration']['socket'];
     let response = JSON.parse(dataRs['data']);
