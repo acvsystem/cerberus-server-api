@@ -15,7 +15,7 @@ class clsFacturacion {
     }
 
     async verificacionDocumentos(dataVerify, vTiendaList) {
-        console.log(dataVerify);
+     
         let tiendasList = vTiendaList;
 
         var dataNoFound = [];

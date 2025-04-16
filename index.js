@@ -386,7 +386,7 @@ io.on('connection', async (socket) => {
     socket.to(`${socketID}`).emit("terminales:get:cantidad:response", response);
   });
 
-  
+
 
 
 
@@ -1566,7 +1566,7 @@ io.on('connection', async (socket) => {
   if (codeTerminal != "SRVFACT" && isIcg != 'true') {
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
     console.log(listSessionConnect);
-    socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
+    socket.broadcast.emit("sessionConnect", listSessionConnect);
   } else {
     if (codeTerminal == "SRVFACT") {
       console.log('SERVIDOR', codeTerminal);
