@@ -390,8 +390,8 @@ io.on('connection', async (socket) => {
        req.body
     );
 
-    let socketID = req.body[0]['configuration']['socket'];
-    let response = JSON.parse(eq.body[0]['data']);
+    let socketID = req.body['configuration']['socket'];
+    let response = JSON.parse(req.body['data']);
 
     facturacionController.verificacionCoeData(response).then((dataResponse) => {
       socket.to(`${socketID}`).emit("comparacion:get:bd:response", { data: dataResponse });
