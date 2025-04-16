@@ -380,14 +380,18 @@ io.on('connection', async (socket) => {
 
   socket.on('comparacion:get:sbk:response', (dataRs) => {
 
+
+  });
+
+  app.get("/comparacion/bd/response", async (req, res) => {
     console.log(
       `-----ENVIO RESPUESTA A FRONTEND
        BACKEND: comparacion:get:bd:response`,
-       dataRs
+       req.body
     );
 
-    let socketID = dataRs['configuration']['socket'];
-    let response = JSON.parse(dataRs['data']);
+    let socketID = req.body[0]['configuration']['socket'];
+    let response = JSON.parse(eq.body[0]['data']);
 
     facturacionController.verificacionCoeData(response).then((dataResponse) => {
       socket.to(`${socketID}`).emit("comparacion:get:bd:response", { data: dataResponse });
