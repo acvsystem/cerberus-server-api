@@ -386,8 +386,7 @@ io.on('connection', async (socket) => {
   app.get("/comparacion/bd/response", async (req, res) => {
     console.log(
       `-----ENVIO RESPUESTA A FRONTEND
-       BACKEND: comparacion:get:bd:response`,
-       req.body
+       BACKEND: comparacion:get:bd:response`
     );
 
     let socketID = req.body['configuration']['socket'];
