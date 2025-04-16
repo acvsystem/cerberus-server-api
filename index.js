@@ -165,29 +165,6 @@ io.on('connection', async (socket) => {
     console.log("upgradedTransport", upgradedTransport);
   });
 
-  socket.on('verifyDocument', async (resData) => {
-    //console.log("'verifyDocument'", resData);
-    if ((resData || "").id == "server") {
-      let tiendasList = [];
-
-      pool.query(`SELECT * FROM TB_LISTA_TIENDA;`).then(([tienda]) => {
-
-        (tienda || []).filter(async (td, i) => {
-          tiendasList.push({ code: (td || {}).SERIE_TIENDA, name: (td || {}).DESCRIPCION });
-
-          if (tienda.length - 1 == i) {
-            let listSessionConnect = await facturacionController.verificacionDocumentos(resData, tiendasList);
-            socket.to(`${listClient.id}`).emit("sessionConnect", listSessionConnect);
-          }
-
-        });
-      });
-
-
-    }
-  });
-
-
   socket.on('consultAsistencia', async (configuracion) => {
     (configuracion || [])['socket'] = listClient.id;
 
@@ -201,14 +178,10 @@ io.on('connection', async (socket) => {
     }
   });
 
-
-
   socket.on('responseStock', (data) => {
     console.log(data);
     socket.to(`${listClient.id}`).emit("dataStock", data);
   });
-
-
 
   socket.on('resClient', async (data) => {
     console.log('resClient', data);
@@ -410,30 +383,7 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("conexion:serverICG:send", data);
   });
 
-  socket.on('disconnect', async () => {
-    if (codeTerminal == "SRVFACT") {
-      await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET ESTATUS_CONEXION = 0 WHERE ID_ESTATUS_SERVER = 1;`);
-      setTimeout(async () => {
-        let [conexionList] = await pool.query(`SELECT * FROM TB_ESTATUS_SERVER_BACKUP;`);
-        if (!((conexionList || [])[0] || {}).ESTATUS_CONEXION) {
-          await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET OLD_ESTATUS = 0 WHERE ID_ESTATUS_SERVER = 1;`);
-          sessionSocket.disconnectServer();
-        }
-      }, 300000);
 
-      socket.broadcast.emit("status:serverSUNAT:send", { 'code': 'SRVFACT', 'online': 'false' });
-    } else if (isIcg != 'true') {
-      console.log(`disconnect ${codeTerminal} - idApp`, listClient.id);
-      let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
-      socket.broadcast.emit("comprobantes:get:response", listSessionDisconnet);
-    }
-
-    if (isIcg == 'true') {
-      socket.broadcast.emit("conexion:serverICG:send", [{ 'code': codeTerminal, 'isConect': '0' }]);
-    }
-
-    console.log('user disconnected');
-  });
 
   socket.on("update:file:FrontAgent", (body) => {
     let configurationList = {
@@ -1583,6 +1533,31 @@ io.on('connection', async (socket) => {
     }
   }
 
+  socket.on('disconnect', async () => { // DESCONEXION DE ALGUN ENLACE (SE ENVIA A COMPROBANTES)
+    if (codeTerminal == "SRVFACT") {
+      await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET ESTATUS_CONEXION = 0 WHERE ID_ESTATUS_SERVER = 1;`);
+      setTimeout(async () => {
+        let [conexionList] = await pool.query(`SELECT * FROM TB_ESTATUS_SERVER_BACKUP;`);
+        if (!((conexionList || [])[0] || {}).ESTATUS_CONEXION) {
+          await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET OLD_ESTATUS = 0 WHERE ID_ESTATUS_SERVER = 1;`);
+          sessionSocket.disconnectServer();
+        }
+      }, 300000);
+
+      socket.broadcast.emit("status:serverSUNAT:send", { 'code': 'SRVFACT', 'online': 'false' });
+    } else if (isIcg != 'true') {
+      console.log(`disconnect ${codeTerminal} - idApp`, listClient.id);
+      let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
+      socket.broadcast.emit("comprobantes:get:response", listSessionDisconnet); //ENVIA A FRONTEND COMPROBANTES
+    }
+
+    if (isIcg == 'true') {
+      socket.broadcast.emit("conexion:serverICG:send", [{ 'code': codeTerminal, 'isConect': '0' }]);
+    }
+
+    console.log('user disconnected');
+  });
+
   app.post("/frontRetail/search/configuration/agente", async (req, res) => {
     let data = ((req || {}).body || []);
     let [configuration] = await pool.query(`SELECT * FROM TB_PARAMETROS_TIENDA WHERE MAC='${((data || {}).mac).toUpperCase()}';`);
@@ -1656,9 +1631,6 @@ io.on('connection', async (socket) => {
     });
 
   });
-
-
-
 
   app.post('/facturas-pendiente', async (req, res) => {
     let request = ((req || []).body || [])
