@@ -92,7 +92,7 @@ class clsFacturacion {
                 var paseDataList = [];
                 var coeDatabd = JSON.parse((dataVerify || {}).coeData);
                 var dataBk = JSON.parse((dataVerify || {}).databk);
-                console.log(coeDatabd.length, dataBk.length);
+                console.log("VERIFICACION ENTRE BASES DE DATOS",coeDatabd.length, dataBk.length);
                 (coeDatabd || []).filter((data, i) => {
                     var cpParse = (data || {}).cmpNumero.split('-');
                     (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
