@@ -375,14 +375,13 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('comparacion:get:sbk:response', (dataRs) => {
-    
-        let socketID = dataRs['configuration']['socket'];
-        let response = JSON.parse(dataRs['data']);
-    
-    /*
+
+    let socketID = dataRs['configuration']['socket'];
+    let response = JSON.parse(dataRs['data']);
+
     facturacionController.verificacionCoeData(response).then((dataResponse) => {
       socket.to(`${socketID}`).emit("comparacion:get:bd:response", { data: dataResponse });
-    });*/
+    });
   });
 
 
