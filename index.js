@@ -374,16 +374,7 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("comparacionGetBdFR", configuration);
   });
 
-  socket.on("comparacion:get:sbk:response", (response) => {
-    let socketID = response['configuration']['socket'];
-    let response = JSON.parse(response['data']);
 
-    facturacionController.verificacionCoeData(response).then((dataResponse) => {
-      socket.to(`${socketID}`).emit("comparacion:get:bd:response", { data: dataResponse });
-    }).catch((err) => {
-      console.log(err);
-    });
-  });
 
 
 
