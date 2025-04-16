@@ -55,4 +55,16 @@ FRONTEND: transacciones:post
 -----ENVIO A FRONT RETAIL 
 BACKEND: transaccionesPostFR
 
+
+*********VERIFICACION DE BASES DE DATOS CON COE_DATA******
+
+-----INIT SOLICITUD
+FRONTEND: comparacion:get:bd
+-----ENVIO A FRONT RETAIL 
+BACKEND: comparacionGetBdSBK
+-----ENVIO RESPUESTA DE SERVIDOR A BACKEND
+SERVIDOR: comparacion:get:sbk:response
+-----ENVIO RESPUESTA A FRONTEND
+BACKEND: comparacion:get:bd:response
+
 */
