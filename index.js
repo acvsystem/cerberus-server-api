@@ -345,7 +345,7 @@ io.on('connection', async (socket) => {
       socket: (socket || {}).id
     };
 
-    socket.broadcast.emit("terminalesGetCantFR", configuration);
+    socket.broadcast.emit("terminalesGetcantidadFR", configuration);
   });
 
   socket.on('terminales:get:cantidad:fr:response', async (data) => {
