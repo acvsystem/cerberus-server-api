@@ -46,4 +46,13 @@ BACKEND: terminalesGetcantidadFR
 FRONT RETAIL: terminales:get:cantidad:fr:response
 -----ENVIO RESPUESTA A FRONTEND
 BACKEND: terminales:get:cantidad:response
+
+
+*************TRANSFERENCIA DE COLA ENTRE FRONT RETAIL***************
+
+-----INIT SOLICITUD
+FRONTEND: transacciones:post
+-----ENVIO A FRONT RETAIL 
+BACKEND: transaccionesPostFR
+
 */

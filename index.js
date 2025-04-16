@@ -205,10 +205,7 @@ io.on('connection', async (socket) => {
 
   });
 
-  socket.on('emitTranferenciaCajas', (data) => {
-    console.log('emitTranferenciaCajas', data);
-    socket.broadcast.emit("exceTranferenciaCajas", data);
-  });
+
 
   socket.on('cleanClient', (data) => {
     console.log('cleanClient');
@@ -359,6 +356,11 @@ io.on('connection', async (socket) => {
     socket.to(`${socketID}`).emit("terminales:get:cantidad:response", response);
   });
 
+  /* TRANFERENCIA DE TRANSACIONES ENTRE FRONT RETAIL */
+
+  socket.on('transacciones:post', (data) => {
+    socket.broadcast.emit("exceTranferenciaCajas", data);
+  });
 
 
 
