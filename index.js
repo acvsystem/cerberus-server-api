@@ -153,7 +153,7 @@ io.on('connection', async (socket) => {
     console.log('app', socket.id);
     listClient.id = socket.id;
     let listSessionConnect = await sessionSocket.connect();
-    socket.emit("sessionConnect", listSessionConnect);
+    socket.sockets.emit("comprobantes:get:response", listSessionConnect);
     let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
 
   }
@@ -425,11 +425,11 @@ io.on('connection', async (socket) => {
     } else if (isIcg != 'true') {
       console.log(`disconnect ${codeTerminal} - idApp`, listClient.id);
       let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
-      socket.broadcast.emit("sessionConnect", listSessionDisconnet);
+      socket.sockets.emit("sessionConnect", listSessionDisconnet);
     }
 
     if (isIcg == 'true') {
-      socket.broadcast.emit("conexion:serverICG:send", [{ 'code': codeTerminal, 'isConect': '0' }]);
+      socket.sockets.emit("conexion:serverICG:send", [{ 'code': codeTerminal, 'isConect': '0' }]);
     }
 
     console.log('user disconnected');
@@ -1566,7 +1566,7 @@ io.on('connection', async (socket) => {
   if (codeTerminal != "SRVFACT" && isIcg != 'true') {
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
     console.log(listSessionConnect);
-    socket.broadcast.emit("sessionConnect", listSessionConnect);
+    socket.sockets.emit("comprobantes:get:response", listSessionConnect);
   } else {
     if (codeTerminal == "SRVFACT") {
       console.log('SERVIDOR', codeTerminal);
