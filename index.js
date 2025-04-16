@@ -382,7 +382,8 @@ io.on('connection', async (socket) => {
 
     console.log(
       `-----ENVIO RESPUESTA A FRONTEND
-       BACKEND: comparacion:get:bd:response`
+       BACKEND: comparacion:get:bd:response`,
+       dataRs
     );
 
     let socketID = dataRs['configuration']['socket'];
