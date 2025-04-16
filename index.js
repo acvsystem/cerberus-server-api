@@ -363,7 +363,18 @@ io.on('connection', async (socket) => {
   });
 
 
- 
+  /* VERIFICACION DE BASES DE DATOS CON COE_DATA */
+
+  socket.on('comparacion:get:bd', (response) => {
+
+    let configuration = {
+      socket: (socket || {}).id
+    };
+
+    socket.broadcast.emit("comparacionGetBdFR", configuration);
+  });
+
+
 
 
 
