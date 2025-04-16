@@ -363,27 +363,7 @@ io.on('connection', async (socket) => {
   });
 
 
-  /* VERIFICACION DE BASES DE DATOS CON COE_DATA */
-
-  socket.on("comparacion:get:bd", (response) => {
-
-    let configuration = {
-      socket: (socket || {}).id
-    };
-
-    socket.broadcast.emit("comparacionGetBdFR", configuration);
-  });
-
-  socket.on("comparacion:get:sbk:response", (response) => {
-    let socketID = data['configuration']['socket'];
-    let response = JSON.parse(response['data']);
-
-    facturacionController.verificacionCoeData(response).then((dataResponse) => {
-      socket.to(`${socketID}`).emit("comparacion:get:bd:response", { data: dataResponse });
-    }).catch((err) => {
-      console.log(err);
-    });
-  });
+ 
 
 
 
