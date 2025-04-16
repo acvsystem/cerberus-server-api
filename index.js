@@ -365,18 +365,6 @@ io.on('connection', async (socket) => {
 
   /* VERIFICACION DE BASES DE DATOS CON COE_DATA */
 
-  app.post("/comparacion/bdTienda", async (req, res) => {
-    io.timeout(100000).emit("comparacionServer", 'DATA', async (err, response) => {
-      let dataPlugin = (response || []).find((r) => typeof r != 'undefined');
-      facturacionController.verificacionCoeData((dataPlugin || {}).DATA).then((dataResponse) => {
-        res.json({ data: dataResponse });
-      }).catch((err) => {
-        console.log(err);
-      })
-    });
-  });
-
-
   socket.on("comparacion:get:bd", (response) => {
 
     let configuration = {
