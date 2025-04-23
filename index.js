@@ -86,7 +86,7 @@ function onVerificarCalendario() {
   now.setDate(now.getDate());
   let day = new Date(now).toLocaleDateString().split('/');
 
-  pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE SUBSTRING(RANGO_DIAS,1,9) = '${day[0] + 1}-${day[1]}-${day[2]}' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
+  pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE SUBSTRING(RANGO_DIAS,1,9) = '${parseInt(day[0]) + 1}-${parseInt(day[1])}-${parseInt(day[2])}' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
     let arCalendarios = ['9M', '9Q'];
     (calendarios || []).filter((c) => {
       arCalendarios.push((c || {}).CODIGO_TIENDA);
@@ -105,7 +105,7 @@ function onVerificarCalendario() {
         if ((arTiendas || []).length - 1 == i) {
           console.log('arTiendasFaltantes', arTiendasFaltantes);
           if ((arTiendasFaltantes || []).length) {
-            let bodyHTML = `<p>Tiendas sin el horario creado. '${day[0] + 1}-${day[1]}-${day[2]}'</p>
+            let bodyHTML = `<p>Tiendas sin el horario creado. '${parseInt(day[0]) + 1}-${parseInt(day[1])}-${parseInt(day[2])}'</p>
         
             <table align="left" cellspacing="0" style="border-right: 1px solid #9e9e9e;">
                 <thead>
