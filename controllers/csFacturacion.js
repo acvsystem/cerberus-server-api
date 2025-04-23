@@ -15,7 +15,7 @@ class clsFacturacion {
     }
 
     async verificacionDocumentos(dataVerify, vTiendaList) {
-     
+
         let tiendasList = vTiendaList;
 
         var dataNoFound = [];
@@ -39,14 +39,14 @@ class clsFacturacion {
 
             if (identify[0] == "N") {
                 let newSerie = (data || {}).cmpSerie.slice(1, 4);
-              //  cpParse = `B${newSerie}` + '-' + (data || {}).cmpNumero;
+                //  cpParse = `B${newSerie}` + '-' + (data || {}).cmpNumero;
             }
 
             if (identify[0] == "H") {
                 let newSerie = (data || {}).cmpSerie.slice(1, 4);
-             //   cpParse = `F${newSerie}` + '-' + (data || {}).cmpNumero;
+                //   cpParse = `F${newSerie}` + '-' + (data || {}).cmpNumero;
             }
-           
+
             if (!(paseDataList || []).includes(cpParse)) {
                 (dataNoFound || []).push({
                     "CORRELATIVO": cpParse,
@@ -92,7 +92,7 @@ class clsFacturacion {
                 var paseDataList = [];
                 var coeDatabd = JSON.parse((dataVerify || {}).coeData);
                 var dataBk = JSON.parse((dataVerify || {}).databk);
-                console.log("VERIFICACION ENTRE BASES DE DATOS",coeDatabd.length, dataBk.length);
+                console.log("VERIFICACION ENTRE BASES DE DATOS", coeDatabd.length, dataBk.length);
                 (coeDatabd || []).filter((data, i) => {
                     var cpParse = (data || {}).cmpNumero.split('-');
                     (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
@@ -116,7 +116,16 @@ class clsFacturacion {
                                 }
 
                                 if (dataBk.length - 1 == j) {
-                                    resolve(dataNoFound);
+                                    if (!dataNoFound.length) {
+                                        resolve([
+                                            {
+                                                code_data: coeDatabd.length,
+                                                manager_data: dataBk.length
+                                            }
+                                        ]);
+                                    } else {
+                                        resolve(dataNoFound);
+                                    }
                                 }
                             }
                         });

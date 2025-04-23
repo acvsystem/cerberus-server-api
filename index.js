@@ -378,11 +378,6 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("comparacionGetBdSBK", configuration);
   });
 
-  socket.on('comparacion:get:sbk:response', (dataRs) => {
-
-
-  });
-
   app.get("/comparacion/bd/response", async (req, res) => {
     console.log(
       `-----ENVIO RESPUESTA A FRONTEND
@@ -396,7 +391,7 @@ io.on('connection', async (socket) => {
       socket.to(`${socketID}`).emit("comparacion:get:bd:response", { data: dataResponse });
     });
   });
-
+ 
 
 
   socket.on('comunicationStock', (email, arrCodeTienda) => {
