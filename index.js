@@ -444,7 +444,7 @@ io.on('connection', async (socket) => {
   /* CONSULTA KARDEX */
 
   socket.on("kardex:get:comprobantes", (configuracion) => {
-    console.log(configuracion);
+    console.log("-----INIT SOLICITUD FRONTEND: kardex:get:comprobantes");
     let configurationList = {
       socket: (socket || {}).id,
       init: configuracion.init,
@@ -456,6 +456,8 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("kardex:get:comprobantes:fr:response", (response) => {
+    console.log("-----ENVIO RESPUESTA A FRONTEND BACKEND: kardex:get:comprobantes:response");
+
     let socketID = ((response || {}).configuration || {}).socket;
     let data = [];
     data = JSON.parse((response || {}).front || []);
