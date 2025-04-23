@@ -447,7 +447,8 @@ io.on('connection', async (socket) => {
     console.log(configuracion);
     let configurationList = {
       socket: (socket || {}).id,
-      dateList: configuracion.dateList,
+      init: configuracion.init,
+      end: configuracion.end,
       code: configuracion.code
     };
 
