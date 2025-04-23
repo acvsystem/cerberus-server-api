@@ -1603,6 +1603,7 @@ io.on('connection', async (socket) => {
 
   app.post("/frontRetail/search/huellero", async (req, res) => {
     let dataServGeneral = (req || {}).body;
+    socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: dataServGeneral, rs: 'new' });
     (dataServGeneral || []).filter(async (huellero, i) => {
 
       let date = new Date((huellero || {}).dia).toLocaleDateString().split('/');
