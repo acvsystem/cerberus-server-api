@@ -460,7 +460,7 @@ io.on('connection', async (socket) => {
 
     let socketID = ((response || {}).configuration || {}).socket;
     let data = [];
-    data = JSON.parse((response || {}).front || []);
+    data = (response || {}).front || [];
     console.log(data);
     socket.to(`${socketID}`).emit("kardex:get:comprobantes:response", { id: response.id, data: data });
   });
