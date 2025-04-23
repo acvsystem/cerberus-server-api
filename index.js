@@ -456,7 +456,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("kardex:get:comprobantes:fr:response", (response) => {
-    let socketID = (response || {}).configuration.socket;
+    let socketID = ((response || {}).configuration || {}).socket;
     let data = [];
     data = JSON.parse((response || {}).front || []);
     console.log(data);
