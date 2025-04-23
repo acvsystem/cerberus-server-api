@@ -441,23 +441,28 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("consultarServGen", configurationList);
   });
 
-  socket.on("bkeFrontAlbaran", (configuracion) => {
+  /* CONSULTA KARDEX */
+
+  socket.on("kardex:get:comprobantes", (configuracion) => {
     console.log(configuracion);
     let configurationList = {
       socket: (socket || {}).id,
-      dateList: configuracion.dateList
+      dateList: configuracion.dateList,
+      code: configuracion.code
     };
 
-    socket.broadcast.emit("pyFrontAlbaran", configurationList);
+    socket.broadcast.emit("kardexGetcomprobantesFR", configurationList);
   });
 
-  socket.on("pyRsFrontAlbaran", (response) => {
+  socket.on("kardex:get:comprobantes:fr:response", (response) => {
     let socketID = (response || {}).configuration.socket;
     let data = [];
     data = JSON.parse((response || {}).front || []);
     console.log(data);
-    socket.to(`${socketID}`).emit("bkeRsFrontAlbaran", { id: response.id, data: data });
+    socket.to(`${socketID}`).emit("kardex:get:comprobantes:response", { id: response.id, data: data });
   });
+
+
 
 
   socket.on("consultaPlanilla", (configuracion) => {

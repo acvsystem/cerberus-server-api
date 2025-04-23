@@ -67,4 +67,14 @@ SERVIDOR: comparacion:get:sbk:response
 -----ENVIO RESPUESTA A FRONTEND
 BACKEND: comparacion:get:bd:response
 
+********* CONSULTA KARDEX ******
+-----INIT SOLICITUD
+FRONTEND: kardex:get:comprobantes
+-----ENVIO A FRONT RETAIL 
+BACKEND: kardexGetcomprobantesFR
+-----ENVIO RESPUESTA DE FRONT RETAIL A BACKEND
+FRONT RETAIL: kardex:get:comprobantes:fr:response
+-----ENVIO RESPUESTA A FRONTEND
+BACKEND: kardex:get:comprobantes:response
+
 */
