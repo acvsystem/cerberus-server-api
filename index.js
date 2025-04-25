@@ -471,6 +471,7 @@ io.on('connection', async (socket) => {
     console.log("-----INIT SOLICITUD FRONTEND: kardex:post:camposlibres");
     let configurationList = {
       socket: (socket || {}).id,
+      code: (configuracion || {}).code,
       num_albaran: (configuracion || {}).num_albaran,
       num_serie: (configuracion || {}).num_serie,
       n: (configuracion || {}).n,
