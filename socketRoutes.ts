@@ -67,7 +67,8 @@ SERVIDOR: comparacion:get:sbk:response
 -----ENVIO RESPUESTA A FRONTEND
 BACKEND: comparacion:get:bd:response
 
-********* CONSULTA KARDEX ******
+****************** CONSULTA KARDEX *********************
+
 -----INIT SOLICITUD
 FRONTEND: kardex:get:comprobantes
 -----ENVIO A FRONT RETAIL 
@@ -76,5 +77,17 @@ BACKEND: kardexGetcomprobantesFR
 FRONT RETAIL: kardex:get:comprobantes:fr:response
 -----ENVIO RESPUESTA A FRONTEND
 BACKEND: kardex:get:comprobantes:response
+
+****************** INSERTAR CAMPOS LIBRES KARDEX *********************
+
+-----INIT SOLICITUD
+FRONTEND: kardex:post:camposlibres
+-----ENVIO A FRONT RETAIL 
+BACKEND: kardexPostcamposlibresFR
+-----ENVIO RESPUESTA DE FRONT RETAIL A BACKEND
+FRONT RETAIL: kardex:post:camposlibres:fr:response
+-----ENVIO RESPUESTA A FRONTEND
+BACKEND: kardex:post:camposlibres:response
+
 
 */
