@@ -90,4 +90,28 @@ FRONT RETAIL: kardex:post:camposlibres:fr:response
 BACKEND: kardex:post:camposlibres:response
 
 
+****************** INSERTAR CUO KARDEX *********************
+
+-----INIT SOLICITUD
+FRONTEND: kardex:post:cuo
+-----ENVIO A FRONT RETAIL 
+BACKEND: kardexPostcuoFR
+-----ENVIO RESPUESTA DE FRONT RETAIL A BACKEND
+FRONT RETAIL: kardex:post:cuo:fr:response
+-----ENVIO RESPUESTA A FRONTEND
+BACKEND: kardex:post:cuo:response
+
+
+****************** CONSULTA CUO KARDEX *********************
+
+-----INIT SOLICITUD
+FRONTEND: kardex:get:cuo
+-----ENVIO A FRONT RETAIL 
+BACKEND: kardexGetcuoFR
+-----ENVIO RESPUESTA DE FRONT RETAIL A BACKEND
+FRONT RETAIL: kardex:get:cuo:fr:response
+-----ENVIO RESPUESTA A FRONTEND
+BACKEND: kardex:get:cuo:response
+
+
 */

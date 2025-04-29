@@ -501,6 +501,57 @@ io.on('connection', async (socket) => {
   });
 
 
+  /* INSERTAR CUO KARDEX */
+
+  socket.on("kardex:post:cuo", (configuracion) => {
+    console.log("-----INIT SOLICITUD FRONTEND: kardex:post:cuo");
+    let configurationList = {
+      socket: (socket || {}).id,
+      code: (configuracion || {}).code,
+      cuo: (configuracion || {}).cuo
+    };
+
+    socket.broadcast.emit("kardexPostcuoFR", configurationList);
+  });
+
+
+  socket.on("kardex:post:cuo:fr:response", (response) => {
+    console.log("-----ENVIO RESPUESTA A FRONTEND BACKEND: kardex:post:cuo:fr:response");
+
+    let socketID = ((response || {}).configuration || {}).socket;
+    let data = [];
+    data = (response || {}).data || [];
+    console.log(data);
+    socket.to(`${socketID}`).emit("kardex:post:cuo:response", { id: response.id, data: data });
+  });
+
+
+   /* CONSULTA CUO KARDEX */
+
+   socket.on("kardex:get:cuo", (configuracion) => {
+    console.log("-----INIT SOLICITUD FRONTEND: kardex:get:cuo");
+    let configurationList = {
+      socket: (socket || {}).id,
+      init: configuracion.init,
+      end: configuracion.end,
+      code: configuracion.code
+    };
+
+    socket.broadcast.emit("kardexGetcuoFR", configurationList);
+  });
+
+  socket.on("kardex:get:cuo:fr:response", (response) => {
+    console.log("-----ENVIO RESPUESTA A FRONTEND BACKEND: kardex:get:comprobantes:response");
+
+    let socketID = ((response || {}).configuration || {}).socket;
+    let data = [];
+    data = (response || {}).front || [];
+    console.log(data);
+    socket.to(`${socketID}`).emit("kardex:get:cuo:response", { id: response.id, data: data });
+  });
+
+
+
   socket.on("consultaPlanilla", (configuracion) => {
     console.log(configuracion);
     let configurationList = {
