@@ -482,7 +482,8 @@ io.on('connection', async (socket) => {
       registro_sanitario: (configuracion || {}).registro_sanitario,
       motivo: (configuracion || {}).motivo,
       tipo_documento: (configuracion || {}).tipo_documento,
-      numero_serie: (configuracion || {}).numero_serie
+      numero_serie: (configuracion || {}).numero_serie,
+      observacion: (configuracion || {}).observacion
     };
 
     socket.broadcast.emit("kardexPostcamposlibresFR", configurationList);
