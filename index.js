@@ -510,6 +510,8 @@ io.on('connection', async (socket) => {
       code: (configuracion || {}).code,
       cuo: (configuracion || {}).cuo,
       valor: (configuracion || {}).valor,
+      tabla: (configuracion || {}).tabla,
+      isUpdate: (configuracion || {}).isUpdate,
       init: configuracion.init,
       end: configuracion.end
     };
@@ -529,9 +531,9 @@ io.on('connection', async (socket) => {
   });
 
 
-   /* CONSULTA CUO KARDEX */
+  /* CONSULTA CUO KARDEX */
 
-   socket.on("kardex:get:cuo", (configuracion) => {
+  socket.on("kardex:get:cuo", (configuracion) => {
     console.log("-----INIT SOLICITUD FRONTEND: kardex:get:cuo");
     let configurationList = {
       socket: (socket || {}).id,
