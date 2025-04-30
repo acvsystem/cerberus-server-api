@@ -508,7 +508,10 @@ io.on('connection', async (socket) => {
     let configurationList = {
       socket: (socket || {}).id,
       code: (configuracion || {}).code,
-      cuo: (configuracion || {}).cuo
+      cuo: (configuracion || {}).cuo,
+      valor: (configuracion || {}).valor,
+      init: configuracion.init,
+      end: configuracion.end
     };
 
     socket.broadcast.emit("kardexPostcuoFR", configurationList);
