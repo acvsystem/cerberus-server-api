@@ -505,15 +505,10 @@ io.on('connection', async (socket) => {
 
   socket.on("kardex:post:cuo", (configuracion) => {
     console.log("-----INIT SOLICITUD FRONTEND: kardex:post:cuo");
+
     let configurationList = {
       socket: (socket || {}).id,
-      code: (configuracion || {}).code,
-      cuo: (configuracion || {}).cuo,
-      valor: (configuracion || {}).valor,
-      tabla: (configuracion || {}).tabla,
-      isUpdate: (configuracion || {}).isUpdate,
-      init: configuracion.init,
-      end: configuracion.end
+      data: configuracion
     };
 
     socket.broadcast.emit("kardexPostcuoFR", configurationList);
