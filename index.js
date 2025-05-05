@@ -1706,7 +1706,7 @@ io.on('connection', async (socket) => {
           console.log("dataServGeneral", dataServGeneral.length);
           setTimeout(() => {
             socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: dataServGeneral, rs: 'new' });
-          }, 3000);
+          }, 8000);
         }
       });
     });
