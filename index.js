@@ -65,7 +65,7 @@ const task_5 = cron.schedule('00 9 * * 0', () => {
   console.log('00 10 * * 0');
   onVerificarCalendario();
 });
-onVerificarCalendario();
+
 task_1.start();
 task_2.start();
 task_3.start();
@@ -86,7 +86,7 @@ function onVerificarCalendario() {
   now.setDate(now.getDate());
   let day = new Date(now).toLocaleDateString().split('/');
 
-  pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE SUBSTRING(RANGO_DIAS,1,9) = '${parseInt(day[0]) + 1}-${parseInt(day[1])}-${parseInt(day[2])}' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
+  pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE TRIM(SUBSTRING(RANGO_DIAS,1,9)) = '${parseInt(day[0]) + 1}-${parseInt(day[1])}-${parseInt(day[2])}' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
     let arCalendarios = ['9M', '9Q'];
     (calendarios || []).filter((c) => {
       arCalendarios.push((c || {}).CODIGO_TIENDA);
@@ -126,7 +126,7 @@ function onVerificarCalendario() {
                 </tbody>
             </table>`;
 
-            emailController.sendEmail(['itperu@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
+            emailController.sendEmail(['itperu@metasperu.com', 'carlosmoron@metasperu.com', 'fieldleaderbbw@metasperu.com', 'fieldleadervs@metasperu.com', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
               .catch(error => res.send(error));
 
           }
