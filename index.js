@@ -65,7 +65,7 @@ const task_5 = cron.schedule('00 9 * * 0', () => {
   console.log('00 10 * * 0');
   onVerificarCalendario();
 });
-
+onVerificarCalendario();
 task_1.start();
 task_2.start();
 task_3.start();
@@ -126,7 +126,7 @@ function onVerificarCalendario() {
                 </tbody>
             </table>`;
 
-            emailController.sendEmail(['itperu@metasperu.com', 'carlosmoron@metasperu.com', 'fieldleaderbbw@metasperu.com', 'fieldleadervs@metasperu.com', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
+            emailController.sendEmail(['itperu@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
               .catch(error => res.send(error));
 
           }
