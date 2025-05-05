@@ -1704,8 +1704,13 @@ io.on('connection', async (socket) => {
 
         if (dataServGeneral.length - 1 == i) {
           console.log("dataServGeneral", dataServGeneral.length);
-          socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: dataServGeneral, rs: 'new' });
 
+          for (let i = 0; i < dataServGeneral.length; i += 1000) {
+            const grupo = registros.slice(i, i + 1000);
+            grupo.forEach(registro => {
+              socket.to(`${dataServGeneral[0].socket}`).emit("reporteHuellero", { id: "servGeneral", data: registro, rs: 'new' });
+            });
+          }
         }
       });
     });
