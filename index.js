@@ -1704,9 +1704,8 @@ io.on('connection', async (socket) => {
 
         if (dataServGeneral.length - 1 == i) {
           console.log("dataServGeneral", dataServGeneral.length);
-          setTimeout(() => {
-            socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: dataServGeneral, rs: 'new' });
-          }, 8000);
+          socket.to(`${listClient.id}`).emit("reporteHuellero", { id: "servGeneral", data: dataServGeneral, rs: 'new' });
+
         }
       });
     });
