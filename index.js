@@ -1707,7 +1707,7 @@ io.on('connection', async (socket) => {
 
           for (let i = 0; i < dataServGeneral.length; i += 1000) {
             const grupo = dataServGeneral.slice(i, i + 1000);
-            socket.to(`${dataServGeneral[0].socket}`).emit("reporteHuellero", { id: "servGeneral", data: grupo, rs: 'new' });
+            socket.to(`${dataServGeneral[0].socket}`).emit("reporteHuellero", { id: "servGeneral", data: grupo, rs: 'new', length: dataServGeneral.length });
           }
         }
       });
