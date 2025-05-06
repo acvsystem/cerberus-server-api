@@ -426,6 +426,23 @@ io.on('connection', async (socket) => {
 
   });
 
+  
+
+  socket.on("consultaMarcacionDet", (configuracion) => {
+    console.log("consultaMarcacionDet", configuracion);
+    let configurationList = {
+      socket: (socket || {}).id,
+      isDefault: configuracion.isDefault,
+      isFeriados: configuracion.isFeriados,
+      isDetallado: configuracion.isDetallado,
+      centroCosto: configuracion.centroCosto,
+      dateList: configuracion.dateList
+    };
+
+    socket.broadcast.emit("consultarEJB", configurationList);
+    socket.broadcast.emit("consultarServGen", configurationList);
+  });
+
   socket.on("consultaMarcacion", (configuracion) => {
     console.log("consultaMarcacion", configuracion);
     let configurationList = {
