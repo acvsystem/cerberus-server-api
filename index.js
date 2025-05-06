@@ -1717,6 +1717,13 @@ io.on('connection', async (socket) => {
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
 
+
+  app.get("/comprobantes/session/lista", async (req, res) => {
+    await pool.query(`SELECT * FROM TB_TERMINAL_TIENDA;`).then(([tiendasSession]) => {
+      res.json({ data: tiendasSession });
+    });
+  });
+
   app.post("/frontRetail/search/horario", async (req, res) => {
     console.log(req.body);
 
