@@ -427,7 +427,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("consultaMarcacion", (configuracion) => {
-    console.log(configuracion);
+    console.log("consultaMarcacion", configuracion);
     let configurationList = {
       socket: (socket || {}).id,
       isDefault: configuracion.isDefault,
