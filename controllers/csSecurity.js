@@ -10,54 +10,58 @@ export const Login = async (req, res) => {
   let objLogin = req.body;
   let usuario = objLogin["usuario"].replace(/[^a-zA-Z-0-9 ]/g, "");
   let password = objLogin["password"];
-  const [dataUser] =
-    await pool.query(`SELECT USUARIO,DEFAULT_PAGE FROM TB_LOGIN WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}'`);
+  await pool.query(`SELECT USUARIO,EMAIL,DEFAULT_PAGE,NOMBRE_MENU,RUTA FROM TB_PERMISO_SISTEMA INNER JOIN TB_MENU_SISTEMA ON TB_MENU_SISTEMA.ID_MENU = TB_PERMISO_SISTEMA.ID_MENU_PS
+                      INNER JOIN TB_LOGIN ON TB_LOGIN.ID_LOGIN = TB_PERMISO_SISTEMA.ID_LOGIN_PS WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}'`).then(([dataUser]) => {
 
-  let nivelUser = ((dataUser || [])[0] || {}).USUARIO;
+    let nivelUser = ((dataUser || [])[0] || {}).USUARIO;
 
-  if (dataUser.length > 0) {
+    if (dataUser.length > 0) {
 
-    const token = tokenController.createToken(usuario, nivelUser);
+      const token = tokenController.createToken(usuario, nivelUser);
 
-    let tiendasList = [
-      { code: '7A', user: 'bbwjoc', nameTienda: 'BBW JOCKEY' },
-      { code: '9N', user: 'vsaqp', nameTienda: 'VS MALL AVENTURA' },
-      { code: '7J', user: 'bbwaqp', nameTienda: 'BBW MALL AVENTURA' },
-      { code: '7E', user: 'bbwlrb', nameTienda: 'BBW LA RAMBLA' },
-      { code: '9D', user: 'vslrb', nameTienda: 'VS LA RAMBLA' },
-      { code: '9B', user: 'vspn', nameTienda: 'VS PLAZA NORTE' },
-      { code: '7C', user: 'bbwpsm', nameTienda: 'BBW SAN MIGUEL' },
-      { code: '9C', user: 'vspsm', nameTienda: 'VS SAN MIGUEL' },
-      { code: '7D', user: 'bbwrps', nameTienda: 'BBW SALAVERRY' },
-      { code: '9I', user: 'vsrps', nameTienda: 'VS SALAVERRY' },
-      { code: '9G', user: 'vsmds', nameTienda: 'VS MALL DEL SUR' },
-      { code: '9H', user: 'vspur', nameTienda: 'VS PURUCHUCO' },
-      { code: '9M', user: 'vsecom', nameTienda: 'VS ECOMMERCE' },
-      { code: '7F', user: 'bbwecom', nameTienda: 'BBW ECOMMERCE' },
-      { code: '9K', user: 'vsmep', nameTienda: 'VS MEGA PLAZA' },
-      { code: '9L', user: 'vsmnk', nameTienda: 'VS MINKA' },
-      { code: '9F', user: 'vsfajoc', nameTienda: 'VSFA JOCKEY FULL' },
-      { code: '7A7', user: 'bbwasia', nameTienda: 'BBW ASIA' },
-      { code: '9P', user: 'vsmptru', nameTienda: 'VS MALL PLAZA' },
-      { code: '7I', user: 'bbwmptru', nameTienda: 'BBW MALL PLAZA' }
-    ];
+      let tiendasList = [
+        { code: '7A', user: 'bbwjoc', nameTienda: 'BBW JOCKEY' },
+        { code: '9N', user: 'vsaqp', nameTienda: 'VS MALL AVENTURA' },
+        { code: '7J', user: 'bbwaqp', nameTienda: 'BBW MALL AVENTURA' },
+        { code: '7E', user: 'bbwlrb', nameTienda: 'BBW LA RAMBLA' },
+        { code: '9D', user: 'vslrb', nameTienda: 'VS LA RAMBLA' },
+        { code: '9B', user: 'vspn', nameTienda: 'VS PLAZA NORTE' },
+        { code: '7C', user: 'bbwpsm', nameTienda: 'BBW SAN MIGUEL' },
+        { code: '9C', user: 'vspsm', nameTienda: 'VS SAN MIGUEL' },
+        { code: '7D', user: 'bbwrps', nameTienda: 'BBW SALAVERRY' },
+        { code: '9I', user: 'vsrps', nameTienda: 'VS SALAVERRY' },
+        { code: '9G', user: 'vsmds', nameTienda: 'VS MALL DEL SUR' },
+        { code: '9H', user: 'vspur', nameTienda: 'VS PURUCHUCO' },
+        { code: '9M', user: 'vsecom', nameTienda: 'VS ECOMMERCE' },
+        { code: '7F', user: 'bbwecom', nameTienda: 'BBW ECOMMERCE' },
+        { code: '9K', user: 'vsmep', nameTienda: 'VS MEGA PLAZA' },
+        { code: '9L', user: 'vsmnk', nameTienda: 'VS MINKA' },
+        { code: '9F', user: 'vsfajoc', nameTienda: 'VSFA JOCKEY FULL' },
+        { code: '7A7', user: 'bbwasia', nameTienda: 'BBW ASIA' },
+        { code: '9P', user: 'vsmptru', nameTienda: 'VS MALL PLAZA' },
+        { code: '7I', user: 'bbwmptru', nameTienda: 'BBW MALL PLAZA' }
+      ];
 
-    let selectedUser = (tiendasList || []).find((tnd) => tnd.user == usuario);
+      let selectedUser = (tiendasList || []).find((tnd) => tnd.user == usuario);
 
-    let parseResponse = [{
-      auth: { token: token },
-      page: { default: ((dataUser || [])[0] || {}).DEFAULT_PAGE },
-      profile: {
-        name: ((dataUser || [])[0] || {}).USUARIO,
-        codigo: (selectedUser || []).code || "",
-        nameTienda: (selectedUser || []).nameTienda || ""
-      }
-    }];
+      let parseResponse = [{
+        auth: { token: token },
+        page: { default: ((dataUser || [])[0] || {}).DEFAULT_PAGE },
+        profile: {
+          name: ((dataUser || [])[0] || {}).USUARIO,
+          codigo: (selectedUser || []).code || "",
+          nameTienda: (selectedUser || []).nameTienda || "",
+          menu: dataUser
+        }
+      }];
 
-    res.header("Authorization", token).json(parseResponse);
-  } else {
-    res.json(defaultResponse.error.login);
-  }
+      res.header("Authorization", token).json(parseResponse);
+    } else {
+      res.json(defaultResponse.error.login);
+    }
+  });
+
+
 };
 
 export const EmailList = async (req, res) => {
