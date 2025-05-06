@@ -50,9 +50,9 @@ export const Login = async (req, res) => {
         profile: {
           name: ((dataUser || [])[0] || {}).USUARIO,
           codigo: (selectedUser || []).code || "",
-          nameTienda: (selectedUser || []).nameTienda || "",
-          menu: dataUser
-        }
+          nameTienda: (selectedUser || []).nameTienda || ""
+        },
+        menu: dataUser
       }];
 
       res.header("Authorization", token).json(parseResponse);
