@@ -1970,14 +1970,14 @@ io.on('connection', async (socket) => {
 
   app.post('/menu/sistema/add/permisos', async (req, res) => {
     let dataNivel = (req || []).body || [];
-    pool.query(`INSERT INTO TB_PERMISO_SISTEMA(ID_MENU_PS,NIVEL)VALUES(${(dataNivel || {}).id_menu},'${(dataNivel || {}).nivel}');`).then(() => {
+    pool.query(`INSERT INTO TB_PERMISO_SISTEMA(ID_MENU_PS,NIVEL)VALUES(${(dataNivel || {})[0].id_menu},'${(dataNivel || {})[0].nivel}');`).then(() => {
       res.json({ msj: success.message })
     });
   });
 
   app.post('/menu/sistema/delete/permisos', async (req, res) => {
     let dataNivel = (req || []).body || [];
-    pool.query(`DELETE FROM TB_PERMISO_SISTEMA WHERE ID_PERMISO_USER = ${(dataNivel || {}).id_menu};`).then(() => {
+    pool.query(`DELETE FROM TB_PERMISO_SISTEMA WHERE ID_PERMISO_USER = ${(dataNivel || {})[0].id_menu};`).then(() => {
       res.json({ msj: success.message })
     });
   });
