@@ -1946,7 +1946,7 @@ io.on('connection', async (socket) => {
     });
   });
 
-  app.get('/menu/sistema/consulta', async (req, res) => {
+  app.post('/menu/sistema/consulta', async (req, res) => {
     let dataConsulta = (req || []).body || [];
     pool.query(`SELECT * FROM TB_PERMISO_SISTEMA INNER JOIN TB_MENU_SISTEMA ON TB_MENU_SISTEMA.ID_MENU = TB_PERMISO_SISTEMA.ID_MENU_PS WHERE TB_PERMISO_SISTEMA.NIVEL = '${((dataConsulta || [])[0] || {}).nivel}';`).then(([menu]) => {
       res.json(menu);
