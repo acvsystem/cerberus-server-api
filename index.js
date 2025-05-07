@@ -1946,11 +1946,20 @@ io.on('connection', async (socket) => {
     });
   });
 
+  app.get('/menu/sistema/consulta', async (req, res) => {
+    let dataConsulta = (req || []).body || [];
+    pool.query(`SELECT * FROM TB_PERMISO_SISTEMA INNER JOIN TB_MENU_SISTEMA ON TB_MENU_SISTEMA.ID_MENU = TB_PERMISO_SISTEMA.ID_MENU_PS WHERE TB_PERMISO_SISTEMA.NIVEL = '${((dataConsulta || [])[0] || {}).nivel}';`).then(([menu]) => {
+      res.json(menu);
+    });
+  });
+
   app.get('/menu/sistema/niveles', async (req, res) => {
     pool.query(`SELECT * FROM TB_NIVELES_SISTEMA;`).then(([niveles]) => {
       res.json(niveles);
     });
   });
+
+
 
   app.post('/menu/sistema/niveles', async (req, res) => {
     let dataNivel = (req || []).body || [];
