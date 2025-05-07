@@ -1939,6 +1939,33 @@ io.on('connection', async (socket) => {
 
   });
 
+
+  app.get('/menu/sistema/lista', async (req, res) => {
+    pool.query(`SELECT * FROM TB_MENU_SISTEMA;`).then(([menu]) => {
+      res.json(menu);
+    });
+  });
+
+  app.get('/menu/sistema/niveles', async (req, res) => {
+    pool.query(`SELECT * FROM TB_NIVELES_SISTEMA;`).then(([niveles]) => {
+      res.json(niveles);
+    });
+  });
+
+  app.post('/menu/sistema/niveles', async (req, res) => {
+    let dataNivel = (req || []).body || [];
+    pool.query(`INSERT INTO TB_NIVELES_SISTEMA(NIVEL_DESCRIPCION)VALUES('${(dataNivel || {}).nivel}');`).then(() => {
+      res.json({ msj: success.message })
+    });
+  });
+
+  app.post('/menu/sistema/permisos', async (req, res) => {
+    let dataNivel = (req || []).body || [];
+    pool.query(`INSERT INTO TB_PERMISO_SISTEMA(ID_MENU_PS,NIVEL)VALUES(${(dataNivel || {}).id_menu},'${(dataNivel || {}).nivel}');`).then(() => {
+      res.json({ msj: success.message })
+    });
+  });
+
   app.post('/sunat-notification', async (req, res) => {
 
     let arrDocumento = (req || []).body || [];
