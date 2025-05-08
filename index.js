@@ -1946,7 +1946,7 @@ io.on('connection', async (socket) => {
     });
   });
 
-  app.post('/menu/add/sistema/', async (req, res) => {
+  app.post('/menu/add/sistema', async (req, res) => {
     let dataMenu = (req || []).body || [];
     pool.query(`INSERT INTO TB_MENU_SISTEMA(NOMBRE_MENU,RUTA)VALUES('${(dataMenu || {})[0].nombre_menu}','${(dataMenu || {})[0].ruta}');`).then(() => {
       res.json({ msj: true })
