@@ -1946,6 +1946,13 @@ io.on('connection', async (socket) => {
     });
   });
 
+  app.post('/menu/add/sistema/', async (req, res) => {
+    let dataMenu = (req || []).body || [];
+    pool.query(`INSERT INTO TB_MENU_SISTEMA(NOMBRE_MENU,RUTA)VALUES('${(dataMenu || {})[0].nombre_menu}','${(dataMenu || {})[0].ruta}');`).then(() => {
+      res.json({ msj: true })
+    });
+  });
+
   app.post('/menu/sistema/consulta', async (req, res) => {
     let dataConsulta = (req || []).body || [];
     pool.query(`SELECT * FROM TB_PERMISO_SISTEMA INNER JOIN TB_MENU_SISTEMA ON TB_MENU_SISTEMA.ID_MENU = TB_PERMISO_SISTEMA.ID_MENU_PS WHERE TB_PERMISO_SISTEMA.NIVEL = '${((dataConsulta || [])[0] || {}).nivel}';`).then(([menu]) => {
@@ -1958,7 +1965,6 @@ io.on('connection', async (socket) => {
       res.json(niveles);
     });
   });
-
 
 
   app.post('/menu/sistema/niveles', async (req, res) => {
