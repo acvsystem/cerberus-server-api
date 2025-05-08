@@ -1939,6 +1939,14 @@ io.on('connection', async (socket) => {
 
   });
 
+  app.post('/usuario/registrar', async (req, res) => {
+    let dataUser = (req || []).body || [];
+    pool.query(`INSERT INTO TB_LOGIN(USUARIO,PASSWORD,DEFAULT_PAGE,EMAIL,NIVEL)VALUES('${(dataUser || [])[0].usuario}','${(dataUser || [])[0].password}','${(dataUser || [])[0].default_page}','${(dataUser || [])[0].email}','${(dataUser || [])[0].nivel}');`).then(() => {
+      res.json({ msj: true })
+    });
+  });
+
+
 
   app.get('/menu/sistema/lista', async (req, res) => {
     pool.query(`SELECT * FROM TB_MENU_SISTEMA;`).then(([menu]) => {
