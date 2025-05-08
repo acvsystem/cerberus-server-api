@@ -1963,7 +1963,7 @@ io.on('connection', async (socket) => {
 
   app.post('/menu/sistema/niveles', async (req, res) => {
     let dataNivel = (req || []).body || [];
-    pool.query(`INSERT INTO TB_NIVELES_SISTEMA(NIVEL_DESCRIPCION)VALUES('${(dataNivel || {}).nivel}');`).then(() => {
+    pool.query(`INSERT INTO TB_NIVELES_SISTEMA(NIVEL_DESCRIPCION)VALUES('${(dataNivel || {})[0].nivel}');`).then(() => {
       res.json({ msj: true })
     });
   });
