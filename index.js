@@ -1946,6 +1946,13 @@ io.on('connection', async (socket) => {
     });
   });
 
+  app.post('/usuario/editar', async (req, res) => {
+    let dataUser = (req || []).body || [];
+    pool.query(`UPDATE TB_LOGIN SET USUARIO = '${(dataUser || [])[0].usuario}',PASSWORD = '${(dataUser || [])[0].password}',DEFAULT_PAGE = '${(dataUser || [])[0].default_page}',EMAIL = '${(dataUser || [])[0].email}',NIVEL = '${(dataUser || [])[0].nivel}' WHERE ID_LOGIN = '${(dataUser || [])[0].id}');`).then(() => {
+      res.json({ msj: true })
+    });
+  });
+
 
 
   app.get('/menu/sistema/lista', async (req, res) => {
