@@ -401,7 +401,7 @@ io.on('connection', async (socket) => {
 
   socket.on('comunicationStockTable', (arrCodeTienda, barcode) => {
     console.log('comunicationStockTable');
-    socket.broadcast.emit("searchStockTable", arrCodeTienda, barcode);
+    socket.broadcast.emit("searchStockTable", arrCodeTienda, barcode, (socket || {}).id);
   });
 
 
@@ -1680,7 +1680,7 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/frontRetail/search/stock", async (req, res) => {
-    socket.to(`${listClient.id}`).emit("dataStockParse", req.body);
+    socket.to(`${((data || [])[0] || {})['socketID']}`).emit("dataStockParse", req.body);
 
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
