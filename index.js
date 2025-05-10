@@ -1680,6 +1680,8 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/frontRetail/search/stock", async (req, res) => {
+    let data = ((req || {}).body || []);
+    console.log(((data || [])[0] || {})['socketID']);
     socket.to(`${((data || [])[0] || {})['socketID']}`).emit("dataStockParse", req.body);
 
     res.json({ mensaje: 'Archivo recibido con éxito' });
