@@ -1703,10 +1703,14 @@ io.on('connection', async (socket) => {
       //let indexR = dataServGeneral.findIndex((dt) => dt.dia == parseDate && dt.nroDocumento == (huellero || {}).nroDocumento);
 
       // if (((rs || [])[0] || {})['FECHA_NUMBER'] == parseDate && ((rs || [])[0] || {})['FECHA_NUMBER'] == (huellero || {}).nroDocumento) {
-      console.log(onSearchRango(i, (huellero || {}).nroDocumento, parseDate));
-      let objRango =  onSearchRango(i, (huellero || {}).nroDocumento, parseDate);
-      ((dataServGeneral || [])[objRango.index] || {})['rango_horario'] = objRango.rango;
-      ((dataServGeneral || [])[objRango.index] || {})['isTardanza'] = false;
+      
+      onSearchRango(i, (huellero || {}).nroDocumento, parseDate).then((rs) => {
+        console.log(rs);
+        ((dataServGeneral || [])[rs.index] || {})['rango_horario'] = rs.rango;
+        ((dataServGeneral || [])[rs.index] || {})['isTardanza'] = false;
+      });
+
+
       // }
 
       if (dataServGeneral.length - 1 == i) {
