@@ -1681,7 +1681,7 @@ io.on('connection', async (socket) => {
 
   app.post("/frontRetail/search/stock", async (req, res) => {
     let data = ((req || {}).body || []);
-    console.log(((data || [])[0] || {})['socketID'], ((data || [])[0] || {})['cCodigoTienda']);
+    console.log(((data || [])[0] || {})['socketID'],((data || [])[0] || {})['cCodigoTienda']);
     socket.to(`${((data || [])[0] || {})['socketID']}`).emit("dataStockParse", req.body);
 
     res.json({ mensaje: 'Archivo recibido con éxito' });
@@ -1693,12 +1693,7 @@ io.on('connection', async (socket) => {
     (dataServGeneral || []).filter(async (huellero, i) => {
 
       let date = new Date((huellero || {}).dia).toLocaleDateString().split('/');
-
       let parseDate = `${date[0]}-${date[1]}-${date[2]}`;
-
-      if ((huellero || {}).nroDocumento == '74582231' && ((huellero || {}).dia == '5-5-2025' || (huellero || {}).dia == '05-05-2025')) {
-        console.log(parseDate);
-      }
 
       await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${(huellero || {}).nroDocumento}' AND FECHA_DESDE = '${(huellero || {}).dia}';`).then(([papeleta]) => {
         ((dataServGeneral || [])[i] || {})['papeleta'] = papeleta || [];
