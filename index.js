@@ -1702,7 +1702,7 @@ io.on('connection', async (socket) => {
 
       await pool.query(`SELECT TB_DIAS_TRABAJO.CODIGO_TIENDA,TB_DIAS_TRABAJO.NOMBRE_COMPLETO,TB_DIAS_TRABAJO.NUMERO_DOCUMENTO,TB_RANGO_HORA.RANGO_HORA,TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '${parseDate}' AND NUMERO_DOCUMENTO = '${(huellero || {}).nroDocumento}';`).then(([rs]) => {
 
-        let indexR = dataServGeneral.findIndex((dt) => dt.dia == parseDate);
+        let indexR = dataServGeneral.findIndex((dt) => dt.dia == parseDate && dt.nroDocumento == (huellero || {}).nroDocumento);
         ((dataServGeneral || [])[indexR] || {})['rango_horario'] = ((rs || [])[0] || {})['RANGO_HORA'] || "";
         ((dataServGeneral || [])[indexR] || {})['isTardanza'] = false;
 
