@@ -1700,30 +1700,32 @@ io.on('connection', async (socket) => {
         ((dataServGeneral || [])[i] || {})['papeleta'] = papeleta || [];
       });
 
-      await pool.query(`SELECT TB_DIAS_TRABAJO.CODIGO_TIENDA,TB_DIAS_TRABAJO.NOMBRE_COMPLETO,TB_DIAS_TRABAJO.NUMERO_DOCUMENTO,TB_RANGO_HORA.RANGO_HORA,TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '${parseDate}' AND NUMERO_DOCUMENTO = '${(huellero || {}).nroDocumento}';`).then(([rs]) => {
+      //let indexR = dataServGeneral.findIndex((dt) => dt.dia == parseDate && dt.nroDocumento == (huellero || {}).nroDocumento);
 
-        //let indexR = dataServGeneral.findIndex((dt) => dt.dia == parseDate && dt.nroDocumento == (huellero || {}).nroDocumento);
+      // if (((rs || [])[0] || {})['FECHA_NUMBER'] == parseDate && ((rs || [])[0] || {})['FECHA_NUMBER'] == (huellero || {}).nroDocumento) {
+      ((dataServGeneral || [])[i] || {})['rango_horario'] = onSearchRango(i, (huellero || {}).nroDocumento, parseDate);
+      ((dataServGeneral || [])[i] || {})['isTardanza'] = false;
+      // }
 
-       // if (((rs || [])[0] || {})['FECHA_NUMBER'] == parseDate && ((rs || [])[0] || {})['FECHA_NUMBER'] == (huellero || {}).nroDocumento) {
-          ((dataServGeneral || [])[i] || {})['rango_horario'] = ((rs || [])[0] || {})['RANGO_HORA'] || "";
-          ((dataServGeneral || [])[i] || {})['isTardanza'] = false;
-       // }
+      if (dataServGeneral.length - 1 == i) {
+        console.log("dataServGeneral", dataServGeneral.length);
 
-
-        if (dataServGeneral.length - 1 == i) {
-          console.log("dataServGeneral", dataServGeneral.length);
-
-          for (let i = 0; i < dataServGeneral.length; i += 1000) {
-            const dataBlock = dataServGeneral.slice(i, i + 1000);
-            socket.to(`${dataServGeneral[0].socket}`).emit("reporteHuellero", { id: "servGeneral", data: dataBlock, rs: 'new', length: dataServGeneral.length });
-          }
+        for (let i = 0; i < dataServGeneral.length; i += 1000) {
+          const dataBlock = dataServGeneral.slice(i, i + 1000);
+          socket.to(`${dataServGeneral[0].socket}`).emit("reporteHuellero", { id: "servGeneral", data: dataBlock, rs: 'new', length: dataServGeneral.length });
         }
-      });
+      }
     });
 
 
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
+
+  function onSearchRango(index, nro_documento, fecha) {
+    pool.query(`SELECT TB_DIAS_TRABAJO.CODIGO_TIENDA,TB_DIAS_TRABAJO.NOMBRE_COMPLETO,TB_DIAS_TRABAJO.NUMERO_DOCUMENTO,TB_RANGO_HORA.RANGO_HORA,TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '${fecha}' AND NUMERO_DOCUMENTO = '${nro_documento}';`).then(([rs]) => {
+      return { index: index, rango: ((rs || [])[0] || {})['RANGO_HORA'] || "" };
+    });
+  }
 
 
   app.get("/comprobantes/session/lista", async (req, res) => {
