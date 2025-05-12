@@ -201,15 +201,21 @@ io.on('connection', async (socket) => {
       }
     ];
 
-    socket.to(`${listClient.id}`).emit("sendDataClient", body);
+    socket.to(`${response[0].socketID}`).emit("sendDataClient", body);
 
   });
 
 
-
   socket.on('cleanClient', (data) => {
     console.log('cleanClient');
-    socket.broadcast.emit("searchCantCliente", data);
+    let socketID = (socket || {}).id;
+    socket.broadcast.emit("searchCantCliente", data, socketID);
+  });
+
+  socket.on('emitCleanClient', (data) => {
+    console.log('cleanClient');
+    let socketID = (socket || {}).id;
+    socket.broadcast.emit("limpiarCliente", data, socketID);
   });
 
   socket.on('cleanColaFront', (data) => {
@@ -405,10 +411,7 @@ io.on('connection', async (socket) => {
   });
 
 
-  socket.on('emitCleanClient', (data) => {
-    console.log('cleanClient');
-    socket.broadcast.emit("limpiarCliente", data);
-  });
+
 
   socket.on('conexion:serverICG', (data) => {
     socket.broadcast.emit("conexion:serverICG:send", data);
