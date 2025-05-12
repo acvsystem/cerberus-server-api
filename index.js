@@ -1694,8 +1694,8 @@ io.on('connection', async (socket) => {
 
       let date = new Date((huellero || {}).dia).toLocaleDateString().split('/');
       let parseDate = `${date[0]}-${date[1]}-${date[2]}`;
-      
-      if ((huellero || {}).nroDocumento == '74582231' && ((huellero || {}).dia == '5-5-2025' || (huellero || {}).dia == '05-05-2025')) {
+
+      if ((huellero || {}).nroDocumento == '74582231') {
         console.log(parseDate);
       }
 
