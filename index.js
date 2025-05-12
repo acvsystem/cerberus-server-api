@@ -1704,17 +1704,10 @@ io.on('connection', async (socket) => {
 
         //let indexR = dataServGeneral.findIndex((dt) => dt.dia == parseDate && dt.nroDocumento == (huellero || {}).nroDocumento);
 
-        (dataServGeneral || []).filter((dt, indexR) => {
-
-          let date2 = new Date((dt || {}).dia).toLocaleDateString().split('/');
-          let parseDate2 = `${date2[0]}-${date2[1]}-${date2[2]}`;
-
-          if (((rs || [])[0] || {})['FECHA_NUMBER'] == parseDate2 && ((rs || [])[0] || {})['FECHA_NUMBER'] == (dt || {}).nroDocumento) {
-            ((dataServGeneral || [])[indexR] || {})['rango_horario'] = ((rs || [])[0] || {})['RANGO_HORA'] || "";
-            ((dataServGeneral || [])[indexR] || {})['isTardanza'] = false;
-          }
-        });
-
+        if (((rs || [])[0] || {})['FECHA_NUMBER'] == parseDate2 && ((rs || [])[0] || {})['FECHA_NUMBER'] == (dt || {}).nroDocumento) {
+          ((dataServGeneral || [])[i] || {})['rango_horario'] = ((rs || [])[0] || {})['RANGO_HORA'] || "";
+          ((dataServGeneral || [])[i] || {})['isTardanza'] = false;
+        }
 
 
         if (dataServGeneral.length - 1 == i) {
