@@ -1704,7 +1704,7 @@ io.on('connection', async (socket) => {
 
         //let indexR = dataServGeneral.findIndex((dt) => dt.dia == parseDate && dt.nroDocumento == (huellero || {}).nroDocumento);
 
-        if (((rs || [])[0] || {})['FECHA_NUMBER'] == parseDate2 && ((rs || [])[0] || {})['FECHA_NUMBER'] == (dt || {}).nroDocumento) {
+        if (((rs || [])[0] || {})['FECHA_NUMBER'] == parseDate && ((rs || [])[0] || {})['FECHA_NUMBER'] == (dt || {}).nroDocumento) {
           ((dataServGeneral || [])[i] || {})['rango_horario'] = ((rs || [])[0] || {})['RANGO_HORA'] || "";
           ((dataServGeneral || [])[i] || {})['isTardanza'] = false;
         }
