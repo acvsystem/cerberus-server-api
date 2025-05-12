@@ -1704,10 +1704,10 @@ io.on('connection', async (socket) => {
 
         //let indexR = dataServGeneral.findIndex((dt) => dt.dia == parseDate && dt.nroDocumento == (huellero || {}).nroDocumento);
 
-        if (((rs || [])[0] || {})['FECHA_NUMBER'] == parseDate && ((rs || [])[0] || {})['FECHA_NUMBER'] == (huellero || {}).nroDocumento) {
+       // if (((rs || [])[0] || {})['FECHA_NUMBER'] == parseDate && ((rs || [])[0] || {})['FECHA_NUMBER'] == (huellero || {}).nroDocumento) {
           ((dataServGeneral || [])[i] || {})['rango_horario'] = ((rs || [])[0] || {})['RANGO_HORA'] || "";
           ((dataServGeneral || [])[i] || {})['isTardanza'] = false;
-        }
+       // }
 
 
         if (dataServGeneral.length - 1 == i) {
