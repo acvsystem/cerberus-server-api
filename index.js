@@ -1703,8 +1703,10 @@ io.on('connection', async (socket) => {
       //let indexR = dataServGeneral.findIndex((dt) => dt.dia == parseDate && dt.nroDocumento == (huellero || {}).nroDocumento);
 
       // if (((rs || [])[0] || {})['FECHA_NUMBER'] == parseDate && ((rs || [])[0] || {})['FECHA_NUMBER'] == (huellero || {}).nroDocumento) {
-      ((dataServGeneral || [])[i] || {})['rango_horario'] = onSearchRango(i, (huellero || {}).nroDocumento, parseDate);
-      ((dataServGeneral || [])[i] || {})['isTardanza'] = false;
+      console.log(onSearchRango(i, (huellero || {}).nroDocumento, parseDate));
+      let objRango =  onSearchRango(i, (huellero || {}).nroDocumento, parseDate);
+      ((dataServGeneral || [])[objRango.index] || {})['rango_horario'] = objRango.rango;
+      ((dataServGeneral || [])[objRango.index] || {})['isTardanza'] = false;
       // }
 
       if (dataServGeneral.length - 1 == i) {
@@ -1722,7 +1724,7 @@ io.on('connection', async (socket) => {
   });
 
   function onSearchRango(index, nro_documento, fecha) {
-    pool.query(`SELECT TB_DIAS_TRABAJO.CODIGO_TIENDA,TB_DIAS_TRABAJO.NOMBRE_COMPLETO,TB_DIAS_TRABAJO.NUMERO_DOCUMENTO,TB_RANGO_HORA.RANGO_HORA,TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '${fecha}' AND NUMERO_DOCUMENTO = '${nro_documento}';`).then(([rs]) => {
+    return pool.query(`SELECT TB_DIAS_TRABAJO.CODIGO_TIENDA,TB_DIAS_TRABAJO.NOMBRE_COMPLETO,TB_DIAS_TRABAJO.NUMERO_DOCUMENTO,TB_RANGO_HORA.RANGO_HORA,TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '${fecha}' AND NUMERO_DOCUMENTO = '${nro_documento}';`).then(([rs]) => {
       return { index: index, rango: ((rs || [])[0] || {})['RANGO_HORA'] || "" };
     });
   }
