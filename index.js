@@ -1702,9 +1702,20 @@ io.on('connection', async (socket) => {
 
       await pool.query(`SELECT TB_DIAS_TRABAJO.CODIGO_TIENDA,TB_DIAS_TRABAJO.NOMBRE_COMPLETO,TB_DIAS_TRABAJO.NUMERO_DOCUMENTO,TB_RANGO_HORA.RANGO_HORA,TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '${parseDate}' AND NUMERO_DOCUMENTO = '${(huellero || {}).nroDocumento}';`).then(([rs]) => {
 
-        let indexR = dataServGeneral.findIndex((dt) => dt.dia == parseDate && dt.nroDocumento == (huellero || {}).nroDocumento);
-        ((dataServGeneral || [])[indexR] || {})['rango_horario'] = ((rs || [])[0] || {})['RANGO_HORA'] || "";
-        ((dataServGeneral || [])[indexR] || {})['isTardanza'] = false;
+        //let indexR = dataServGeneral.findIndex((dt) => dt.dia == parseDate && dt.nroDocumento == (huellero || {}).nroDocumento);
+
+        (dataServGeneral || []).filter((dt, indexR) => {
+
+          let date2 = new Date((dt || {}).dia).toLocaleDateString().split('/');
+          let parseDate2 = `${date2[0]}-${date2[1]}-${date2[2]}`;
+
+          if (((rs || [])[0] || {})['FECHA_NUMBER'] == parseDate2 && ((rs || [])[0] || {})['FECHA_NUMBER'] == (dt || {}).nroDocumento) {
+            ((dataServGeneral || [])[indexR] || {})['rango_horario'] = ((rs || [])[0] || {})['RANGO_HORA'] || "";
+            ((dataServGeneral || [])[indexR] || {})['isTardanza'] = false;
+          }
+        });
+
+
 
         if (dataServGeneral.length - 1 == i) {
           console.log("dataServGeneral", dataServGeneral.length);
