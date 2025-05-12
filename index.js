@@ -1700,27 +1700,21 @@ io.on('connection', async (socket) => {
         ((dataServGeneral || [])[i] || {})['papeleta'] = papeleta || [];
       });
 
-      //let indexR = dataServGeneral.findIndex((dt) => dt.dia == parseDate && dt.nroDocumento == (huellero || {}).nroDocumento);
-
-      // if (((rs || [])[0] || {})['FECHA_NUMBER'] == parseDate && ((rs || [])[0] || {})['FECHA_NUMBER'] == (huellero || {}).nroDocumento) {
-      
-      onSearchRango(i, (huellero || {}).nroDocumento, parseDate).then((rs) => {
-        console.log(rs);
+      await onSearchRango(i, (huellero || {}).nroDocumento, parseDate).then((rs) => {
         ((dataServGeneral || [])[rs.index] || {})['rango_horario'] = rs.rango;
         ((dataServGeneral || [])[rs.index] || {})['isTardanza'] = false;
       });
 
+      setTimeout(() => {
+        if (dataServGeneral.length - 1 == i) {
+          console.log("dataServGeneral", dataServGeneral.length);
 
-      // }
-
-      if (dataServGeneral.length - 1 == i) {
-        console.log("dataServGeneral", dataServGeneral.length);
-
-        for (let i = 0; i < dataServGeneral.length; i += 1000) {
-          const dataBlock = dataServGeneral.slice(i, i + 1000);
-          socket.to(`${dataServGeneral[0].socket}`).emit("reporteHuellero", { id: "servGeneral", data: dataBlock, rs: 'new', length: dataServGeneral.length });
+          for (let i = 0; i < dataServGeneral.length; i += 1000) {
+            const dataBlock = dataServGeneral.slice(i, i + 1000);
+            socket.to(`${dataServGeneral[0].socket}`).emit("reporteHuellero", { id: "servGeneral", data: dataBlock, rs: 'new', length: dataServGeneral.length });
+          }
         }
-      }
+      }, 2000);
     });
 
 
