@@ -365,7 +365,7 @@ io.on('connection', async (socket) => {
   /* TRANFERENCIA DE TRANSACIONES ENTRE FRONT RETAIL */
 
   socket.on('transacciones:post', (data) => {
-    socket.broadcast.emit("exceTranferenciaCajas", data);
+    socket.broadcast.emit("transaccionesPostFR", data);
   });
 
 
