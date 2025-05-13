@@ -646,6 +646,13 @@ io.on('connection', async (socket) => {
     res.json(arAutorizacion);
   });
 
+  app.post("/papeleta/update/fecha", async (req, res) => {
+    let data = req.body[0];
+    await pool.query(`UPDATE TB_HEAD_PAPELETA SET FECHA_DESDE = '${(data || {}).fecha}', FECHA_HASTA = '${(data || {}).fecha}' WHERE ID_HEAD_PAPELETA = ${(data || {}).id_papeleta};`).then(() => {
+      res.json({ success: true });
+    });
+  });
+
   app.post("/oficina/marcacion", async (req, res) => {
     let response = req.body;
     let socketID = (response[0] || {}).socketID;
