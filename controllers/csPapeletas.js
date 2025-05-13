@@ -17,9 +17,9 @@ export const generarCodigo = async (req, res) => {
 
 export const recalcularHorasExtras = async (req, res) => {
     let data = ((req || {}).body || [])[0];
-     pool.query(`DELETE FROM TB_HORA_EXTRA_EMPLEADO WHERE ID_HR_EXTRA = ${(data || "").id_hora_extra};`).then(()=>{
+    pool.query(`DELETE FROM TB_HORA_EXTRA_EMPLEADO WHERE ID_HR_EXTRA = ${(data || "").id_hora_extra};`).then(() => {
         res.json(defaultResponse.success.default);
-     });
+    });
 
 };
 
@@ -37,7 +37,7 @@ export const regHorasExtras = async (req, res) => {
             let fh = ((hrx || {}).fecha || "").split("-");
             let fecha = (hrx || {}).fecha;
             let fechaHr = `${parseInt(fh[2])}-${parseInt(fecha.split("-")[1].substr(0, 1)) == 0 ? fecha.split("-")[1].substr(1, 2) : fecha.split("-")[1].substr(0, 2)}-${fh[0]}`;
-            
+
             console.log(`SELECT * FROM TB_DIAS_LIBRE 
                 INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
                 WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(hrx || {}).documento}'
@@ -265,6 +265,7 @@ export const seachPapeleta = async (req, res) => {
     if ((arPapeleta || []).length) {
         await (arPapeleta || []).filter((pap) => {
             parsePap.push({
+                id_papeleta: (pap || {}).ID_HEAD_PAPELETA,
                 codigo_papeleta: (pap || {}).CODIGO_PAPELETA,
                 nombre_completo: (pap || {}).NOMBRE_COMPLETO,
                 documento: (pap || {}).NRO_DOCUMENTO_EMPLEADO,
