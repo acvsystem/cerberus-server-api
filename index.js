@@ -1697,6 +1697,14 @@ io.on('connection', async (socket) => {
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
 
+  app.post("/papeleta/search/fecha", async (req, res) => {
+    let data = ((req || {}).body || []);
+
+    await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${(data || {}).nroDocumento}' AND FECHA_DESDE = '${(data || {}).dia}';`).then(([papeleta]) => {
+      res.json({ data: papeleta });
+    });
+  });
+
   app.post("/frontRetail/search/huellero", async (req, res) => {
     let dataServGeneral = (req || {}).body;
 
