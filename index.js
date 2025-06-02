@@ -766,7 +766,7 @@ io.on('connection', async (socket) => {
                                     </tr>
                                     <tr>
                                         <td style="margin-bottom:10px;display:flex">
-                                            <a style="margin-left:155px;text-decoration:none;background:#155795;padding:10px 30px;font-size:18px;color:#ffff;border-radius:4px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif" href="http://38.187.8.22:3600/auth-hora-extra" target="_blank">horas extras</a>
+                                            <a style="margin-left:155px;text-decoration:none;background:#155795;padding:10px 30px;font-size:18px;color:#ffff;border-radius:4px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif" href="http://161.132.94.174:3600/auth-hora-extra" target="_blank">horas extras</a>
                                         </td>
                                     </tr>
                                 </tbody>
