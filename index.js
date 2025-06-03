@@ -646,7 +646,7 @@ io.on('connection', async (socket) => {
     res.json(arAutorizacion);
   });
 
-    app.get("/sunat/configuration", async (req, res) => {
+  app.get("/sunat/configuration", async (req, res) => {
     let [arConfiguracion] = await pool.query(`SELECT  XML_ETIQUIETA_GROUP,
         XML_TIPO_FORMULARIO,
         XML_EMAIL_PRUEBA, 
@@ -659,6 +659,8 @@ io.on('connection', async (socket) => {
         XML_TK_SUNAT,
         XML_CHECK_PROMOCION,
         APLICACION_FILE FROM TB_CONFIGURACION_FILE_APLICACION WHERE APLICACION_FILE = 'plugin_sunat_icg';`);
+
+    console.log(arConfiguracion);
     res.json(arConfiguracion);
   });
 
