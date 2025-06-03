@@ -651,7 +651,7 @@ io.on('connection', async (socket) => {
         XML_TIPO_FORMULARIO,
         XML_EMAIL_PRUEBA, 
         XML_ASUNTO_EMAIL_PROMO, 
-        CONVERT(XML_BODY_EMAIL USING utf8) 
+        CONVERT(XML_BODY_EMAIL USING utf8) AS XML_BODY_EMAIL
         XML_IS_HTML,
         XML_SERVICIO_EMAIL, 
         XML_SERVICIO_PASSWORD,
