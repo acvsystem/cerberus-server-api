@@ -646,6 +646,11 @@ io.on('connection', async (socket) => {
     res.json(arAutorizacion);
   });
 
+    app.get("/sunat/configuration", async (req, res) => {
+    let [arConfiguracion] = await pool.query(`SELECT * FROM TB_CONFIGURACION_FILE WHERE APLICACION = 'plugin_sunat_icg';`);
+    res.json(arConfiguracion);
+  });
+
   app.post("/papeleta/update/fecha", async (req, res) => {
     let data = req.body[0];
     await pool.query(`UPDATE TB_HEAD_PAPELETA SET FECHA_DESDE = '${(data || {}).fecha}', FECHA_HASTA = '${(data || {}).fecha}' WHERE ID_HEAD_PAPELETA = ${(data || {}).id_papeleta};`).then(() => {
