@@ -647,7 +647,17 @@ io.on('connection', async (socket) => {
   });
 
     app.get("/sunat/configuration", async (req, res) => {
-    let [arConfiguracion] = await pool.query(`SELECT * FROM TB_CONFIGURACION_FILE_APLICACION WHERE APLICACION_FILE = 'plugin_sunat_icg';`);
+    let [arConfiguracion] = await pool.query(`SELECT  XML_ETIQUIETA_GROUP,
+        XML_TIPO_FORMULARIO,
+        XML_EMAIL_PRUEBA, 
+        XML_ASUNTO_EMAIL_PROMO, 
+        CONVERT(XML_BODY_EMAIL USING utf8) 
+        XML_IS_HTML,
+        XML_SERVICIO_EMAIL, 
+        XML_SERVICIO_PASSWORD,
+        XML_API_SUNAT,
+        XML_TK_SUNAT,
+        APLICACION_FILE FROM TB_CONFIGURACION_FILE_APLICACION WHERE APLICACION_FILE = 'plugin_sunat_icg';`);
     res.json(arConfiguracion);
   });
 
