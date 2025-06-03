@@ -657,6 +657,7 @@ io.on('connection', async (socket) => {
         XML_SERVICIO_PASSWORD,
         XML_API_SUNAT,
         XML_TK_SUNAT,
+        XML_CHECK_PROMOCION,
         APLICACION_FILE FROM TB_CONFIGURACION_FILE_APLICACION WHERE APLICACION_FILE = 'plugin_sunat_icg';`);
     res.json(arConfiguracion);
   });
