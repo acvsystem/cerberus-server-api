@@ -647,7 +647,7 @@ io.on('connection', async (socket) => {
   });
 
     app.get("/sunat/configuration", async (req, res) => {
-    let [arConfiguracion] = await pool.query(`SELECT * FROM TB_CONFIGURACION_FILE_APLICACION WHERE APLICACION = 'plugin_sunat_icg';`);
+    let [arConfiguracion] = await pool.query(`SELECT * FROM TB_CONFIGURACION_FILE_APLICACION WHERE APLICACION_FILE = 'plugin_sunat_icg';`);
     res.json(arConfiguracion);
   });
 
