@@ -553,6 +553,30 @@ io.on('connection', async (socket) => {
     socket.to(`${socketID}`).emit("kardex:get:cuo:response", { id: response.id, data: data });
   });
 
+  /* CONSULTA STOCK TRASPASOS */
+
+  socket.on("inventario:get:barcode", (configuracion) => {
+    console.log("-----INIT SOLICITUD FRONTEND: inventario:get:barcode");
+    let configurationList = {
+      socket: (socket || {}).id,
+      codigoTienda: configuracion.codigoTienda,
+      almOrigen: configuracion.origen,
+      barcode: configuracion.barcode
+    };
+
+    socket.broadcast.emit("inventarioGetbarcodeFR", configurationList);
+  });
+
+  socket.on("inventario:get:fr:barcode:response", (response) => {
+    console.log("-----ENVIO RESPUESTA A FRONTEND BACKEND: inventario:get:fr:barcode:response");
+
+    let socketID = ((response || {}).configuration || {}).socket;
+    let data = [];
+    data = (response || {}).data || [];
+    console.log(data);
+    socket.to(`${socketID}`).emit("inventario:get:barcode:response", { data: data });
+  });
+
 
 
   socket.on("consultaPlanilla", (configuracion) => {
@@ -1705,6 +1729,14 @@ io.on('connection', async (socket) => {
     let data = ((req || {}).body || []);
     let [configuration] = await pool.query(`SELECT * FROM TB_PARAMETROS_TIENDA WHERE MAC='${((data || {}).mac).toUpperCase()}';`);
     res.json(configuration)
+  });
+
+  app.post("/frontRetail/search/stock", async (req, res) => {
+    let data = ((req || {}).body || []);
+    console.log(((data || [])[0] || {})['socketID'], ((data || [])[0] || {})['cCodigoTienda']);
+    socket.to(`${((data || [])[0] || {})['socketID']}`).emit("dataStockParse", req.body);
+
+    res.json({ mensaje: 'Archivo recibido con éxito' });
   });
 
   app.post("/frontRetail/search/stock", async (req, res) => {

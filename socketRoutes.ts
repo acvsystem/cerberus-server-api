@@ -113,5 +113,15 @@ FRONT RETAIL: kardex:get:cuo:fr:response
 -----ENVIO RESPUESTA A FRONTEND
 BACKEND: kardex:get:cuo:response
 
+****************** CONSULTA STOCK TRASPASOS *********************
+
+-----INIT SOLICITUD
+FRONTEND: inventario:get:barcode
+-----ENVIO A FRONT RETAIL 
+BACKEND: inventarioGetbarcodeFR
+-----ENVIO RESPUESTA DE FRONT RETAIL A BACKEND
+FRONT RETAIL: inventario:get:fr:barcode:response
+-----ENVIO RESPUESTA DE SERVIDOR BACKUP A BACKEND
+BACKEND: inventario:get:barcode:response
 
 */
