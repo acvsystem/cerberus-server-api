@@ -589,8 +589,9 @@ io.on('connection', async (socket) => {
         secure: false
       });
 
-      await client.uploadFrom(filePath, fileName);
-      await client.ensureDir("IT")
+     // await client.ensureDir("IT")
+      await client.uploadFrom('IT', fileName);
+      
 
       res.send('Archivo subido al FTP con éxito');
     } catch (err) {
