@@ -17,7 +17,7 @@ import tokenController from './controllers/csToken.js';
 import fs from 'fs';
 import path from 'path';
 import multer from 'multer';
-import { ftp } from "basic-ftp"
+import { Client } from "basic-ftp"
 
 const app = express();
 const httpServer = createServer(app);
@@ -578,7 +578,7 @@ io.on('connection', async (socket) => {
     const filePath = req.file.path;
     const fileName = req.file.originalname;
 
-    const client = new ftp.Client();
+    const client = new Client.Client();
     client.ftp.verbose = true;
 
     try {
