@@ -17,11 +17,12 @@ import tokenController from './controllers/csToken.js';
 import fs from 'fs';
 import path from 'path';
 import multer from 'multer';
+const ftp = require('basic-ftp');
 
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: "*", methods: ["GET", "POST"], transports: ['websocket', 'polling'] } });
-
+const uploadTraspasos = multer({ dest: 'uploads/traspasos' });
 
 app.use(
   cors({
@@ -570,6 +571,33 @@ io.on('connection', async (socket) => {
     socket.to(`${socketID}`).emit("inventario:get:barcode:response", { data: data });
   });
 
+
+  /* ENVIAR TRSPASOS POR FTP */
+
+  app.post('/upload/traspasos', uploadTraspasos.single('file'), async (req, res) => {
+    const filePath = req.file.path;
+    const fileName = req.file.originalname;
+
+    const client = new ftp.Client();
+    client.ftp.verbose = true;
+
+    try {
+      await client.access({
+        host: '161.132.94.174',
+        user: 'ITPeru',
+        password: '/**P3ru_IT**/',
+        secure: false
+      });
+
+      await client.uploadFrom(filePath, fileName);
+      res.send('Archivo subido al FTP con éxito');
+    } catch (err) {
+      res.status(500).send('Error subiendo al FTP: ' + err.message);
+    } finally {
+      client.close();
+      fs.unlinkSync(filePath); // Borrar archivo local temporal
+    }
+  });
 
 
   socket.on("consultaPlanilla", (configuracion) => {
