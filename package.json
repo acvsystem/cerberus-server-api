@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "basic-ftp": "^5.0.5",
     "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
     "dotenv": "^16.0.3",
