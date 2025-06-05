@@ -17,7 +17,7 @@ import tokenController from './controllers/csToken.js';
 import fs from 'fs';
 import path from 'path';
 import multer from 'multer';
-const ftp = require('basic-ftp');
+import { Client } from "basic-ftp"
 
 const app = express();
 const httpServer = createServer(app);
