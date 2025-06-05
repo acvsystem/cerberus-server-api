@@ -584,8 +584,8 @@ io.on('connection', async (socket) => {
     try {
       await client.access({
         host: '161.132.94.174',
-        user: 'ITPeru',
-        password: '/**P3ru_IT**/',
+        user: 'metasFTP',
+        password: 'METAS20600516885',
         secure: false
       });
 
