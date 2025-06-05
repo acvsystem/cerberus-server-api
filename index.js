@@ -578,7 +578,7 @@ io.on('connection', async (socket) => {
     const filePath = req.file.path;
     const fileName = req.file.originalname;
 
-    const client = new Client.Client();
+    const client = new Client()
     client.ftp.verbose = true;
 
     try {
