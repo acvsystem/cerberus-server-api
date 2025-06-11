@@ -69,12 +69,12 @@ class clsFacturacion {
             emailController.sendEmail('johnnygermano@metasperu.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, null, xlsFile, (selectedLocal || {}).name)
                 .catch(error => res.send(error));
         } else {
-            const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
+           /* const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
             const workBook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
             const xlsFile = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
             emailController.sendEmail('itperu@metasperu.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, null, xlsFile, (selectedLocal || {}).name)
-                .catch(error => res.send(error));
+                .catch(error => res.send(error));*/
         }
 
         await pool.query(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
