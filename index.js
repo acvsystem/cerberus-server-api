@@ -671,7 +671,7 @@ io.on('connection', async (socket) => {
   });
 
   app.get("/equipos/lista", async (req, res) => {
-    let [arEquipos] = await pool.query(`SELECT LT.DESCRIPCION,PT.NUM_CAJA,PT.MAC FROM TB_PARAMETROS_TIENDA PT INNER JOIN TB_LISTA_TIENDA LT ON LT.SERIE_TIENDA = PT.SERIE_TIENDA WHERE ESTATUS = 'ACTIVO' ORDER BY LT.DESCRIPCION;`);
+    let [arEquipos] = await pool.query(`SELECT LT.DESCRIPCION,PT.NUM_CAJA,PT.MAC,PT.IP,PT.ONLINE FROM TB_PARAMETROS_TIENDA PT INNER JOIN TB_LISTA_TIENDA LT ON LT.SERIE_TIENDA = PT.SERIE_TIENDA WHERE ESTATUS = 'ACTIVO' ORDER BY LT.DESCRIPCION;`);
     res.json({ data: arEquipos, success: true });
   });
 
