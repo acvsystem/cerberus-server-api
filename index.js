@@ -161,6 +161,60 @@ io.on('connection', async (socket) => {
 
   const transport = socket.conn.transport.name; // in most cases, "polling"
 
+  socket.on('status:serverSUNAT', (data) => {
+    socket.broadcast.emit("status:serverSUNAT:send", data);
+  });
+
+  if (codeTerminal != "SRVFACT" && isIcg != 'true') {
+    let listSessionConnect = await sessionSocket.connect(codeTerminal);
+    console.log(listSessionConnect);
+    socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
+  } else {
+    if (codeTerminal == "SRVFACT") {
+      console.log('SERVIDOR', codeTerminal);
+      let [conexionList] = await pool.query(`SELECT * FROM TB_ESTATUS_SERVER_BACKUP;`);
+      await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET ESTATUS_CONEXION = 1 WHERE ID_ESTATUS_SERVER = 1;`);
+      /*
+      if (!((conexionList || [])[0] || {}).OLD_ESTATUS) {
+        emailController.sendEmail('johnnygermano@metasperu.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
+          .catch(error => res.send(error));
+      }
+      */
+      await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET OLD_ESTATUS = 1 WHERE ID_ESTATUS_SERVER = 1;`);
+
+    }
+  }
+
+  socket.on('status:EQP', (data) => {
+    console.log(data);
+    socket.broadcast.emit("status:EQP:send", data);
+  });
+
+  socket.on('disconnect', async () => { // DESCONEXION DE ALGUN ENLACE (SE ENVIA A COMPROBANTES)
+    if (codeTerminal == "SRVFACT") {
+      await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET ESTATUS_CONEXION = 0 WHERE ID_ESTATUS_SERVER = 1;`);
+      setTimeout(async () => {
+        let [conexionList] = await pool.query(`SELECT * FROM TB_ESTATUS_SERVER_BACKUP;`);
+        if (!((conexionList || [])[0] || {}).ESTATUS_CONEXION) {
+          await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET OLD_ESTATUS = 0 WHERE ID_ESTATUS_SERVER = 1;`);
+          sessionSocket.disconnectServer();
+        }
+      }, 300000);
+
+      socket.broadcast.emit("status:serverSUNAT:send", { 'code': 'SRVFACT', 'online': 'false' });
+    } else if (isIcg != 'true') {
+      console.log(`disconnect ${codeTerminal} - idApp`, listClient.id);
+      let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
+      socket.broadcast.emit("comprobantes:get:response", listSessionDisconnet); //ENVIA A FRONTEND COMPROBANTES
+    }
+
+    if (isIcg == 'true') {
+      socket.broadcast.emit("conexion:serverICG:send", [{ 'code': codeTerminal, 'isConect': '0' }]);
+    }
+
+    console.log('user disconnected');
+  });
+
   socket.conn.on("upgrade", () => {
     const upgradedTransport = socket.conn.transport.name; // in most cases, "websocket"
     console.log("upgradedTransport", upgradedTransport);
@@ -205,7 +259,6 @@ io.on('connection', async (socket) => {
     socket.to(`${response[0].socket}`).emit("sendDataClient", body);
 
   });
-
 
   socket.on('cleanClient', (data) => {
     console.log('cleanClient');
@@ -399,8 +452,6 @@ io.on('connection', async (socket) => {
     });
   });
 
-
-
   socket.on('comunicationStock', (email, arrCodeTienda) => {
     console.log('comunicationStock');
     socket.broadcast.emit("searchStockTest", email, arrCodeTienda);
@@ -411,14 +462,9 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("searchStockTable", arrCodeTienda, barcode, (socket || {}).id);
   });
 
-
-
-
   socket.on('conexion:serverICG', (data) => {
     socket.broadcast.emit("conexion:serverICG:send", data);
   });
-
-
 
   socket.on("update:file:FrontAgent", (body) => {
     let configurationList = {
@@ -504,7 +550,6 @@ io.on('connection', async (socket) => {
     socket.to(`${socketID}`).emit("kardex:post:camposlibres:response", { id: response.id, data: data });
   });
 
-
   /* INSERTAR CUO KARDEX */
 
   socket.on("kardex:post:cuo", (configuracion) => {
@@ -518,7 +563,6 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("kardexPostcuoFR", configurationList);
   });
 
-
   socket.on("kardex:post:cuo:fr:response", (response) => {
     console.log("-----ENVIO RESPUESTA A FRONTEND BACKEND: kardex:post:cuo:fr:response");
 
@@ -528,7 +572,6 @@ io.on('connection', async (socket) => {
     console.log(data);
     socket.to(`${socketID}`).emit("kardex:post:cuo:response", { id: response.id, data: data });
   });
-
 
   /* CONSULTA CUO KARDEX */
 
@@ -571,7 +614,6 @@ io.on('connection', async (socket) => {
     socket.to(`${socketID}`).emit("inventario:get:barcode:response", { data: data });
   });
 
-
   /* ENVIAR TRSPASOS POR FTP */
 
   app.post('/upload/traspasos', uploadTraspasos.single('file'), async (req, res) => {
@@ -602,7 +644,6 @@ io.on('connection', async (socket) => {
       fs.unlinkSync(filePath); // Borrar archivo local temporal
     }
   });
-
 
   socket.on("consultaPlanilla", (configuracion) => {
     console.log(configuracion);
@@ -747,12 +788,9 @@ io.on('connection', async (socket) => {
     });
   });
 
-
   socket.on("marcacion_of", async (data) => {
     socket.broadcast.emit("solicitar_marcacion_of", { socketID: (socket || {}).id });
   });
-
-
 
   socket.on("solicitar_aprobacion_hrx", async (data) => {
 
@@ -929,7 +967,6 @@ io.on('connection', async (socket) => {
     }
 
   });
-
 
   app.get("/login/users", async (req, res) => {
     let [arUsers] = await pool.query(`SELECT * FROM TB_LOGIN;`);
@@ -1129,7 +1166,6 @@ io.on('connection', async (socket) => {
 
   });
 
-
   app.post("/calendario/searchrHorario", async (req, res) => {
     let dataReq = req.body;
 
@@ -1238,7 +1274,6 @@ io.on('connection', async (socket) => {
       res.json(parsePap);
     }
   });
-
 
   //INSERTAR RANGO HORARIO EN SEARCH
   app.post("/horario/insert/rangoHorario", async (req, res) => {
@@ -1360,7 +1395,6 @@ io.on('connection', async (socket) => {
       res.json({ msj: err });
     });
   });
-
 
   app.post("/horario/registrar", async (req, res) => {
     let arHorario = req.body;
@@ -1579,7 +1613,6 @@ io.on('connection', async (socket) => {
 
   });
 
-
   socket.on("consultaHorasTrab", (configuracion) => {
     console.log("consultaHorasTrab", configuracion);
     let configurationList = {
@@ -1593,7 +1626,6 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("comunicationEnlace", (enlace) => {
-
   });
 
   socket.on("consultaListaEmpleado", (cntCosto) => {
@@ -1616,7 +1648,6 @@ io.on('connection', async (socket) => {
 
     socket.broadcast.emit("consultarEJB", configurationList);
   });
-
 
   socket.on("listaEmpleados", (response) => {
     let data = response;
@@ -1700,57 +1731,6 @@ io.on('connection', async (socket) => {
     socket.to(`${socketID}`).emit("update:file:status", statusList);
   });
 
-
-  socket.on('status:serverSUNAT', (data) => {
-    socket.broadcast.emit("status:serverSUNAT:send", data);
-  });
-
-
-
-  if (codeTerminal != "SRVFACT" && isIcg != 'true') {
-    let listSessionConnect = await sessionSocket.connect(codeTerminal);
-    console.log(listSessionConnect);
-    socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
-  } else {
-    if (codeTerminal == "SRVFACT") {
-      console.log('SERVIDOR', codeTerminal);
-      let [conexionList] = await pool.query(`SELECT * FROM TB_ESTATUS_SERVER_BACKUP;`);
-      await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET ESTATUS_CONEXION = 1 WHERE ID_ESTATUS_SERVER = 1;`);
-      /*
-      if (!((conexionList || [])[0] || {}).OLD_ESTATUS) {
-        emailController.sendEmail('johnnygermano@metasperu.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
-          .catch(error => res.send(error));
-      }
-      */
-      await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET OLD_ESTATUS = 1 WHERE ID_ESTATUS_SERVER = 1;`);
-
-    }
-  }
-
-  socket.on('disconnect', async () => { // DESCONEXION DE ALGUN ENLACE (SE ENVIA A COMPROBANTES)
-    if (codeTerminal == "SRVFACT") {
-      await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET ESTATUS_CONEXION = 0 WHERE ID_ESTATUS_SERVER = 1;`);
-      setTimeout(async () => {
-        let [conexionList] = await pool.query(`SELECT * FROM TB_ESTATUS_SERVER_BACKUP;`);
-        if (!((conexionList || [])[0] || {}).ESTATUS_CONEXION) {
-          await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET OLD_ESTATUS = 0 WHERE ID_ESTATUS_SERVER = 1;`);
-          sessionSocket.disconnectServer();
-        }
-      }, 300000);
-
-      socket.broadcast.emit("status:serverSUNAT:send", { 'code': 'SRVFACT', 'online': 'false' });
-    } else if (isIcg != 'true') {
-      console.log(`disconnect ${codeTerminal} - idApp`, listClient.id);
-      let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
-      socket.broadcast.emit("comprobantes:get:response", listSessionDisconnet); //ENVIA A FRONTEND COMPROBANTES
-    }
-
-    if (isIcg == 'true') {
-      socket.broadcast.emit("conexion:serverICG:send", [{ 'code': codeTerminal, 'isConect': '0' }]);
-    }
-
-    console.log('user disconnected');
-  });
 
   app.post("/frontRetail/search/configuration/agente", async (req, res) => {
     let data = ((req || {}).body || []);
