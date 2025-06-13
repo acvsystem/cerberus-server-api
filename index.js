@@ -472,7 +472,7 @@ io.on('connection', async (socket) => {
       update: (body || {}).typeUpdate || 'python',
     };
 
-    socket.broadcast.emit("update_file_Agente", configurationList);
+    socket.broadcast.emit("update_file_Plugin", configurationList);
 
   });
 
