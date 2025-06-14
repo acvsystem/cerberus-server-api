@@ -477,6 +477,19 @@ io.on('connection', async (socket) => {
     }
   });
 
+  socket.on("update:file:response", (response) => {
+    let socketID = (response || {}).socket;
+    let status = (response || {}).status;
+    let mac = (response || {}).mac;
+
+    let statusList = {
+      mac: mac,
+      status: status,
+    };
+
+    socket.to(`${socketID}`).emit("update:file:status", statusList);
+  });
+
   socket.on("consultaMarcacion", (configuracion) => {
     console.log(configuracion);
     let configurationList = {
@@ -1724,18 +1737,7 @@ io.on('connection', async (socket) => {
     socket.to(`${listClient.id}`).emit("reporteEmpleadoTienda", { id: data.id, data: parseEJB });
   });
 
-  socket.on("update:file:response", (response) => {
-    let socketID = (response || {}).socket;
-    let status = (response || {}).status;
-    let serie = (response || {}).serie;
 
-    let statusList = {
-      serie: serie,
-      status: status,
-    };
-
-    socket.to(`${socketID}`).emit("update:file:status", statusList);
-  });
 
 
   app.post("/frontRetail/search/configuration/agente", async (req, res) => {
