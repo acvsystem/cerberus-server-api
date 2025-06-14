@@ -466,14 +466,15 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("conexion:serverICG:send", data);
   });
 
-  socket.on("update:file:FrontAgent", (body) => {
+  socket.on("update:file:FrontAgent", (fileName) => {
     let configurationList = {
       socket: (socket || {}).id,
-      update: (body || {}).typeUpdate || 'python',
+      fileName: fileName,
     };
 
-    socket.broadcast.emit("update_file_Plugin", configurationList);
-
+    if ((fileName || "").length) {
+      socket.broadcast.emit("update_file_Plugin", configurationList);
+    }
   });
 
   socket.on("consultaMarcacion", (configuracion) => {
