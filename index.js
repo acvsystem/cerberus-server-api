@@ -675,6 +675,11 @@ io.on('connection', async (socket) => {
     res.json({ data: arEquipos, success: true });
   });
 
+  app.get("/plugin/lista", async (req, res) => {
+    let [arPlugin] = await pool.query(`SELECT * FROM TB_LISTA_PLUGIN WHERE ESTADO = 'ACTIVO';`);
+    res.json({ data: arPlugin, success: true });
+  });
+
   app.post("/planilla/FDM", async (req, res) => {
     let response = req.body;
     var serverData = JSON.parse((response[0] || []).serverData);
