@@ -152,7 +152,7 @@ router.get('/download', (req, res) => {
     let file = "";
 
     //  if (((resValidation || {}).decoded || {}).aud == "AGENTE") {
-    file = pathDownload.path.agente;
+    file = pathDownload.path.sunat;
     //  }
 
     /*  if (((resValidation || {}).decoded || {}).aud == "SUNAT") {
