@@ -466,10 +466,11 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("conexion:serverICG:send", data);
   });
 
-  socket.on("update:file:FrontAgent", (fileName) => {
+  socket.on("update:file:FrontAgent", (body) => {
     let configurationList = {
       socket: (socket || {}).id,
-      fileName: fileName,
+      fileName: (body || {}).fileName,
+      hash: (body || {}).hash
     };
 
     if ((fileName || "").length) {
