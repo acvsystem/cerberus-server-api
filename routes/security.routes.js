@@ -133,7 +133,7 @@ router.get('/download', (req, res) => {
     let token = req.header('Authorization');
     let hash = req.header('hash');
 
-    console.log("download", token,hash);
+    console.log("download", token, hash);
 
     if (hash) {
         var bytes = CryptoJS.AES.decrypt(hash, defaultResponse.keyCryptHash);
@@ -150,28 +150,31 @@ router.get('/download', (req, res) => {
 
 
 
-    //  if ((resValidation || {}).isValid) {
-    let file = "";
+    if ((resValidation || {}).isValid) {
+        let file = "";
 
-    //  if (((resValidation || {}).decoded || {}).aud == "AGENTE") {
-    file = pathDownload.path.sunat;
-    //  }
+        switch (((resValidation || {}).decoded || {}).aud) {
+            case "SUNAT_ICG.zip":
+                file = pathDownload.path.sunat;
+                break;
+            case "XML_SUNAT_ICG.zip":
+                file = pathDownload.path.sunat;
+                break;
+            case "VALIDACION.zip":
+                file = pathDownload.path.sunat;
+                break;
+            case "DLL_NOTA_CREDITO.zip":
+                file = pathDownload.path.sunat;
+                break;
+            case "PLUGIN_APP_METAS_PERU.zip":
+                file = pathDownload.path.sunat;
+        }
 
-    /*  if (((resValidation || {}).decoded || {}).aud == "SUNAT") {
-          file = pathDownload.path.pluginSunat;
-      }
-
-      if (((resValidation || {}).decoded || {}).aud == "DOCUMENTO") {
-          file = pathDownload.path.pluginDocument;
-      }
-*/
-    var fileLocation = path.join('./', file);
-    res.download(fileLocation, file);
-
-
-    /*  } else {
-          return res.status(401).json('Access denied');
-      }*/
+        var fileLocation = path.join('./', file);
+        res.download(fileLocation, file);
+    } else {
+        return res.status(401).json('Access denied');
+    }
 
 });
 
