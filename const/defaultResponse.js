@@ -1,4 +1,5 @@
 export const prop = {
+    keyCryptHash: "filipences413",
     success: {
         default: { success: true, msj: "Successful" }
     },
