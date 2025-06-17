@@ -133,6 +133,8 @@ router.get('/download', (req, res) => {
     let token = req.header('Authorization');
     let hash = req.header('hash');
 
+    console.log("download", token,hash);
+
     if (hash) {
         var bytes = CryptoJS.AES.decrypt(hash, defaultResponse.keyCryptHash);
         var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8)) || {};

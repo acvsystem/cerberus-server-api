@@ -186,7 +186,6 @@ io.on('connection', async (socket) => {
   }
 
   socket.on('status:EQP', (data) => {
-    console.log(data);
     socket.broadcast.emit("status:EQP:send", data);
   });
 
