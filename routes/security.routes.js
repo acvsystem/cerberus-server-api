@@ -96,7 +96,7 @@ router.post('/create/hash/agente', (req, res) => {
             nivel: (body || {}).nivel
         };
 
-        const hash = CryptoJS.AES.encrypt(JSON.stringify(data), prop.keyCryptHash).toString();
+        const hash = CryptoJS.AES.encrypt(JSON.stringify(data), defaultResponse.keyCryptHash).toString();
 
         res.json({ success: true, hash: hash });
     } else {
@@ -134,7 +134,7 @@ router.get('/download', (req, res) => {
     let hash = req.header('hash');
 
     if (hash) {
-        var bytes = CryptoJS.AES.decrypt(hash, prop.keyCryptHash);
+        var bytes = CryptoJS.AES.decrypt(hash, defaultResponse.keyCryptHash);
         var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8)) || {};
 
         if (Object.keys(decryptedData).length) {
