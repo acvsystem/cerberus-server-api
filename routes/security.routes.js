@@ -158,16 +158,25 @@ router.get('/download', (req, res) => {
                 file = pathDownload.path.sunat;
                 break;
             case "XML_SUNAT_ICG.zip":
-                file = pathDownload.path.sunat;
+                file = pathDownload.path.sunatXML;
                 break;
             case "VALIDACION.zip":
-                file = pathDownload.path.sunat;
+                file = pathDownload.path.totalizacion;
                 break;
             case "DLL_NOTA_CREDITO.zip":
-                file = pathDownload.path.sunat;
+                file = pathDownload.path.notaCredito;
                 break;
-            case "PLUGIN_APP_METAS_PERU.zip":
-                file = pathDownload.path.sunat;
+            case "PLUGIN_APP_METAS_PERU_VS.zip":
+                file = pathDownload.path.appMetasvs;
+                break;
+            case "PLUGIN_APP_METAS_PERU_BBW.zip":
+                file = pathDownload.path.appMetasbbw;
+                break;
+            case "PLUGIN_APP_METAS_PERU_VSFA.zip":
+                file = pathDownload.path.appMetasvsfa;
+                break;
+            case "PLUGIN_APP_METAS_PERU_ECOM.zip":
+                file = pathDownload.path.appMetasecom;
         }
 
         var fileLocation = path.join('./', file);
