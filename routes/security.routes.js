@@ -109,7 +109,7 @@ router.post('/configuracion/tiempo/tolerancia', async (req, res) => {
     let data = ((req || {}).body || [])[0];
     console.log(data);
     pool.query(`SELECT * FROM TB_CONFIGURACION_TOLERANCIA_HORA WHERE REFERENCIA = '${(data || {}).referencia}';`).then(([registro]) => {
-        
+
         if (!(registro || []).length) {
             pool.query(`INSERT INTO TB_CONFIGURACION_TOLERANCIA_HORA(REFERENCIA,TIEMPO_TOLERANCIA)VALUES('${(data || {}).referencia}','${(data || {}).tiempo_tolerancia}')`).then(() => {
                 res.json(defaultResponse.success.default);
@@ -130,20 +130,24 @@ router.get('/configuracion/tiempo/tolerancia', async (req, res) => {
 
 router.get('/download', (req, res) => {
 
-    /*  let token = req.header('Authorization');
-      let hash = req.header('hash');
-  
-      if (hash) {
-          var bytes = CryptoJS.AES.decrypt(hash, prop.keyCryptHash);
-          var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8)) || {};
-  
-          if (Object.keys(decryptedData).length) {
-              token = tokenController.createToken((decryptedData || {}).user, (decryptedData || {}).nivel);
-          }
-      }
-  
-      let resValidation = tokenController.verificationToken(token);
-  */
+    let token = req.header('Authorization');
+    let hash = req.header('hash');
+
+    if (hash) {
+        var bytes = CryptoJS.AES.decrypt(hash, prop.keyCryptHash);
+        var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8)) || {};
+
+        if (Object.keys(decryptedData).length) {
+            token = tokenController.createToken((decryptedData || {}).user, (decryptedData || {}).nivel);
+        }
+    }
+
+    let resValidation = tokenController.verificationToken(token);
+
+    console.log("download", resValidation);
+
+
+
     //  if ((resValidation || {}).isValid) {
     let file = "";
 
