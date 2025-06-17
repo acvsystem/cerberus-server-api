@@ -473,7 +473,7 @@ io.on('connection', async (socket) => {
       hash: (body || {}).hash
     };
 
-    if ((fileName || "").length) {
+    if ((body || {}).hash.length && (body || {}).fileName.length) {
       socket.broadcast.emit("update_file_Plugin", configurationList);
     }
   });
