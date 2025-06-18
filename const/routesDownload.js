@@ -4,9 +4,9 @@ export const pathDownload = {
         sunatXML: "./download/sunat/configuracion_plugin_sunat.zip",
         totalizacion:"./download/totalizacion/TOTALIZACION.zip",
         notaCredito:"./download/notaCredito/DLL_NOTA_CREDITO.zip",
-        appMetasvs: "./update/app/vs_agenteFront.zip",
-        appMetasbbw: "./update/app/bbw_agenteFront.zip",
-        appMetasvsfa: "./update/app/vsfa_agenteFront.zip",
-        appMetasecom: "./update/app/ecom_agenteFront.zip"
+        appMetasvs: "./download/appMetasvs/agenteFront.pyp",
+        appMetasbbw: "./download/appMetasbbw/agenteFront.py",
+        appMetasvsfa: "./download/appMetasvsfa/agenteFront.py",
+        appMetasecom: "./download/appMetasecom/agenteFront.py"
     }
 };

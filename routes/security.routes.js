@@ -143,7 +143,7 @@ router.get('/download', (req, res) => {
     }
 
     let resValidation = tokenController.verificationToken(token);
-    console.log(resValidation);
+   
     if ((resValidation || {}).isValid) {
         let file = "";
 
@@ -174,7 +174,7 @@ router.get('/download', (req, res) => {
         }
 
         var fileLocation = path.join('./', file);
-        console.log(fileLocation);
+        
         res.download(fileLocation, file);
     } else {
         return res.status(401).json('Access denied');
