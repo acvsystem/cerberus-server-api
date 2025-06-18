@@ -143,7 +143,7 @@ router.get('/download', (req, res) => {
     }
 
     let resValidation = tokenController.verificationToken(token);
-
+    console.log(resValidation);
     if ((resValidation || {}).isValid) {
         let file = "";
 
