@@ -160,16 +160,16 @@ router.get('/download', (req, res) => {
             case "DLL_NOTA_CREDITO.zip":
                 file = pathDownload.path.notaCredito;
                 break;
-            case "PLUGIN_APP_METAS_PERU_VS.zip":
+            case "PLUGIN_APP_METAS_PERU_VS":
                 file = pathDownload.path.appMetasvs;
                 break;
-            case "PLUGIN_APP_METAS_PERU_BBW.zip":
+            case "PLUGIN_APP_METAS_PERU_BBW":
                 file = pathDownload.path.appMetasbbw;
                 break;
-            case "PLUGIN_APP_METAS_PERU_VSFA.zip":
+            case "PLUGIN_APP_METAS_PERU_VSFA":
                 file = pathDownload.path.appMetasvsfa;
                 break;
-            case "PLUGIN_APP_METAS_PERU_ECOM.zip":
+            case "PLUGIN_APP_METAS_PERU_ECOM":
                 file = pathDownload.path.appMetasecom;
         }
 

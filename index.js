@@ -466,10 +466,38 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("update:file:FrontAgent", (body) => {
+
+    switch (((resValidation || {}).decoded || {}).aud) {
+      case "SUNAT_ICG.zip":
+        file = "SUNAT_ICG.zip";
+        break;
+      case "XML_SUNAT_ICG.zip":
+        file = "XML_SUNAT_ICG.zip";
+        break;
+      case "VALIDACION.zip":
+        file = "VALIDACION.zip";
+        break;
+      case "DLL_NOTA_CREDITO.zip":
+        file = "DLL_NOTA_CREDITO.zip";
+        break;
+      case "PLUGIN_APP_METAS_PERU_VS":
+        file = "agenteFront.py";
+        break;
+      case "PLUGIN_APP_METAS_PERU_BBW":
+        file = "agenteFront.py";
+        break;
+      case "PLUGIN_APP_METAS_PERU_VSFA":
+        file = "agenteFront.py";
+        break;
+      case "PLUGIN_APP_METAS_PERU_ECOM":
+        file = "agenteFront.py";
+    }
+
     let configurationList = {
       socket: (socket || {}).id,
       fileName: (body || {}).fileName,
-      hash: (body || {}).hash
+      hash: (body || {}).hash,
+      dowFile: file
     };
 
     if ((body || {}).hash.length && (body || {}).fileName.length) {
