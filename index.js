@@ -470,34 +470,43 @@ io.on('connection', async (socket) => {
     switch (((resValidation || {}).decoded || {}).aud) {
       case "SUNAT_ICG.zip":
         file = "SUNAT_ICG.zip";
+        isZip = true;
         break;
       case "XML_SUNAT_ICG.zip":
         file = "XML_SUNAT_ICG.zip";
+        isZip = true;
         break;
       case "VALIDACION.zip":
         file = "VALIDACION.zip";
+        isZip = true;
         break;
       case "DLL_NOTA_CREDITO.zip":
         file = "DLL_NOTA_CREDITO.zip";
+        isZip = true;
         break;
       case "PLUGIN_APP_METAS_PERU_VS":
         file = "agenteFront.py";
+        isZip = false;
         break;
       case "PLUGIN_APP_METAS_PERU_BBW":
         file = "agenteFront.py";
+        isZip = false;
         break;
       case "PLUGIN_APP_METAS_PERU_VSFA":
         file = "agenteFront.py";
+        isZip = false;
         break;
       case "PLUGIN_APP_METAS_PERU_ECOM":
         file = "agenteFront.py";
+        isZip = false;
     }
 
     let configurationList = {
       socket: (socket || {}).id,
       fileName: (body || {}).fileName,
       hash: (body || {}).hash,
-      dowFile: file
+      dowFile: file,
+      isZip: isZip
     };
 
     if ((body || {}).hash.length && (body || {}).fileName.length) {
