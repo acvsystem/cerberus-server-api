@@ -466,7 +466,9 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("update:file:FrontAgent", (body) => {
-
+    let file = "";
+    let isZip = false;
+    
     switch ((body || {}).fileName) {
       case "SUNAT_ICG.zip":
         file = "SUNAT_ICG.zip";
