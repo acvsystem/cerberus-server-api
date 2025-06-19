@@ -475,8 +475,8 @@ io.on('connection', async (socket) => {
         isZip = true;
         break;
       case "XML_SUNAT_ICG.zip":
-        file = "XML_SUNAT_ICG.zip";
-        isZip = true;
+        file = "configuracion_plugin_sunat.xml";
+        isZip = false;
         break;
       case "VALIDACION.zip":
         file = "VALIDACION.zip";
