@@ -1984,7 +1984,7 @@ io.on('connection', async (socket) => {
       await fs.stat('./download' + file, (err, stats) => {
         arDirectory.push({
           name: file,
-          size: stats.size,
+          size: "",
           mtime: stats.atime
         });
         if (fs.readdirSync('/download').length == arDirectory.length) {
