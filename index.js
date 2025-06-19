@@ -1999,7 +1999,7 @@ io.on('connection', async (socket) => {
 
     let request = ((req || []).query || []);
     console.log(request);
-    const file = "./download/" + (request || {}).route;
+    const file = "./download" + (request || {}).route;
     var fileLocation = path.join('./', file);
     res.download(fileLocation, file);
   });
