@@ -1979,9 +1979,9 @@ io.on('connection', async (socket) => {
 
   app.get('/listDirectory', async (req, res) => {
     let arDirectory = [];
-    fs.readdirSync('/download').forEach(async (file, i) => {
+    fs.readdirSync('./download').forEach(async (file, i) => {
       console.log(file);
-      await fs.stat('/download/' + file, (err, stats) => {
+      await fs.stat('./download' + file, (err, stats) => {
         arDirectory.push({
           name: file,
           size: stats.size,
