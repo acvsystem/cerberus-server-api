@@ -141,6 +141,7 @@ io.on('connection', async (socket) => {
   let codeQuery = socket.handshake.query.code;
   let codeTerminal = socket.handshake.headers.code;
   let isIcg = socket.handshake.headers.icg;
+  let macEqp = socket.handshake.headers.mac;
 
   let indexAgente = (agenteList || []).findIndex((data, i) => (data || {}).code == codeTerminal);
 
@@ -209,6 +210,10 @@ io.on('connection', async (socket) => {
 
     if (isIcg == 'true') {
       socket.broadcast.emit("conexion:serverICG:send", [{ 'code': codeTerminal, 'isConect': '0' }]);
+    }
+
+    if (codeTerminal == 'EQP' && (macEqp || "").length) {
+      socket.broadcast.emit("desconexion:eqp:send", [{ 'mac': macEqp }]);
     }
 
     console.log('user disconnected');
