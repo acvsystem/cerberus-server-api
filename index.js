@@ -1998,8 +1998,9 @@ io.on('connection', async (socket) => {
   app.get("/download/driveCloud", (req, res) => {
 
     let request = ((req || []).query || []);
-    console.log(request);
-    const file = "./download" + (request || {}).route;
+    
+    const file = "./download/" + (request || {}).route;
+    console.log(file);
     var fileLocation = path.join('./', file);
     res.download(fileLocation, file);
   });
