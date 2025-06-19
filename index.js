@@ -509,7 +509,7 @@ io.on('connection', async (socket) => {
       hash: (body || {}).hash,
       dowFile: file,
       isZip: isZip,
-      mac: (body || {}).mac
+      mac: (body || {}).mac || "notMac"
     };
 
     if ((body || {}).hash.length && (body || {}).fileName.length) {
