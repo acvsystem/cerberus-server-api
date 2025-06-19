@@ -492,19 +492,19 @@ io.on('connection', async (socket) => {
         isZip = true;
         break;
       case "PLUGIN_APP_METAS_PERU_VS":
-        file = "agenteFront.py";
+        file = "C:/FACTURACION_IT/agenteFront.py";
         isZip = false;
         break;
       case "PLUGIN_APP_METAS_PERU_BBW":
-        file = "agenteFront.py";
+        file = "C:/FACTURACION_IT/agenteFront.py";
         isZip = false;
         break;
       case "PLUGIN_APP_METAS_PERU_VSFA":
-        file = "agenteFront.py";
+        file = "C:/FACTURACION_IT/agenteFront.py";
         isZip = false;
         break;
       case "PLUGIN_APP_METAS_PERU_ECOM":
-        file = "agenteFront.py";
+        file = "C:/FACTURACION_IT/agenteFront.py";
         isZip = false;
     }
 
