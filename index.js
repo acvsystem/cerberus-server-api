@@ -1985,7 +1985,7 @@ io.on('connection', async (socket) => {
         arDirectory.push({
           name: file,
           size: "",
-          mtime: stats.atime
+          mtime: ""
         });
         if (fs.readdirSync('/download').length == arDirectory.length) {
           res.json(arDirectory);
