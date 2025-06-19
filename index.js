@@ -1944,7 +1944,7 @@ io.on('connection', async (socket) => {
   app.post('/createDirectory', async (req, res) => {
     let request = ((req || []).body || [])
     console.log(request);
-    fs.mkdir("driveCloud/EMBARQUES/" + (request || {}).route, (error) => {
+    fs.mkdir("./download/" + (request || {}).route, (error) => {
       if (error) {
         res.json({ msj: error.message })
       } else {
@@ -1958,7 +1958,7 @@ io.on('connection', async (socket) => {
     console.log(request);
     let evalueDir = ((request || {}).route || "").split(".");
     if (evalueDir.length >= 2) {
-      fs.unlink("driveCloud/EMBARQUES/" + (request || {}).route, (error) => {
+      fs.unlink("./download/" + (request || {}).route, (error) => {
         if (error) {
           res.json({ msj: error.message })
         } else {
@@ -1966,7 +1966,7 @@ io.on('connection', async (socket) => {
         }
       });
     } else {
-      fs.rmdir("driveCloud/EMBARQUES/" + (request || {}).route, (error) => {
+      fs.rmdir("./download/" + (request || {}).route, (error) => {
         if (error) {
           res.json({ msj: error.message })
         } else {
@@ -1999,7 +1999,7 @@ io.on('connection', async (socket) => {
 
     let request = ((req || []).query || []);
     console.log(request);
-    const file = "./driveCloud/EMBARQUES/" + (request || {}).route;
+    const file = "./download/" + (request || {}).route;
     var fileLocation = path.join('./', file);
     res.download(fileLocation, file);
   });
@@ -2007,7 +2007,7 @@ io.on('connection', async (socket) => {
 
   const storageEngine = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, './driveCloud/EMBARQUES/')
+      cb(null, './download/')
     },
     filename: (req, file, cb) => {
       cb(null, file.originalname)
@@ -2020,8 +2020,8 @@ io.on('connection', async (socket) => {
     destination: function (req, file, cb) {
       let __dirName = req.query.path || "";
       let dr = __dirName.length ? __dirName + "/" : "";
-      console.log('./driveCloud/EMBARQUES/' + dr);
-      cb(null, './driveCloud/EMBARQUES/' + dr);
+      console.log('./download/' + dr);
+      cb(null, './download/' + dr);
     },
     filename: function (req, file, cb) {
 
@@ -2056,16 +2056,16 @@ io.on('connection', async (socket) => {
   app.post('/oneListDirectory', async (req, res) => {
     let arDirectory = [];
     let request = ((req || []).body || [])
-    if (fs.readdirSync('driveCloud/EMBARQUES/' + request.path).length) {
-      fs.readdirSync('driveCloud/EMBARQUES/' + request.path).forEach(async (file, i) => {
-        await fs.stat('driveCloud/EMBARQUES/' + request.path + "/" + file, (err, stats) => {
+    if (fs.readdirSync('./download/' + request.path).length) {
+      fs.readdirSync('./download/' + request.path).forEach(async (file, i) => {
+        await fs.stat('./download/' + request.path + "/" + file, (err, stats) => {
           arDirectory.push({
             name: file,
             size: stats.size,
             mtime: stats.atime
           });
 
-          if (fs.readdirSync('driveCloud/EMBARQUES/' + request.path).length == arDirectory.length) {
+          if (fs.readdirSync('./download/' + request.path).length == arDirectory.length) {
             res.json(arDirectory || []);
           }
 
