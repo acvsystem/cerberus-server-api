@@ -1987,7 +1987,7 @@ io.on('connection', async (socket) => {
           size: "",
           mtime: ""
         });
-        if (fs.readdirSync('/download').length == arDirectory.length) {
+        if (fs.readdirSync('./download').length == arDirectory.length) {
           res.json(arDirectory);
         }
 
