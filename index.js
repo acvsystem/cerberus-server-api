@@ -1979,15 +1979,15 @@ io.on('connection', async (socket) => {
 
   app.get('/listDirectory', async (req, res) => {
     let arDirectory = [];
-    fs.readdirSync('driveCloud/EMBARQUES').forEach(async (file, i) => {
+    fs.readdirSync('/download').forEach(async (file, i) => {
       console.log(file);
-      await fs.stat('driveCloud/EMBARQUES/' + file, (err, stats) => {
+      await fs.stat('/download/' + file, (err, stats) => {
         arDirectory.push({
           name: file,
           size: stats.size,
           mtime: stats.atime
         });
-        if (fs.readdirSync('driveCloud/EMBARQUES').length == arDirectory.length) {
+        if (fs.readdirSync('/download').length == arDirectory.length) {
           res.json(arDirectory);
         }
 
