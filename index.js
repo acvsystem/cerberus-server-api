@@ -1864,17 +1864,14 @@ io.on('connection', async (socket) => {
 
   app.post("/frontRetail/search/horario", async (req, res) => {
 
-
     let data = req.body;
 
     (data || []).filter(async (dt, i) => {
       let date = new Date((dt || {}).dia).toLocaleDateString().split('/');
       let parseDate = `${date[0]}-${date[1]}-${date[2]}`;
       console.log(parseDate,(dt || {}).nroDocumento);
-    /*  let [arFeriado] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE 
-        INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
-        WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(dt || {}).nroDocumento}'
-        AND FECHA_NUMBER = '${parseDate}';`);*/
+      let [arFeriado] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE 
+        INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS;`);
 
       if ((arFeriado || []).length) {
         data[i]['isException'] = true;
