@@ -1863,14 +1863,14 @@ io.on('connection', async (socket) => {
   });
 
   app.post("/frontRetail/search/horario", async (req, res) => {
-    console.log(req.body);
+
 
     let data = req.body;
-/*
+
     (data || []).filter(async (dt, i) => {
       let date = new Date((dt || {}).dia).toLocaleDateString().split('/');
       let parseDate = `${date[0]}-${date[1]}-${date[2]}`;
-
+      console.log(parseDate,(dt || {}).nroDocumento);
       let [arFeriado] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE 
         INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
         WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(dt || {}).nroDocumento}'
@@ -1893,7 +1893,7 @@ io.on('connection', async (socket) => {
         }
       });
     });
-*/
+
   });
 
   app.post('/facturas-pendiente', async (req, res) => {
@@ -1998,9 +1998,9 @@ io.on('connection', async (socket) => {
   app.get("/download/driveCloud", (req, res) => {
 
     let request = ((req || []).query || []);
-    
+
     const file = "./download/" + (request || {}).route;
-    
+
     var fileLocation = path.join('./', file);
     console.log(file);
     res.download(fileLocation, file);
