@@ -1866,7 +1866,7 @@ io.on('connection', async (socket) => {
     console.log(req.body);
 
     let data = req.body;
-
+/*
     (data || []).filter(async (dt, i) => {
       let date = new Date((dt || {}).dia).toLocaleDateString().split('/');
       let parseDate = `${date[0]}-${date[1]}-${date[2]}`;
@@ -1893,7 +1893,7 @@ io.on('connection', async (socket) => {
         }
       });
     });
-
+*/
   });
 
   app.post('/facturas-pendiente', async (req, res) => {
