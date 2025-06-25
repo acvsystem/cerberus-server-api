@@ -16,8 +16,8 @@ from email.mime.base import MIMEBase
 from email import encoders
 import smtplib
 import msvcrt
-
-res = requests.post('http://161.132.94.174:3200/frontRetail/search/configuration/agente',data={"mac":gma()})
+serverBackend = 'http://metasperu.net.pe:3200'
+res = requests.post(serverBackend + '/frontRetail/search/configuration/agente',data={"mac":gma()})
 configuration = res.json()
 print('configuration',configuration)
 
@@ -35,7 +35,7 @@ if len(configuration) > 0:
     
     hash = 'U2FsdGVkX19N0xc+gKZEcnXvJc/aJ0AySfiJ7XubWHxfkZ5fWetzn7n1OD+Lebp3jr1yk3qKnMUBdKy5nDZHHw=='
     
-    sio.connect('http://161.132.94.174:3200', transports=['websocket'], headers={'code': serieTienda})
+    sio.connect(serverBackend, transports=['websocket'], headers={'code': serieTienda})
 
     @sio.event
     def disconnect():
@@ -220,7 +220,7 @@ if len(configuration) > 0:
                 obj['socketID'] = socketID
                 myobj.append(obj)
         print(myobj)
-        x = requests.post('http://161.132.94.174:3200/frontRetail/search/stock', json = myobj)
+        x = requests.post(serverBackend + '/frontRetail/search/stock', json = myobj)
         print(x)
         
     
@@ -782,7 +782,7 @@ if len(configuration) > 0:
         process = json.dumps({'code':serieTienda,'progress':90})
         sio.emit('responseStock',process)
         # Iniciamos los parámetros del script
-        remitente = 'itperu.notification@gmail.com'
+        remitente = 'itperu@metasperu.com'
         destinatarios = [email]
         asunto = asuntoEmail
         cuerpo = 'Este es el contenido del mensaje'
@@ -821,7 +821,7 @@ if len(configuration) > 0:
         sesion_smtp.starttls()
     
         # Iniciamos sesión en el servidor
-        sesion_smtp.login('itperu.notification@gmail.com','zgbiaxbnhulwlvqk')
+        sesion_smtp.login('itperu@metasperu.com','lpieqykwqpdzkhgt')
     
         # Convertimos el objeto mensaje a texto
         texto = mensaje.as_string()
