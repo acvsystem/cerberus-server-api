@@ -693,15 +693,16 @@ io.on('connection', async (socket) => {
 
     try {
       await client.access({
-        host: '161.132.94.174',
-        user: 'metasFTP',
-        password: 'METAS20600516885',
+        host: '172.20.1.76',
+        port: 9879,
+        user: 'ftpuser25801247',
+        password: 'Cfz&}q)]i_^c~6MSVPI%',
         secure: false
       });
 
-      await client.ensureDir("IT")
+      await client.ensureDir("ITPERU")
       await client.uploadFrom(filePath, fileName);
-      await client.uploadFromDir("IT")
+      await client.uploadFromDir("ITPERU")
 
 
       res.send('Archivo subido al FTP con éxito');
