@@ -846,6 +846,7 @@ io.on('connection', async (socket) => {
       console.log(parseDate);
       if (date[2] == '2025') {
         await onConsultarHorarioOficina(i, parseDate, mc.documento).then(([responseHorario]) => {
+          console.log(responseHorario);
           ((response || [])[(responseHorario || [])[0].index] || {})['rango_horario'] = (responseHorario || [])[0].horario;
           ((response || [])[(responseHorario || [])[0].index] || {})['isTardanza'] = false;
 
