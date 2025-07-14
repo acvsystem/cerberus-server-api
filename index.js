@@ -847,9 +847,9 @@ io.on('connection', async (socket) => {
       if (date[2] == '2025') {
         if (i >= 0) {
           onConsultarHorarioOficina(i, parseDate, mc.documento).then(([responseHorario]) => {
-            console.log(responseHorario);
-          //  ((response || [])[(responseHorario || [])[0].index] || {})['rango_horario'] = (responseHorario || [])[0].horario || "";
-           // ((response || [])[(responseHorario || [])[0].index] || {})['isTardanza'] = false;
+            console.log(responseHorario.index);
+            ((response || [])[(responseHorario || {}).index] || {})['rango_horario'] = (responseHorario || {}).horario || "";
+            ((response || [])[(responseHorario || {}).index] || {})['isTardanza'] = false;
 
             if (response.length - 1 == i) {
               setTimeout(() => {
