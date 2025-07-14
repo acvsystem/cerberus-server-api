@@ -86,7 +86,7 @@ function onConsultarHorarioOficina(index, fecha, documento) {
           TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA 
           INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '${fecha}' AND NUMERO_DOCUMENTO = '${documento}';`).then(([rs]) => {
 
-    return [{ index: index, horario: ((rs || [])[0] || {})['RANGO_HORA'] || "" }];
+    return [{ index: index || "", horario: ((rs || [])[0] || {})['RANGO_HORA'] || "" }];
   });
 }
 
@@ -845,7 +845,7 @@ io.on('connection', async (socket) => {
       let parseDate = `${date[0]}-${parseInt(date[1])}-${date[2]}`;
       console.log(parseDate);
       if (date[2] == '2025') {
-        if (i > 0) {
+        if (i >= 0) {
           onConsultarHorarioOficina(i, parseDate, mc.documento).then(([responseHorario]) => {
             console.log(responseHorario);
             ((response || [])[(responseHorario || [])[0].index] || {})['rango_horario'] = (responseHorario || [])[0].horario || "";
