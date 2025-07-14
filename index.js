@@ -700,9 +700,9 @@ io.on('connection', async (socket) => {
         secure: false
       });
 
-      await client.ensureDir("IT")
+      await client.ensureDir("ITPERU")
       await client.uploadFrom(filePath, fileName);
-      await client.uploadFromDir("IT")
+      await client.uploadFromDir("ITPERU")
 
 
       res.send('Archivo subido al FTP con éxito');
