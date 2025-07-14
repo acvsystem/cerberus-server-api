@@ -833,7 +833,7 @@ io.on('connection', async (socket) => {
     console.log(response);
     (response || []).filter(async (mc, i) => {
       let date = new Date(mc.checkinout.split(' ')[0]).toLocaleDateString().split('/');
-      let parseDate = `${date[0]}-${date[1]}-${date[2]}`;
+      let parseDate = `${date[0]}-${date[1]*1}-${date[2]}`;
       if (date[2] == '2025') {
         pool.query(`SELECT TB_DIAS_TRABAJO.CODIGO_TIENDA,TB_DIAS_TRABAJO.NOMBRE_COMPLETO,TB_DIAS_TRABAJO.NUMERO_DOCUMENTO,TB_RANGO_HORA.RANGO_HORA,TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '${parseDate}' AND NUMERO_DOCUMENTO = '${mc.documento}';`).then(([rs]) => {
 
