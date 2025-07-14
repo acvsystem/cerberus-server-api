@@ -86,7 +86,7 @@ function onConsultarHorarioOficina(index, fecha, documento) {
           TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA 
           INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '${fecha}' AND NUMERO_DOCUMENTO = '${documento}';`).then(([rs]) => {
 
-    return { index: index, horario: ((rs || [])[0] || {})['RANGO_HORA'] }
+    return [{ index: index, horario: ((rs || [])[0] || {})['RANGO_HORA'] }];
   });
 }
 
