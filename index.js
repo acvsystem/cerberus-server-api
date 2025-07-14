@@ -843,11 +843,15 @@ io.on('connection', async (socket) => {
     (response || []).filter(async (mc, i) => {
       let date = new Date(mc.checkinout.split(' ')[0]).toLocaleDateString().split('/');
       let parseDate = `${date[0]}-${parseInt(date[1])}-${date[2]}`;
-      console.log(parseDate);
+
       if (date[2] == '2025') {
         if (i >= 0) {
           onConsultarHorarioOficina(i, parseDate, mc.documento).then(([responseHorario]) => {
-            console.log(responseHorario.index);
+
+            if (parseDate == '30-6-2025' && mc.documento == '76542350') {
+              console.log((response || [])[(responseHorario || {}).index]);
+            }
+
             ((response || [])[(responseHorario || {}).index] || {})['rango_horario'] = (responseHorario || {}).horario || "";
             ((response || [])[(responseHorario || {}).index] || {})['isTardanza'] = false;
 
