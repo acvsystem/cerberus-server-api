@@ -845,21 +845,21 @@ io.on('connection', async (socket) => {
       let parseDate = `${date[0]}-${parseInt(date[1])}-${date[2]}`;
       console.log(parseDate);
       if (date[2] == '2025') {
-        await onConsultarHorarioOficina(i, parseDate, mc.documento).then(([responseHorario]) => {
-          console.log(responseHorario);
-          ((response || [])[(responseHorario || [])[0].index] || {})['rango_horario'] = (responseHorario || [])[0].horario || "";
-          ((response || [])[(responseHorario || [])[0].index] || {})['isTardanza'] = false;
+        if (i > 0) {
+          await onConsultarHorarioOficina(i, parseDate, mc.documento).then(([responseHorario]) => {
+            console.log(responseHorario);
+            ((response || [])[(responseHorario || [])[0].index] || {})['rango_horario'] = (responseHorario || [])[0].horario || "";
+            ((response || [])[(responseHorario || [])[0].index] || {})['isTardanza'] = false;
 
-          if (response.length - 1 == i) {
-            setTimeout(() => {
-              socket.to(`${socketID}`).emit("marcacionOficina", { id: 'OF', data: response });
-              res.json({ success: true });
-            }, 2000);
-          }
-        });
+            if (response.length - 1 == i) {
+              setTimeout(() => {
+                socket.to(`${socketID}`).emit("marcacionOficina", { id: 'OF', data: response });
+                res.json({ success: true });
+              }, 2000);
+            }
+          });
+        }
       }
-
-
     });
   });
 
