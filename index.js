@@ -2171,6 +2171,12 @@ io.on('connection', async (socket) => {
     });
   });
 
+  app.get('/usuario/tiendas/asigandas', async (req, res) => {
+    pool.query(`SELECT * FROM TB_USUARIO_TIENDAS_ASIGNADAS;`).then(([tiendas]) => {
+      res.json(tiendas);
+    });
+  });
+
 
 
   app.post('/sunat-notification', async (req, res) => {
