@@ -2157,42 +2157,57 @@ io.on('connection', async (socket) => {
     });
   });
 
-  app.post('/sunat-notification', async (req, res) => {
+  app.post('/usuario/asignar/tienda', async (req, res) => {
+    let dataAsignacion = (req || []).body || [];
+    pool.query(`INSERT INTO TB_USUARIO_TIENDAS_ASIGNADAS(ID_USUARIO,ID_TIENDA,DESCRIPCION_TIENDA)VALUES('${(dataAsignacion || {})[0].id_usuario}','${(dataAsignacion || {})[0].id_tienda}','${(dataAsignacion || {})[0].descripcion_tienda}');`).then(() => {
+      res.json({ msj: true })
+    });
+  });
 
-    let arrDocumento = (req || []).body || [];
-    console.log((req || []).body);
-    let tiendasList = [
-      { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
-      { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
-      { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@metasperu.com' },
-      { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@metasperu.com' },
-      { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@metasperu.com' },
-      { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@metasperu.com' },
-      { code: '7C', name: 'BBW SAN MIGUEL', email: 'bbwsanmiguel@metasperu.com' },
-      { code: '9C', name: 'VS SAN MIGUEL', email: 'vssanmiguel@metasperu.com' },
-      { code: '7D', name: 'BBW SALAVERRY', email: 'bbwsalaverry@metasperu.com' },
-      { code: '9I', name: 'VS SALAVERRY', email: 'vssalaverry@metasperu.com' },
-      { code: '9G', name: 'VS MALL DEL SUR', email: 'vsmalldelsur@metasperu.com' },
-      { code: '9H', name: 'VS PURUCHUCO', email: 'vspuruchuco@metasperu.com' },
-      { code: '9M', name: 'VS ECOMMERCE', email: 'vsecommpe@metasperu.com' },
-      { code: '7F', name: 'BBW ECOMMERCE', email: 'bbwecommperu@metasperu.com' },
-      { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@metasperu.com' },
-      { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@metasperu.com' },
-      { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@metasperu.com' },
-      { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@metasperu.com' },
-      { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com' },
-      { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
-    ];
+  app.post('/usuario/delete/tienda', async (req, res) => {
+    let dataAsignacion = (req || []).body || [];
+    pool.query(`DELETE FROM TB_USUARIO_TIENDAS_ASIGNADAS WHERE ID_TIENDA_ASIGNADA = ${(dataAsignacion || {})[0].id_tienda_asignada};`).then(() => {
+      res.json({ msj: true })
+    });
 
-    (arrDocumento || []).filter(async (doc) => {
-      if (((doc || {}).ESTADO_SUNAT || "").trim() == "RECHAZADO" || ((doc || {}).ESTADO_SUNAT || "").trim() == "GENERADO") {
 
-        let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = '${(doc || {}).CODIGO_DOCUMENTO}';`);
 
-        let isEmailEnvio = ((verifyDocument || [])[0] || {}).ENVIO_EMAIL || 'false';
+    app.post('/sunat-notification', async (req, res) => {
 
-        if (!(verifyDocument || []).length) {
-          await pool.query(`INSERT INTO TB_DOCUMENTOS_ERROR_SUNAT(CODIGO_DOCUMENTO,NRO_CORRELATIVO,NOM_ADQUIRIENTE,NRO_DOCUMENTO,TIPO_DOCUMENTO_ADQUIRIENTE,OBSERVACION,ESTADO_SUNAT,ESTADO_COMPROBANTE,CODIGO_ERROR_SUNAT,ENVIO_EMAIL,FECHA_EMISION)
+      let arrDocumento = (req || []).body || [];
+      console.log((req || []).body);
+      let tiendasList = [
+        { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
+        { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
+        { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@metasperu.com' },
+        { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@metasperu.com' },
+        { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@metasperu.com' },
+        { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@metasperu.com' },
+        { code: '7C', name: 'BBW SAN MIGUEL', email: 'bbwsanmiguel@metasperu.com' },
+        { code: '9C', name: 'VS SAN MIGUEL', email: 'vssanmiguel@metasperu.com' },
+        { code: '7D', name: 'BBW SALAVERRY', email: 'bbwsalaverry@metasperu.com' },
+        { code: '9I', name: 'VS SALAVERRY', email: 'vssalaverry@metasperu.com' },
+        { code: '9G', name: 'VS MALL DEL SUR', email: 'vsmalldelsur@metasperu.com' },
+        { code: '9H', name: 'VS PURUCHUCO', email: 'vspuruchuco@metasperu.com' },
+        { code: '9M', name: 'VS ECOMMERCE', email: 'vsecommpe@metasperu.com' },
+        { code: '7F', name: 'BBW ECOMMERCE', email: 'bbwecommperu@metasperu.com' },
+        { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@metasperu.com' },
+        { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@metasperu.com' },
+        { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@metasperu.com' },
+        { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@metasperu.com' },
+        { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com' },
+        { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
+      ];
+
+      (arrDocumento || []).filter(async (doc) => {
+        if (((doc || {}).ESTADO_SUNAT || "").trim() == "RECHAZADO" || ((doc || {}).ESTADO_SUNAT || "").trim() == "GENERADO") {
+
+          let [verifyDocument] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT WHERE CODIGO_DOCUMENTO = '${(doc || {}).CODIGO_DOCUMENTO}';`);
+
+          let isEmailEnvio = ((verifyDocument || [])[0] || {}).ENVIO_EMAIL || 'false';
+
+          if (!(verifyDocument || []).length) {
+            await pool.query(`INSERT INTO TB_DOCUMENTOS_ERROR_SUNAT(CODIGO_DOCUMENTO,NRO_CORRELATIVO,NOM_ADQUIRIENTE,NRO_DOCUMENTO,TIPO_DOCUMENTO_ADQUIRIENTE,OBSERVACION,ESTADO_SUNAT,ESTADO_COMPROBANTE,CODIGO_ERROR_SUNAT,ENVIO_EMAIL,FECHA_EMISION)
                                   VALUES(${(doc || {}).CODIGO_DOCUMENTO},
                                   '${(doc || {}).NRO_CORRELATIVO}',
                                   '${(doc || {}).NOM_ADQUIRIENTE}',
@@ -2205,32 +2220,32 @@ io.on('connection', async (socket) => {
                                   'false',
                                   '${(doc || {}).FECHA_EMISION}');`);
 
-          // res.send('RECEPCION EXITOSA..!!');
-        } else {
-          await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET
+            // res.send('RECEPCION EXITOSA..!!');
+          } else {
+            await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET
                                   NOM_ADQUIRIENTE ='${(doc || {}).NOM_ADQUIRIENTE}',
                                   NRO_DOCUMENTO = '${(doc || {}).NRO_DOCUMENTO}',
                                   OBSERVACION = '${(doc || {}).OBSERVACION}',
                                   ESTADO_SUNAT = '${(doc || {}).ESTADO_SUNAT}',
                                   ESTADO_COMPROBANTE = '${(doc || {}).ESTADO_COMPROBANTE}',
                                   CODIGO_ERROR_SUNAT = '${(doc || {}).CODIGO_ERROR_SUNAT}' WHERE CODIGO_DOCUMENTO = ${(doc || {}).CODIGO_DOCUMENTO};`);
-          //res.send('RECEPCION EXITOSA..!!');
-        }
+            //res.send('RECEPCION EXITOSA..!!');
+          }
 
-        let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
-        socket.to(`${listClient.id}`).emit("sendNotificationSunat", documentList);
+          let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
+          socket.to(`${listClient.id}`).emit("sendNotificationSunat", documentList);
 
-        /*let errDocument = [
-            {
-                'ID.FACTURA': (arrDocumento || {}).CODIGO_DOCUMENTO,
-                'NUM.FACTURA': (arrDocumento || {}).NRO_CORRELATIVO,
-                'FEC.EMISION': (arrDocumento || {}).FECHA_EMISION,
-                'NOM.CLIENTE': (arrDocumento || {}).NOM_ADQUIRIENTE,
-                'NUM.DOCUMENTO': (arrDocumento || {}).NRO_DOCUMENTO,
-            }
-        ]*/
+          /*let errDocument = [
+              {
+                  'ID.FACTURA': (arrDocumento || {}).CODIGO_DOCUMENTO,
+                  'NUM.FACTURA': (arrDocumento || {}).NRO_CORRELATIVO,
+                  'FEC.EMISION': (arrDocumento || {}).FECHA_EMISION,
+                  'NOM.CLIENTE': (arrDocumento || {}).NOM_ADQUIRIENTE,
+                  'NUM.DOCUMENTO': (arrDocumento || {}).NRO_DOCUMENTO,
+              }
+          ]*/
 
-        var bodyHTML = `<p>Buenos días, adjunto los datos de una factura emitida con numero de RUC errado.</p> 
+          var bodyHTML = `<p>Buenos días, adjunto los datos de una factura emitida con numero de RUC errado.</p> 
           
               <p>Lamentablemente no han cumplido con los procesos y métodos de validación que se les han proporcionado.</p>  
               
@@ -2265,52 +2280,52 @@ io.on('connection', async (socket) => {
 
 
 
-        let serie = ((doc || {}).NRO_CORRELATIVO || "").split('-')[0];
+          let serie = ((doc || {}).NRO_CORRELATIVO || "").split('-')[0];
 
-        var codigo = serie.substr(1, 3);
-        var selectedLocal = {};
-        var count = 0;
+          var codigo = serie.substr(1, 3);
+          var selectedLocal = {};
+          var count = 0;
 
 
-        while (count <= 1) {
+          while (count <= 1) {
 
-          if (count == 1) {
-            codigo = serie.substr(1, 2);
+            if (count == 1) {
+              codigo = serie.substr(1, 2);
+            }
+
+            selectedLocal = tiendasList.find((data) => data.code == codigo) || {};
+            if (Object.keys(selectedLocal).length) {
+              count = 1;
+            }
+
+            count++;
           }
 
-          selectedLocal = tiendasList.find((data) => data.code == codigo) || {};
-          if (Object.keys(selectedLocal).length) {
-            count = 1;
+          if (Object.keys(selectedLocal).length && isEmailEnvio != 'true') {
+            console.log("sunat:codigo_tienda", codigo);
+            console.log("sunat:tienda", selectedLocal);
+
+            await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET ENVIO_EMAIL ='true' WHERE CODIGO_DOCUMENTO = ${(doc || {}).CODIGO_DOCUMENTO};`);
+
+            emailController.sendEmail([(selectedLocal || {}).email || '', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com'], `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
+              .catch(error => res.send(error));
+
+            res.send('RECEPCION EXITOSA..!!');
           }
-
-          count++;
         }
+      });
 
-        if (Object.keys(selectedLocal).length && isEmailEnvio != 'true') {
-          console.log("sunat:codigo_tienda", codigo);
-          console.log("sunat:tienda", selectedLocal);
 
-          await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET ENVIO_EMAIL ='true' WHERE CODIGO_DOCUMENTO = ${(doc || {}).CODIGO_DOCUMENTO};`);
 
-          emailController.sendEmail([(selectedLocal || {}).email || '', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com'], `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
-            .catch(error => res.send(error));
-
-          res.send('RECEPCION EXITOSA..!!');
-        }
-      }
     });
 
-
-
+    console.log(`connect ${codeTerminal} - idApp`, listClient.id);
+    console.log('a user connected');
   });
 
-  console.log(`connect ${codeTerminal} - idApp`, listClient.id);
-  console.log('a user connected');
-});
 
 
-
-httpServer.listen(3200, async () => {
-  console.log('listening on *:3200');
-  console.log('ACTUALIZADO');
-});
+  httpServer.listen(3200, async () => {
+    console.log('listening on *:3200');
+    console.log('ACTUALIZADO');
+  });
