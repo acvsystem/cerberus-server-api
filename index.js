@@ -2159,14 +2159,14 @@ io.on('connection', async (socket) => {
 
   app.post('/usuario/asignar/tienda', async (req, res) => {
     let dataAsignacion = (req || []).body || [];
-    pool.query(`INSERT INTO TB_USUARIO_TIENDAS_ASIGNADAS(ID_USUARIO,ID_TIENDA,DESCRIPCION_TIENDA)VALUES('${(dataAsignacion || {})[0].id_usuario}','${(dataAsignacion || {})[0].id_tienda}','${(dataAsignacion || {})[0].descripcion_tienda}');`).then(() => {
+    pool.query(`INSERT INTO TB_USUARIO_TIENDAS_ASIGNADAS(ID_USUARIO_TASG,ID_TIENDA_TASG,DESCRIPCION_TIENDA)VALUES('${(dataAsignacion || {})[0].id_usuario}','${(dataAsignacion || {})[0].id_tienda}','${(dataAsignacion || {})[0].descripcion_tienda}');`).then(() => {
       res.json({ msj: true })
     });
   });
 
   app.post('/usuario/delete/tienda', async (req, res) => {
     let dataAsignacion = (req || []).body || [];
-    pool.query(`DELETE FROM TB_USUARIO_TIENDAS_ASIGNADAS WHERE ID_TIENDA_ASIGNADA = ${(dataAsignacion || {})[0].id_tienda_asignada};`).then(() => {
+    pool.query(`DELETE FROM TB_USUARIO_TIENDAS_ASIGNADAS WHERE ID_TIENDA_ASIGANADA = ${(dataAsignacion || {})[0].id_tienda_asignada};`).then(() => {
       res.json({ msj: true })
     });
   });
