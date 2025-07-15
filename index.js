@@ -687,7 +687,7 @@ io.on('connection', async (socket) => {
   app.post('/upload/traspasos', uploadTraspasos.single('file'), async (req, res) => {
     const filePath = req.file.path;
     const fileName = req.file.originalname;
-
+    const rutaDirectory = req.ftpDirectorio;
     const client = new Client()
     client.ftp.verbose = true;
 
@@ -700,6 +700,8 @@ io.on('connection', async (socket) => {
         secure: false
       });
 
+      console.log(rutaDirectory);
+      
       await client.ensureDir("ITPERU/VSBA")
       await client.uploadFrom(filePath, fileName);
       await client.uploadFromDir("ITPERU/VSBA")
