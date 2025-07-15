@@ -2171,8 +2171,9 @@ io.on('connection', async (socket) => {
     });
   });
 
-  app.get('/usuario/tiendas/asigandas', async (req, res) => {
-    pool.query(`SELECT * FROM TB_USUARIO_TIENDAS_ASIGNADAS;`).then(([tiendas]) => {
+  app.post('/usuario/tiendas/asigandas', async (req, res) => {
+    let dataUsuario = (req || []).body || [];
+    pool.query(`SELECT * FROM TB_USUARIO_TIENDAS_ASIGNADAS WHERE ID_USUARIO_TASG = ;${(dataUsuario || {})[0].id_usuario}`).then(([tiendas]) => {
       res.json(tiendas);
     });
   });
