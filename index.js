@@ -700,8 +700,8 @@ io.on('connection', async (socket) => {
         secure: false
       });
 
-      console.log(rutaDirectory);
-      
+      console.log(req);
+
       await client.ensureDir("ITPERU/VSBA")
       await client.uploadFrom(filePath, fileName);
       await client.uploadFromDir("ITPERU/VSBA")
