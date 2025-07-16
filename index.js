@@ -967,28 +967,34 @@ io.on('connection', async (socket) => {
     pool.query(`SELECT TB_LISTA_TIENDA.SERIE_TIENDA,TB_LOGIN.EMAIL FROM TB_USUARIO_TIENDAS_ASIGNADAS 
                 INNER JOIN TB_LISTA_TIENDA ON TB_LISTA_TIENDA.ID_TIENDA = TB_USUARIO_TIENDAS_ASIGNADAS.ID_TIENDA_TASG
                 INNER JOIN TB_LOGIN ON TB_LOGIN.ID_LOGIN = TB_USUARIO_TIENDAS_ASIGNADAS.ID_USUARIO_TASG WHERE TB_LISTA_TIENDA.SERIE_TIENDA = '${(data || {}).codigo_tienda}';`).then(([tienda]) => {
-      console.log("solicitar_aprobacion_hrx",(data || {}).codigo_tienda, tienda);
-      (tienda || []).filter((td) => {
+      console.log("solicitar_aprobacion_hrx", (data || {}).codigo_tienda, tienda);
+      (tienda || []).filter((td, i) => {
         (correo || []).push((td || {}).EMAIL);
+
+        if ((tienda || []).length - 1 == i) {
+          console.log("solicitar_aprobacion_hrx", correo);
+
+          /* if (data.codigo_tienda == '7I' || data.codigo_tienda == '9P' || data.codigo_tienda == '9N' || data.codigo_tienda == '7J' || data.codigo_tienda == '9F') {
+  correo.push('carlosmoron@metasperu.com');
+}
+ 
+    if (data.codigo_tienda == '9M' || data.codigo_tienda == '7F') {
+      correo.push('johnnygermano@metasperu.com');
+    }
+ 
+if (data.codigo_tienda != '7I' && data.codigo_tienda != '9P' && data.codigo_tienda != '9N' && data.codigo_tienda != '7J' && data.codigo_tienda != '9M' && data.codigo_tienda != '7F') {
+  correo.push('josecarreno@metasperu.com ');
+}
+*/
+
+
+          /*  emailController.sendEmail(correo, `SOLICITUD DE APROBACION DE HORA EXTRA - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
+              .catch(error => res.send(error));*/
+        }
       });
     });
 
-    /* if (data.codigo_tienda == '7I' || data.codigo_tienda == '9P' || data.codigo_tienda == '9N' || data.codigo_tienda == '7J' || data.codigo_tienda == '9F') {
-      correo.push('carlosmoron@metasperu.com');
-    }
-   
-        if (data.codigo_tienda == '9M' || data.codigo_tienda == '7F') {
-          correo.push('johnnygermano@metasperu.com');
-        }
-   
-    if (data.codigo_tienda != '7I' && data.codigo_tienda != '9P' && data.codigo_tienda != '9N' && data.codigo_tienda != '7J' && data.codigo_tienda != '9M' && data.codigo_tienda != '7F') {
-      correo.push('josecarreno@metasperu.com ');
-    }
- */
 
-    console.log("solicitar_aprobacion_hrx", correo);
-    /*  emailController.sendEmail(correo, `SOLICITUD DE APROBACION DE HORA EXTRA - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
-        .catch(error => res.send(error));*/
 
   });
 
