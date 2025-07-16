@@ -967,7 +967,7 @@ io.on('connection', async (socket) => {
     pool.query(`SELECT TB_LISTA_TIENDA.SERIE_TIENDA,TB_LOGIN.EMAIL FROM TB_USUARIO_TIENDAS_ASIGNADAS 
                 INNER JOIN TB_LISTA_TIENDA ON TB_LISTA_TIENDA.ID_TIENDA = TB_USUARIO_TIENDAS_ASIGNADAS.ID_TIENDA_TASG
                 INNER JOIN TB_LOGIN ON TB_LOGIN.ID_LOGIN = TB_USUARIO_TIENDAS_ASIGNADAS.ID_USUARIO_TASG WHERE TB_LISTA_TIENDA.SERIE_TIENDA = '${(data || {}).codigo_tienda}';`).then(([tienda]) => {
-      console.log("solicitar_aprobacion_hrx", tienda);
+      console.log("solicitar_aprobacion_hrx",(data || {}).codigo_tienda, tienda);
       (tienda || []).filter((td) => {
         (correo || []).push((td || {}).EMAIL);
       });
