@@ -875,8 +875,8 @@ io.on('connection', async (socket) => {
 
     let [arHrExtra] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
 
-    /* if (!(arHrExtra || []).length) {
-       await pool.query(`INSERT INTO TB_AUTORIZAR_HR_EXTRA(
+    if (!(arHrExtra || []).length) {
+      await pool.query(`INSERT INTO TB_AUTORIZAR_HR_EXTRA(
          HR_EXTRA_ACOMULADO,
          NRO_DOCUMENTO_EMPLEADO,
          NOMBRE_COMPLETO,
@@ -884,7 +884,7 @@ io.on('connection', async (socket) => {
          RECHAZADO,
          FECHA,
          CODIGO_TIENDA)VALUES('${(data || {}).hora_extra}','${(data || {}).nro_documento}','${(data || {}).nombre_completo}',${(data || {}).aprobado},false,'${(data || {}).fecha}','${(data || {}).codigo_tienda}')`);
-     }*/
+    }
 
     let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
 
@@ -913,7 +913,7 @@ io.on('connection', async (socket) => {
 
     let selectedLocal = tiendasList.find((td) => td.code == data.codigo_tienda) || {};
 
-    // socket.broadcast.emit("lista_solicitudes", arAutorizacion);
+    socket.broadcast.emit("lista_solicitudes", arAutorizacion);
 
     let bodyHTML = `<table style="width:100%;border-spacing:0">
                 <tbody>
@@ -962,40 +962,25 @@ io.on('connection', async (socket) => {
                 </tbody>
             </table>`;
 
-    //let correo = ['itperu@metasperu.com', 'johnnygermano@metasperu.com'];
-    let correo = [];
+    let correo = ['itperu@metasperu.com', 'johnnygermano@metasperu.com'];
+
     pool.query(`SELECT TB_LISTA_TIENDA.SERIE_TIENDA,TB_LOGIN.EMAIL FROM TB_USUARIO_TIENDAS_ASIGNADAS 
                 INNER JOIN TB_LISTA_TIENDA ON TB_LISTA_TIENDA.ID_TIENDA = TB_USUARIO_TIENDAS_ASIGNADAS.ID_TIENDA_TASG
                 INNER JOIN TB_LOGIN ON TB_LOGIN.ID_LOGIN = TB_USUARIO_TIENDAS_ASIGNADAS.ID_USUARIO_TASG WHERE TB_LISTA_TIENDA.SERIE_TIENDA = '${(data || {}).codigo_tienda}';`).then(([tienda]) => {
+
       console.log("solicitar_aprobacion_hrx", (data || {}).codigo_tienda, tienda);
+
       (tienda || []).filter((td, i) => {
         (correo || []).push((td || {}).EMAIL);
 
         if ((tienda || []).length - 1 == i) {
           console.log("solicitar_aprobacion_hrx", correo);
 
-          /* if (data.codigo_tienda == '7I' || data.codigo_tienda == '9P' || data.codigo_tienda == '9N' || data.codigo_tienda == '7J' || data.codigo_tienda == '9F') {
-  correo.push('carlosmoron@metasperu.com');
-}
- 
-    if (data.codigo_tienda == '9M' || data.codigo_tienda == '7F') {
-      correo.push('johnnygermano@metasperu.com');
-    }
- 
-if (data.codigo_tienda != '7I' && data.codigo_tienda != '9P' && data.codigo_tienda != '9N' && data.codigo_tienda != '7J' && data.codigo_tienda != '9M' && data.codigo_tienda != '7F') {
-  correo.push('josecarreno@metasperu.com ');
-}
-*/
-
-
-          /*  emailController.sendEmail(correo, `SOLICITUD DE APROBACION DE HORA EXTRA - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
-              .catch(error => res.send(error));*/
+          emailController.sendEmail(correo, `SOLICITUD DE APROBACION DE HORA EXTRA - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
+            .catch(error => res.send(error));
         }
       });
     });
-
-
-
   });
 
   socket.on("autorizar_hrx", async (data) => {
