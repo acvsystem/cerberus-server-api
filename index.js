@@ -1024,6 +1024,89 @@ io.on('connection', async (socket) => {
     let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
     let [arAutorizacionResponse] = await pool.query(`SELECT * FROM TB_AROBADO_HR_EXTRA WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
 
+
+    if (aprobado == 'rechazado') {
+
+      if ((data || {}).comentario == 'No marco su salida de turno' || (data || {}).comentario == 'No marco su salida a break') {
+        let tiendasList = [
+          { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
+          { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
+          { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@metasperu.com' },
+          { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@metasperu.com' },
+          { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@metasperu.com' },
+          { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@metasperu.com' },
+          { code: '7C', name: 'BBW SAN MIGUEL', email: 'bbwsanmiguel@metasperu.com' },
+          { code: '9C', name: 'VS SAN MIGUEL', email: 'vssanmiguel@metasperu.com' },
+          { code: '7D', name: 'BBW SALAVERRY', email: 'bbwsalaverry@metasperu.com' },
+          { code: '9I', name: 'VS SALAVERRY', email: 'vssalaverry@metasperu.com' },
+          { code: '9G', name: 'VS MALL DEL SUR', email: 'vsmalldelsur@metasperu.com' },
+          { code: '9H', name: 'VS PURUCHUCO', email: 'vspuruchuco@metasperu.com' },
+          { code: '9M', name: 'VS ECOMMERCE', email: 'vsecommpe@metasperu.com' },
+          { code: '7F', name: 'BBW ECOMMERCE', email: 'bbwecommperu@metasperu.com' },
+          { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@metasperu.com' },
+          { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@metasperu.com' },
+          { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@metasperu.com' },
+          { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@metasperu.com' },
+          { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com' },
+          { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
+        ];
+
+        let selectedLocal = tiendasList.find((td) => td.code == data.codigo_tienda) || {};
+
+        let bodyHTML = `<table style="width:100%;border-spacing:0">
+                <tbody>
+                    <tr style="display:flex">
+                        <td>
+                            <table style="border-radius:4px;border-spacing:0;border:1px solid #155795;min-width:450px">
+                                <tbody>
+                                    <tr>
+                                        <td style="border-top-left-radius:4px;border-top-right-radius:4px;background:#155795;padding:40px">
+                                            <p style="color:#fff;font-weight:700;font-size:30px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif"><span class="il">METAS PERU</span> S.A.C</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center;padding:10px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
+                                            <p>Hora extra rechazada por marcacion.</p> 
+
+                                            <table align="left" cellspacing="0" style="width: 100%;border: solid 1px;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="150px">TIENDA</th>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">FECHA</th>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">H.EXTRA</th>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="180px">NOMBRE COMPLETO</th>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="200px">COMENTARIO</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(selectedLocal || {}).name}</td>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(data || {}).fecha}</td>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(data || {}).hora_extra}</td>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(data || {}).nombre_completo}</td>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(data || {}).comentario}</td>
+
+                                                    </tr>
+                                            
+                                                </tbody>
+                                            </table>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>`;
+
+        let correo = ['itperu@metasperu.com', 'johnnygermano@metasperu.com', 'metasperurrhh@gmail.com', 'metasperurrhh2@gmail.com'];
+
+        emailController.sendEmail(correo, `NOTIFICACION H.EXTRA RECHAZADO POR MARCACION - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
+          .catch(error => res.send(error));
+      }
+    }
+
     socket.broadcast.emit("lista_solicitudes", arAutorizacion);
     socket.broadcast.emit("respuesta_autorizacion", arAutorizacionResponse);
   });
