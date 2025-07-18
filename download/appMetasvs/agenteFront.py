@@ -255,6 +255,7 @@ if len(configuration) > 0:
                                 obj['cTalla'] = row[8]
                                 obj['cColor'] = row[9]
                                 obj[propertyStock] = row[10]
+                                obj['socketID'] = socketID
 
                                 myobj.append(obj)
                         else:
@@ -262,12 +263,14 @@ if len(configuration) > 0:
                             obj['cCodigoTienda'] = serieTienda
                             obj['cCodigoBarra'] = barcode
                             obj[propertyStock] = 0
+                            obj['socketID'] = socketID
                             myobj.append(obj)
                     else:
                         obj = collections.OrderedDict()
                         obj['cCodigoTienda'] = serieTienda
                         obj['cCodigoBarra'] = barcode
                         obj[propertyStock] = 0
+                        obj['socketID'] = socketID
                         myobj.append(obj)
 
             else:
@@ -275,6 +278,7 @@ if len(configuration) > 0:
                 obj['cCodigoTienda'] = serieTienda
                 obj['cCodigoBarra'] = barcode
                 obj[propertyStock] = 0
+                obj['socketID'] = socketID
                 myobj.append(obj)
         else:
             connection = pyodbc.connect(conexion)
