@@ -1022,9 +1022,10 @@ io.on('connection', async (socket) => {
     }
 
     let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
+    let [arAutorizacionEmp] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA WHERE NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
     let [arAutorizacionResponse] = await pool.query(`SELECT * FROM TB_AROBADO_HR_EXTRA WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
 
-    console.log(arAutorizacionResponse);
+    console.log(arAutorizacionEmp[0]['NOMBRE_COMPLETO']);
     if (aprobado == 'rechazado') {
 
       if ((data || {}).comentario == 'No marco su salida de turno' || (data || {}).comentario == 'No marco su salida a break') {
@@ -1083,7 +1084,7 @@ io.on('connection', async (socket) => {
                                                         <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(selectedLocal || {}).name}</td>
                                                         <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(data || {}).fecha}</td>
                                                         <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(data || {}).hora_extra}</td>
-                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(data || {}).nombre_completo}</td>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${((arAutorizacionEmp || [])[0] || {})['NOMBRE_COMPLETO']}</td>
                                                         <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(data || {}).comentario}</td>
 
                                                     </tr>
