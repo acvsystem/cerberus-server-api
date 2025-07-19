@@ -1061,12 +1061,13 @@ io.on('connection', async (socket) => {
                             <table style="border-radius:4px;border-spacing:0;border:1px solid #155795;min-width:450px">
                                 <tbody>
                                     <tr>
-                                        <td style="border-top-left-radius:4px;border-top-right-radius:4px;background:#155795;padding:40px">
+                                        <td style="border-top-left-radius:4px;border-top-right-radius:4px;background:#155795;padding:40px;text-align: center">
                                             <p style="color:#fff;font-weight:700;font-size:30px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif"><span class="il">METAS PERU</span> S.A.C</p>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="text-align: center;padding:10px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
+                                            <p style="font-weight: 500;">Usuario responsable: ${data.usuario}</p>
                                             <p>Hora extra rechazada por marcacion.</p> 
 
                                             <table align="left" cellspacing="0" style="width: 100%;border: solid 1px;">
