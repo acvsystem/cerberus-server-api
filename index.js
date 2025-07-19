@@ -1026,7 +1026,7 @@ io.on('connection', async (socket) => {
 
 
     if (aprobado == 'rechazado') {
-
+      console.log(data);
       if ((data || {}).comentario == 'No marco su salida de turno' || (data || {}).comentario == 'No marco su salida a break') {
         let tiendasList = [
           { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
