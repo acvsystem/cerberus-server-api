@@ -2266,6 +2266,12 @@ io.on('connection', async (socket) => {
   });
 
 
+  app.get('/notificaciones/', async (req, res) => {
+    const auth_token = req.header("Authorization") || "";
+    const tokenResolve = tokenController.verificationToken(auth_token);
+    console.log("NOTIFICACIONES", tokenResolve);
+  });
+
 
   app.post('/sunat-notification', async (req, res) => {
 
