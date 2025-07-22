@@ -2270,6 +2270,7 @@ io.on('connection', async (socket) => {
     const auth_token = req.header("Authorization") || "";
     const tokenResolve = tokenController.verificationToken(auth_token);
     console.log("NOTIFICACIONES", tokenResolve);
+    res.json('success');
   });
 
 
