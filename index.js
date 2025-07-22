@@ -2182,8 +2182,14 @@ io.on('connection', async (socket) => {
 
   app.post('/usuario/registrar', async (req, res) => {
     let dataUser = (req || []).body || [];
-    pool.query(`INSERT INTO TB_LOGIN(USUARIO,PASSWORD,DEFAULT_PAGE,EMAIL,NIVEL)VALUES('${(dataUser || [])[0].usuario}','${(dataUser || [])[0].password}','${(dataUser || [])[0].default_page}','${(dataUser || [])[0].email}','${(dataUser || [])[0].nivel}');`).then(() => {
-      res.json({ msj: true })
+    pool.query(`SELECT * FROM TB_LOGIN WHERE USUARIO = '${(dataUser || [])[0].usuario}';`).then(([usuario]) => {
+      if (!(usuario || []).length) {
+        pool.query(`INSERT INTO TB_LOGIN(USUARIO,PASSWORD,DEFAULT_PAGE,EMAIL,NIVEL)VALUES('${(dataUser || [])[0].usuario}','${(dataUser || [])[0].password}','${(dataUser || [])[0].default_page}','${(dataUser || [])[0].email}','${(dataUser || [])[0].nivel}');`).then(() => {
+          res.json({ msj: true });
+        });
+      } else {
+        res.json({ msj: false });
+      }
     });
   });
 
