@@ -1256,6 +1256,7 @@ io.on('connection', async (socket) => {
 
     if ((arSession || []).length) {
       let valid = tokenController.verificationToken(arSession[0]['HASH']);
+      console.log(valid);
       if ((valid || {}).isValid) {
         await pool.query(`INSERT INTO TB_SESSION_LOGIN(
           EMAIL,
