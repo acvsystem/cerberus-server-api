@@ -4,14 +4,14 @@ import { prop } from '../keys.js';
 
 class clsToken {
 
-    createToken(usuario, nivelUser) {
+    createToken(id, usuario, nivelUser) {
         let privateKey = prop.keyCrypt;
         let option = {
             issuer: 'cerberus.server',
             audience: `${nivelUser}`
         };
         console.log("createToken", option);
-        const token = Jwt.sign({ id: usuario }, `${privateKey}`, option);
+        const token = Jwt.sign({ id: id, usuario: usuario }, `${privateKey}`, option);
         return token;
     }
 

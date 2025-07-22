@@ -18,6 +18,7 @@ import fs from 'fs';
 import path from 'path';
 import multer from 'multer';
 import { Client } from "basic-ftp"
+import mdwErrorHandler from './middleware/errorHandler.js';
 
 const app = express();
 const httpServer = createServer(app);
@@ -2272,11 +2273,18 @@ io.on('connection', async (socket) => {
   });
 
 
-  app.get('/notificaciones/', async (req, res) => {
+  app.get('/notificaciones', async (req, res) => {
     const auth_token = req.header("Authorization") || "";
     const tokenResolve = tokenController.verificationToken(auth_token);
     console.log("NOTIFICACIONES", tokenResolve);
-    res.json('success');
+
+    if ((tokenResolve || {}).isValid) {
+      pool.query(`SELECT * FROM TB_USUARIO_NOTIFICACION WHERE ID_LOGIN_NT = ${(tokenResolve || {}).id_usuario};`).then(([notificaciones]) => {
+        res.json(notificaciones);
+      });
+    } else {
+      res.status(403).json(mdwErrorHandler.error({ status: 403, type: 'Forbidden', message: 'No autorizado', api: '/notificaciones' }));
+    }
   });
 
 
@@ -2430,7 +2438,6 @@ io.on('connection', async (socket) => {
   console.log(`connect ${codeTerminal} - idApp`, listClient.id);
   console.log('a user connected');
 });
-
 
 
 httpServer.listen(3200, async () => {

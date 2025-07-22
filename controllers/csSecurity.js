@@ -10,14 +10,14 @@ export const Login = async (req, res) => {
   let objLogin = req.body;
   let usuario = objLogin["usuario"].replace(/[^a-zA-Z-0-9 ]/g, "");
   let password = objLogin["password"];
-  await pool.query(`SELECT USUARIO,DEFAULT_PAGE,TB_LOGIN.NIVEL,NOMBRE_MENU,RUTA,EMAIL FROM TB_PERMISO_SISTEMA INNER JOIN TB_MENU_SISTEMA ON TB_MENU_SISTEMA.ID_MENU = TB_PERMISO_SISTEMA.ID_MENU_PS
+  await pool.query(`SELECT ID_LOGIN,USUARIO,DEFAULT_PAGE,TB_LOGIN.NIVEL,NOMBRE_MENU,RUTA,EMAIL FROM TB_PERMISO_SISTEMA INNER JOIN TB_MENU_SISTEMA ON TB_MENU_SISTEMA.ID_MENU = TB_PERMISO_SISTEMA.ID_MENU_PS
                     INNER JOIN TB_LOGIN ON TB_LOGIN.NIVEL = TB_PERMISO_SISTEMA.NIVEL WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}'`).then(([dataUser]) => {
 
     let nivelUser = ((dataUser || [])[0] || {}).USUARIO;
-
+    let idUsuario = ((dataUser || [])[0] || {}).ID_LOGIN;
     if (dataUser.length > 0) {
 
-      const token = tokenController.createToken(usuario, nivelUser);
+      const token = tokenController.createToken(idUsuario, usuario, nivelUser);
 
       let tiendasList = [
         { code: '7A', user: 'bbwjoc', nameTienda: 'BBW JOCKEY' },
