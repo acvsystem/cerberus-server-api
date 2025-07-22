@@ -2279,7 +2279,7 @@ io.on('connection', async (socket) => {
     console.log("NOTIFICACIONES", tokenResolve);
 
     if ((tokenResolve || {}).isValid) {
-      pool.query(`SELECT * FROM TB_USUARIO_NOTIFICACION WHERE ID_LOGIN_NT = ${(tokenResolve || {}).id};`).then(([notificaciones]) => {
+      pool.query(`SELECT * FROM TB_USUARIO_NOTIFICACION WHERE ID_LOGIN_NT = ${(tokenResolve || {}).decoded.id};`).then(([notificaciones]) => {
         res.json(notificaciones);
       });
     } else {
