@@ -19,7 +19,7 @@ import path from 'path';
 import multer from 'multer';
 import { Client } from "basic-ftp"
 import mdwErrorHandler from './middleware/errorHandler.js';
-import services from './services/notificaciones.js';
+//import services from './services/notificaciones.js';
 
 const app = express();
 const httpServer = createServer(app);
