@@ -51,7 +51,8 @@ export const Login = async (req, res) => {
           name: ((dataUser || [])[0] || {}).USUARIO,
           codigo: (selectedUser || []).code || "",
           nameTienda: (selectedUser || []).nameTienda || "",
-          email: ((dataUser || [])[0] || {}).EMAIL
+          email: ((dataUser || [])[0] || {}).EMAIL,
+          nivel: ((dataUser || [])[0] || {}).NIVEL
         },
         menu: dataUser || []
       }];

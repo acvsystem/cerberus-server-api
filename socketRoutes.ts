@@ -124,4 +124,10 @@ FRONT RETAIL: inventario:get:fr:barcode:response
 -----ENVIO RESPUESTA DE SERVIDOR BACKUP A BACKEND
 BACKEND: inventario:get:barcode:response
 
+
+****************** NOTIFICACIONES *********************
+
+-----LISTEN NOTIFICACIONES
+FRONTEND: notificaciones:get
+
 */

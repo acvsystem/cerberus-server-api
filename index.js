@@ -19,6 +19,7 @@ import path from 'path';
 import multer from 'multer';
 import { Client } from "basic-ftp"
 import mdwErrorHandler from './middleware/errorHandler.js';
+import services from './services/notificaciones.js';
 
 const app = express();
 const httpServer = createServer(app);
@@ -111,6 +112,8 @@ function onVerificarCalendario() {
       (arTiendas || []).filter((tienda, i) => {
         if (!arCalendarios.includes((tienda || {}).SERIE_TIENDA)) {
           arTiendasFaltantes.push((tienda || {}).DESCRIPCION);
+          
+          //services.userNotificacion();
         }
 
         if ((arTiendas || []).length - 1 == i) {
@@ -2279,8 +2282,22 @@ io.on('connection', async (socket) => {
     console.log("NOTIFICACIONES", tokenResolve);
 
     if ((tokenResolve || {}).isValid) {
-      pool.query(`SELECT * FROM TB_USUARIO_NOTIFICACION WHERE ID_LOGIN_NT = ${(tokenResolve || {}).decoded.id};`).then(([notificaciones]) => {
+      pool.query(`SELECT * FROM TB_USUARIO_NOTIFICACION INNER JOIN TB_NOTIFICACIONES ON ID_NOTIFICACION = ID_NOTIFICACION_NT WHERE ID_LOGIN_NT = ${(tokenResolve || {}).decoded.id};`).then(([notificaciones]) => {
         res.json(notificaciones);
+      });
+    } else {
+      res.status(403).json(mdwErrorHandler.error({ status: 403, type: 'Forbidden', message: 'No autorizado', api: '/notificaciones' }));
+    }
+  });
+
+  app.post('/notificaciones/read', async (req, res) => {
+    const auth_token = req.header("Authorization") || "";
+    const tokenResolve = tokenController.verificationToken(auth_token);
+
+    if ((tokenResolve || {}).isValid) {
+      let dataRequest = (req || []).body || [];
+      pool.query(`UPDATE TB_USUARIO_NOTIFICACION SET IS_READ = 1 WHERE ID_USN = ${(dataRequest || {}).idNoti};`).then(() => {
+        res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/notificaciones/read' }));
       });
     } else {
       res.status(403).json(mdwErrorHandler.error({ status: 403, type: 'Forbidden', message: 'No autorizado', api: '/notificaciones' }));

@@ -1,7 +1,6 @@
 class mddlErrorHandler {
     error(err) {
         return {
-            status: "error",
             code: err.status || 500,
             error: {
                 type: err.type || 'InternalServerError',
