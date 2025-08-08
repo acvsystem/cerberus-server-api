@@ -17,7 +17,7 @@ from email import encoders
 import smtplib
 import msvcrt
 
-serverBackend = 'http://metasperu.net.pe'
+serverBackend = 'http://metasperu.net.pe:3200'
 res = requests.post(serverBackend + '/frontRetail/search/configuration/agente',data={"mac":gma()})
 configuration = res.json()
 print('configuration',configuration)
@@ -41,6 +41,10 @@ if len(configuration) > 0:
     @sio.event
     def disconnect():
         print('disconnected from server')
+
+    @sio.event
+    def xmlPluginSunat(data):
+        genXmlPluginSunat(data)
 
     @sio.event
     def comprobantesGetFR(configuration):
@@ -114,7 +118,79 @@ if len(configuration) > 0:
             if row['code'] == serieTienda:
                 fnSendDataFront(barcode,socketID)  
 
-    
+    @sio.event
+    def inventarioGetbarcodeFR(codeTienda,almOrigen,barcode,socketID):
+        if codeTienda == serieTienda:
+           fnStockBarcode(almOrigen,barcode,socketID)
+
+    def fnStockBarcode(almOrigen,barcode,socketID):
+        myobj = []
+        responseData = []
+        j = {}
+        server = instanciaBD
+        dataBase = nameBD
+        conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=ICGAdmin;PWD=masterkey'
+        querySql="DECLARE @CODALMACENORIGEN AS NVARCHAR(3)='"+almOrigen+"' SELECT ART.CODARTICULO,AL.CODBARRAS,ART.DESCRIPCION,AL.TALLA,AL.COLOR,S.STOCK,DPTO.DESCRIPCION,ART.REFPROVEEDOR FROM	ARTICULOS ART WITH(NOLOCK)	INNER JOIN ARTICULOSLIN AL WITH(NOLOCK) ON ART.CODARTICULO=AL.CODARTICULO INNER JOIN STOCKS S WITH(NOLOCK) ON AL.CODARTICULO=S.CODARTICULO AND AL.COLOR=S.COLOR AND AL.TALLA=S.TALLA AND S.CODALMACEN=@CODALMACENORIGEN	LEFT JOIN DEPARTAMENTO DPTO WITH(NOLOCK) ON ART.DPTO=DPTO.NUMDPTO WHERE	AL.CODBARRAS = '"+barcode+"' AND S.STOCK > 0"
+        print(querySql)
+        connection = pyodbc.connect(conexion)
+        cursor = connection.cursor()
+        cursor.execute("SELECT @@version;")
+        row = cursor.fetchone()
+        cursor.execute(querySql)
+        rows = cursor.fetchall()
+        for row in rows:
+            obj = collections.OrderedDict()
+            obj['cCodigoTienda'] = serieTienda
+            obj['cCodigoArticulo'] = row[0]
+            obj['cCodigoBarra'] = row[1]
+            obj['cDescripcion'] = row[2]
+            obj['cTalla'] = row[3]
+            obj['cColor'] = row[4]
+            obj['cStock'] = row[5]
+            obj['cDescDepartamento'] = row[6]
+            obj['cRefProveedor'] = row[7]
+            obj['socketID'] = socketID
+            myobj.append(obj)
+        j = json.dumps(myobj)
+        print(myobj)
+        print("-----ENVIO SOLICITUD A SERVIDOR BACKUP BACKEND: inventario:get:fr:barcode:response")
+        sio.emit('inventario:get:fr:barcode:response',{'data':j,'socket':socketID})
+        
+    def genXmlPluginSunat():
+      res = requests.get(serverBackend + '/sunat/configuration')
+      xmlConfiguracion = res.json()
+      rutaCreate = "configuracion_plugin_sunat.xml"
+      if len(xmlConfiguracion) > 0:
+        
+          xml_parametro = xmlConfiguracion[0]
+          xml_etiqueta = xml_parametro['XML_ETIQUIETA_GROUP']
+          xml_tipoFormulario = xml_parametro['XML_TIPO_FORMULARIO']
+          xml_isCheckPromocion = xml_parametro['XML_CHECK_PROMOCION']
+          xml_emailPrueba = xml_parametro['XML_EMAIL_PRUEBA']
+          xml_asuntoEmailPromo = xml_parametro['XML_ASUNTO_EMAIL_PROMO']
+          xml_bodyEmailPromo = xml_parametro['XML_BODY_EMAIL']
+          xml_isHtml = xml_parametro['XML_IS_HTML']
+          xml_servicioEmail = xml_parametro['XML_SERVICIO_EMAIL']
+          xml_servicioPassword = xml_parametro['XML_SERVICIO_PASSWORD']
+          xml_api = xml_parametro['XML_API_SUNAT']
+          xml_key = xml_parametro['XML_TK_SUNAT']
+        
+          root = ET.Element(xml_etiqueta)
+         
+       
+          ET.SubElement(root, "tipoFormulario").text = xml_tipoFormulario
+          ET.SubElement(root, "isCheckPromocion").text = xml_isCheckPromocion
+          ET.SubElement(root, "emailPrueba").text = xml_emailPrueba
+          ET.SubElement(root, "asuntoEmailPromo").text = xml_asuntoEmailPromo
+          ET.SubElement(root, "bodyEmailPromo").text = xml_bodyEmailPromo
+          ET.SubElement(root, "isHtml").text = xml_isHtml
+          ET.SubElement(root, "servicioEmail").text = xml_servicioEmail
+          ET.SubElement(root, "servicioPassword").text = xml_servicioPassword
+          ET.SubElement(root, "api").text = xml_api
+          ET.SubElement(root, "key").text = xml_key
+       
+          arbol = ET.ElementTree(root)
+          arbol.write("configuracion_plugin_sunat.xml", encoding="utf-8", xml_declaration=True)  
 
     def fnSendDataFront(barcode,socketID):
         myobj = []
@@ -179,6 +255,7 @@ if len(configuration) > 0:
                                 obj['cTalla'] = row[8]
                                 obj['cColor'] = row[9]
                                 obj[propertyStock] = row[10]
+                                obj['socketID'] = socketID
 
                                 myobj.append(obj)
                         else:
@@ -186,12 +263,14 @@ if len(configuration) > 0:
                             obj['cCodigoTienda'] = serieTienda
                             obj['cCodigoBarra'] = barcode
                             obj[propertyStock] = 0
+                            obj['socketID'] = socketID
                             myobj.append(obj)
                     else:
                         obj = collections.OrderedDict()
                         obj['cCodigoTienda'] = serieTienda
                         obj['cCodigoBarra'] = barcode
                         obj[propertyStock] = 0
+                        obj['socketID'] = socketID
                         myobj.append(obj)
 
             else:
@@ -199,6 +278,7 @@ if len(configuration) > 0:
                 obj['cCodigoTienda'] = serieTienda
                 obj['cCodigoBarra'] = barcode
                 obj[propertyStock] = 0
+                obj['socketID'] = socketID
                 myobj.append(obj)
         else:
             connection = pyodbc.connect(conexion)
@@ -787,7 +867,7 @@ if len(configuration) > 0:
         process = json.dumps({'code':serieTienda,'progress':90})
         sio.emit('responseStock',process)
         # Iniciamos los parámetros del script
-        remitente = 'itperu@metasperu.com'
+        remitente = 'itperu.notification@gmail.com'
         destinatarios = [email]
         asunto = asuntoEmail
         cuerpo = 'Este es el contenido del mensaje'
@@ -826,7 +906,7 @@ if len(configuration) > 0:
         sesion_smtp.starttls()
     
         # Iniciamos sesión en el servidor
-        sesion_smtp.login('itperu@metasperu.com','lpieqykwqpdzkhgt')
+        sesion_smtp.login('itperu.notification@gmail.com','zgbiaxbnhulwlvqk')
     
         # Convertimos el objeto mensaje a texto
         texto = mensaje.as_string()

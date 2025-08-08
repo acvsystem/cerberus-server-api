@@ -96,6 +96,11 @@ if len(configuration) > 0:
         consultingClient(data,socketID)
 
     @sio.event
+    def inventarioGetbarcodeFR(codeTienda,almOrigen,barcode,socketID):
+        if codeTienda == serieTienda:
+           fnStockBarcode(almOrigen,barcode,socketID)
+           
+    @sio.event
     def searchStockTest(email,codeList):
         rows = codeList
         for row in rows:
@@ -109,7 +114,38 @@ if len(configuration) > 0:
             if row['code'] == serieTienda:
                 fnSendDataFront(barcode,socketID)  
 
-    
+    def fnStockBarcode(almOrigen,barcode,socketID):
+        myobj = []
+        responseData = []
+        j = {}
+        server = instanciaBD
+        dataBase = nameBD
+        conexion='DRIVER={SQL Server};SERVER='+server+';DATABASE='+dataBase+';UID=ICGAdmin;PWD=masterkey'
+        querySql="DECLARE @CODALMACENORIGEN AS NVARCHAR(3)='"+almOrigen+"' SELECT ART.CODARTICULO,AL.CODBARRAS,ART.DESCRIPCION,AL.TALLA,AL.COLOR,S.STOCK,DPTO.DESCRIPCION,ART.REFPROVEEDOR FROM	ARTICULOS ART WITH(NOLOCK)	INNER JOIN ARTICULOSLIN AL WITH(NOLOCK) ON ART.CODARTICULO=AL.CODARTICULO INNER JOIN STOCKS S WITH(NOLOCK) ON AL.CODARTICULO=S.CODARTICULO AND AL.COLOR=S.COLOR AND AL.TALLA=S.TALLA AND S.CODALMACEN=@CODALMACENORIGEN	LEFT JOIN DEPARTAMENTO DPTO WITH(NOLOCK) ON ART.DPTO=DPTO.NUMDPTO WHERE	AL.CODBARRAS = '"+barcode+"' AND S.STOCK > 0"
+        print(querySql)
+        connection = pyodbc.connect(conexion)
+        cursor = connection.cursor()
+        cursor.execute("SELECT @@version;")
+        row = cursor.fetchone()
+        cursor.execute(querySql)
+        rows = cursor.fetchall()
+        for row in rows:
+            obj = collections.OrderedDict()
+            obj['cCodigoTienda'] = serieTienda
+            obj['cCodigoArticulo'] = row[0]
+            obj['cCodigoBarra'] = row[1]
+            obj['cDescripcion'] = row[2]
+            obj['cTalla'] = row[3]
+            obj['cColor'] = row[4]
+            obj['cStock'] = row[5]
+            obj['cDescDepartamento'] = row[6]
+            obj['cRefProveedor'] = row[7]
+            obj['socketID'] = socketID
+            myobj.append(obj)
+        j = json.dumps(myobj)
+        print(myobj)
+        print("-----ENVIO SOLICITUD A SERVIDOR BACKUP BACKEND: inventario:get:fr:barcode:response")
+        sio.emit('inventario:get:fr:barcode:response',{'data':j,'socket':socketID})
 
     def fnSendDataFront(barcode,socketID):
         myobj = []
@@ -174,6 +210,7 @@ if len(configuration) > 0:
                                 obj['cTalla'] = row[8]
                                 obj['cColor'] = row[9]
                                 obj[propertyStock] = row[10]
+                                obj['socketID'] = socketID
 
                                 myobj.append(obj)
                         else:
@@ -181,12 +218,14 @@ if len(configuration) > 0:
                             obj['cCodigoTienda'] = serieTienda
                             obj['cCodigoBarra'] = barcode
                             obj[propertyStock] = 0
+                            obj['socketID'] = socketID
                             myobj.append(obj)
                     else:
                         obj = collections.OrderedDict()
                         obj['cCodigoTienda'] = serieTienda
                         obj['cCodigoBarra'] = barcode
                         obj[propertyStock] = 0
+                        obj['socketID'] = socketID
                         myobj.append(obj)
 
             else:
@@ -194,6 +233,7 @@ if len(configuration) > 0:
                 obj['cCodigoTienda'] = serieTienda
                 obj['cCodigoBarra'] = barcode
                 obj[propertyStock] = 0
+                obj['socketID'] = socketID
                 myobj.append(obj)
         else:
             connection = pyodbc.connect(conexion)
