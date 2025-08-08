@@ -18,5 +18,5 @@ class mdlNotificacion {
 
 
 
-const mdNotificacion = new mdlNotificacion;
-export default mdNotificacion;
+//const mdNotificacion = new mdlNotificacion;
+export default mdlNotificacion;
