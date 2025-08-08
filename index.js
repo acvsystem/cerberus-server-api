@@ -19,6 +19,7 @@ import path from 'path';
 import multer from 'multer';
 import { Client } from "basic-ftp"
 import mdwErrorHandler from './middleware/errorHandler.js';
+import mdNotificacion from './class/clsNotificaciones.js';
 //import services from './services/notificaciones.js';
 
 const app = express();
@@ -2283,7 +2284,14 @@ io.on('connection', async (socket) => {
 
     if ((tokenResolve || {}).isValid) {
       pool.query(`SELECT * FROM TB_USUARIO_NOTIFICACION INNER JOIN TB_NOTIFICACIONES ON ID_NOTIFICACION = ID_NOTIFICACION_NT WHERE ID_LOGIN_NT = ${(tokenResolve || {}).decoded.id};`).then(([notificaciones]) => {
-        res.json(notificaciones);
+        let jsonNotificacion = [];
+        (notificaciones || []).filter((noti, i) => {
+          let notificacion = new mdNotificacion((noti || {}).TIPO, (noti || {}).TITULO, (noti || {}).MENSAJE, (noti || {}).IS_READ);
+          jsonNotificacion.push(notificacion);
+          if ((notificaciones || []).length - 1 == i) {
+            res.json(jsonNotificacion);
+          }
+        });
       });
     } else {
       res.status(403).json(mdwErrorHandler.error({ status: 403, type: 'Forbidden', message: 'No autorizado', api: '/notificaciones' }));
