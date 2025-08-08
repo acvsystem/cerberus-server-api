@@ -2292,6 +2292,7 @@ io.on('connection', async (socket) => {
             res.json(jsonNotificacion);
           }
         });
+        res.json(notificaciones);
       });
     } else {
       res.status(403).json(mdwErrorHandler.error({ status: 403, type: 'Forbidden', message: 'No autorizado', api: '/notificaciones' }));
