@@ -112,7 +112,7 @@ function onVerificarCalendario() {
       (arTiendas || []).filter((tienda, i) => {
         if (!arCalendarios.includes((tienda || {}).SERIE_TIENDA)) {
           arTiendasFaltantes.push((tienda || {}).DESCRIPCION);
-          
+
           //services.userNotificacion();
         }
 
@@ -140,7 +140,7 @@ function onVerificarCalendario() {
                 </tbody>
             </table>`;
 
-            emailController.sendEmail(['itperu@metasperu.com', 'carlosmoron@metasperu.com', 'fieldleaderbbw@metasperu.com', 'fieldleadervs@metasperu.com', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com','paulodosreis@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
+            emailController.sendEmail(['itperu@metasperu.com', 'carlosmoron@metasperu.com', 'fieldleaderbbw@metasperu.com', 'fieldleadervs@metasperu.com', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com', 'paulodosreis@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
               .catch(error => res.send(error));
 
           }
@@ -2276,7 +2276,7 @@ io.on('connection', async (socket) => {
   });
 
 
-  /*app.get('/notificaciones', async (req, res) => {
+  app.get('/notificaciones', async (req, res) => {
     const auth_token = req.header("Authorization") || "";
     const tokenResolve = tokenController.verificationToken(auth_token);
     console.log("NOTIFICACIONES", tokenResolve);
@@ -2288,7 +2288,7 @@ io.on('connection', async (socket) => {
     } else {
       res.status(403).json(mdwErrorHandler.error({ status: 403, type: 'Forbidden', message: 'No autorizado', api: '/notificaciones' }));
     }
-  });*/
+  });
 
   app.post('/notificaciones/read', async (req, res) => {
     const auth_token = req.header("Authorization") || "";
