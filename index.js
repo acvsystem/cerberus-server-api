@@ -186,7 +186,7 @@ io.on('connection', async (socket) => {
   // Escuchar eventos
   socket.onAny((event, data, callback) => {
     const start = Date.now();
-
+    const responseData = { ok: true, recibido: data };
     console.log('--- Nueva petición ---');
     console.log('Hora:', new Date().toISOString());
     console.log('IP:', clientIp);
