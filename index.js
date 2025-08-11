@@ -182,6 +182,7 @@ function onVerificarCalendario() {
 }
 
 io.on('connection', async (socket) => {
+  const clientIp = socket.handshake.address;
   // Escuchar eventos
   socket.onAny((event, data, callback) => {
     const start = Date.now();
