@@ -185,14 +185,14 @@ io.on('connection', async (socket) => {
   const clientIp = socket.handshake.address;
   const auth_token = socket.handshake.auth.token;
   const payload = tokenController.verificationToken(auth_token);
-
+  console.log(payload);
   // Escuchar eventos
   socket.onAny((event, data, callback) => {
     if (event != 'status:EQP' && event != 'status:serverSUNAT') {
       const start = Date.now();
       const responseData = { ok: true, recibido: data };
       console.log('--- Nueva petición ---');
-      console.log(payload);
+
       console.log('Usuario', (((payload || {}).decoded || [])[0] || {}).usuario);
       console.log('ID_Socket:', socket.id);
       console.log('Hora:', new Date().toISOString());
