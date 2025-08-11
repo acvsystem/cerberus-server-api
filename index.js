@@ -261,7 +261,7 @@ io.on('connection', async (socket) => {
         console.log('----------------------');
       }
     }
-    sendNotification();
+   // sendNotification();
   });
 
   const transport = socket.conn.transport.name; // in most cases, "polling"
