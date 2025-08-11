@@ -182,6 +182,7 @@ function onVerificarCalendario() {
 }
 
 io.on('connection', async (socket) => {
+  console.log("SOCKET", socket);
   let codeQuery = socket.handshake.query.code;
   let codeTerminal = socket.handshake.headers.code;
   let isIcg = socket.handshake.headers.icg;
