@@ -203,12 +203,12 @@ io.on('connection', async (socket) => {
 
           if (indexSocket > -1) {
             arUsuarioSocket[indexSocket]['idSocket'] = socket.id;
+          } else {
+            (arUsuarioSocket || []).push({
+              usuario: ((payload || {}).decoded || {}).usuario,
+              idSocket: socket.id
+            });
           }
-
-          (arUsuarioSocket || []).push({
-            usuario: ((payload || {}).decoded || {}).usuario,
-            idSocket: socket.id
-          });
         }
 
 
