@@ -188,21 +188,24 @@ io.on('connection', async (socket) => {
 
   // Escuchar eventos
   socket.onAny((event, data, callback) => {
-    if (event != 'status:EQP' && event != 'status:serverSUNAT') {
-      const start = Date.now();
-      const responseData = { ok: true, recibido: data };
-      console.log('--- Nueva petición ---');
-      console.log('Usuario', socket.handshake);
-      console.log('Usuario', payload);
-      console.log('Usuario', auth_token);
-      console.log('ID_Socket:', socket.id);
-      console.log('Hora:', new Date().toISOString());
-      console.log('IP:', clientIp);
-      console.log('event_response:', event);
-      console.log('response:', responseData);
-      console.log('Duración:', `${Date.now() - start}ms`);
-      console.log('----------------------');
+    if (socket.handshake.query.code == 'app') {
+      if (event != 'status:EQP' && event != 'status:serverSUNAT') {
+        const start = Date.now();
+        const responseData = { ok: true, recibido: data };
+        console.log('--- Nueva petición ---');
+        console.log('Usuario', socket.handshake);
+        console.log('Usuario', payload);
+        console.log('Usuario', auth_token);
+        console.log('ID_Socket:', socket.id);
+        console.log('Hora:', new Date().toISOString());
+        console.log('IP:', clientIp);
+        console.log('event_response:', event);
+        console.log('response:', responseData);
+        console.log('Duración:', `${Date.now() - start}ms`);
+        console.log('----------------------');
+      }
     }
+
   });
 
   let codeQuery = socket.handshake.query.code;
