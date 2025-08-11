@@ -40,6 +40,36 @@ app.use("/security", securityRoutes);
 app.use("/recursos_humanos", recursosHumanosRoutes);
 app.use("/sistema", frontRetailRoutes);
 
+
+// Middleware de logging
+app.use((req, res, next) => {
+  const start = Date.now();
+
+  // Captura de datos originales
+  const originalSend = res.send;
+
+  // Interceptamos la respuesta
+  res.send = function (body) {
+    const duration = Date.now() - start;
+    console.log('--- Nueva petición ---');
+    console.log('Hora:', new Date().toISOString());
+    console.log('IP:', req.ip);
+    console.log('Método:', req.method);
+    console.log('URL:', req.originalUrl);
+    console.log('Query:', req.query);
+    console.log('Params:', req.params);
+    console.log('Body:', req.body);
+    console.log('Status:', res.statusCode);
+    console.log('Respuesta:', body);
+    console.log('Duración:', `${duration}ms`);
+    console.log('----------------------');
+
+    return originalSend.call(this, body);
+  };
+
+  next();
+});
+
 const emiter = new EventEmitter();
 
 var listClient = { id: '' };
@@ -2284,12 +2314,12 @@ io.on('connection', async (socket) => {
 
     if ((tokenResolve || {}).isValid) {
       pool.query(`SELECT * FROM TB_USUARIO_NOTIFICACION INNER JOIN TB_NOTIFICACIONES ON ID_NOTIFICACION = ID_NOTIFICACION_NT WHERE ID_LOGIN_NT = ${(tokenResolve || {}).decoded.id};`).then(([notificaciones]) => {
-        let jsonNotificacion = [];
+        let resNotificacion = [];
         (notificaciones || []).filter((noti, i) => {
           let notificacion = new mdlNotificacion((noti || {}).TIPO, (noti || {}).TITULO, (noti || {}).MENSAJE, (noti || {}).IS_READ);
-          jsonNotificacion.push(notificacion);
+          (resNotificacion || []).push(notificacion);
           if ((notificaciones || []).length - 1 == i) {
-            res.json(jsonNotificacion);
+            res.json(resNotificacion);
           }
         });
       });
