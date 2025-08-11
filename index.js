@@ -184,6 +184,7 @@ function onVerificarCalendario() {
 io.on('connection', async (socket) => {
   const clientIp = socket.handshake.address;
   const auth_token = socket.handshake.auth.token;
+  console.log(auth_token);
   const payload = tokenController.verificationToken(auth_token);
 
   // Escuchar eventos
