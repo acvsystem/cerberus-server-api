@@ -183,12 +183,16 @@ function onVerificarCalendario() {
 
 io.on('connection', async (socket) => {
   const clientIp = socket.handshake.address;
+  const auth_token = socket.handshake.auth.token;
+  const payload = tokenController.verificationToken(auth_token);
+
   // Escuchar eventos
   socket.onAny((event, data, callback) => {
     if (event != 'status:EQP' && event != 'status:serverSUNAT') {
       const start = Date.now();
       const responseData = { ok: true, recibido: data };
       console.log('--- Nueva petición ---');
+      console.log('tokenVrf', payload);
       console.log('Hora:', new Date().toISOString());
       console.log('IP:', clientIp);
       console.log('event_response:', event);
