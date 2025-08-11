@@ -185,15 +185,17 @@ io.on('connection', async (socket) => {
   const clientIp = socket.handshake.address;
   // Escuchar eventos
   socket.onAny((event, data, callback) => {
-    const start = Date.now();
-    const responseData = { ok: true, recibido: data };
-    console.log('--- Nueva petición ---');
-    console.log('Hora:', new Date().toISOString());
-    console.log('IP:', clientIp);
-    console.log('event_response:', event);
-    console.log('response:', responseData);
-    console.log('Duración:', `${Date.now() - start}ms`);
-    console.log('----------------------');
+    if (event != 'status:EQP') {
+      const start = Date.now();
+      const responseData = { ok: true, recibido: data };
+      console.log('--- Nueva petición ---');
+      console.log('Hora:', new Date().toISOString());
+      console.log('IP:', clientIp);
+      console.log('event_response:', event);
+      console.log('response:', responseData);
+      console.log('Duración:', `${Date.now() - start}ms`);
+      console.log('----------------------');
+    }
   });
 
   let codeQuery = socket.handshake.query.code;
