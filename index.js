@@ -194,7 +194,7 @@ io.on('connection', async (socket) => {
       const responseData = { ok: true, recibido: data };
       console.log('--- Nueva petición ---');
 
-      console.log('Usuario', payload);
+      console.log('Usuario', auth_token);
       console.log('ID_Socket:', socket.id);
       console.log('Hora:', new Date().toISOString());
       console.log('IP:', clientIp);
