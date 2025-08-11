@@ -198,11 +198,20 @@ io.on('connection', async (socket) => {
         const start = Date.now();
         const responseData = { ok: true, recibido: data };
         if (typeof ((payload || {}).decoded || {}).usuario != 'undefined') {
+
+          let indexSocket = arUsuarioSocket.findIndex((usk) => usk.usuario == ((payload || {}).decoded || {}).usuario);
+
+          if (indexSocket > -1) {
+            arUsuarioSocket[indexSocket]['idSocket'] = socket.id;
+          }
+
           (arUsuarioSocket || []).push({
             usuario: ((payload || {}).decoded || {}).usuario,
             idSocket: socket.id
           });
         }
+
+
         console.log('--- Nueva petición ---');
         console.log('Usuario', ((payload || {}).decoded || {}).usuario);
         console.log('ID_Socket:', socket.id);
