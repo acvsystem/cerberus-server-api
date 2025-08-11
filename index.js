@@ -192,7 +192,7 @@ io.on('connection', async (socket) => {
       const start = Date.now();
       const responseData = { ok: true, recibido: data };
       console.log('--- Nueva petición ---');
-      console.log('Usuario', ((payload || {}).decoded || {}).usuario);
+      console.log('Usuario', (((payload || {}).decoded || [])[0] || {}).usuario);
       console.log('ID_Socket:', socket.id);
       console.log('Hora:', new Date().toISOString());
       console.log('IP:', clientIp);
