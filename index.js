@@ -191,6 +191,30 @@ io.on('connection', async (socket) => {
   const sockets = await io.fetchSockets(); // desde Socket.IO v4
   const socketIds = sockets.map(s => s.id);
 
+
+
+  let codeQuery = socket.handshake.query.code;
+  let codeTerminal = socket.handshake.headers.code;
+  let isIcg = socket.handshake.headers.icg;
+  let macEqp = socket.handshake.headers.mac;
+
+  let indexAgente = (agenteList || []).findIndex((data, i) => (data || {}).code == codeTerminal);
+
+  if (indexAgente != -1) {
+    agenteList[indexAgente]['id'] = socket.id;
+  } else {
+    agenteList.push({ id: socket.id, code: codeTerminal });
+  }
+
+  if (codeQuery == 'app') {
+    console.log('app', socket.id);
+    listClient.id = socket.id;
+    let listSessionConnect = await sessionSocket.connect();
+    socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
+    let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
+
+  }
+
   // Escuchar eventos
   socket.onAny((event, data, callback) => {
     if (socket.handshake.query.code == 'app') {
@@ -226,28 +250,6 @@ io.on('connection', async (socket) => {
     }
 
   });
-
-  let codeQuery = socket.handshake.query.code;
-  let codeTerminal = socket.handshake.headers.code;
-  let isIcg = socket.handshake.headers.icg;
-  let macEqp = socket.handshake.headers.mac;
-
-  let indexAgente = (agenteList || []).findIndex((data, i) => (data || {}).code == codeTerminal);
-
-  if (indexAgente != -1) {
-    agenteList[indexAgente]['id'] = socket.id;
-  } else {
-    agenteList.push({ id: socket.id, code: codeTerminal });
-  }
-
-  if (codeQuery == 'app') {
-    console.log('app', socket.id);
-    listClient.id = socket.id;
-    let listSessionConnect = await sessionSocket.connect();
-    socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
-    let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
-
-  }
 
   const transport = socket.conn.transport.name; // in most cases, "polling"
 
