@@ -182,7 +182,19 @@ function onVerificarCalendario() {
 }
 
 io.on('connection', async (socket) => {
-  console.log("SOCKET", socket);
+  // Escuchar eventos
+  socket.onAny((event, data, callback) => {
+    const start = Date.now();
+
+    console.log('--- Nueva petición ---');
+    console.log('Hora:', new Date().toISOString());
+    console.log('IP:', clientIp);
+    console.log('event_response:', event);
+    console.log('response:', responseData);
+    console.log('Duración:', `${Date.now() - start}ms`);
+    console.log('----------------------');
+  });
+
   let codeQuery = socket.handshake.query.code;
   let codeTerminal = socket.handshake.headers.code;
   let isIcg = socket.handshake.headers.icg;
