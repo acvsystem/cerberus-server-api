@@ -100,6 +100,9 @@ const task_5 = cron.schedule('00 9 * * 0', () => {
   onVerificarCalendario();
 });
 
+
+
+
 task_1.start();
 task_2.start();
 task_3.start();
@@ -122,6 +125,13 @@ function onConsultarHorarioOficina(index, fecha, documento) {
     return [{ index: index || "", horario: ((rs || [])[0] || {})['RANGO_HORA'] || "" }];
   });
 }
+
+function sendNotification() {
+  let userSocket = arUsuarioSocket.find((usk) => usk.usuario == "SISTEMAS");
+  io.to(`${(userSocket || {}).idSocket}`).emit("notification:test", "NOTIFICACION ENVIADA CON EXITO..!!!");
+}
+
+
 
 function onVerificarCalendario() {
 
@@ -215,6 +225,9 @@ io.on('connection', async (socket) => {
 
   }
 
+
+
+
   // Escuchar eventos
   socket.onAny((event, data, callback) => {
     if (socket.handshake.query.code == 'app') {
@@ -248,7 +261,7 @@ io.on('connection', async (socket) => {
         console.log('----------------------');
       }
     }
-
+    sendNotification();
   });
 
   const transport = socket.conn.transport.name; // in most cases, "polling"
