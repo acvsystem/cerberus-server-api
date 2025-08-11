@@ -184,7 +184,6 @@ function onVerificarCalendario() {
 io.on('connection', async (socket) => {
   const clientIp = socket.handshake.address;
   const auth_token = socket.handshake.auth.token;
-  console.log(auth_token);
   const payload = tokenController.verificationToken(auth_token);
 
   // Escuchar eventos
@@ -193,7 +192,8 @@ io.on('connection', async (socket) => {
       const start = Date.now();
       const responseData = { ok: true, recibido: data };
       console.log('--- Nueva petición ---');
-      console.log('tokenVrf', payload);
+      console.log('Usuario', ((payload || {}).decoded || {}).usuario);
+      console.log('ID_Socket:', socket.id);
       console.log('Hora:', new Date().toISOString());
       console.log('IP:', clientIp);
       console.log('event_response:', event);
