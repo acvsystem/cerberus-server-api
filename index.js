@@ -185,7 +185,7 @@ io.on('connection', async (socket) => {
   const clientIp = socket.handshake.address;
   // Escuchar eventos
   socket.onAny((event, data, callback) => {
-    if (event != 'status:EQP') {
+    if (event != 'status:EQP' && event != 'status:serverSunat') {
       const start = Date.now();
       const responseData = { ok: true, recibido: data };
       console.log('--- Nueva petición ---');
