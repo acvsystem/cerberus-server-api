@@ -26,7 +26,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: "*", methods: ["GET", "POST"], transports: ['websocket', 'polling'] } });
 const uploadTraspasos = multer({ dest: 'uploads/traspasos' });
-
+let arUsuarioSocket = [];
 app.use(
   cors({
     origin: "*",
@@ -197,6 +197,12 @@ io.on('connection', async (socket) => {
       if (event != 'status:EQP' && event != 'status:serverSUNAT') {
         const start = Date.now();
         const responseData = { ok: true, recibido: data };
+        if (typeof ((payload || {}).decoded || {}).usuario != 'undefined') {
+          (arUsuarioSocket || []).push({
+            usuario: ((payload || {}).decoded || {}).usuario,
+            idSocket: socket.id
+          });
+        }
         console.log('--- Nueva petición ---');
         console.log('Usuario', ((payload || {}).decoded || {}).usuario);
         console.log('ID_Socket:', socket.id);
@@ -204,7 +210,7 @@ io.on('connection', async (socket) => {
         console.log('IP:', clientIp);
         console.log('event_response:', event);
         console.log('response:', responseData);
-        console.log('conectados:', socketIds);
+        console.log('conectados:', arUsuarioSocket);
         console.log('Duración:', `${Date.now() - start}ms`);
         console.log('----------------------');
       }
