@@ -39,7 +39,8 @@ export const Login = async (req, res) => {
         { code: '9F', user: 'vsfajoc', nameTienda: 'VSFA JOCKEY FULL' },
         { code: '7A7', user: 'bbwasia', nameTienda: 'BBW ASIA' },
         { code: '9P', user: 'vsmptru', nameTienda: 'VS MALL PLAZA' },
-        { code: '7I', user: 'bbwmptru', nameTienda: 'BBW MALL PLAZA' }
+        { code: '7I', user: 'bbwmptru', nameTienda: 'BBW MALL PLAZA' },
+        { code: '9Q', user: 'vssa', nameTienda: 'VS MALL AVENTURA SA' }
       ];
 
       let selectedUser = (tiendasList || []).find((tnd) => tnd.user == usuario);
