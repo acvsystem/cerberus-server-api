@@ -51,8 +51,8 @@ router.get('/lista/registro/tiendas', async (req, res) => {
 
 router.post('/add/registro/tiendas', async (req, res) => {
     let data = ((req || {}).body || [])[0];
-    await pool.query(`INSERT INTO TB_LISTA_TIENDA (SERIE_TIENDA,DESCRIPCION,COD_ALMACEN,UNID_SERVICIO,TIPO_TIENDA,EMAIL)
-        VALUES('${(data || {}).serie_tienda}','${(data || {}).nombre_tienda}','${(data || {}).cod_almacen}','${(data || {}).unid_servicio}','${(data || {}).tipo_tienda}','${(data || {}).email}');`)
+    await pool.query(`INSERT INTO TB_LISTA_TIENDA (SERIE_TIENDA,DESCRIPCION,COD_ALMACEN,UNID_SERVICIO,ESTATUS,TIPO_TIENDA,EMAIL)
+        VALUES('${(data || {}).serie_tienda}','${(data || {}).nombre_tienda}','${(data || {}).cod_almacen}','${(data || {}).unid_servicio}','ACTIVO','${(data || {}).tipo_tienda}','${(data || {}).email}');`)
         .then((rs) => {
             pool.query(`INSERT INTO TB_TERMINAL_TIENDA(CODIGO_TERMINAL,DESCRIPCION,VERIFICACION,CANT_COMPROBANTES,ISONLINE)
             VALUES('${(data || {}).serie_tienda}','${(data || {}).nombre_tienda}',false,0,false)`).then(() => {
