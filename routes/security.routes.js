@@ -56,7 +56,10 @@ router.post('/add/registro/tiendas', async (req, res) => {
         .then((rs) => {
             pool.query(`INSERT INTO TB_TERMINAL_TIENDA(CODIGO_TERMINAL,DESCRIPCION,VERIFICACION,CANT_COMPROBANTES,ISONLINE)
             VALUES('${(data || {}).serie_tienda}','${(data || {}).nombre_tienda}',false,0,false)`).then(() => {
-                res.json(defaultResponse.success.default);
+                pool.query(`INSERT INTO TB_KEY_TERMINAL(KEY_CODE,DESC_KEY_TERMINAL)
+            VALUES('${(data || {}).serie_tienda}','${(data || {}).nombre_tienda}')`).then(() => {
+                    res.json(defaultResponse.success.default);
+                });
             });
         });
 });
