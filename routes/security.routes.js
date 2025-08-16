@@ -53,7 +53,10 @@ router.post('/add/registro/tiendas', async (req, res) => {
     let data = ((req || {}).body || [])[0];
     await pool.query(`INSERT INTO TB_LISTA_TIENDA (SERIE_TIENDA,DESCRIPCION)VALUES('${(data || {}).serie_tienda}','${(data || {}).nombre_tienda}');`)
         .then((rs) => {
-            res.json(defaultResponse.success.default);
+            pool.query(`INSERT INTO TB_TERMINAL_TIENDA(CODIGO_TERMINAL,DESCRIPCION,VERIFICACION,CANT_COMPROBANTES,ISONLINE)
+            VALUES('${(data || {}).serie_tienda}','${(data || {}).nombre_tienda}',false,0,false)`).then(() => {
+                res.json(defaultResponse.success.default);
+            });
         });
 });
 
@@ -143,7 +146,7 @@ router.get('/download', (req, res) => {
     }
 
     let resValidation = tokenController.verificationToken(token);
-   
+
     if ((resValidation || {}).isValid) {
         let file = "";
 
@@ -174,7 +177,7 @@ router.get('/download', (req, res) => {
         }
 
         var fileLocation = path.join('./', file);
-        
+
         res.download(fileLocation, file);
     } else {
         return res.status(401).json('Access denied');

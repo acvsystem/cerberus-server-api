@@ -126,9 +126,9 @@ function onConsultarHorarioOficina(index, fecha, documento) {
   });
 }
 
-function sendNotification() {
-  let userSocket = arUsuarioSocket.find((usk) => usk.usuario == "SISTEMAS");
-  io.to(`${(userSocket || {}).idSocket}`).emit("notification:test", "NOTIFICACION ENVIADA CON EXITO..!!!");
+function sendNotification(usuario, notificacion) {
+  let userSocket = arUsuarioSocket.find((usk) => usk.usuario == usuario);
+  io.to(`${(userSocket || {}).idSocket}`).emit("notificaciones:get", notificacion);
 }
 
 
@@ -261,7 +261,7 @@ io.on('connection', async (socket) => {
         console.log('----------------------');
       }
     }
-   // sendNotification();
+    // sendNotification();
   });
 
   const transport = socket.conn.transport.name; // in most cases, "polling"
