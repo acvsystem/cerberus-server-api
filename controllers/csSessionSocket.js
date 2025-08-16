@@ -4,7 +4,7 @@ import emailController from '../sendEmail.js';
 class clsSessionSocket {
 
     async onNewTerminal(codigo) {
-        
+
         let [data] = await pool.query(`SELECT KEY_CODE,DESC_KEY_TERMINAL FROM TB_KEY_TERMINAL WHERE KEY_CODE = '${codigo}'`)
 
         if (data.length) {
@@ -12,8 +12,8 @@ class clsSessionSocket {
             VALUES('${codigo}','${((data || [])[0] || {}).DESC_KEY_TERMINAL}',false,0,false)`);
 
             return data;
-        }else{
-            
+        } else {
+
         }
     }
 
@@ -26,8 +26,9 @@ class clsSessionSocket {
     async connect(codigo) {
         let listSession = [];
         if (codigo) {
-            console.log(codigo);
+            console.log("fn connect", codigo);
             let isExistTerminal = await this.onEvalueIsExist(codigo);
+            console.log("fn connect exist", isExistTerminal);
             if (!isExistTerminal.length) {
                 await this.onNewTerminal(codigo);
                 await pool.query(`UPDATE TB_TERMINAL_TIENDA SET ISONLINE = true WHERE CODIGO_TERMINAL = '${codigo}'`);
