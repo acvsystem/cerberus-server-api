@@ -140,7 +140,7 @@ function onVerificarCalendario() {
   let day = new Date(now).toLocaleDateString().split('/');
 
   pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE TRIM(SUBSTRING(RANGO_DIAS,1,9)) = '${parseInt(day[0]) + 1}-${parseInt(day[1])}-${parseInt(day[2])}' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
-    let arCalendarios = ['9M', '9Q'];
+    let arCalendarios = ['9M'];
     (calendarios || []).filter((c) => {
       arCalendarios.push((c || {}).CODIGO_TIENDA);
     });
@@ -272,7 +272,7 @@ io.on('connection', async (socket) => {
 
   if (codeTerminal != "SRVFACT" && isIcg != 'true') {
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
-    console.log(listSessionConnect);
+    console.log("AQUI", codeTerminal);
     socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
   } else {
     if (codeTerminal == "SRVFACT") {
