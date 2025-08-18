@@ -17,7 +17,8 @@ class clsStores {
                         code_store_ejb: (store || {}).COD_TIENDA_EJB,
                     });
                 });
-                res.json(responseJSON);
+
+                return responseJSON;
             });
     }
 }
