@@ -21,6 +21,24 @@ class clsStores {
                 res.json(responseJSON);
             });
     }
+
+    allStoresTerminals = (req, res) => {
+        pool.query(`SELECT * FROM TB_TERMINAL_TIENDA;`)
+            .then(([requestSql]) => {
+                let responseJSON = [];
+                (requestSql || []).filter((store) => {
+                    (responseJSON || []).push({
+                        code_terminal: (store || {}).CODIGO_TERMINAL,
+                        description: (store || {}).DESCRIPCION,
+                        verification: (store || {}).VERIFICACION,
+                        voucher_quantity: (store || {}).CANT_COMPROBANTES,
+                        online: (store || {}).ISONLINE,
+                    });
+                });
+
+                res.json(responseJSON);
+            });
+    }
 }
 
 const storesController = new clsStores;

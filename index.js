@@ -838,7 +838,7 @@ io.on('connection', async (socket) => {
     })
   });
 
-  app.get("/equipos/lista", async (req, res) => {
+  app.get("/equipos/lista", async (req, res) => { //computers/all - [GET]
     let [arEquipos] = await pool.query(`SELECT LT.DESCRIPCION,PT.NUM_CAJA,PT.MAC,PT.IP,PT.ONLINE,PT.UNID_SERVICIO FROM TB_PARAMETROS_TIENDA PT INNER JOIN TB_LISTA_TIENDA LT ON LT.SERIE_TIENDA = PT.SERIE_TIENDA WHERE ESTATUS = 'ACTIVO' ORDER BY LT.DESCRIPCION;`);
     res.json({ data: arEquipos, success: true });
   });
@@ -901,18 +901,19 @@ io.on('connection', async (socket) => {
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
 
-  app.get("/papeleta/lista/tipo_papeleta", async (req, res) => {
+  app.get("/papeleta/lista/tipo_papeleta", async (req, res) => { //ballot/type/all - [GET]
     let [arTipoPapeleta] = await pool.query(`SELECT * FROM TB_TIPO_PAPELETA;`);
     res.json(arTipoPapeleta);
   });
 
-  app.get("/papeleta/lista/horas_autorizacion", async (req, res) => {
+  app.get("/papeleta/lista/horas_autorizacion", async (req, res) => { //ballot/authorization/all - [GET]
     let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA ORDER BY FECHA DESC;`);
     res.json(arAutorizacion);
   });
 
-  app.get("/sunat/configuration", async (req, res) => {
-    let [arConfiguracion] = await pool.query(`SELECT  XML_ETIQUIETA_GROUP,
+  app.get("/sunat/configuration", async (req, res) => { //configuration/plugin/sunat - [GET]
+    let [arConfiguracion] = await pool.query(`SELECT  
+        XML_ETIQUIETA_GROUP,
         XML_TIPO_FORMULARIO,
         XML_EMAIL_PRUEBA, 
         XML_ASUNTO_EMAIL_PROMO, 
@@ -923,7 +924,8 @@ io.on('connection', async (socket) => {
         XML_API_SUNAT,
         XML_TK_SUNAT,
         XML_CHECK_PROMOCION,
-        APLICACION_FILE FROM TB_CONFIGURACION_FILE_APLICACION WHERE APLICACION_FILE = 'plugin_sunat_icg';`);
+        APLICACION_FILE 
+        FROM TB_CONFIGURACION_FILE_APLICACION WHERE APLICACION_FILE = 'plugin_sunat_icg';`);
 
     console.log(arConfiguracion);
     res.json(arConfiguracion);
@@ -1213,7 +1215,7 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("respuesta_autorizacion", arAutorizacionResponse);
   });
 
-  app.get("/session_login/view", async (req, res) => {
+  app.get("/session_login/view", async (req, res) => { //security/session/login/all - [GET]
     let [arSession] = await pool.query(`SELECT * FROM TB_SESSION_LOGIN;`);
     if ((arSession || []).length) {
       res.json({ data: arSession, success: true });
@@ -1223,7 +1225,7 @@ io.on('connection', async (socket) => {
 
   });
 
-  app.get("/auth_session/view", async (req, res) => {
+  app.get("/auth_session/view", async (req, res) => { //security/session/auth/all - [GET]
     let [arAuthSession] = await pool.query(`SELECT * FROM TB_AUTH_SESSION;`);
     if ((arAuthSession || []).length) {
       res.json({ data: arAuthSession, success: true });
@@ -1233,7 +1235,7 @@ io.on('connection', async (socket) => {
 
   });
 
-  app.get("/login/users", async (req, res) => {
+  app.get("/login/users", async (req, res) => { //security/users/all - [GET]
     let [arUsers] = await pool.query(`SELECT * FROM TB_LOGIN;`);
     if ((arUsers || []).length) {
       res.json({ data: arUsers, success: true });
@@ -1501,7 +1503,7 @@ io.on('connection', async (socket) => {
     }
   })
 
-  app.get("/calendario/listarHorario", async (req, res) => {
+  app.get("/calendario/listarHorario", async (req, res) => { //schedule/all - [GET]
     let [arHorarios] = await pool.query(`SELECT RANGO_DIAS,CODIGO_TIENDA FROM TB_HORARIO_PROPERTY ORDER BY  DATEDIFF(DATE(SUBSTRING_INDEX(RANGO_DIAS,' ',1)), CURDATE()) asc;`);
     console.log(arHorarios);
     if ((arHorarios || []).length) {
@@ -1511,7 +1513,7 @@ io.on('connection', async (socket) => {
     }
   });
 
-  app.get("/papeleta/listarPapeleta", async (req, res) => {
+  app.get("/papeleta/listarPapeleta", async (req, res) => { //ballot/all - [GET]
     let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' ORDER BY DATEDIFF(DATE(FECHA_CREACION), CURDATE()) ASC;`);
     let parsePap = [];
     if ((arPapeleta || []).length) {
@@ -2058,7 +2060,7 @@ io.on('connection', async (socket) => {
   }
 
 
-  app.get("/comprobantes/session/lista", async (req, res) => {
+  app.get("/comprobantes/session/lista", async (req, res) => { //stores/terminals/all - [GET]
     await pool.query(`SELECT * FROM TB_TERMINAL_TIENDA;`).then(([tiendasSession]) => {
       res.json({ data: tiendasSession });
     });
@@ -2302,7 +2304,7 @@ io.on('connection', async (socket) => {
 
 
 
-  app.get('/menu/sistema/lista', async (req, res) => {
+  app.get('/menu/sistema/lista', async (req, res) => { //configuration/menu/all - [GET]
     pool.query(`SELECT * FROM TB_MENU_SISTEMA;`).then(([menu]) => {
       res.json(menu);
     });
@@ -2322,7 +2324,7 @@ io.on('connection', async (socket) => {
     });
   });
 
-  app.get('/menu/sistema/niveles', async (req, res) => {
+  app.get('/menu/sistema/niveles', async (req, res) => { //configuration/level/all - [GET]
     pool.query(`SELECT * FROM TB_NIVELES_SISTEMA;`).then(([niveles]) => {
       res.json(niveles);
     });
