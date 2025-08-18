@@ -1,7 +1,7 @@
 //DOCUMENTACION DE API's
 
 /* STORES */
-    // stores/all
+    // stores/all - [GET]
         /* JSON RESPONSE
             serie: SERIE_TIENDA
             description: DESCRIPCION
@@ -13,7 +13,12 @@
             code_store_ejb: COD_TIENDA_EJB
          */
 
-
+/* CONFIGURATION */
+    // configuration/client/list/clear - [POST]{value}
+    // configuration/client/list/clear - [GET]
+        /* JSON RESPONSE
+            client_clear: LIST_CLIENTE
+        */
 
 /* SECURITY */
 
