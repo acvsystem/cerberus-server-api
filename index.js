@@ -11,6 +11,7 @@ import * as cron from 'node-cron';
 import { EventEmitter } from "events";
 import securityRoutes from "./routes/security.routes.js";
 import recursosHumanosRoutes from "./routes/recursosHumanos.routes.js";
+import storesRoutes from './routes/stores.routes.js';
 import frontRetailRoutes from "./routes/frontRetail.routes.js";
 import { prop as defaultResponse } from "./const/defaultResponse.js";
 import tokenController from './controllers/csToken.js';
@@ -39,6 +40,9 @@ app.use(bodyParser.urlencoded({ limit: "1000000mb", extended: true }));
 app.use("/security", securityRoutes);
 app.use("/recursos_humanos", recursosHumanosRoutes);
 app.use("/sistema", frontRetailRoutes);
+app.use("/stores", storesRoutes);
+
+
 
 
 // Middleware de logging
