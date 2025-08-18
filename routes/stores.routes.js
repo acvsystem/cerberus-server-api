@@ -1,10 +1,8 @@
 import { Router } from 'express';
 const router = Router();
-import storesController from '../controllers/csStores.js';
+import storesController from '../controllers/csStores';
 
-router.get('/all', storesController.allStores, async (req, res) => {
-    console.log(req);
-});
+router.get('/all', storesController.allStores);
 
 const storesRoutes = router;
 export default storesRoutes

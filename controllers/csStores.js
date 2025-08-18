@@ -1,7 +1,7 @@
 import { pool } from '../conections/conexMysql.js';
 
 class clsStores {
-    allStores() {
+    allStores = (req, res) => {
         pool.query(`SELECT * FROM TB_LISTA_TIENDA WHERE ESTATUS = 'ACTIVO';`)
             .then(([requestSql]) => {
                 let responseJSON = [];
@@ -18,7 +18,7 @@ class clsStores {
                     });
                 });
 
-                return responseJSON;
+                res.json(responseJSON);
             });
     }
 }
