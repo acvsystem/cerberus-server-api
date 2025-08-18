@@ -1,5 +1,5 @@
 import { pool } from '../conections/conexMysql.js';
-import mdlNotificacion from '../class/clsNotificaciones.js';
+import mdwErrorHandler from '../middleware/errorHandler.js';
 
 class clsConfiguration {
     clearClient = (req, res) => {
