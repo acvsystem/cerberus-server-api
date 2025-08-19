@@ -1380,7 +1380,7 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("refreshSessionView", "");
   });
 
-  app.post("/calendario/generar", async (req, res) => { // schedule/generate - [POST][{id,cargo,date,range,code,range_date,days,days_work,days_free,arWorkers,observation}]
+  app.post("/calendario/generar", async (req, res) => { // schedule/generate - [POST][{id,cargo,date,range,code_store,range_date,days,days_work,days_free,arWorkers,observation}]
     let data = req.body;
     let response = [];
     let dateNow = new Date();

@@ -99,16 +99,16 @@
     /// ballot/fecha - [PUT]{id_ballot,date}
         
 /* SCHEDULE */ 
-    // schedule/all - [GET]
+    /// schedule/all - [GET]
         /* JSON RESPONSE
             range_days: RANGO_DIAS
             code_store: CODIGO_TIENDA
          */
-    // schedule/generate - [POST][{id,cargo,date,range,code,range_date,days,days_work,days_free,arWorkers,observation}]
-    // schedule/search - [GET]{range_days,code_store}
-    // schedule/range - [POST]{code_store,range,id_schedule}
-    // schedule/range - [PUT]{id_range,range}
-    // schedule/day/work - [POST]{code_store,identity_document,full_name,id_range,id_day,id_schedule}
+    /// schedule/generate - [POST][{id,cargo,date,range,code_store,range_date,days,days_work,days_free,arWorkers,observation}]
+    /// schedule/search - [GET]{range_days,code_store}
+    /// schedule/range - [POST]{code_store,range,id_schedule}
+    /// schedule/range - [PUT]{id_range,range}
+    /// schedule/day/work - [POST]{code_store,identity_document,full_name,id_range,id_day,id_schedule}
     // schedule/day/work - [DELETE]{id_daywork}
     // schedule/day/free - [POST]{ code_store,identity_document,full_name,id_range,id_day,id_schedule}
     // schedule/day/free - [DELETE]{id_dayfree}
