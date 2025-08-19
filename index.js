@@ -784,7 +784,7 @@ io.on('connection', async (socket) => {
 
   /* ENVIAR TRSPASOS POR FTP */
 
-  app.post('/upload/traspasos', uploadTraspasos.single('file'), async (req, res) => {
+  app.post('/upload/traspasos', uploadTraspasos.single('file'), async (req, res) => { // transfers/upload/file - [POST]{formData:Blob}
     const filePath = req.file.path;
     const fileName = req.file.originalname;
     const rutaDirectory = req.body.ftpDirectorio;
@@ -931,7 +931,7 @@ io.on('connection', async (socket) => {
     res.json(arConfiguracion);
   });
 
-  app.post("/papeleta/update/fecha", async (req, res) => {
+  app.post("/papeleta/update/fecha", async (req, res) => { // ballot/fecha - [PUT]{id_ballot,date}
     let data = req.body[0];
     await pool.query(`UPDATE TB_HEAD_PAPELETA SET FECHA_DESDE = '${(data || {}).fecha}', FECHA_HASTA = '${(data || {}).fecha}' WHERE ID_HEAD_PAPELETA = ${(data || {}).id_papeleta};`).then(() => {
       res.json({ success: true });
@@ -1336,7 +1336,7 @@ io.on('connection', async (socket) => {
 
   });
 
-  app.post("/auth_session/delete", async (req, res) => {
+  app.post("/auth_session/delete", async (req, res) => {// security/session/auth - [DELETE]{id_session}
     let data = ((req || {}).body || []);
     await pool.query(`DELETE FROM TB_AUTH_SESSION WHERE ID_AUTH_SESSION='${(data || {}).id}';`);
     let [arSession] = await pool.query(`SELECT * FROM TB_AUTH_SESSION;`);
@@ -1380,7 +1380,7 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("refreshSessionView", "");
   });
 
-  app.post("/calendario/generar", async (req, res) => {
+  app.post("/calendario/generar", async (req, res) => { // schedule/generate - [POST][{id,cargo,date,range,code,range_date,days,days_work,days_free,arWorkers,observation}]
     let data = req.body;
     let response = [];
     let dateNow = new Date();
@@ -1434,7 +1434,7 @@ io.on('connection', async (socket) => {
 
   });
 
-  app.post("/calendario/searchrHorario", async (req, res) => {
+  app.post("/calendario/searchrHorario", async (req, res) => {// schedule/search - [GET]{range_days,code_store}
     let dataReq = req.body;
 
     let response = [];
@@ -1544,7 +1544,7 @@ io.on('connection', async (socket) => {
   });
 
   //INSERTAR RANGO HORARIO EN SEARCH
-  app.post("/horario/insert/rangoHorario", async (req, res) => {
+  app.post("/horario/insert/rangoHorario", async (req, res) => { // schedule/range - [POST]{code_store,range,id_schedule}
     let row = (req || {}).body || {};
     pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).rg}',${(row || {}).id})`).then((a) => {
       pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(row || {}).codigo_tienda}' AND RANGO_HORA = '${(row || {}).rg}' AND ID_RG_HORARIO = ${(row || {}).id} ORDER by ID_RANGO_HORA DESC LIMIT 1;`).then(([arRango]) => {
@@ -1559,7 +1559,7 @@ io.on('connection', async (socket) => {
   });
 
   //EDITAR RANGO HORARIO EN SEARCH
-  app.post("/horario/update/rangoHorario", async (req, res) => {
+  app.post("/horario/update/rangoHorario", async (req, res) => { // schedule/range - [PUT]{id_range,range}
     let row = (req || {}).body || {};
     await pool.query(`UPDATE TB_RANGO_HORA SET RANGO_HORA = '${(row || {}).rg}' WHERE ID_RANGO_HORA = ${(row || {}).id}`).then((a) => {
       res.json({ success: true });
@@ -1569,7 +1569,7 @@ io.on('connection', async (socket) => {
   });
 
   //INSERTAR DIA DE TRABAJO EN SEARCH
-  app.post("/horario/insert/diaTrabajo", async (req, res) => {
+  app.post("/horario/insert/diaTrabajo", async (req, res) => { // schedule/day/work - [POST]{code_store,identity_document,full_name,id_range,id_day,id_schedule}
     let row = (req || {}).body || {};
     pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
     pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).numero_documento}','${(row || {}).nombre_completo}',${(row || {}).id_rango},${(row || {}).id_dia},${(row || {}).id_horario})`).then(() => {
@@ -1585,7 +1585,7 @@ io.on('connection', async (socket) => {
   });
 
   //ELIMINAR DIA DE TRABAJO EN SEARCH|
-  app.post("/horario/delete/diaTrabajo", async (req, res) => {
+  app.post("/horario/delete/diaTrabajo", async (req, res) => { // schedule/day/work - [DELETE]{id_daywork}
     let id_registro = ((req || {}).body || {})['id'];
     pool.query(`DELETE FROM TB_DIAS_TRABAJO WHERE ID_DIA_TRB = ${id_registro};`).then(() => {
       res.json({ success: true });
@@ -1595,7 +1595,7 @@ io.on('connection', async (socket) => {
   });
 
   //INSERTAR DIA DE LIBRE EN SEARCH
-  app.post("/horario/insert/diaLibre", async (req, res) => {
+  app.post("/horario/insert/diaLibre", async (req, res) => { // schedule/day/free - [POST]{ code_store,identity_document,full_name,id_range,id_day,id_schedule}
     let row = (req || {}).body || {};
     pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
     pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).numero_documento}','${(row || {}).nombre_completo}',${(row || {}).id_rango},${(row || {}).id_dia},${(row || {}).id_horario})`).then(() => {
@@ -1611,7 +1611,7 @@ io.on('connection', async (socket) => {
   });
 
   //ELIMINAR DIA LIBRE DE SEARCH
-  app.post("/horario/delete/diaLibre", async (req, res) => {
+  app.post("/horario/delete/diaLibre", async (req, res) => { // schedule/day/free - [DELETE]{id_dayfree}
     let id_registro = ((req || {}).body || {})['id'];
 
 
@@ -1627,7 +1627,7 @@ io.on('connection', async (socket) => {
   });
 
   //INSERTAR OBSERVACION DE SEARCH
-  app.post("/horario/insert/observacion", async (req, res) => {
+  app.post("/horario/insert/observacion", async (req, res) => { // schedule/observation - [POST]{id_day,id_schedule,code_store,full_name,observation}
     let row = (req || {}).body || {};
     await pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
     pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION) VALUES(${(row || {}).id_dia},${(row || {}).id_horario},'${((row || {}) || {}).codigo_tienda}','${((row || {}) || {}).nombre_completo}','${((row || {}) || {}).observacion}')`).then(() => {
@@ -1643,7 +1643,7 @@ io.on('connection', async (socket) => {
   });
 
   //EDITAR OBSERVACION DE SEARCH
-  app.post("/horario/update/observacion", async (req, res) => {
+  app.post("/horario/update/observacion", async (req, res) => { // schedule/observation - [PUT]{id,new_observation}
     let id_registro = ((req || {}).body || {})['id'];
     let observacion = ((req || {}).body || {})['observacion'];
 
@@ -1655,7 +1655,7 @@ io.on('connection', async (socket) => {
   });
 
   //ELIMINAR OBSERVACION DE SEARCH
-  app.post("/horario/delete/observacion", async (req, res) => {
+  app.post("/horario/delete/observacion", async (req, res) => { // schedule/observation - [DELETE]{id_observation}
     let id_registro = ((req || {}).body || {})['id'];
     pool.query(`DELETE FROM TB_OBSERVACION WHERE ID_OBSERVACION = ${id_registro};`).then(() => {
       res.json({ success: true });
@@ -1664,7 +1664,7 @@ io.on('connection', async (socket) => {
     });
   });
 
-  app.post("/horario/registrar", async (req, res) => {
+  app.post("/horario/registrar", async (req, res) => { // schedule/register - [POST][{id,cargo,date,range,code,range_date,days,days_work,days_free,arWorkers,observation}]
     let arHorario = req.body;
 
     (arHorario || []).filter(async (hrr, index) => {
@@ -2282,7 +2282,7 @@ io.on('connection', async (socket) => {
 
   });
 
-  app.post('/usuario/registrar', async (req, res) => {
+  app.post('/usuario/registrar', async (req, res) => { // security/user - [POST]{ username,password,default_page,email,level}
     let dataUser = (req || []).body || [];
     pool.query(`SELECT * FROM TB_LOGIN WHERE USUARIO = '${(dataUser || [])[0].usuario}';`).then(([usuario]) => {
       if (!(usuario || []).length) {
@@ -2295,7 +2295,7 @@ io.on('connection', async (socket) => {
     });
   });
 
-  app.post('/usuario/editar', async (req, res) => {
+  app.post('/usuario/editar', async (req, res) => { // security/user - [PUT]{ id_user,username,password,default_page,email,level}
     let dataUser = (req || []).body || [];
     pool.query(`UPDATE TB_LOGIN SET USUARIO = '${(dataUser || [])[0].usuario}',PASSWORD = '${(dataUser || [])[0].password}',DEFAULT_PAGE = '${(dataUser || [])[0].default_page}',EMAIL = '${(dataUser || [])[0].email}',NIVEL = '${(dataUser || [])[0].nivel}' WHERE ID_LOGIN = ${(dataUser || [])[0].id};`).then(() => {
       res.json({ msj: true })
@@ -2310,14 +2310,14 @@ io.on('connection', async (socket) => {
     });
   });
 
-  app.post('/menu/add/sistema', async (req, res) => {
+  app.post('/menu/add/sistema', async (req, res) => { // configuration/menu - [POST]{ name_menu,route}
     let dataMenu = (req || []).body || [];
     pool.query(`INSERT INTO TB_MENU_SISTEMA(NOMBRE_MENU,RUTA)VALUES('${(dataMenu || {})[0].nombre_menu}','${(dataMenu || {})[0].ruta}');`).then(() => {
       res.json({ msj: true })
     });
   });
 
-  app.post('/menu/sistema/consulta', async (req, res) => {
+  app.post('/menu/sistema/consulta', async (req, res) => { // configuration/menu/search - [GET]{level}
     let dataConsulta = (req || []).body || [];
     pool.query(`SELECT * FROM TB_PERMISO_SISTEMA INNER JOIN TB_MENU_SISTEMA ON TB_MENU_SISTEMA.ID_MENU = TB_PERMISO_SISTEMA.ID_MENU_PS WHERE TB_PERMISO_SISTEMA.NIVEL = '${((dataConsulta || [])[0] || {}).nivel}';`).then(([menu]) => {
       res.json(menu);
@@ -2331,42 +2331,42 @@ io.on('connection', async (socket) => {
   });
 
 
-  app.post('/menu/sistema/niveles', async (req, res) => {
+  app.post('/menu/sistema/niveles', async (req, res) => { // configuration/level - [POST]{level}
     let dataNivel = (req || []).body || [];
     pool.query(`INSERT INTO TB_NIVELES_SISTEMA(NIVEL_DESCRIPCION)VALUES('${(dataNivel || {})[0].nivel}');`).then(() => {
       res.json({ msj: true })
     });
   });
 
-  app.post('/menu/sistema/add/permisos', async (req, res) => {
+  app.post('/menu/sistema/add/permisos', async (req, res) => { // configuration/menu/permission - [POST]{id_menu,level}
     let dataNivel = (req || []).body || [];
     pool.query(`INSERT INTO TB_PERMISO_SISTEMA(ID_MENU_PS,NIVEL)VALUES(${(dataNivel || {})[0].id_menu},'${(dataNivel || {})[0].nivel}');`).then(() => {
       res.json({ msj: true })
     });
   });
 
-  app.post('/menu/sistema/delete/permisos', async (req, res) => {
+  app.post('/menu/sistema/delete/permisos', async (req, res) => { // configuration/menu/permission - [DELETE]{id_permission}
     let dataNivel = (req || []).body || [];
     pool.query(`DELETE FROM TB_PERMISO_SISTEMA WHERE ID_PERMISO_USER = ${(dataNivel || {})[0].id_menu};`).then(() => {
       res.json({ msj: true })
     });
   });
 
-  app.post('/usuario/asignar/tienda', async (req, res) => {
+  app.post('/usuario/asignar/tienda', async (req, res) => { // configuration/asignation/store - [POST]{id_user,id_store,description_store}
     let dataAsignacion = (req || []).body || [];
     pool.query(`INSERT INTO TB_USUARIO_TIENDAS_ASIGNADAS(ID_USUARIO_TASG,ID_TIENDA_TASG,DESCRIPCION_TIENDA)VALUES('${(dataAsignacion || {})[0].id_usuario}','${(dataAsignacion || {})[0].id_tienda}','${(dataAsignacion || {})[0].descripcion_tienda}');`).then(() => {
       res.json({ msj: true })
     });
   });
 
-  app.post('/usuario/delete/tienda', async (req, res) => {
+  app.post('/usuario/delete/tienda', async (req, res) => { // configuration/asignation/store - [DELETE]{id_asignation}
     let dataAsignacion = (req || []).body || [];
     pool.query(`DELETE FROM TB_USUARIO_TIENDAS_ASIGNADAS WHERE ID_TIENDA_ASIGANADA = ${(dataAsignacion || {})[0].id_tienda_asignada};`).then(() => {
       res.json({ msj: true })
     });
   });
 
-  app.post('/usuario/tiendas/asigandas', async (req, res) => {
+  app.post('/usuario/tiendas/asigandas', async (req, res) => { // configuration/asignation/store - [GET]{id_user}
     let dataUsuario = (req || []).body || [];
     pool.query(`SELECT * FROM TB_USUARIO_TIENDAS_ASIGNADAS WHERE ID_USUARIO_TASG = ${(dataUsuario || {}).id_usuario};`).then(([tiendas]) => {
       res.json(tiendas);

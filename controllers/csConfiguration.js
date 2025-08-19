@@ -75,6 +75,83 @@ class clsConfiguration {
             res.json(responseJSON);
         });
     }
+
+    inMenu = (req, res) => {
+        let nameMenu = ((req || []).body || {})['name_menu'];
+        let route = ((req || []).body || {})['route'];
+        pool.query(`INSERT INTO TB_MENU_SISTEMA(NOMBRE_MENU,RUTA)VALUES('${nameMenu}','${route}');`).then(() => {
+            res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/configuration/menu' }));
+        }).catch(() => {
+            res.status(500).json(mdwErrorHandler.error({ status: 500, type: 'InternalServerError', message: 'Error en la base de datos.', api: '/configuration/menu', data: [] }));
+        });
+    }
+
+    searchMenu = (req, res) => {
+        let level = ((req || {}).query || {}).level;
+        pool.query(`SELECT * FROM TB_PERMISO_SISTEMA INNER JOIN TB_MENU_SISTEMA ON TB_MENU_SISTEMA.ID_MENU = TB_PERMISO_SISTEMA.ID_MENU_PS WHERE TB_PERMISO_SISTEMA.NIVEL = '${level}';`).then(([responseSQL]) => {
+            res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/configuration/menu/search', data: responseSQL }));
+        }).catch(() => {
+            res.status(500).json(mdwErrorHandler.error({ status: 500, type: 'InternalServerError', message: 'Error en la base de datos.', api: '/configuration/menu/search', data: [] }));
+        });
+    }
+
+    inLevel = (req, res) => {
+        let level = ((req || []).body || {}).level;
+        pool.query(`INSERT INTO TB_NIVELES_SISTEMA(NIVEL_DESCRIPCION)VALUES('${level}');`).then(() => {
+            res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/configuration/level', data: [] }));
+        }).catch(() => {
+            res.status(500).json(mdwErrorHandler.error({ status: 500, type: 'InternalServerError', message: 'Error en la base de datos.', api: '/configuration/level', data: [] }));
+        });
+    }
+
+    inPermissionMenu = (req, res) => {
+        let id_menu = ((req || []).body || {}).id_menu || "";
+        let level = ((req || []).body || {}).level || "";
+
+        pool.query(`INSERT INTO TB_PERMISO_SISTEMA(ID_MENU_PS,NIVEL)VALUES(${id_menu},'${level}');`).then(() => {
+            res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/configuration/menu/permission', data: [] }));
+        }).catch(() => {
+            res.status(500).json(mdwErrorHandler.error({ status: 500, type: 'InternalServerError', message: 'Error en la base de datos.', api: '/configuration/menu/permission', data: [] }));
+        });
+    }
+
+    delPermissionMenu = (req, res) => {
+        let id_permission = ((req || {}).query || {}).id_permission || "";
+        pool.query(`DELETE FROM TB_PERMISO_SISTEMA WHERE ID_PERMISO_USER = ${id_permission};`).then(() => {
+            res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/configuration/menu/permission', data: [] }));
+        }).catch(() => {
+            res.status(500).json(mdwErrorHandler.error({ status: 500, type: 'InternalServerError', message: 'Error en la base de datos.', api: '/configuration/menu/permission', data: [] }));
+        });
+    }
+
+    inAsignationStore = (req, res) => {
+        let id_user = ((req || []).body || {}).id_user || "";
+        let id_store = ((req || []).body || {}).id_store || "";
+        let description_store = ((req || []).body || {}).description_store || "";
+        pool.query(`INSERT INTO TB_USUARIO_TIENDAS_ASIGNADAS(ID_USUARIO_TASG,ID_TIENDA_TASG,DESCRIPCION_TIENDA)VALUES('${id_user}','${id_store}','${description_store}');`).then(() => {
+            res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/configuration/asignation/store', data: [] }));
+        }).catch(() => {
+            res.status(500).json(mdwErrorHandler.error({ status: 500, type: 'InternalServerError', message: 'Error en la base de datos.', api: '/configuration/asignation/store', data: [] }));
+        });
+    }
+
+    delAsignationStore = (req, res) => {
+        let id_asignation = ((req || {}).query || {}).id_asignation || "";
+        pool.query(`DELETE FROM TB_USUARIO_TIENDAS_ASIGNADAS WHERE ID_TIENDA_ASIGANADA = ${id_asignation};`).then(() => {
+            res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/configuration/asignation/store', data: [] }));
+        }).catch(() => {
+            res.status(500).json(mdwErrorHandler.error({ status: 500, type: 'InternalServerError', message: 'Error en la base de datos.', api: '/configuration/asignation/store', data: [] }));
+        });
+    }
+
+    searchAsignationStore = (req, res) => {
+        let id_user = ((req || {}).query || {}).id_user || "";
+        pool.query(`SELECT * FROM TB_USUARIO_TIENDAS_ASIGNADAS WHERE ID_USUARIO_TASG = ${id_user};`).then(([responseSQL]) => {
+            res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/configuration/asignation/store', data: responseSQL }));
+        }).catch(() => {
+            res.status(500).json(mdwErrorHandler.error({ status: 500, type: 'InternalServerError', message: 'Error en la base de datos.', api: '/configuration/asignation/store', data: [] }));
+        });
+    }
 }
 
 const configurationController = new clsConfiguration;

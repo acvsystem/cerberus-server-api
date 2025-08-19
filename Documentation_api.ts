@@ -1,6 +1,6 @@
 //DOCUMENTACION DE API's
 
-/* STORES */ //--------
+/* STORES */
     // stores/all - [GET]
         /* JSON RESPONSE
             serie: SERIE_TIENDA
@@ -21,13 +21,13 @@
             online: ISONLINE
         */
 
-/* CONFIGURATION */ //--------
-    // configuration/client/list/clear - [POST]{client_clear}
-    // configuration/client/list/clear - [GET]
+/* CONFIGURATION */
+    /// configuration/client/list/clear - [POST]{client_clear}
+    /// configuration/client/list/clear - [GET]
         /* JSON RESPONSE
             client_clear: LIST_CLIENTE
         */
-    // configuration/plugin/sunat - [GET]
+    /// configuration/plugin/sunat - [GET]
         /* JSON RESPONSE
             XML_ETIQUIETA_GROUP,
             XML_TIPO_FORMULARIO,
@@ -42,18 +42,27 @@
             XML_CHECK_PROMOCION,
             APLICACION_FILE 
         */
-    // configuration/menu/all - [GET]
+    /// configuration/menu/all - [GET]
         /* JSON RESPONSE
             name_menu: NOMBRE_MENU
             route: RUTA
             icon: ICO
         */
-    // configuration/level/all - [GET]
+    /// configuration/level/all - [GET]
         /* JSON RESPONSE
             level: NIVEL_DESCRIPCION
         */
+    /// configuration/menu - [POST]{ name_menu,route}
+    /// configuration/menu/search - [GET]{level}
+    /// configuration/level - [POST]{level}
+    /// configuration/menu/permission - [POST]{id_menu,level}
+    /// configuration/menu/permission - [DELETE]{id_permission}
+    /// configuration/asignation/store - [POST]{id_user,id_store,description_store}
+    /// configuration/asignation/store - [DELETE]{id_asignation}
+    /// configuration/asignation/store - [GET]{id_user}
 
-/* BALLOT */  //--------   
+
+/* BALLOT */  
     // ballot/type/all - [GET]
         /* JSON RESPONSE
             description: DESCRIPCION
@@ -87,13 +96,26 @@
             fecha_creacion: FECHA_CREACION
             horas_extras: []
         */
-
-/* SCHEDULE */ //--------  
+    // ballot/fecha - [PUT]{id_ballot,date}
+        
+/* SCHEDULE */ 
     // schedule/all - [GET]
         /* JSON RESPONSE
             range_days: RANGO_DIAS
             code_store: CODIGO_TIENDA
          */
+    // schedule/generate - [POST][{id,cargo,date,range,code,range_date,days,days_work,days_free,arWorkers,observation}]
+    // schedule/search - [GET]{range_days,code_store}
+    // schedule/range - [POST]{code_store,range,id_schedule}
+    // schedule/range - [PUT]{id_range,range}
+    // schedule/day/work - [POST]{code_store,identity_document,full_name,id_range,id_day,id_schedule}
+    // schedule/day/work - [DELETE]{id_daywork}
+    // schedule/day/free - [POST]{ code_store,identity_document,full_name,id_range,id_day,id_schedule}
+    // schedule/day/free - [DELETE]{id_dayfree}
+    // schedule/observation - [POST]{id_day,id_schedule,code_store,full_name,observation}
+    // schedule/observation - [PUT]{id,new_observation}
+    // schedule/observation - [DELETE]{id_observation}
+    // schedule/register - [POST][{id,cargo,date,range,code,range_date,days,days_work,days_free,arWorkers,observation}]
 
 /* SECURITY */
     // security/session/login/all - [GET]
@@ -118,8 +140,10 @@
             email: EMAIL
             level: NIVEL
         */
-
-/* COMPUTERS */ //--------  
+    // security/session/auth - [DELETE]{id_session}
+    // security/user - [POST]{ username,password,default_page,email,level}
+    // security/user - [PUT]{ id_user,username,password,default_page,email,level}
+/* COMPUTERS */
     // computers/all - [GET]
         /* JSON RESPONSE
             description: DESCRIPCION
@@ -129,5 +153,9 @@
             online: ONLINE
             service_unit: UNID_SERVICIO
         */
+
+/* TRANSFERS */
+    // transfers/upload/file - [POST]{formData:Blob}
+
 /* HUMAN RESOURCES */
 

@@ -7,6 +7,7 @@ class mddlErrorHandler {
                 message: err.message || 'Error interno del servidor'
             },
             path: err.api,
+            data: err.data || [],
             timestamp: new Date().toISOString()
         };
     };
