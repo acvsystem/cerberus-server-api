@@ -61,6 +61,16 @@ class clsBallot {
             res.json(responseJSON);
         });
     }
+
+    updBallot = (req, res) => {
+        let id_ballot = ((req || []).body || {}).id_ballot || "";
+        let date = ((req || []).body || {}).date || "";
+        pool.query(`UPDATE TB_HEAD_PAPELETA SET FECHA_DESDE = '${date}', FECHA_HASTA = '${date}' WHERE ID_HEAD_PAPELETA = ${id_ballot};`).then(() => {
+            res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/ballot/fecha', data: [] }));
+        }).catch(() => {
+            res.status(500).json(mdwErrorHandler.error({ status: 500, type: 'InternalServerError', message: 'Error en la base de datos.', api: '/ballot/fecha', data: [] }));
+        });
+    }
 }
 
 const ballotController = new clsBallot;

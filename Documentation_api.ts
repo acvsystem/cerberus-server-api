@@ -63,11 +63,11 @@
 
 
 /* BALLOT */  
-    // ballot/type/all - [GET]
+    /// ballot/type/all - [GET]
         /* JSON RESPONSE
             description: DESCRIPCION
         */
-    // ballot/authorization/all - [GET]
+    /// ballot/authorization/all - [GET]
         /* JSON RESPONSE
             accumulated_overtime: HR_EXTRA_ACOMULADO
             document_employe: TB_AUTORIZAR_HR_EXTRA
@@ -79,7 +79,7 @@
             modified_by: USUARIO_MODF
             comment: COMENTARIO
         */
-    // ballot/all - [GET]
+    /// ballot/all - [GET]
         /* JSON RESPONSE
             codigo_papeleta: CODIGO_PAPELETA
             nombre_completo: NOMBRE_COMPLETO
@@ -96,7 +96,7 @@
             fecha_creacion: FECHA_CREACION
             horas_extras: []
         */
-    // ballot/fecha - [PUT]{id_ballot,date}
+    /// ballot/fecha - [PUT]{id_ballot,date}
         
 /* SCHEDULE */ 
     // schedule/all - [GET]
