@@ -8,6 +8,11 @@ import CryptoJS from 'crypto-js';
 import { pool } from "../conections/conexMysql.js";
 import { prop as defaultResponse } from "../const/defaultResponse.js";
 
+
+
+
+
+
 router.post('/login', Login);
 router.get('/emailList', EmailList);
 router.post('/service/cliente/list/delete', async (req, res) => {

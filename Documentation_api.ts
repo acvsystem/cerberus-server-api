@@ -1,7 +1,7 @@
 //DOCUMENTACION DE API's
 
 /* STORES */
-    // stores/all - [GET]
+    /// stores/all - [GET]
         /* JSON RESPONSE
             serie: SERIE_TIENDA
             description: DESCRIPCION
@@ -12,7 +12,7 @@
             email: EMAIL
             code_store_ejb: COD_TIENDA_EJB
          */
-    // stores/terminals/all - [GET]
+    /// stores/terminals/all - [GET]
         /* JSON RESPONSE
             code_terminal: CODIGO_TERMINAL
             description: DESCRIPCION
@@ -109,30 +109,30 @@
     /// schedule/range - [POST]{code_store,range,id_schedule}
     /// schedule/range - [PUT]{id_range,range}
     /// schedule/day/work - [POST]{code_store,identity_document,full_name,id_range,id_day,id_schedule}
-    // schedule/day/work - [DELETE]{id_daywork}
-    // schedule/day/free - [POST]{ code_store,identity_document,full_name,id_range,id_day,id_schedule}
-    // schedule/day/free - [DELETE]{id_dayfree}
-    // schedule/observation - [POST]{id_day,id_schedule,code_store,full_name,observation}
-    // schedule/observation - [PUT]{id,new_observation}
-    // schedule/observation - [DELETE]{id_observation}
-    // schedule/register - [POST][{id,cargo,date,range,code,range_date,days,days_work,days_free,arWorkers,observation}]
+    /// schedule/day/work - [DELETE]{id_daywork}
+    /// schedule/day/free - [POST]{ code_store,identity_document,full_name,id_range,id_day,id_schedule}
+    /// schedule/day/free - [DELETE]{id_dayfree}
+    /// schedule/observation - [POST]{id_day,id_schedule,code_store,full_name,observation}
+    /// schedule/observation - [PUT]{id_observation,new_observation}
+    /// schedule/observation - [DELETE]{id_observation}
+    /// schedule/register - [POST][{id,cargo,date,range,code,range_date,days,days_work,days_free,arWorkers,observation}]
 
 /* SECURITY */
-    // security/session/login/all - [GET]
+    /// security/session/login/all - [GET]
         /* JSON RESPONSE
             email: EMAIL
             ip: IP
             divice: DIVICE
             authorized: AUTORIZADO
         */
-    // security/session/auth/all - [GET]
+    /// security/session/auth/all - [GET]
         /* JSON RESPONSE
             id: ID_AUTH_SESSION
             email: EMAIL
             code: CODIGO
             hash: HASH
         */
-    // security/users/all - [GET]
+    /// security/users/all - [GET]
         /* JSON RESPONSE
             user: USUARIO
             password: PASSWORD
@@ -140,11 +140,17 @@
             email: EMAIL
             level: NIVEL
         */
-    // security/session/auth - [DELETE]{id_session}
-    // security/user - [POST]{ username,password,default_page,email,level}
-    // security/user - [PUT]{ id_user,username,password,default_page,email,level}
+    /// security/session/auth - [DELETE]{id_session}
+        /* JSON RESPONSE
+            id: ID_AUTH_SESSION
+            email: EMAIL
+            code: CODIGO
+            hash: HASH
+        */
+    /// security/user - [POST]{ username,password,default_page,email,level}
+    /// security/user - [PUT]{ id_user,username,password,default_page,email,level}
 /* COMPUTERS */
-    // computers/all - [GET]
+    /// computers/all - [GET]
         /* JSON RESPONSE
             description: DESCRIPCION
             box_number: NUM_CAJA

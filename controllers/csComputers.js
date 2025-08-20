@@ -19,6 +19,8 @@ class clsComputers {
             res.json(responseJSON);
         });
     }
+
+    
 }
 
 const computersController = new clsComputers;

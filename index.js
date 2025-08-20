@@ -1643,7 +1643,7 @@ io.on('connection', async (socket) => {
   });
 
   //EDITAR OBSERVACION DE SEARCH
-  app.post("/horario/update/observacion", async (req, res) => { // schedule/observation - [PUT]{id,new_observation}
+  app.post("/horario/update/observacion", async (req, res) => { // schedule/observation - [PUT]{id_observation,new_observation}
     let id_registro = ((req || {}).body || {})['id'];
     let observacion = ((req || {}).body || {})['observacion'];
 
