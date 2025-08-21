@@ -22,6 +22,9 @@ import multer from 'multer';
 import { Client } from "basic-ftp"
 import mdwErrorHandler from './middleware/errorHandler.js';
 import mdlNotificacion from './class/clsNotificaciones.js';
+import scheduleController from './controllers/csSchedule.js';
+import scheduleRoutes from './routes/schedule.routes.js';
+import configurationRoutes from './routes/configuration.routes.js';
 //import services from './services/notificaciones.js';
 
 const app = express();
@@ -42,8 +45,8 @@ app.use("/security", securityRoutes);
 app.use("/recursos_humanos", recursosHumanosRoutes);
 app.use("/sistema", frontRetailRoutes);
 app.use("/stores", storesRoutes);
-app.use("/configuration", configurationController);
-
+app.use("/configuration", configurationRoutes);
+app.use("/schedule", scheduleRoutes);
 
 
 // Middleware de logging
@@ -199,6 +202,7 @@ function onVerificarCalendario() {
 
 
 io.on('connection', async (socket) => {
+  
   const clientIp = socket.handshake.address;
   const auth_token = socket.handshake.auth.token;
   const payload = tokenController.verificationToken(auth_token);

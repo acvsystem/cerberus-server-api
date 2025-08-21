@@ -15,6 +15,12 @@ router.delete('/menu/permission', configurationController.delPermissionMenu);
 router.post('/asignation/store', configurationController.inAsignationStore);
 router.delete('/asignation/store', configurationController.delAsignationStore);
 router.get('/asignation/store', configurationController.searchAsignationStore);
+router.get('/permission/scheduleBallot', configurationController.allPermissionSB);//configuracion/permisos/hp
+router.post('/permission/scheduleBallot', configurationController.inPermissionSB);//configuracion/permisos/hp
+router.get('time/tolerance', configurationController.allTimeTolerance);//configuracion/tiempo/tolerancia
+router.post('time/tolerence',configurationController.inTimeTolerance);// configuracion/tiempo/tolerancia
+
+
 
 const configurationRoutes = router;
 export default configurationRoutes

@@ -1,4 +1,5 @@
 import { pool } from '../conections/conexMysql.js';
+import toolFunctions from '../services/toolFunctions.js';
 import mdwErrorHandler from '../middleware/errorHandler.js';
 
 class clsConfiguration {
@@ -150,6 +151,86 @@ class clsConfiguration {
             res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/configuration/asignation/store', data: responseSQL }));
         }).catch(() => {
             res.status(500).json(mdwErrorHandler.error({ status: 500, type: 'InternalServerError', message: 'Error en la base de datos.', api: '/configuration/asignation/store', data: [] }));
+        });
+    }
+
+    allPermissionSB = (req, res) => {
+        const arPermission = toolFunctions.allPermissionSB();
+        let responseJSON = [];
+        (arPermission || []).filter((permiss) => {
+            (responseJSON || []).push({
+                id_config_sb: permiss.ID_CONF_HP,
+                id_store: permiss.ID_TIENDA,
+                serie_store: permiss.SERIE_TIENDA,
+                name_store: permiss.DESCRIPTION,
+                is_free_schedule: permiss.IS_FREE_HORARIO,
+                is_free_ballot: permiss.IS_FREE_PAPELETA
+            });
+        });
+
+        res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/configuration/permission/scheduleBallot', data: responseJSON }));
+    }
+
+    inPermissionSB = (req, res) => {
+        let is_permission_schedule = ((req || {}).body || {}).is_permission_schedule;
+        let is_permission_ballot = ((req || {}).body || {}).is_permission_ballot;
+        let id_config_sb = ((req || {}).body || {}).id_config_sb;
+
+        pool.query(`UPDATE TB_CONFIGURACION_HORARIO_PAP SET IS_FREE_HORARIO = ${is_permission_schedule}, IS_FREE_PAPELETA = ${is_permission_ballot} WHERE ID_CONF_HP = ${id_config_sb};`).then(() => {
+            const arPermission = toolFunctions.allPermissionSB();
+            let responseJSON = [];
+            (arPermission || []).filter((permiss) => {
+                (responseJSON || []).push({
+                    id_config_sb: permiss.ID_CONF_HP,
+                    id_store: permiss.ID_TIENDA,
+                    serie_store: permiss.SERIE_TIENDA,
+                    name_store: permiss.DESCRIPTION,
+                    is_free_schedule: permiss.IS_FREE_HORARIO,
+                    is_free_ballot: permiss.IS_FREE_PAPELETA
+                });
+            });
+
+            res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/configuration/permission/scheduleBallot', data: responseJSON }));
+        });
+    }
+
+    allTimeTolerance = (req, res) => {
+        pool.query(`SELECT * FROM TB_CONFIGURACION_TOLERANCIA_HORA;`).then(([tolerance]) => {
+            let responseJSON = [];
+
+            (tolerance || []).filter((tolerance) => {
+                responseJSON.push({
+                    reference: tolerance.REFERENCIA,
+                    time_tolerance: TIEMPO_TOLERANCIA
+                });
+            });
+
+            res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/configuration/permission/scheduleBallot', data: responseJSON }));
+        });
+    }
+
+    inTimeTolerance = (req, res) => {
+        let reference = ((req || {}).body || {}).reference;
+        let time_tolerance = ((req || {}).body || {}).time_tolerance;
+
+        pool.query(`SELECT * FROM TB_CONFIGURACION_TOLERANCIA_HORA WHERE REFERENCIA = '${reference}';`).then(([tolerance]) => {
+
+            if (!(tolerance || []).length) {
+                pool.query(`INSERT INTO TB_CONFIGURACION_TOLERANCIA_HORA(REFERENCIA,TIEMPO_TOLERANCIA)VALUES('${reference}','${time_tolerance}')`).then(() => {
+                    res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/configuracion/tiempo/tolerancia', data: [] }));
+                }).catch((err) => {
+                    res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'OK', message: err, api: '/configuracion/tiempo/tolerancia', data: [] }));
+                });
+            } else {
+                let id_tolerance = ((tolerance || [])[0] || {}).ID_TOLERANCIA;
+                pool.query(`UPDATE TB_CONFIGURACION_TOLERANCIA_HORA SET TIEMPO_TOLERANCIA = '${time_tolerance}' WHERE ID_TOLERANCIA = ${id_tolerance}`).then(() => {
+                    res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/configuracion/tiempo/tolerancia', data: [] }));
+                }).catch((err) => {
+                    res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'OK', message: err, api: '/configuracion/tiempo/tolerancia', data: [] }));
+                });
+            }
+        }).catch((err) => {
+            res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'OK', message: err, api: '/configuracion/tiempo/tolerancia', data: [] }));
         });
     }
 }

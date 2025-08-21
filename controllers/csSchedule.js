@@ -23,7 +23,7 @@ class clsSchedule {
         let range = ((dataSchedule || [])[0] || {})['range'];
         let resSchedule = [];
 
-        await(dataSchedule || []).filter(async (schedule, indexSchedule) => {
+        (dataSchedule || []).filter(async (schedule, indexSchedule) => {
             let [arScheduleProperty] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE RANGO_DIAS = '${(schedule || {}).range}' AND CODIGO_TIENDA = '${(schedule || {}).code_store}';`);
             if (!(arScheduleProperty || []).length) {
                 await pool.query(`INSERT INTO TB_HORARIO_PROPERTY(CARGO,CODIGO_TIENDA,FECHA,RANGO_DIAS)VALUES('${(schedule || {}).cargo}','${(schedule || {}).code_store}','${(schedule || {}).date}','${(schedule || {}).range}')`);
@@ -440,6 +440,7 @@ class clsSchedule {
                 }, 2000);
             }
         });
+        
     }
 }
 

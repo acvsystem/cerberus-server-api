@@ -149,6 +149,44 @@
         */
     /// security/user - [POST]{ username,password,default_page,email,level}
     /// security/user - [PUT]{ id_user,username,password,default_page,email,level}
+    /// security/login - [POST]{ username,password}
+        /* JSON RESPONSE
+            auth: { token: token }
+            page: { default: DEFAULT_PAGE }
+            profile: {
+                name: USUARIO,
+                codigo: code,
+                nameTienda: nameTienda,
+                email: EMAIL,
+                nivel: NIVEL
+            },
+            menu: dataUser
+        */
+
+    /// security/inventaryEmail
+        /* JSON RESPONSE
+            email: EMAIL
+        */
+    /// security/parameter/store
+        /* JSON RESPONSE
+            box_number: parameter.NUM_CAJA,
+            mac: parameter.MAC,
+            serie_store: parameter.SERIE_TIENDA,
+            database_instance: parameter.DATABASE_INSTANCE,
+            database_name: parameter.DATABASE_NAME,
+            code_type_bill: parameter.COD_TIPO_FAC,
+            code_type_ticket: parameter.COD_TIPO_BOL,
+            property_stock: parameter.PROPERTY_STOCK,
+            subject_email_report_stock: parameter.ASUNTO_EMAIL_REPORT_STOCK,
+            name_excel_report_sotck: parameter.NAME_EXCEL_REPORT_STOCK,
+            route_download_py: parameter.RUTA_DOWNLOAD_PY,
+            route_download_sunat: parameter.RUTA_DOWNLOAD_SUNAT,
+            route_download_validation: parameter.RUTA_DOWNLOAD_VALIDACION,
+            is_main_server: parameter.IS_PRINCIPAL_SERVER,
+            ip: parameter.IP,
+            online: parameter.ONLINE,
+            unit_service: parameter.UNID_SERVICIO
+        */       
 /* COMPUTERS */
     /// computers/all - [GET]
         /* JSON RESPONSE

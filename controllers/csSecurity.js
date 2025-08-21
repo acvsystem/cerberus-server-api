@@ -1,195 +1,338 @@
-import { pool } from "../conections/conexMysql.js";
-import { prop as defaultResponse } from "../const/defaultResponse.js";
-import { prop } from "../keys.js";
+import { pool } from '../conections/conexMysql.js';
+import srvToolFunction from '../services/toolFunctions.js';
 import tokenController from "./csToken.js";
-import Jwt from "jsonwebtoken";
-import request from "request";
+import mdwErrorHandler from '../middleware/errorHandler.js';
 
-export const Login = async (req, res) => {
-  console.log(req);
-  let objLogin = req.body;
-  let usuario = objLogin["usuario"].replace(/[^a-zA-Z-0-9 ]/g, "");
-  let password = objLogin["password"];
-  await pool.query(`SELECT ID_LOGIN,USUARIO,DEFAULT_PAGE,TB_LOGIN.NIVEL,NOMBRE_MENU,RUTA,EMAIL FROM TB_PERMISO_SISTEMA INNER JOIN TB_MENU_SISTEMA ON TB_MENU_SISTEMA.ID_MENU = TB_PERMISO_SISTEMA.ID_MENU_PS
-                    INNER JOIN TB_LOGIN ON TB_LOGIN.NIVEL = TB_PERMISO_SISTEMA.NIVEL WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}'`).then(([dataUser]) => {
+class clsSecurity {
 
-    let nivelUser = ((dataUser || [])[0] || {}).USUARIO;
-    let idUsuario = ((dataUser || [])[0] || {}).ID_LOGIN;
-    if (dataUser.length > 0) {
+  allSessionLogin = (req, res) => {
+    pool.query(`SELECT * FROM TB_SESSION_LOGIN;`).then(([requestSQL]) => {
+      let responseJSON = [];
 
-      const token = tokenController.createToken(idUsuario, usuario, nivelUser);
+      (requestSQL || []).filter((sql) => {
+        responseJSON.push({
+          email: (sql || {}).EMAIL,
+          ip: (sql || {}).IP,
+          divice: (sql || {}).DIVICE,
+          authorized: (sql || {}).AUTORIZADO
+        });
+      });
 
-      let tiendasList = [
-        { code: '7A', user: 'bbwjoc', nameTienda: 'BBW JOCKEY' },
-        { code: '9N', user: 'vsaqp', nameTienda: 'VS MALL AVENTURA' },
-        { code: '7J', user: 'bbwaqp', nameTienda: 'BBW MALL AVENTURA' },
-        { code: '7E', user: 'bbwlrb', nameTienda: 'BBW LA RAMBLA' },
-        { code: '9D', user: 'vslrb', nameTienda: 'VS LA RAMBLA' },
-        { code: '9B', user: 'vspn', nameTienda: 'VS PLAZA NORTE' },
-        { code: '7C', user: 'bbwpsm', nameTienda: 'BBW SAN MIGUEL' },
-        { code: '9C', user: 'vspsm', nameTienda: 'VS SAN MIGUEL' },
-        { code: '7D', user: 'bbwrps', nameTienda: 'BBW SALAVERRY' },
-        { code: '9I', user: 'vsrps', nameTienda: 'VS SALAVERRY' },
-        { code: '9G', user: 'vsmds', nameTienda: 'VS MALL DEL SUR' },
-        { code: '9H', user: 'vspur', nameTienda: 'VS PURUCHUCO' },
-        { code: '9M', user: 'vsecom', nameTienda: 'VS ECOMMERCE' },
-        { code: '7F', user: 'bbwecom', nameTienda: 'BBW ECOMMERCE' },
-        { code: '9K', user: 'vsmep', nameTienda: 'VS MEGA PLAZA' },
-        { code: '9L', user: 'vsmnk', nameTienda: 'VS MINKA' },
-        { code: '9F', user: 'vsfajoc', nameTienda: 'VSFA JOCKEY FULL' },
-        { code: '7A7', user: 'bbwasia', nameTienda: 'BBW ASIA' },
-        { code: '9P', user: 'vsmptru', nameTienda: 'VS MALL PLAZA' },
-        { code: '7I', user: 'bbwmptru', nameTienda: 'BBW MALL PLAZA' },
-        { code: '9Q', user: 'vssa', nameTienda: 'VS MALL AVENTURA SA' }
-      ];
+      res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/security/session/login/all', data: responseJSON }));
+    }).catch((err) => {
+      res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'Error', message: err, api: '/security/session/login/all', data: [] }));
+    });
+  }
 
-      let selectedUser = (tiendasList || []).find((tnd) => tnd.user == usuario);
+  allSessionAuth = (req, res) => {
+    pool.query(`SELECT * FROM TB_AUTH_SESSION;`).then(([requestSQL]) => {
+      let responseJSON = [];
 
-      let parseResponse = [{
-        auth: { token: token },
-        page: { default: ((dataUser || [])[0] || {}).DEFAULT_PAGE },
-        profile: {
-          name: ((dataUser || [])[0] || {}).USUARIO,
-          codigo: (selectedUser || []).code || "",
-          nameTienda: (selectedUser || []).nameTienda || "",
-          email: ((dataUser || [])[0] || {}).EMAIL,
-          nivel: ((dataUser || [])[0] || {}).NIVEL
-        },
-        menu: dataUser || []
-      }];
+      (requestSQL || []).filter((sql) => {
+        responseJSON.push({
+          id: (sql || {}).ID_AUTH_SESSION,
+          email: (sql || {}).EMAIL,
+          code: (sql || {}).CODIGO,
+          hash: (sql || {}).HASH
+        });
+      });
 
-      res.header("Authorization", token).json(parseResponse);
-    } else {
-      res.json(defaultResponse.error.login);
+      res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/security/session/auth/all', data: responseJSON }));
+    }).catch((err) => {
+      res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'Error', message: err, api: '/security/session/auth/all', data: [] }));
+    });
+  }
+
+  allUser = (req, res) => {
+    pool.query(`SELECT * FROM TB_LOGIN;`).then(([requestSQL]) => {
+      let responseJSON = [];
+
+      (requestSQL || []).filter((sql) => {
+        responseJSON.push({
+          user: (sql || {}).USUARIO,
+          password: (sql || {}).PASSWORD,
+          default_page: (sql || {}).DEFAULT_PAGE,
+          email: (sql || {}).EMAIL,
+          level: (sql || {}).NIVEL
+        });
+      });
+
+      res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/security/users/all', data: responseJSON }));
+    }).catch((err) => {
+      res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'Error', message: err, api: '/security/users/all', data: [] }));
+    });
+  }
+
+  delAuthorization = (req, res) => {
+    let id_session = ((req || {}).query || {}).id_session;
+    pool.query(`DELETE FROM TB_AUTH_SESSION WHERE ID_AUTH_SESSION='${id_session}';`).then(() => {
+      pool.query(`SELECT * FROM TB_AUTH_SESSION;`).then(([requestSQL]) => {
+        let responseJSON = [];
+
+        (requestSQL || []).filter((sql) => {
+          responseJSON.push({
+            id: (sql || {}).ID_AUTH_SESSION,
+            email: (sql || {}).EMAIL,
+            code: (sql || {}).CODIGO,
+            hash: (sql || {}).HASH
+          });
+        });
+
+        res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/security/users/all', data: responseJSON }));
+      }).catch((err) => {
+        res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'Error session list', message: err, api: '/security/session/auth', data: [] }));
+      });
+    }).catch((err) => {
+      res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'Error Delete', message: err, api: '/security/session/auth', data: [] }));
+    });
+  }
+
+  inUser = (req, res) => {
+    let username = ((req || []).body || {}).username;
+    let password = ((req || []).body || {}).password;
+    let default_page = ((req || []).body || {}).default_page;
+    let email = ((req || []).body || {}).email;
+    let level = ((req || []).body || {}).level;
+
+    pool.query(`SELECT * FROM TB_LOGIN WHERE USUARIO = '${username}';`).then(([resquesSQL]) => {
+      if (!(resquesSQL || []).length) {
+        pool.query(`INSERT INTO TB_LOGIN(USUARIO,PASSWORD,DEFAULT_PAGE,EMAIL,NIVEL)VALUES('${username}','${password}','${default_page}','${email}','${level}');`).then(() => {
+          res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/security/user', data: [] }));
+        });
+      } else {
+        res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'Error', message: err, api: '/security/user', data: [] }));
+      }
+    });
+  }
+
+  updUser = (req, res) => {
+    let id_user = ((req || []).body || {}).id_user;
+    let username = ((req || []).body || {}).username;
+    let password = ((req || []).body || {}).password;
+    let default_page = ((req || []).body || {}).default_page;
+    let email = ((req || []).body || {}).email;
+    let level = ((req || []).body || {}).level;
+
+    pool.query(`UPDATE TB_LOGIN SET USUARIO = '${username}',PASSWORD = '${password}',DEFAULT_PAGE = '${default_page}',EMAIL = '${email}',NIVEL = '${level}' WHERE ID_LOGIN = ${id_user};`).then(() => {
+      res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/security/user', data: [] }));
+    });
+  }
+
+  login = async (req, res) => {
+    try {
+      let username = (((req || {}).body || {}).username || "").replace(/[^a-zA-Z-0-9 ]/g, "");;
+      let password = ((req || {}).body || {}).password;
+
+      let dataUser = await srvToolFunction.verifyUser(username, password);
+
+      let level_user = ((dataUser || [])[0] || {}).USUARIO;
+      let id_user = ((dataUser || [])[0] || {}).ID_LOGIN;
+
+      if ((dataUser || []).length > 0) {
+
+        const token = await tokenController.createToken(id_user, username, level_user);
+        const allUserStore = await srvToolFunction.userStore();
+
+        let selectedUser = (allUserStore || []).find((uStore) => (uStore || {}).USUARIO == username);
+
+        let parseResponse = [{
+          auth: { token: token },
+          page: { default: ((dataUser || [])[0] || {}).DEFAULT_PAGE },
+          profile: {
+            name: username,
+            codigo: (selectedUser || []).SERIE_TIENDA || "",
+            nameTienda: (selectedUser || []).DESCRIPCION || "",
+            email: ((dataUser || [])[0] || {}).EMAIL,
+            nivel: ((dataUser || [])[0] || {}).NIVEL
+          },
+          menu: dataUser || []
+        }];
+
+        res.header("Authorization", token).json(parseResponse);
+      } else {
+        res.status(401).json(mdwErrorHandler.error({ status: 401, type: 'Error', message: 'Error de autenticacion', api: '/security/login', data: [] }));
+      }
+    } catch (err) {
+      res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'Error', message: err, api: '/security/login', data: [] }));
     }
-  });
+  }
+
+  allInventoryEmail = async (req, res) => {
+    try {
+      const allEmail = await srvToolFunction.inventaryEmail();
+      let arEmail = [];
+
+      (allEmail || []).filter((uEmail) => {
+        (arEmail || []).push({ email: uEmail.EMAIL });
+      });
+
+      res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/security/inventaryEmail', data: arEmail }));
+    } catch (error) {
+      res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'Error', message: err, api: '/security/inventaryEmail', data: [] }));
+    }
+  };
+
+  allParameterStore = async (req, res) => {
+    try {
+      const allParameterStore = await srvToolFunction.allParameterStore();
+      let arParameter = [];
+
+      (allParameterStore || []).filter((parameter) => {
+        (arParameter || []).push({
+          box_number: parameter.NUM_CAJA,
+          mac: parameter.MAC,
+          serie_store: parameter.SERIE_TIENDA,
+          database_instance: parameter.DATABASE_INSTANCE,
+          database_name: parameter.DATABASE_NAME,
+          code_type_bill: parameter.COD_TIPO_FAC,
+          code_type_ticket: parameter.COD_TIPO_BOL,
+          property_stock: parameter.PROPERTY_STOCK,
+          subject_email_report_stock: parameter.ASUNTO_EMAIL_REPORT_STOCK,
+          name_excel_report_sotck: parameter.NAME_EXCEL_REPORT_STOCK,
+          route_download_py: parameter.RUTA_DOWNLOAD_PY,
+          route_download_sunat: parameter.RUTA_DOWNLOAD_SUNAT,
+          route_download_validation: parameter.RUTA_DOWNLOAD_VALIDACION,
+          is_main_server: parameter.IS_PRINCIPAL_SERVER,
+          ip: parameter.IP,
+          online: parameter.ONLINE,
+          unit_service: parameter.UNID_SERVICIO
+        });
+      });
+
+      res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/security/inventaryEmail', data: arParameter }));
+    } catch (error) {
+      res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'Error', message: err, api: '/security/inventaryEmail', data: [] }));
+    }
+  }
+
+  genHashPlugin = (req, res) => {
+    const token = req.header('Authorization') || "";
+    let body = (req || {}).body || {};
+    let resValidation = tokenController.verificationToken(token);
+
+    if ((resValidation || {}).isValid) {
+      let data = {
+        user: "DUNAMIS",
+        nivel: (body || {}).nivel
+      };
+
+      const hash = CryptoJS.AES.encrypt(JSON.stringify(data), defaultResponse.keyCryptHash).toString();
+
+      res.json({ success: true, hash: hash });
+    } else {
+      return res.status(401).json('Access denied');
+    }
+  }
+
+  downloadFile = (req, res) => {
+    let token = req.header('Authorization');
+    let hash = req.header('hash');
+
+    if (hash) {
+      var bytes = CryptoJS.AES.decrypt(hash, defaultResponse.keyCryptHash);
+      var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8)) || {};
+
+      if (Object.keys(decryptedData).length) {
+        token = tokenController.createToken((decryptedData || {}).user, (decryptedData || {}).nivel);
+      }
+    }
+
+    let resValidation = tokenController.verificationToken(token);
+
+    if ((resValidation || {}).isValid) {
+      let file = "";
+
+      switch (((resValidation || {}).decoded || {}).aud) {
+        case "SUNAT_ICG.zip":
+          file = pathDownload.path.sunat;
+          break;
+        case "XML_SUNAT_ICG.zip":
+          file = pathDownload.path.sunatXML;
+          break;
+        case "VALIDACION.zip":
+          file = pathDownload.path.totalizacion;
+          break;
+        case "DLL_NOTA_CREDITO.zip":
+          file = pathDownload.path.notaCredito;
+          break;
+        case "PLUGIN_APP_METAS_PERU_VS":
+          file = pathDownload.path.appMetasvs;
+          break;
+        case "PLUGIN_APP_METAS_PERU_BBW":
+          file = pathDownload.path.appMetasbbw;
+          break;
+        case "PLUGIN_APP_METAS_PERU_VSFA":
+          file = pathDownload.path.appMetasvsfa;
+          break;
+        case "PLUGIN_APP_METAS_PERU_ECOM":
+          file = pathDownload.path.appMetasecom;
+      }
+
+      var fileLocation = path.join('./', file);
+
+      res.download(fileLocation, file);
+    } else {
+      return res.status(401).json('Access denied');
+    }
+  }
 
 
-};
+  createAccessPostulant = async (req, res) => {
+    const auth_token = req.header("Authorization") || "";
+    const payload = tokenController.verificationToken(auth_token);
+    let tokenDecode = payload;
 
-export const EmailList = async (req, res) => {
+    if ((tokenDecode || {}).isValid) {
+      let privateKey = prop.keyCrypt;
 
-  res.json([
-    { mail: "inventariogd.peru@gmail.com" },
-    { mail: "josecarreno@metasperu.com" },
-    { mail: "itperu@metasperu.com" },
-    { mail: "johnnygermano@metasperu.com" },
-    { mail: "logisticaperu@metasperu.com" },
-    { mail: "carlosmoron@metasperu.com" }
-  ]);
-};
+      let option = {
+        expiresIn: "10800s",
+        issuer: "cerberus.server",
+        audience: `${((tokenDecode || {}).decoded || {}).aud}`,
+      };
 
-export const createMenuProfile = async (req, res) => {
-  let request = req.body;
-  let idProfile = (request || {}).idProfile;
-  let noOptionList = [];
-  let menuUser = [];
-
-  noOptionList = (request || {}).noOption || [];
-  menuUser = (request || {}).menu || [];
-
-  await pool.query(`DELETE FROM TB_PERMISO_SISTEMA WHERE ID_ROL_PERMISO = ${idProfile};`);
-
-  if (menuUser.length) {
-    await menuUser.filter(async (op) => {
-      await pool.query(
-        `INSERT INTO TB_PERMISO_SISTEMA(ID_ROL_PERMISO,ID_MENU_PERMISO)VALUES(${idProfile},${op});`
+      const token = Jwt.sign({ id: (option || {}).audience },
+        `${privateKey}`,
+        option
       );
-    });
-  }
+      let urlAccess = "";
+      var options = {
+        method: "POST",
+        url: `https://urlbae.com/api/url/add`,
+        headers: {
+          Authorization: "Bearer b0e4b5f92b7334796e0af3ed4fabd3cd",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          url: `http://159.65.226.239:5000/postulante/${token}`,
+        }),
+      };
 
-  console.log(request);
-  res.json(defaultResponse.success.default);
-};
-
-export const CreateNewUser = async (req, res) => {
-  let newRegister = (req || {}).body || {};
-  let headers = (req || {}).headers;
-  let validToken = await tokenController.verificationToken(
-    (headers || {}).authorization
-  );
-  console.log(validToken);
-  let [nivel] = await pool.query(
-    `SELECT * FROM TB_ROL_SISTEMA WHERE NOMBRE_ROL='${((validToken || {}).decoded || {}).aud
-    }'`
-  );
-
-  await pool.query(`INSERT INTO TB_USUARIO(USUARIO,PASSWORD,EMAIL,ID_ROL_USUARIO)
-            VALUES('${newRegister.usuario}','${newRegister.password}','${newRegister.mail}',${((nivel || [])[0] || {}).ID_ROL
-    })`);
-
-  const [id_new_user] = await pool.query(
-    `SELECT ID_LOGIN FROM TB_USUARIO WHERE USUARIO = '${newRegister.usuario}' AND PASSWORD = '${newRegister.password}'`
-  );
-
-  if (id_new_user.length) {
-    res.json(defaultResponse.success.default);
-  } else {
-    res.json(defaultResponse.error.default);
-  }
-};
-
-export const createAccessPostulant = async (req, res) => {
-  const auth_token = req.header("Authorization") || "";
-  const payload = tokenController.verificationToken(auth_token);
-  let tokenDecode = payload;
-
-  if ((tokenDecode || {}).isValid) {
-    let privateKey = prop.keyCrypt;
-
-    let option = {
-      expiresIn: "10800s",
-      issuer: "cerberus.server",
-      audience: `${((tokenDecode || {}).decoded || {}).aud}`,
-    };
-
-    const token = Jwt.sign({ id: (option || {}).audience },
-      `${privateKey}`,
-      option
-    );
-    let urlAccess = "";
-    var options = {
-      method: "POST",
-      url: `https://urlbae.com/api/url/add`,
-      headers: {
-        Authorization: "Bearer b0e4b5f92b7334796e0af3ed4fabd3cd",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        url: `http://159.65.226.239:5000/postulante/${token}`,
-      }),
-    };
-
-    request(options, function (error, response) {
-      if (error) throw new Error(error);
-      console.log("createAccessPostulant", (((response || {}).body || {})));
-      urlAccess = JSON.parse(((response || {}).body || '{}'))["shorturl"] || `http://159.65.226.239:5000/postulante/${token}`;
-      res.json(urlAccess);
-    });
+      request(options, function (error, response) {
+        if (error) throw new Error(error);
+        console.log("createAccessPostulant", (((response || {}).body || {})));
+        urlAccess = JSON.parse(((response || {}).body || '{}'))["shorturl"] || `http://159.65.226.239:5000/postulante/${token}`;
+        res.json(urlAccess);
+      });
 
 
-  } else {
-    res.status(401).send(defaultResponse.error.default);
-  }
-};
+    } else {
+      res.status(401).send(defaultResponse.error.default);
+    }
+  };
 
-export const validationAccessPostulant = async (req, res) => {
-  const auth_token = ((req || {}).body || {}).token || "";
-  const payload = tokenController.verificationToken(auth_token);
-  const tokenDecode = payload;
-  if ((tokenDecode || {}).isValid) {
-    res.header("Authorization", auth_token).json(prop.success.default);
-  } else {
-    res.status(401).send(defaultResponse.error.default);
-  }
-};
+  validationAccessPostulant = async (req, res) => {
+    const auth_token = ((req || {}).body || {}).token || "";
+    const payload = tokenController.verificationToken(auth_token);
+    const tokenDecode = payload;
+    if ((tokenDecode || {}).isValid) {
+      res.header("Authorization", auth_token).json(prop.success.default);
+    } else {
+      res.status(401).send(defaultResponse.error.default);
+    }
+  };
 
-export const onRegistrarTienda = async (req, res) => {
-  let data = ((req || {}).body || []);
-  await pool.query(`INSERT INTO TB_PARAMETROS_TIENDA(NUM_CAJA,MAC,SERIE_TIENDA,DATABASE_INSTANCE,DATABASE_NAME,COD_TIPO_FAC,COD_TIPO_BOL,PROPERTY_STOCK,ASUNTO_EMAIL_REPORT_STOCK,NAME_EXCEL_REPORT_STOCK,RUTA_DOWNLOAD_PY,RUTA_DOWNLOAD_SUNAT)
-    VALUES(${(data || {}).nro_caja},'${(data || {}).mac}','${(data || {}).serie_tienda}','${(data || {}).database_instance}','${(data || {}).database_name}','${(data || {}).cod_tipo_factura}','${(data || {}).cod_tipo_boleta}','${(data || {}).property_stock}','${(data || {}).asunto_email_stock}','${(data || {}).name_excel_stock}','${(data || {}).ruta_download_agente}','${(data || {}).ruta_download_sunat}');`)
-    .then((rs) => {
-      res.json(prop.success)
-    });
 }
 
+const securityController = new clsSecurity;
+export default securityController;
