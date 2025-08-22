@@ -52,7 +52,7 @@ class clsConfiguration {
     AllMenu = (req, res) => {
         pool.query(`SELECT * FROM TB_MENU_SISTEMA;`).then(([responseSQL]) => {
             let responseJSON = [];
-            (responseSql || []).filter((column) => {
+            (responseSQL || []).filter((column) => {
                 (responseJSON || []).push({
                     name_menu: (column || {}).NOMBRE_MENU,
                     route: (column || {}).RUTA,
@@ -67,7 +67,7 @@ class clsConfiguration {
     AllLevel = (req, res) => {
         pool.query(`SELECT * FROM TB_NIVELES_SISTEMA;`).then(([responseSQL]) => {
             let responseJSON = [];
-            (responseSql || []).filter((column) => {
+            (responseSQL || []).filter((column) => {
                 (responseJSON || []).push({
                     level: (column || {}).NIVEL_DESCRIPCION
                 });
@@ -146,7 +146,7 @@ class clsConfiguration {
     }
 
     searchAsignationStore = (req, res) => {
-        let id_user = ((req || {}).query || {}).id_user || "";
+        let { id_user } = ((req || {}).query || []);
         pool.query(`SELECT * FROM TB_USUARIO_TIENDAS_ASIGNADAS WHERE ID_USUARIO_TASG = ${id_user};`).then(([responseSQL]) => {
             res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/configuration/asignation/store', data: responseSQL }));
         }).catch(() => {

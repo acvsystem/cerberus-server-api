@@ -3,6 +3,7 @@ import { pool } from '../conections/conexMysql.js';
 class svToolFunction {
 
     async verifyUser(username, password) {
+        
         let querySQL = `SELECT ID_LOGIN,USUARIO,DEFAULT_PAGE,TB_LOGIN.NIVEL,NOMBRE_MENU,RUTA,EMAIL FROM TB_PERMISO_SISTEMA 
                 INNER JOIN TB_MENU_SISTEMA ON TB_MENU_SISTEMA.ID_MENU = TB_PERMISO_SISTEMA.ID_MENU_PS
                 INNER JOIN TB_LOGIN ON TB_LOGIN.NIVEL = TB_PERMISO_SISTEMA.NIVEL

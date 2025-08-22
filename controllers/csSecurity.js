@@ -49,6 +49,7 @@ class clsSecurity {
 
       (requestSQL || []).filter((sql) => {
         responseJSON.push({
+          id_user: (sql || {}).ID_LOGIN,
           user: (sql || {}).USUARIO,
           password: (sql || {}).PASSWORD,
           default_page: (sql || {}).DEFAULT_PAGE,

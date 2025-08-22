@@ -25,6 +25,13 @@ import mdlNotificacion from './class/clsNotificaciones.js';
 import scheduleController from './controllers/csSchedule.js';
 import scheduleRoutes from './routes/schedule.routes.js';
 import configurationRoutes from './routes/configuration.routes.js';
+import comunicationSocket from './sockets/comunication.socket.js';
+import logSocket from './sockets/log.socket.js';
+import vouchersSocket from './sockets/vouchers.socket.js';
+import transactionsSocket from './sockets/transactions.socket.js';
+import statusSocket from './sockets/status.socket.js';
+import resourcesHumanSocket from './sockets/resourcesHuman.socket.js';
+
 //import services from './services/notificaciones.js';
 
 const app = express();
@@ -81,7 +88,6 @@ app.use((req, res, next) => {
 const emiter = new EventEmitter();
 
 var listClient = { id: '' };
-var agenteList = [];
 
 const task_1 = cron.schedule('00 10 * * *', () => {
   console.log('00 10');
@@ -107,9 +113,6 @@ const task_5 = cron.schedule('00 9 * * 0', () => {
   console.log('00 10 * * 0');
   onVerificarCalendario();
 });
-
-
-
 
 task_1.start();
 task_2.start();
@@ -200,359 +203,32 @@ function onVerificarCalendario() {
 }
 
 
+comunicationSocket(io);
+logSocket(io);
+vouchersSocket(io);
+transactionsSocket(io);
+statusSocket(io);
+resourcesHumanSocket(io);
 
 io.on('connection', async (socket) => {
-  
+
   const clientIp = socket.handshake.address;
   const auth_token = socket.handshake.auth.token;
-  const payload = tokenController.verificationToken(auth_token);
+  //const payload = tokenController.verificationToken(auth_token);
 
   const sockets = await io.fetchSockets(); // desde Socket.IO v4
   const socketIds = sockets.map(s => s.id);
-
-
 
   let codeQuery = socket.handshake.query.code;
   let codeTerminal = socket.handshake.headers.code;
   let isIcg = socket.handshake.headers.icg;
   let macEqp = socket.handshake.headers.mac;
 
-  let indexAgente = (agenteList || []).findIndex((data, i) => (data || {}).code == codeTerminal);
-
-  if (indexAgente != -1) {
-    agenteList[indexAgente]['id'] = socket.id;
-  } else {
-    agenteList.push({ id: socket.id, code: codeTerminal });
-  }
-
-  if (codeQuery == 'app') {
-    console.log('app', socket.id);
-    listClient.id = socket.id;
-    let listSessionConnect = await sessionSocket.connect();
-    socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
-    let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
-
-  }
-
-
-
-
-  // Escuchar eventos
-  socket.onAny((event, data, callback) => {
-    if (socket.handshake.query.code == 'app') {
-      if (event != 'status:EQP' && event != 'status:serverSUNAT') {
-        const start = Date.now();
-        const responseData = { ok: true, recibido: data };
-        if (typeof ((payload || {}).decoded || {}).usuario != 'undefined') {
-
-          let indexSocket = arUsuarioSocket.findIndex((usk) => usk.usuario == ((payload || {}).decoded || {}).usuario);
-
-          if (indexSocket > -1) {
-            arUsuarioSocket[indexSocket]['idSocket'] = socket.id;
-          } else {
-            (arUsuarioSocket || []).push({
-              usuario: ((payload || {}).decoded || {}).usuario,
-              idSocket: socket.id
-            });
-          }
-        }
-
-
-        console.log('--- Nueva petición ---');
-        console.log('Usuario', ((payload || {}).decoded || {}).usuario);
-        console.log('ID_Socket:', socket.id);
-        console.log('Hora:', new Date().toISOString());
-        console.log('IP:', clientIp);
-        console.log('event_response:', event);
-        console.log('response:', responseData);
-        console.log('conectados:', arUsuarioSocket);
-        console.log('Duración:', `${Date.now() - start}ms`);
-        console.log('----------------------');
-      }
-    }
-    // sendNotification();
-  });
-
   const transport = socket.conn.transport.name; // in most cases, "polling"
-
-  socket.on('status:serverSUNAT', (data) => {
-    socket.broadcast.emit("status:serverSUNAT:send", data);
-  });
-
-  if (codeTerminal != "SRVFACT" && isIcg != 'true') {
-    let listSessionConnect = await sessionSocket.connect(codeTerminal);
-    console.log("AQUI", codeTerminal);
-    socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
-  } else {
-    if (codeTerminal == "SRVFACT") {
-      console.log('SERVIDOR', codeTerminal);
-      let [conexionList] = await pool.query(`SELECT * FROM TB_ESTATUS_SERVER_BACKUP;`);
-      await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET ESTATUS_CONEXION = 1 WHERE ID_ESTATUS_SERVER = 1;`);
-      /*
-      if (!((conexionList || [])[0] || {}).OLD_ESTATUS) {
-        emailController.sendEmail('johnnygermano@metasperu.com', `SERVIDOR FACTURACION CONECTADO..!!!!!`, null, null, `SERVIDOR FACTURACION`)
-          .catch(error => res.send(error));
-      }
-      */
-      await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET OLD_ESTATUS = 1 WHERE ID_ESTATUS_SERVER = 1;`);
-
-    }
-  }
-
-  socket.on('status:EQP', (data) => {
-    socket.broadcast.emit("status:EQP:send", data);
-  });
-
-  socket.on('disconnect', async () => { // DESCONEXION DE ALGUN ENLACE (SE ENVIA A COMPROBANTES)
-    if (codeTerminal == "SRVFACT") {
-      await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET ESTATUS_CONEXION = 0 WHERE ID_ESTATUS_SERVER = 1;`);
-      setTimeout(async () => {
-        let [conexionList] = await pool.query(`SELECT * FROM TB_ESTATUS_SERVER_BACKUP;`);
-        if (!((conexionList || [])[0] || {}).ESTATUS_CONEXION) {
-          await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET OLD_ESTATUS = 0 WHERE ID_ESTATUS_SERVER = 1;`);
-          sessionSocket.disconnectServer();
-        }
-      }, 300000);
-
-      socket.broadcast.emit("status:serverSUNAT:send", { 'code': 'SRVFACT', 'online': 'false' });
-    } else if (isIcg != 'true') {
-      console.log(`disconnect ${codeTerminal} - idApp`, listClient.id);
-      let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
-      socket.broadcast.emit("comprobantes:get:response", listSessionDisconnet); //ENVIA A FRONTEND COMPROBANTES
-    }
-
-    if (isIcg == 'true') {
-      socket.broadcast.emit("conexion:serverICG:send", [{ 'code': codeTerminal, 'isConect': '0' }]);
-    }
-
-    if (codeTerminal == 'EQP' && (macEqp || "").length) {
-      socket.broadcast.emit("desconexion:eqp:send", [{ 'mac': macEqp }]);
-    }
-
-    console.log('user disconnected');
-  });
 
   socket.conn.on("upgrade", () => {
     const upgradedTransport = socket.conn.transport.name; // in most cases, "websocket"
     console.log("upgradedTransport", upgradedTransport);
-  });
-
-  socket.on('consultAsistencia', async (configuracion) => {
-    (configuracion || [])['socket'] = listClient.id;
-
-    socket.emit("searchAsistencia", configuracion);
-  });
-
-  socket.on('reporteAssitencia', async (resData) => {
-    print(resData)
-    if ((resData || "").id == "server") {
-      socket.to(`${(resData || [])['configuration']['socket']}`).emit("responseAsistencia", resData);
-    }
-  });
-
-  socket.on('responseStock', (data) => {
-    console.log(data);
-    socket.to(`${listClient.id}`).emit("dataStock", data);
-  });
-
-  socket.on('resClient', async (data) => {
-    console.log('resClient', data);
-    let response = JSON.parse(data);
-    // let [tiendaExist] = await pool.query(`SELECT * FROM TB_CLIENTES_BLANCO WHERE SERIE_TIENDA = ${codeTerminal};`);
-    //console.log('tiendaExist', tiendaExist);
-    /*if ((tiendaExist || []).length) {
-      await pool.query(`UPDATE TB_CLIENTES_BLANCO SET NUMERO_CLIENTES = ${response[0]['clientCant']} WHERE SERIE_TIENDA = ${codeTerminal});`);
-    } else {
-      await pool.query(`INSERT INTO TB_CLIENTES_BLANCO(SERIE_TIENDA,NUMERO_CLIENTES)VALUES(${codeTerminal},${response[0]['clientCant']});`);
-    }*/
-
-    let body = [
-      {
-        code: codeTerminal,
-        clientCant: response[0]['clientCant']
-      }
-    ];
-
-    socket.to(`${response[0].socket}`).emit("sendDataClient", body);
-
-  });
-
-  socket.on('cleanClient', (data) => {
-    console.log('cleanClient');
-    let socketID = (socket || {}).id;
-    socket.broadcast.emit("searchCantCliente", data, socketID);
-  });
-
-  socket.on('emitCleanClient', (data) => {
-    console.log('cleanClient');
-    let socketID = (socket || {}).id;
-    socket.broadcast.emit("limpiarCliente", data, socketID);
-  });
-
-  socket.on('cleanColaFront', (data) => {
-    console.log('clearColaUpdatePanama');
-    socket.broadcast.emit("clearColaUpdatePanama", data);
-  });
-
-  /* CONSULTAR DOCUMENTOS FALTANTES */
-
-  socket.on('comprobantes:get', (data) => {
-    console.log(
-      `-----INIT SOLICITUD
-       FRONTEND: comprobantes:get`
-    );
-    let configuration = {
-      socket: (socket || {}).id
-    };
-
-    socket.broadcast.emit("comprobantesGetFR", configuration); //SE ENVIA AL PYTHON DEL FRONT RETAIL
-  });
-
-  socket.on('comprobantes:get:fr:response', (data) => {
-    console.log(
-      `-----ENVIO RESPUESTA DE FRONT RETAIL A BACKEND
-       FRONT RETAIL: comprobantes:get:fr:response`
-    );
-
-    let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
-    if (typeof codeTerminal != 'undefined' && codeTerminal != '') {
-      socket.broadcast.emit("comprobantesGetSBK", data, codeTerminal); // SE ENVIA AL PYTHON DEL SERVIDOR BACKUP
-    }
-  });
-
-  socket.on('comprobantes:get:sbk:response', async (resData) => { // RESPUESTA DESDE EL SERVIDOR BACKUP
-    console.log(
-      `-----ENVIO RESPUESTA DE SERVIDOR BACKUP A BACKEND
-       SERVIDOR BACKUP: comprobantes:get:sbk:response`
-    );
-
-    if ((resData || "").id == "server") {
-      let tiendasList = [];
-      let socketID = resData['frontData']['configuration']['socket'];
-
-      pool.query(`SELECT * FROM TB_LISTA_TIENDA;`).then(([tienda]) => {
-
-        (tienda || []).filter(async (td, i) => {
-          tiendasList.push({ code: (td || {}).SERIE_TIENDA, name: (td || {}).DESCRIPCION });
-
-          if (tienda.length - 1 == i) {
-            let listSessionConnect = await facturacionController.verificacionDocumentos({ serverData: resData['serverData'], frontData: resData['frontData']['data'], codigoFront: resData['codigoFront'] }, tiendasList);
-            console.log(
-              `-----ENVIO RESPUESTA A FRONTEND
-               BACKEND: comprobantes:get:response`
-            );
-            socket.to(`${socketID}`).emit("comprobantes:get:response", listSessionConnect); // SE ENVIA A FRONTEND
-          }
-
-        });
-      });
-    }
-  });
-
-  /* VERIFICACION DE TRANSACCIONES */
-
-  socket.on('transacciones:get', (data) => { //ENVIA A FRONT RETAIL
-    console.log(
-      `-----INIT SOLICITUD
-      FRONTEND: transacciones:get`
-    );
-
-    let configuration = {
-      socket: (socket || {}).id
-    };
-
-    socket.broadcast.emit("transaccionesGetFR", configuration);
-  });
-
-  socket.on('transacciones:get:fr:response', (data) => { //RECIBE DE FRONT RETAIL
-    console.log(
-      `-----ENVIO RESPUESTA A FRONTEND
-       BACKEND: transacciones:get:response`
-    );
-
-    let socketID = data['configuration']['socket'];
-    let response = JSON.parse(data['data']);
-    let body = [
-      {
-        code: codeTerminal,
-        transaciones: response[0]['remCount']
-      }
-    ];
-
-    socket.to(`${socketID}`).emit("transacciones:get:response", body); // ENVIA A FRONTEND
-  });
-
-  /* CONSULTA NOMBRES DE TERMINALES FRONT RETAIL */
-
-  socket.on('terminales:get:name', (data) => {
-    console.log(
-      `-----INIT SOLICITUD
-       FRONTEND: terminales:get:name`
-    );
-
-    let configuration = {
-      socket: (socket || {}).id
-    };
-
-    socket.broadcast.emit("terminalesGetNameFR", configuration);
-  });
-
-  socket.on('terminales:get:name:fr:response', async (data) => {
-    console.log(
-      `-----ENVIO RESPUESTA DE FRONT RETAIL A BACKEND
-       FRONT RETAIL: terminales:get:name:fr:response`
-    );
-    let socketID = data['configuration']['socket'];
-    let response = JSON.parse(data['data']);
-    socket.to(`${socketID}`).emit("terminales:get:name:response", response); // ENVIA A FRONTEND
-  });
-
-  /* CONSULTA CANTIDAD EN TERMINALES FRONT RETAIL */
-
-  socket.on('terminales:get:cantidad', (data) => {
-    console.log(
-      `-----INIT SOLICITUD
-       FRONTEND: terminales:get:cantidad`
-    );
-
-    let configuration = {
-      socket: (socket || {}).id
-    };
-
-    socket.broadcast.emit("terminalesGetcantidadFR", configuration);
-  });
-
-  socket.on('terminales:get:cantidad:fr:response', async (data) => {
-    console.log(
-      `-----ENVIO RESPUESTA A FRONTEND
-       BACKEND: terminales:get:cantidad:response`
-    );
-
-    let socketID = data['configuration']['socket'];
-    let response = JSON.parse(data['data']);
-    socket.to(`${socketID}`).emit("terminales:get:cantidad:response", response);
-  });
-
-  /* TRANFERENCIA DE TRANSACIONES ENTRE FRONT RETAIL */
-
-  socket.on('transacciones:post', (data) => {
-    socket.broadcast.emit("transaccionesPostFR", data);
-  });
-
-
-  /* VERIFICACION DE BASES DE DATOS CON COE_DATA */
-
-  socket.on('comparacion:get:bd', (response) => {
-    console.log(
-      `-----ENVIO A SERVIDOR BACKUP 
-       BACKEND: comparacionGetBdSBK`
-    );
-
-    let configuration = {
-      socket: (socket || {}).id
-    };
-
-    socket.broadcast.emit("comparacionGetBdSBK", configuration);
   });
 
   app.get("/comparacion/bd/response", async (req, res) => {
@@ -569,282 +245,10 @@ io.on('connection', async (socket) => {
     });
   });
 
-  socket.on('comunicationStock', (email, arrCodeTienda) => {
-    console.log('comunicationStock');
-    socket.broadcast.emit("searchStockTest", email, arrCodeTienda);
-  });
-
-  socket.on('comunicationStockTable', (arrCodeTienda, barcode) => {
-    console.log('comunicationStockTable');
-    socket.broadcast.emit("searchStockTable", arrCodeTienda, barcode, (socket || {}).id);
-  });
-
-  socket.on('conexion:serverICG', (data) => {
-    socket.broadcast.emit("conexion:serverICG:send", data);
-  });
-
-  socket.on("update:file:FrontAgent", (body) => {
-    let file = "";
-    let isZip = false;
-
-    switch ((body || {}).fileName) {
-      case "SUNAT_ICG.zip":
-        file = "SUNAT_ICG.zip";
-        isZip = true;
-        break;
-      case "XML_SUNAT_ICG.zip":
-        file = "configuracion_plugin_sunat.xml";
-        isZip = false;
-        break;
-      case "VALIDACION.zip":
-        file = "VALIDACION.zip";
-        isZip = true;
-        break;
-      case "DLL_NOTA_CREDITO.zip":
-        file = "DLL_NOTA_CREDITO.zip";
-        isZip = true;
-        break;
-      case "PLUGIN_APP_METAS_PERU_VS":
-        file = "C:/FACTURACION_IT/agenteFront.py";
-        isZip = false;
-        break;
-      case "PLUGIN_APP_METAS_PERU_BBW":
-        file = "C:/FACTURACION_IT/agenteFront.py";
-        isZip = false;
-        break;
-      case "PLUGIN_APP_METAS_PERU_VSFA":
-        file = "C:/FACTURACION_IT/agenteFront.py";
-        isZip = false;
-        break;
-      case "PLUGIN_APP_METAS_PERU_ECOM":
-        file = "C:/FACTURACION_IT/agenteFront.py";
-        isZip = false;
-    }
-
-    let configurationList = {
-      socket: (socket || {}).id,
-      fileName: (body || {}).fileName,
-      hash: (body || {}).hash,
-      dowFile: file,
-      isZip: isZip,
-      mac: (body || {}).mac || "notMac"
-    };
-
-    if ((body || {}).hash.length && (body || {}).fileName.length) {
-      socket.broadcast.emit("update_file_Plugin", configurationList);
-    }
-  });
-
-  socket.on("update:file:response", (response) => {
-    let socketID = (response || {}).socket;
-    let status = (response || {}).status;
-    let mac = (response || {}).mac;
-
-    let statusList = {
-      mac: mac,
-      status: status,
-    };
-
-    socket.to(`${socketID}`).emit("update:file:status", statusList);
-  });
-
-  socket.on("consultaMarcacion", (configuracion) => {
-    console.log(configuracion);
-    let configurationList = {
-      socket: (socket || {}).id,
-      isDefault: configuracion.isDefault,
-      isFeriados: configuracion.isFeriados,
-      isDetallado: configuracion.isDetallado,
-      centroCosto: configuracion.centroCosto,
-      dateList: configuracion.dateList
-    };
-
-    socket.broadcast.emit("consultarEJB", configurationList);
-    socket.broadcast.emit("consultarServGen", configurationList);
-  });
-
-  /* CONSULTA KARDEX */
-
-  socket.on("kardex:get:comprobantes", (configuracion) => {
-    console.log("-----INIT SOLICITUD FRONTEND: kardex:get:comprobantes");
-    let configurationList = {
-      socket: (socket || {}).id,
-      init: configuracion.init,
-      end: configuracion.end,
-      code: configuracion.code
-    };
-
-    socket.broadcast.emit("kardexGetcomprobantesFR", configurationList);
-  });
-
-  socket.on("kardex:get:comprobantes:fr:response", (response) => {
-    console.log("-----ENVIO RESPUESTA A FRONTEND BACKEND: kardex:get:comprobantes:response");
-
-    let socketID = ((response || {}).configuration || {}).socket;
-    let data = [];
-    data = (response || {}).front || [];
-    console.log(data);
-    socket.to(`${socketID}`).emit("kardex:get:comprobantes:response", { id: response.id, data: data });
-  });
-
-  /* INSERTAR REGISTRO CAMPOS LIBRES KARDEX */
-
-  socket.on("kardex:post:camposlibres", (configuracion) => {
-    console.log("-----INIT SOLICITUD FRONTEND: kardex:post:camposlibres");
-    let configurationList = {
-      socket: (socket || {}).id,
-      code: (configuracion || {}).code,
-      num_albaran: (configuracion || {}).num_albaran,
-      num_serie: (configuracion || {}).num_serie,
-      n: (configuracion || {}).n,
-      numero_despacho: (configuracion || {}).numero_despacho,
-      tasa_cambio: (configuracion || {}).tasa_cambio,
-      total_gastos: (configuracion || {}).total_gastos,
-      flete_acarreo: (configuracion || {}).flete_acarreo,
-      registro_sanitario: (configuracion || {}).registro_sanitario,
-      motivo: (configuracion || {}).motivo,
-      tipo_documento: (configuracion || {}).tipo_documento,
-      numero_serie: (configuracion || {}).numero_serie,
-      observacion: (configuracion || {}).observacion,
-      contenedor: (configuracion || {}).contenedor
-    };
-
-    socket.broadcast.emit("kardexPostcamposlibresFR", configurationList);
-  });
-
-  socket.on("kardex:post:camposlibres:fr:response", (response) => {
-    console.log("-----ENVIO RESPUESTA A FRONTEND BACKEND: kardex:post:camposlibres:fr:response");
-
-    let socketID = ((response || {}).configuration || {}).socket;
-    let data = [];
-    data = (response || {}).data || [];
-    console.log(data);
-    socket.to(`${socketID}`).emit("kardex:post:camposlibres:response", { id: response.id, data: data });
-  });
-
-  /* INSERTAR CUO KARDEX */
-
-  socket.on("kardex:post:cuo", (configuracion) => {
-    console.log("-----INIT SOLICITUD FRONTEND: kardex:post:cuo");
-
-    let configurationList = {
-      socket: (socket || {}).id,
-      data: configuracion
-    };
-
-    socket.broadcast.emit("kardexPostcuoFR", configurationList);
-  });
-
-  socket.on("kardex:post:cuo:fr:response", (response) => {
-    console.log("-----ENVIO RESPUESTA A FRONTEND BACKEND: kardex:post:cuo:fr:response");
-
-    let socketID = ((response || {}).configuration || {}).socket;
-    let data = [];
-    data = (response || {}).data || [];
-    console.log(data);
-    socket.to(`${socketID}`).emit("kardex:post:cuo:response", { id: response.id, data: data });
-  });
-
-  /* CONSULTA CUO KARDEX */
-
-  socket.on("kardex:get:cuo", (configuracion) => {
-    console.log("-----INIT SOLICITUD FRONTEND: kardex:get:cuo");
-    let configurationList = {
-      socket: (socket || {}).id,
-      init: configuracion.init,
-      end: configuracion.end,
-      code: configuracion.code
-    };
-
-    socket.broadcast.emit("kardexGetcuoFR", configurationList);
-  });
-
-  socket.on("kardex:get:cuo:fr:response", (response) => {
-    console.log("-----ENVIO RESPUESTA A FRONTEND BACKEND: kardex:get:comprobantes:response");
-
-    let socketID = ((response || {}).configuration || {}).socket;
-    let data = [];
-    data = (response || {}).front || [];
-    console.log(data);
-    socket.to(`${socketID}`).emit("kardex:get:cuo:response", { id: response.id, data: data });
-  });
-
-  /* CONSULTA STOCK TRASPASOS */
-
-  socket.on("inventario:get:barcode", (configuracion) => {
-    console.log("-----INIT SOLICITUD FRONTEND: inventario:get:barcode");
-    socket.broadcast.emit("inventarioGetbarcodeFR", configuracion.codigoTienda, configuracion.origen, configuracion.barcode, (socket || {}).id);
-  });
-
-  socket.on("inventario:get:fr:barcode:response", (response) => {
-    console.log("-----ENVIO RESPUESTA A FRONTEND BACKEND: inventario:get:fr:barcode:response");
-
-    let socketID = (response || {}).socket;
-    let data = [];
-    data = (response || {}).data || [];
-    console.log(data);
-    socket.to(`${socketID}`).emit("inventario:get:barcode:response", { data: data });
-  });
-
-  /* ENVIAR TRSPASOS POR FTP */
-
-  app.post('/upload/traspasos', uploadTraspasos.single('file'), async (req, res) => { // transfers/upload/file - [POST]{formData:Blob}
-    const filePath = req.file.path;
-    const fileName = req.file.originalname;
-    const rutaDirectory = req.body.ftpDirectorio;
-    const client = new Client()
-    client.ftp.verbose = true;
-
-    try {
-      await client.access({
-        host: '199.89.54.31',
-        port: 9879,
-        user: 'ftpuser25801247',
-        password: 'Cfz&}q)]i_^c~6MSVPI%',
-        secure: false
-      });
-
-      await client.ensureDir(`ITPERU/${rutaDirectory}`)
-      await client.uploadFrom(filePath, fileName);
-      await client.uploadFromDir(`ITPERU/${rutaDirectory}`)
-
-      res.send('Archivo subido al FTP con éxito');
-    } catch (err) {
-      res.status(500).send('Error subiendo al FTP: ' + err.message);
-    } finally {
-      client.close();
-      fs.unlinkSync(filePath); // Borrar archivo local temporal
-    }
-  });
-
-  socket.on("consultaPlanilla", (configuracion) => {
-    console.log(configuracion);
-    let configurationList = {
-      socket: (socket || {}).id,
-      tipo: configuracion.tipo_planilla,
-      date: configuracion.date
-    };
-
-    socket.broadcast.emit("consultarQuincena", configurationList);
-  });
-
-  socket.on("resAdelandoQuinc", (response) => {
-    let socketID = (response || {}).configuration.socket;
-    let dataEJB = [];
-    dataEJB = JSON.parse((response || {}).serverData || []);
-    console.log(dataEJB);
-    socket.to(`${socketID}`).emit("reporteQuincena", { id: response.id, data: dataEJB });
-  });
-
   app.get("/papeleta/generar/codigo", async (req, res) => {
     fnGenerarCodigoPap(fnGenerarCodigoPap()).then((codigo) => {
       res.json({ codigo: codigo });
     })
-  });
-
-  app.get("/equipos/lista", async (req, res) => { //computers/all - [GET]
-    let [arEquipos] = await pool.query(`SELECT LT.DESCRIPCION,PT.NUM_CAJA,PT.MAC,PT.IP,PT.ONLINE,PT.UNID_SERVICIO FROM TB_PARAMETROS_TIENDA PT INNER JOIN TB_LISTA_TIENDA LT ON LT.SERIE_TIENDA = PT.SERIE_TIENDA WHERE ESTATUS = 'ACTIVO' ORDER BY LT.DESCRIPCION;`);
-    res.json({ data: arEquipos, success: true });
   });
 
   app.get("/plugin/lista", async (req, res) => {
@@ -905,16 +309,6 @@ io.on('connection', async (socket) => {
     res.json({ mensaje: 'Archivo recibido con éxito' });
   });
 
-  app.get("/papeleta/lista/tipo_papeleta", async (req, res) => { //ballot/type/all - [GET]
-    let [arTipoPapeleta] = await pool.query(`SELECT * FROM TB_TIPO_PAPELETA;`);
-    res.json(arTipoPapeleta);
-  });
-
-  app.get("/papeleta/lista/horas_autorizacion", async (req, res) => { //ballot/authorization/all - [GET]
-    let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA ORDER BY FECHA DESC;`);
-    res.json(arAutorizacion);
-  });
-
   app.get("/sunat/configuration", async (req, res) => { //configuration/plugin/sunat - [GET]
     let [arConfiguracion] = await pool.query(`SELECT  
         XML_ETIQUIETA_GROUP,
@@ -933,13 +327,6 @@ io.on('connection', async (socket) => {
 
     console.log(arConfiguracion);
     res.json(arConfiguracion);
-  });
-
-  app.post("/papeleta/update/fecha", async (req, res) => { // ballot/fecha - [PUT]{id_ballot,date}
-    let data = req.body[0];
-    await pool.query(`UPDATE TB_HEAD_PAPELETA SET FECHA_DESDE = '${(data || {}).fecha}', FECHA_HASTA = '${(data || {}).fecha}' WHERE ID_HEAD_PAPELETA = ${(data || {}).id_papeleta};`).then(() => {
-      res.json({ success: true });
-    });
   });
 
   app.post("/oficina/marcacion", async (req, res) => {
@@ -971,282 +358,6 @@ io.on('connection', async (socket) => {
         }
       }
     });
-  });
-
-  socket.on("marcacion_of", async (data) => {
-    socket.broadcast.emit("solicitar_marcacion_of", { socketID: (socket || {}).id });
-  });
-
-  socket.on("solicitar_aprobacion_hrx", async (data) => {
-
-    let [arHrExtra] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
-
-    if (!(arHrExtra || []).length) {
-      await pool.query(`INSERT INTO TB_AUTORIZAR_HR_EXTRA(
-         HR_EXTRA_ACOMULADO,
-         NRO_DOCUMENTO_EMPLEADO,
-         NOMBRE_COMPLETO,
-         APROBADO,
-         RECHAZADO,
-         FECHA,
-         CODIGO_TIENDA)VALUES('${(data || {}).hora_extra}','${(data || {}).nro_documento}','${(data || {}).nombre_completo}',${(data || {}).aprobado},false,'${(data || {}).fecha}','${(data || {}).codigo_tienda}')`);
-    }
-
-    let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
-
-    let tiendasList = [
-      { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
-      { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
-      { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@metasperu.com' },
-      { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@metasperu.com' },
-      { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@metasperu.com' },
-      { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@metasperu.com' },
-      { code: '7C', name: 'BBW SAN MIGUEL', email: 'bbwsanmiguel@metasperu.com' },
-      { code: '9C', name: 'VS SAN MIGUEL', email: 'vssanmiguel@metasperu.com' },
-      { code: '7D', name: 'BBW SALAVERRY', email: 'bbwsalaverry@metasperu.com' },
-      { code: '9I', name: 'VS SALAVERRY', email: 'vssalaverry@metasperu.com' },
-      { code: '9G', name: 'VS MALL DEL SUR', email: 'vsmalldelsur@metasperu.com' },
-      { code: '9H', name: 'VS PURUCHUCO', email: 'vspuruchuco@metasperu.com' },
-      { code: '9M', name: 'VS ECOMMERCE', email: 'vsecommpe@metasperu.com' },
-      { code: '7F', name: 'BBW ECOMMERCE', email: 'bbwecommperu@metasperu.com' },
-      { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@metasperu.com' },
-      { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@metasperu.com' },
-      { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@metasperu.com' },
-      { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@metasperu.com' },
-      { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com' },
-      { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
-    ];
-
-    let selectedLocal = tiendasList.find((td) => td.code == data.codigo_tienda) || {};
-
-    socket.broadcast.emit("lista_solicitudes", arAutorizacion);
-
-    let bodyHTML = `<table style="width:100%;border-spacing:0">
-                <tbody>
-                    <tr style="display:flex">
-                        <td>
-                            <table style="border-radius:4px;border-spacing:0;border:1px solid #155795;min-width:450px">
-                                <tbody>
-                                    <tr>
-                                        <td style="border-top-left-radius:4px;border-top-right-radius:4px;display:flex;background:#155795;padding:20px">
-                                            <p style="margin-left:72px;color:#fff;font-weight:700;font-size:30px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif"><span class="il">METAS PERU</span> S.A.C</p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: center;padding:10px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
-                                            <p>Hola, tienes horas extras pendientes de aprobar.</p> 
-
-                                            <table align="left" cellspacing="0" style="width: 100%;border: solid 1px;">
-                                                <thead>
-                                                    <tr>
-                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">FECHA</th>
-                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">NOMBRE COMPLETO</th>
-                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">H.EXTRA</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(data || {}).fecha}</td>
-                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(data || {}).nombre_completo}</td>
-                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(data || {}).hora_extra}</td>
-                                                    </tr>
-                                            
-                                                </tbody>
-                                            </table>
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="margin-bottom:10px;display:flex">
-                                            <a style="margin-left:155px;text-decoration:none;background:#155795;padding:10px 30px;font-size:18px;color:#ffff;border-radius:4px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif" href="http://metasperu.net.pe/auth-hora-extra" target="_blank">horas extras</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>`;
-
-    let correo = ['itperu@metasperu.com', 'johnnygermano@metasperu.com'];
-
-    pool.query(`SELECT TB_LISTA_TIENDA.SERIE_TIENDA,TB_LOGIN.EMAIL FROM TB_USUARIO_TIENDAS_ASIGNADAS 
-                INNER JOIN TB_LISTA_TIENDA ON TB_LISTA_TIENDA.ID_TIENDA = TB_USUARIO_TIENDAS_ASIGNADAS.ID_TIENDA_TASG
-                INNER JOIN TB_LOGIN ON TB_LOGIN.ID_LOGIN = TB_USUARIO_TIENDAS_ASIGNADAS.ID_USUARIO_TASG WHERE TB_LISTA_TIENDA.SERIE_TIENDA = '${(data || {}).codigo_tienda}';`).then(([tienda]) => {
-
-      console.log("solicitar_aprobacion_hrx", (data || {}).codigo_tienda, tienda);
-
-      (tienda || []).filter((td, i) => {
-        (correo || []).push((td || {}).EMAIL);
-
-        if ((tienda || []).length - 1 == i) {
-          console.log("solicitar_aprobacion_hrx", correo);
-
-          emailController.sendEmail(correo, `SOLICITUD DE APROBACION DE HORA EXTRA - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
-            .catch(error => res.send(error));
-        }
-      });
-    });
-  });
-
-  socket.on("autorizar_hrx", async (data) => {
-
-    let [arHrExtra] = await pool.query(`SELECT * FROM TB_AROBADO_HR_EXTRA WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
-    let aprobado = data.aprobado ? 'aprobado' : 'rechazado';
-
-    if (!(arHrExtra || []).length) {
-      await pool.query(`INSERT INTO TB_AROBADO_HR_EXTRA(
-        HR_EXTRA_ACOMULADO,
-        NRO_DOCUMENTO_EMPLEADO,
-        NOMBRE_COMPLETO,
-        APROBADO,
-        RECHAZADO,
-        FECHA,
-        CODIGO_TIENDA)VALUES('${data.hora_extra}','${data.nro_documento}','${data.nombre_completo}',${data.aprobado},${data.rechazado},'${data.fecha}','${data.codigo_tienda}')`);
-
-      await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET COMENTARIO = '${((data || {}).comentario || "")}', USUARIO_MODF = '${data.usuario}', APROBADO = ${data.aprobado == true ? 1 : 0},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
-      let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}' AND HR_EXTRA_ACUMULADO = '${data.hora_extra}';`);
-
-      if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
-        await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET ESTADO = '${aprobado}',APROBADO = ${data.aprobado == true ? 1 : 0} WHERE ID_HR_EXTRA = ${((arHrExtra || [])[0] || {})['ID_HR_EXTRA']};`);
-      }
-
-    } else {
-
-      let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}' AND HR_EXTRA_ACUMULADO = '${data.hora_extra}';`);
-
-      if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
-        console.log(`UPDATE TB_HORA_EXTRA_EMPLEADO SET ESTADO = '${aprobado}',APROBADO = ${data.aprobado == true ? 1 : 0} WHERE ID_HR_EXTRA = ${((arHrExtra || [])[0] || {})['ID_HR_EXTRA']};`);
-        await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET ESTADO = '${aprobado}',APROBADO = ${data.aprobado == true ? 1 : 0} WHERE ID_HR_EXTRA = ${((arHrExtra || [])[0] || {})['ID_HR_EXTRA']};`);
-      }
-
-      await pool.query(`UPDATE TB_AUTORIZAR_HR_EXTRA SET COMENTARIO = '${((data || {}).comentario || "")}', USUARIO_MODF = '${data.usuario}', APROBADO = ${data.aprobado == true ? 1 : 0},RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
-      let comentario = data.aprobado == true ? "" : `${((data || {}).comentario || "")}`;
-      await pool.query(`UPDATE TB_AROBADO_HR_EXTRA SET COMENTARIO = '${comentario}', APROBADO = ${data.aprobado == true ? 1 : 0}, RECHAZADO = ${data.rechazado} WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
-
-
-    }
-
-    let [arAutorizacion] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA;`);
-    let [arAutorizacionEmp] = await pool.query(`SELECT * FROM TB_AUTORIZAR_HR_EXTRA WHERE NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
-    let [arAutorizacionResponse] = await pool.query(`SELECT * FROM TB_AROBADO_HR_EXTRA WHERE HR_EXTRA_ACOMULADO = '${data.hora_extra}' AND CODIGO_TIENDA = '${data.codigo_tienda}'  AND FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}';`);
-
-
-    if (aprobado == 'rechazado') {
-
-      if ((data || {}).comentario == 'No marco su salida de turno' || (data || {}).comentario == 'No marco su salida a break') {
-        let tiendasList = [
-          { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
-          { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
-          { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@metasperu.com' },
-          { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@metasperu.com' },
-          { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@metasperu.com' },
-          { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@metasperu.com' },
-          { code: '7C', name: 'BBW SAN MIGUEL', email: 'bbwsanmiguel@metasperu.com' },
-          { code: '9C', name: 'VS SAN MIGUEL', email: 'vssanmiguel@metasperu.com' },
-          { code: '7D', name: 'BBW SALAVERRY', email: 'bbwsalaverry@metasperu.com' },
-          { code: '9I', name: 'VS SALAVERRY', email: 'vssalaverry@metasperu.com' },
-          { code: '9G', name: 'VS MALL DEL SUR', email: 'vsmalldelsur@metasperu.com' },
-          { code: '9H', name: 'VS PURUCHUCO', email: 'vspuruchuco@metasperu.com' },
-          { code: '9M', name: 'VS ECOMMERCE', email: 'vsecommpe@metasperu.com' },
-          { code: '7F', name: 'BBW ECOMMERCE', email: 'bbwecommperu@metasperu.com' },
-          { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@metasperu.com' },
-          { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@metasperu.com' },
-          { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@metasperu.com' },
-          { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@metasperu.com' },
-          { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com' },
-          { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
-        ];
-
-        let selectedLocal = tiendasList.find((td) => td.code == data.codigo_tienda) || {};
-
-        let bodyHTML = `<table style="width:100%;border-spacing:0">
-                <tbody>
-                    <tr style="display:flex">
-                        <td>
-                            <table style="border-radius:4px;border-spacing:0;border:1px solid #155795;min-width:450px">
-                                <tbody>
-                                    <tr>
-                                        <td style="border-top-left-radius:4px;border-top-right-radius:4px;background:#155795;padding:40px;text-align: center">
-                                            <p style="color:#fff;font-weight:700;font-size:30px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif"><span class="il">METAS PERU</span> S.A.C</p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: center;padding:10px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
-                                            <p style="font-weight: 500;">Usuario responsable: ${data.usuario}</p>
-                                            <p>Hora extra rechazada por marcacion.</p> 
-
-                                            <table align="left" cellspacing="0" style="width: 100%;border: solid 1px;">
-                                                <thead>
-                                                    <tr>
-                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="150px">TIENDA</th>
-                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">FECHA</th>
-                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">H.EXTRA</th>
-                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="180px">NOMBRE COMPLETO</th>
-                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="200px">COMENTARIO</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(selectedLocal || {}).name}</td>
-                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(data || {}).fecha}</td>
-                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(data || {}).hora_extra}</td>
-                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${((arAutorizacionEmp || [])[0] || {})['NOMBRE_COMPLETO']}</td>
-                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(data || {}).comentario}</td>
-
-                                                    </tr>
-                                            
-                                                </tbody>
-                                            </table>
-
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>`;
-
-        let correo = ['itperu@metasperu.com', 'johnnygermano@metasperu.com', 'metasperurrhh@gmail.com', 'metasperurrhh2@gmail.com'];
-
-        emailController.sendEmail(correo, `NOTIFICACION H.EXTRA RECHAZADO POR MARCACION - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
-          .catch(error => res.send(error));
-      }
-    }
-
-    socket.broadcast.emit("lista_solicitudes", arAutorizacion);
-    socket.broadcast.emit("respuesta_autorizacion", arAutorizacionResponse);
-  });
-
-  app.get("/session_login/view", async (req, res) => { //security/session/login/all - [GET]
-    let [arSession] = await pool.query(`SELECT * FROM TB_SESSION_LOGIN;`);
-    if ((arSession || []).length) {
-      res.json({ data: arSession, success: true });
-    } else {
-      res.json({ success: false });
-    }
-
-  });
-
-  app.get("/auth_session/view", async (req, res) => { //security/session/auth/all - [GET]
-    let [arAuthSession] = await pool.query(`SELECT * FROM TB_AUTH_SESSION;`);
-    if ((arAuthSession || []).length) {
-      res.json({ data: arAuthSession, success: true });
-    } else {
-      res.json({ success: false });
-    }
-
-  });
-
-  app.get("/login/users", async (req, res) => { //security/users/all - [GET]
-    let [arUsers] = await pool.query(`SELECT * FROM TB_LOGIN;`);
-    if ((arUsers || []).length) {
-      res.json({ data: arUsers, success: true });
-    } else {
-      res.json({ success: false });
-    }
-
   });
 
   app.post("/session_login", async (req, res) => {
@@ -1507,61 +618,6 @@ io.on('connection', async (socket) => {
     }
   })
 
-  app.get("/calendario/listarHorario", async (req, res) => { //schedule/all - [GET]
-    let [arHorarios] = await pool.query(`SELECT RANGO_DIAS,CODIGO_TIENDA FROM TB_HORARIO_PROPERTY ORDER BY  DATEDIFF(DATE(SUBSTRING_INDEX(RANGO_DIAS,' ',1)), CURDATE()) asc;`);
-    console.log(arHorarios);
-    if ((arHorarios || []).length) {
-      res.json(arHorarios);
-    } else {
-      res.json({ success: false });
-    }
-  });
-
-  app.get("/papeleta/listarPapeleta", async (req, res) => { //ballot/all - [GET]
-    let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' ORDER BY DATEDIFF(DATE(FECHA_CREACION), CURDATE()) ASC;`);
-    let parsePap = [];
-    if ((arPapeleta || []).length) {
-      await (arPapeleta || []).filter(async (pap) => {
-
-        (parsePap || []).push({
-          codigo_papeleta: (pap || {}).CODIGO_PAPELETA,
-          nombre_completo: (pap || {}).NOMBRE_COMPLETO,
-          documento: (pap || {}).NRO_DOCUMENTO_EMPLEADO,
-          id_tipo_papeleta: (pap || {}).ID_PAP_TIPO_PAPELETA,
-          cargo_empleado: (pap || {}).CARGO_EMPLEADO,
-          fecha_desde: (pap || {}).FECHA_DESDE,
-          fecha_hasta: (pap || {}).FECHA_HASTA,
-          hora_salida: (pap || {}).HORA_SALIDA,
-          hora_llegada: (pap || {}).HORA_LLEGADA,
-          hora_acumulado: (pap || {}).HORA_ACUMULADA,
-          hora_solicitada: (pap || {}).HORA_SOLICITADA,
-          codigo_tienda: (pap || {}).CODIGO_TIENDA,
-          fecha_creacion: (pap || {}).FECHA_CREACION,
-          horas_extras: []
-        });
-      });
-
-      res.json(parsePap);
-    } else {
-      res.json(parsePap);
-    }
-  });
-
-  //INSERTAR RANGO HORARIO EN SEARCH
-  app.post("/horario/insert/rangoHorario", async (req, res) => { // schedule/range - [POST]{code_store,range,id_schedule}
-    let row = (req || {}).body || {};
-    pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).rg}',${(row || {}).id})`).then((a) => {
-      pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(row || {}).codigo_tienda}' AND RANGO_HORA = '${(row || {}).rg}' AND ID_RG_HORARIO = ${(row || {}).id} ORDER by ID_RANGO_HORA DESC LIMIT 1;`).then(([arRango]) => {
-        res.json({
-          success: true,
-          id: arRango[0]['ID_RANGO_HORA']
-        });
-      });
-    }).catch((err) => {
-      res.json({ msj: err });
-    });
-  });
-
   //EDITAR RANGO HORARIO EN SEARCH
   app.post("/horario/update/rangoHorario", async (req, res) => { // schedule/range - [PUT]{id_range,range}
     let row = (req || {}).body || {};
@@ -1572,43 +628,11 @@ io.on('connection', async (socket) => {
     });
   });
 
-  //INSERTAR DIA DE TRABAJO EN SEARCH
-  app.post("/horario/insert/diaTrabajo", async (req, res) => { // schedule/day/work - [POST]{code_store,identity_document,full_name,id_range,id_day,id_schedule}
-    let row = (req || {}).body || {};
-    pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
-    pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).numero_documento}','${(row || {}).nombre_completo}',${(row || {}).id_rango},${(row || {}).id_dia},${(row || {}).id_horario})`).then(() => {
-      pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE CODIGO_TIENDA = '${(row || {}).codigo_tienda}' AND NUMERO_DOCUMENTO = '${(row || {}).numero_documento}' AND NOMBRE_COMPLETO = '${(row || {}).nombre_completo}' AND ID_TRB_RANGO_HORA = ${(row || {}).id_rango} AND ID_TRB_DIAS = ${(row || {}).id_dia} AND ID_TRB_HORARIO = ${(row || {}).id_horario} ORDER by ID_DIA_TRB DESC LIMIT 1;`).then(([arTrabajo]) => {
-        res.json({
-          success: true,
-          id: arTrabajo[0]['ID_DIA_TRB']
-        });
-      });
-    }).catch((err) => {
-      res.json({ msj: err });
-    });
-  });
-
   //ELIMINAR DIA DE TRABAJO EN SEARCH|
   app.post("/horario/delete/diaTrabajo", async (req, res) => { // schedule/day/work - [DELETE]{id_daywork}
     let id_registro = ((req || {}).body || {})['id'];
     pool.query(`DELETE FROM TB_DIAS_TRABAJO WHERE ID_DIA_TRB = ${id_registro};`).then(() => {
       res.json({ success: true });
-    }).catch((err) => {
-      res.json({ msj: err });
-    });
-  });
-
-  //INSERTAR DIA DE LIBRE EN SEARCH
-  app.post("/horario/insert/diaLibre", async (req, res) => { // schedule/day/free - [POST]{ code_store,identity_document,full_name,id_range,id_day,id_schedule}
-    let row = (req || {}).body || {};
-    pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
-    pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(row || {}).codigo_tienda}','${(row || {}).numero_documento}','${(row || {}).nombre_completo}',${(row || {}).id_rango},${(row || {}).id_dia},${(row || {}).id_horario})`).then(() => {
-      pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE CODIGO_TIENDA = '${(row || {}).codigo_tienda}' AND NUMERO_DOCUMENTO = '${(row || {}).numero_documento}' AND NOMBRE_COMPLETO = '${(row || {}).nombre_completo}' AND ID_TRB_RANGO_HORA = ${(row || {}).id_rango} AND ID_TRB_DIAS = ${(row || {}).id_dia} AND ID_TRB_HORARIO = ${(row || {}).id_horario} ORDER by ID_DIA_LBR DESC LIMIT 1;`).then(([arTrabajo]) => {
-        res.json({
-          success: true,
-          id: arTrabajo[0]['ID_DIA_LBR']
-        });
-      });
     }).catch((err) => {
       res.json({ msj: err });
     });
@@ -1628,22 +652,6 @@ io.on('connection', async (socket) => {
     })
 
 
-  });
-
-  //INSERTAR OBSERVACION DE SEARCH
-  app.post("/horario/insert/observacion", async (req, res) => { // schedule/observation - [POST]{id_day,id_schedule,code_store,full_name,observation}
-    let row = (req || {}).body || {};
-    await pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
-    pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION) VALUES(${(row || {}).id_dia},${(row || {}).id_horario},'${((row || {}) || {}).codigo_tienda}','${((row || {}) || {}).nombre_completo}','${((row || {}) || {}).observacion}')`).then(() => {
-      pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_DIAS = ${(row || {}).id_dia} AND ID_OBS_HORARIO = ${(row || {}).id_horario} AND CODIGO_TIENDA = '${((row || {}) || {}).codigo_tienda}' AND NOMBRE_COMPLETO = '${((row || {}) || {}).nombre_completo}' AND OBSERVACION = '${((row || {}) || {}).observacion}' ORDER by ID_OBSERVACION DESC LIMIT 1;`).then(([arObservacion]) => {
-        res.json({
-          success: true,
-          id: arObservacion[0]['ID_OBSERVACION']
-        });
-      });
-    }).catch((err) => {
-      res.json({ msj: err });
-    });
   });
 
   //EDITAR OBSERVACION DE SEARCH
@@ -1667,331 +675,6 @@ io.on('connection', async (socket) => {
       res.json({ msj: err });
     });
   });
-
-  app.post("/horario/registrar", async (req, res) => { // schedule/register - [POST][{id,cargo,date,range,code,range_date,days,days_work,days_free,arWorkers,observation}]
-    let arHorario = req.body;
-
-    (arHorario || []).filter(async (hrr, index) => {
-      //REGISTRA UN NUEVO CALENDARIO
-      console.log("REGISTRAR CALENDARIO");
-
-      await pool.query(`CALL SP_HORARIO_PROPERTY('${(hrr || {}).fecha}','${(hrr || {}).rango}','${(hrr || {}).cargo}','${(hrr || {}).codigo_tienda}',@output);`).then((a) => {
-
-        pool.query(`SELECT ID_HORARIO FROM TB_HORARIO_PROPERTY WHERE FECHA = '${(hrr || {}).fecha}' AND RANGO_DIAS = '${(hrr || {}).rango}' AND CARGO = '${(hrr || {}).cargo}' AND CODIGO_TIENDA = '${(hrr || {}).codigo_tienda}';`).then(([results]) => {
-
-          let id_horario = results[0]['ID_HORARIO']
-          let arRangoHorario = (hrr || {}).rg_hora || [];
-          let arDiasHorario = (hrr || {}).dias || [];
-          let arDiasTrbHorario = (hrr || {}).dias_trabajo || [];
-          let arDiasLibHorario = (hrr || {}).dias_libres || [];
-          let arObservacion = (hrr || {}).observacion || [];
-
-          (arRangoHorario || []).filter(async (rango, index) => {
-            await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO) VALUES('${(rango || {}).codigo_tienda}','${(rango || {}).rg}',${id_horario})`).then((a) => {
-
-              pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rango || {}).codigo_tienda}' AND RANGO_HORA = '${(rango || {}).rg}' AND ID_RG_HORARIO = ${id_horario};`).then(([rangoResult]) => {
-                let id_rango = rangoResult[0]['ID_RANGO_HORA'];
-                arRangoHorario[index]["id_rango_mysql"] = id_rango;
-              });
-            });
-          });
-
-
-          (arDiasHorario || []).filter(async (dia, index) => {
-            pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
-            await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER) VALUES('${(dia || {}).dia}','${(dia || {}).fecha}',${id_horario},${(dia || {}).id},'${(dia || {}).fecha_number}')`).then(() => {
-
-              pool.query(`SELECT * FROM  TB_DIAS_HORARIO WHERE DIA = '${(dia || {}).dia}' AND FECHA = '${(dia || {}).fecha}' AND ID_DIA_HORARIO = ${id_horario} AND POSITION = ${(dia || {}).id} AND FECHA_NUMBER = '${(dia || {}).fecha_number}';`).then(([diaResult]) => {
-                let id_dia = diaResult[0]['ID_DIAS'];
-                arDiasHorario[index]["id_dia_mysql"] = id_dia;
-              });
-
-            });
-          });
-
-          setTimeout(() => {
-            (arDiasTrbHorario || []).filter((diaTrb) => {
-
-              let objDia = (arDiasHorario || []).find((dia) => (dia || {}).id == (diaTrb || {}).id_dia);
-              let objRango = (arRangoHorario || []).find((rango) => (rango || {}).id == (diaTrb || {}).rg);
-              console.log(objDia);
-              console.log(objRango);
-              pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
-              pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(diaTrb || {}).codigo_tienda}','${(diaTrb || {}).numero_documento}','${(diaTrb || {}).nombre_completo}',${(objRango || {}).id_rango_mysql},${(objDia || {}).id_dia_mysql},${id_horario})`);
-            });
-
-            (arDiasLibHorario || []).filter((diaLbr) => {
-
-              let objDia = (arDiasHorario || []).find((dia) => (dia || {}).id == (diaLbr || {}).id_dia);
-              let objRango = (arRangoHorario || []).find((rango) => (rango || {}).id == (diaLbr || {}).rg);
-
-              pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
-              pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(diaLbr || {}).codigo_tienda}','${(diaLbr || {}).numero_documento}','${(diaLbr || {}).nombre_completo}',${(objRango || {}).id_rango_mysql},${(objDia || {}).id_dia_mysql},${id_horario})`);
-            });
-
-            (arObservacion || []).filter((observacion) => {
-
-              let objDia = (arDiasHorario || []).find((dia) => (dia || {}).id == (observacion || {}).id_dia);
-
-              pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
-              pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION) VALUES(${(objDia || {}).id_dia_mysql},${id_horario},'${(observacion || {}).codigo_tienda}','${(observacion || {}).nombre_completo}','${(observacion || {}).observacion}')`);
-            });
-
-          }, 1000);
-
-        });
-
-      });
-
-      if (arHorario.length - 1 == index) {
-        setTimeout(async () => {
-          let response = [];
-          let arObservation = [];
-          console.log(arHorario[0]['codigo_tienda'], arHorario[0]['rango']);
-          let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${arHorario[0]['codigo_tienda']}' AND RANGO_DIAS = '${arHorario[0]['rango']}';`);
-
-          await (requestSql || []).filter(async (dth) => {
-            (response || []).push({
-              id: dth.ID_HORARIO,
-              cargo: dth.CARGO,
-              codigo_tienda: dth.CODIGO_TIENDA,
-              rg_hora: [],
-              dias: [],
-              dias_trabajo: [],
-              dias_libres: [],
-              arListTrabajador: [],
-              observacion: []
-            });
-          });
-
-          if (response.length) {
-            (response || []).filter(async (dth, index) => {
-
-              pool.query(`SELECT * FROM TB_RANGO_HORA WHERE ID_RG_HORARIO = ${dth.id};`).then(([requestRg]) => {
-                (requestRg || []).filter(async (rdh) => {
-                  response[index]['rg_hora'].push({ id: rdh.ID_RANGO_HORA, position: response[index]['rg_hora'].length + 1, rg: rdh.RANGO_HORA, codigo_tienda: arHorario[0]['codigo_tienda'] });
-                });
-
-                pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${dth.id} ORDER BY POSITION  ASC;`).then(([requestDh]) => {
-                  (requestDh || []).filter(async (rdh) => {
-                    response[index]['dias'].push({ dia: rdh.DIA, fecha: rdh.FECHA, fecha_number: rdh.FECHA_NUMBER, id: rdh.ID_DIAS, position: response[index]['dias'].length + 1 });
-                  });
-
-                  pool.query(`SELECT * FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${dth.id};`).then(([requestTb]) => {
-                    (requestTb || []).filter(async (rdb) => {
-                      response[index]['dias_trabajo'].push({ id: rdb.ID_DIA_TRB, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA, codigo_tienda: rdb.CODIGO_TIENDA });
-                    });
-
-                    pool.query(`SELECT * FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${dth.id};`).then(([requestTd]) => {
-                      (requestTd || []).filter(async (rdb) => {
-                        response[index]['dias_libres'].push({ id: rdb.ID_DIA_LBR, id_cargo: rdb.ID_TRB_HORARIO, id_dia: rdb.ID_TRB_DIAS, nombre_completo: rdb.NOMBRE_COMPLETO, numero_documento: rdb.NUMERO_DOCUMENTO, rg: rdb.ID_TRB_RANGO_HORA, codigo_tienda: rdb.CODIGO_TIENDA });
-                      });
-
-
-                      pool.query(`SELECT * FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${dth.id};`).then(async (requestObs) => {
-                        const [row, field] = requestObs;
-
-                        await (row || []).filter(async (obs) => {
-                          response[index]['observacion'].push({ id: obs.ID_OBSERVACION, id_dia: obs.ID_OBS_DIAS, nombre_completo: obs.NOMBRE_COMPLETO, observacion: obs.OBSERVACION });
-                        });
-                        arObservation.push("true");
-
-                        if (requestSql.length - 1 == index) {
-                          setTimeout(() => {
-                            res.json({ success: true, data: response });
-                          }, 2000);
-                        }
-                      });
-                    });
-                  });
-                });
-              });
-            });
-          }
-        }, 2000);
-      }
-    });
-
-  });
-
-  socket.on("actualizarHorario", async (data) => {
-
-    let dataHorario = data || [];
-
-    dataHorario.filter(async (dth) => {
-      await pool.query(`DELETE FROM TB_DIAS_TRABAJO WHERE ID_TRB_HORARIO = ${(dth || {}).id};`);
-      await pool.query(`DELETE FROM TB_DIAS_LIBRE WHERE ID_TRB_HORARIO = ${(dth || {}).id};`);
-      await pool.query(`DELETE FROM TB_OBSERVACION WHERE ID_OBS_HORARIO = ${(dth || {}).id};`);
-
-
-
-      dth['rg_hora'].filter(async (rg, i) => {
-
-        let data = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rg || {}).codigo_tienda}' AND ID_RG_HORARIO = ${(dth || {}).id} AND ID_RANGO_HORA = ${(rg || {}).id};`);
-
-        if (Object.values(data[0]).length) {
-
-          await pool.query(`UPDATE TB_RANGO_HORA SET RANGO_HORA = '${rg.rg}' WHERE ID_RANGO_HORA = ${(rg || {}).id};`);
-        } else {
-          let dataRg = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rg || {}).codigo_tienda}' AND ID_RG_HORARIO = ${(dth || {}).id} AND RANGO_HORA = '${rg.rg}';`);
-
-          if (!Object.values(dataRg[0]).length) {
-            console.log(dth.cargo, `SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rg || {}).codigo_tienda}' AND ID_RG_HORARIO = ${(dth || {}).id} AND RANGO_HORA = '${rg.rg}';`);
-            console.log(!Object.values(dataRg[0]).length);
-            await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)VALUES('${dth.codigo_tienda}','${rg.rg}',${(dth || {}).id})`);
-          }
-        }
-
-      });
-
-      let [diasHorario] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE ID_DIA_HORARIO = ${(dth || {}).id};`);
-
-      if (dth['dias'].length) {
-        dth['dias'].filter(async (diah) => {
-
-          if ((diasHorario || []).length) {
-            let [diaHorarioSelected] = await pool.query(`SELECT * FROM TB_DIAS_HORARIO WHERE DIA = '${(diah || {}).dia}' AND ID_DIA_HORARIO = ${(dth || {}).id};`);
-            await pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
-            await pool.query(`UPDATE TB_DIAS_HORARIO SET FECHA='${diah.fecha}' , FECHA_NUMBER='${diah.fecha_number}' WHERE ID_DIAS = ${(diaHorarioSelected[0] || []).ID_DIAS};`);
-          } else {
-            await pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
-            await pool.query(`INSERT INTO TB_DIAS_HORARIO(DIA,FECHA,ID_DIA_HORARIO,POSITION,FECHA_NUMBER)VALUES('${diah.dia}','${diah.fecha}',${(dth || {}).id},${(diah || {}).position},'${(diah || {}).fecha_number}')`);
-          }
-
-        });
-      }
-
-      if (dth['dias_trabajo'].length) {
-        dth['dias_trabajo'].filter(async (diat) => {
-          await pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
-          await pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${(diat || {}).rg},${(diat || {}).id_dia},${(dth || {}).id})`);
-        });
-      }
-
-      if (dth['dias_libres'].length) {
-        dth['dias_libres'].filter(async (diat) => {
-          await pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
-          await pool.query(`INSERT INTO TB_DIAS_LIBRE(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO)VALUES('${diat.codigo_tienda}','${diat.numero_documento}','${diat.nombre_completo}',${diat.rg},${diat.id_dia},${(dth || {}).id})`);
-        });
-      }
-
-      if (dth['observacion'].length) {
-        dth['observacion'].filter(async (obs) => {
-          await pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
-          await pool.query(`INSERT INTO TB_OBSERVACION(ID_OBS_DIAS,ID_OBS_HORARIO,CODIGO_TIENDA,NOMBRE_COMPLETO,OBSERVACION)VALUES(${(obs || {}).id_dia},${(dth || {}).id},'${(obs || {}).codigo_tienda}','${(obs || {}).nombre_completo}','${(obs || {}).observacion}')`);
-        });
-      }
-    });
-
-  });
-
-  socket.on("consultaHorasTrab", (configuracion) => {
-    console.log("consultaHorasTrab", configuracion);
-    let configurationList = {
-      socket: (socket || {}).id,
-      fechain: configuracion[0].fechain,
-      fechaend: configuracion[0].fechaend,
-      nro_documento: configuracion[0].nro_documento
-    };
-
-    socket.broadcast.emit("consultaHoras", configurationList);
-  });
-
-  socket.on("comunicationEnlace", (enlace) => {
-  });
-
-  socket.on("consultaListaEmpleado", (cntCosto) => {
-    console.log(cntCosto);
-    let configurationList = {
-      socket: (socket || {}).id,
-      cntCosto: cntCosto
-    };
-    console.log(configurationList);
-    socket.broadcast.emit("consultarEJB", configurationList);
-    socket.broadcast.emit("consultarEmpleados", configurationList);
-  });
-
-  socket.on("horario/empleadoEJB", (cntCosto) => {
-    console.log(cntCosto);
-    let configurationList = {
-      socket: (socket || {}).id,
-      cntCosto: cntCosto
-    };
-
-    socket.broadcast.emit("consultarEJB", configurationList);
-  });
-
-  socket.on("listaEmpleados", (response) => {
-    let data = response;
-    socket.to(`${(data || [])['configuration']['socket']}`).emit("reporteEmpleadoTienda", { id: data.id, data: JSON.parse((data || {}).serverData || []) });
-  });
-
-  socket.on("resEmpleados", (response) => {
-    let data = response;
-    let parseEJB = [];
-    let parseHuellero = [];
-    let dataResponse = [];
-    let IDSocket = data.socket;
-
-    if (data.id == "EJB") {
-      let dataEJB = [];
-      dataEJB = JSON.parse((data || {}).serverData || []);
-
-      if (data.id == "EJB" && dataEJB.length) {
-        console.log("EJB", true);
-      }
-
-      (dataEJB || []).filter((ejb) => {
-
-        parseEJB.push({
-          id: "EJB",
-          codigoEJB: ((ejb || {}).CODEJB || "").trim(),
-          nombre_completo: `${(ejb || {}).APEPAT} ${(ejb || {}).APEMAT} ${(ejb || {}).NOMBRE}`,
-          nro_documento: ((ejb || {}).NUMDOC || "").trim(),
-          telefono: ((ejb || {}).TELEFO || "").trim(),
-          email: ((ejb || {}).EMAIL || "").trim(),
-          fec_nacimiento: ((ejb || {}).FECNAC || "").trim(),
-          fec_ingreso: ((ejb || {}).FECING || "").trim(),
-          status: ((ejb || {}).STATUS || "").trim(),
-          unid_servicio: ((ejb || {}).UNDSERVICIO || "").trim(),
-          code_unid_servicio: ((ejb || {}).CODUNDSERVICIO || "").trim(),
-        });
-
-      });
-
-    }
-
-    if (data.id == "servGeneral") {
-      let dataServGeneral = [];
-      dataServGeneral = JSON.parse((data || {}).serverData || []);
-
-      if (data.id == "servGeneral" && dataServGeneral.length) {
-        console.log("servGeneral", true);
-        console.log(dataServGeneral);
-      }
-
-      (dataServGeneral || []).filter((huellero) => {
-        parseHuellero.push({
-          id: "servGeneral",
-          nro_documento: (huellero || {}).nroDocumento,
-          dia: (huellero || {}).dia,
-          hr_ingreso: (huellero || {}).hrIn,
-          hr_salida: (huellero || {}).hrOut,
-          hr_trabajadas: (huellero || {}).hrWorking,
-          caja: (huellero || {}).caja,
-          rango_horario: '',
-          isTardanza: false
-        });
-      });
-
-    }
-
-    socket.to(`${listClient.id}`).emit("reporteHuellero", { id: data.id, data: JSON.parse((data || {}).serverData || []) });
-    socket.to(`${listClient.id}`).emit("reporteEmpleadoTienda", { id: data.id, data: parseEJB });
-  });
-
-
-
 
   app.post("/frontRetail/search/configuration/agente", async (req, res) => {
     let data = ((req || {}).body || []);
@@ -2062,13 +745,6 @@ io.on('connection', async (socket) => {
       return { index: index, rango: ((rs || [])[0] || {})['RANGO_HORA'] || "" };
     });
   }
-
-
-  app.get("/comprobantes/session/lista", async (req, res) => { //stores/terminals/all - [GET]
-    await pool.query(`SELECT * FROM TB_TERMINAL_TIENDA;`).then(([tiendasSession]) => {
-      res.json({ data: tiendasSession });
-    });
-  });
 
   app.post("/frontRetail/search/horario", async (req, res) => {
 
@@ -2223,8 +899,6 @@ io.on('connection', async (socket) => {
     }
   });
 
-
-
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       let __dirName = req.query.path || "";
@@ -2244,23 +918,6 @@ io.on('connection', async (socket) => {
 
     res.json({ message: 'success' });
   });
-
-  /*
-   app.post('/uploadMultipleSingleField', upload.array('multipleFiles', 5), (req, res) => {
-     // The uploaded files are available in req.files
-     res.json({ message: 'Multiple files from a single field uploaded successfully!' });
-   });
- 
-   app.post('/uploadMultipleFields', upload.fields([
-     { name: 'field1Files', maxCount: 5 },
-     { name: 'field2Files', maxCount: 5 }
-   ]), (req, res) => {
-     // The uploaded files are available in req.files
-     // Use req.files['field1Files'] for files from the first field
-     // Use req.files['field2Files'] for files from the second field
-     res.json({ message: 'Multiple files from multiple fields uploaded successfully!' });
-   });
- */
 
   app.post('/oneListDirectory', async (req, res) => {
     let arDirectory = [];
@@ -2306,21 +963,6 @@ io.on('connection', async (socket) => {
     });
   });
 
-
-
-  app.get('/menu/sistema/lista', async (req, res) => { //configuration/menu/all - [GET]
-    pool.query(`SELECT * FROM TB_MENU_SISTEMA;`).then(([menu]) => {
-      res.json(menu);
-    });
-  });
-
-  app.post('/menu/add/sistema', async (req, res) => { // configuration/menu - [POST]{ name_menu,route}
-    let dataMenu = (req || []).body || [];
-    pool.query(`INSERT INTO TB_MENU_SISTEMA(NOMBRE_MENU,RUTA)VALUES('${(dataMenu || {})[0].nombre_menu}','${(dataMenu || {})[0].ruta}');`).then(() => {
-      res.json({ msj: true })
-    });
-  });
-
   app.post('/menu/sistema/consulta', async (req, res) => { // configuration/menu/search - [GET]{level}
     let dataConsulta = (req || []).body || [];
     pool.query(`SELECT * FROM TB_PERMISO_SISTEMA INNER JOIN TB_MENU_SISTEMA ON TB_MENU_SISTEMA.ID_MENU = TB_PERMISO_SISTEMA.ID_MENU_PS WHERE TB_PERMISO_SISTEMA.NIVEL = '${((dataConsulta || [])[0] || {}).nivel}';`).then(([menu]) => {
@@ -2328,37 +970,9 @@ io.on('connection', async (socket) => {
     });
   });
 
-  app.get('/menu/sistema/niveles', async (req, res) => { //configuration/level/all - [GET]
-    pool.query(`SELECT * FROM TB_NIVELES_SISTEMA;`).then(([niveles]) => {
-      res.json(niveles);
-    });
-  });
-
-
-  app.post('/menu/sistema/niveles', async (req, res) => { // configuration/level - [POST]{level}
-    let dataNivel = (req || []).body || [];
-    pool.query(`INSERT INTO TB_NIVELES_SISTEMA(NIVEL_DESCRIPCION)VALUES('${(dataNivel || {})[0].nivel}');`).then(() => {
-      res.json({ msj: true })
-    });
-  });
-
-  app.post('/menu/sistema/add/permisos', async (req, res) => { // configuration/menu/permission - [POST]{id_menu,level}
-    let dataNivel = (req || []).body || [];
-    pool.query(`INSERT INTO TB_PERMISO_SISTEMA(ID_MENU_PS,NIVEL)VALUES(${(dataNivel || {})[0].id_menu},'${(dataNivel || {})[0].nivel}');`).then(() => {
-      res.json({ msj: true })
-    });
-  });
-
   app.post('/menu/sistema/delete/permisos', async (req, res) => { // configuration/menu/permission - [DELETE]{id_permission}
     let dataNivel = (req || []).body || [];
     pool.query(`DELETE FROM TB_PERMISO_SISTEMA WHERE ID_PERMISO_USER = ${(dataNivel || {})[0].id_menu};`).then(() => {
-      res.json({ msj: true })
-    });
-  });
-
-  app.post('/usuario/asignar/tienda', async (req, res) => { // configuration/asignation/store - [POST]{id_user,id_store,description_store}
-    let dataAsignacion = (req || []).body || [];
-    pool.query(`INSERT INTO TB_USUARIO_TIENDAS_ASIGNADAS(ID_USUARIO_TASG,ID_TIENDA_TASG,DESCRIPCION_TIENDA)VALUES('${(dataAsignacion || {})[0].id_usuario}','${(dataAsignacion || {})[0].id_tienda}','${(dataAsignacion || {})[0].descripcion_tienda}');`).then(() => {
       res.json({ msj: true })
     });
   });
@@ -2376,7 +990,6 @@ io.on('connection', async (socket) => {
       res.json(tiendas);
     });
   });
-
 
   app.get('/notificaciones', async (req, res) => {
     const auth_token = req.header("Authorization") || "";
@@ -2412,7 +1025,6 @@ io.on('connection', async (socket) => {
       res.status(403).json(mdwErrorHandler.error({ status: 403, type: 'Forbidden', message: 'No autorizado', api: '/notificaciones' }));
     }
   });
-
 
   app.post('/sunat-notification', async (req, res) => {
 
@@ -2561,12 +1173,9 @@ io.on('connection', async (socket) => {
 
   });
 
-  console.log(`connect ${codeTerminal} - idApp`, listClient.id);
-  console.log('a user connected');
 });
 
 
 httpServer.listen(3200, async () => {
   console.log('listening on *:3200');
-  console.log('ACTUALIZADO');
 });
