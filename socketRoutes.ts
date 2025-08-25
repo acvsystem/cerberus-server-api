@@ -130,4 +130,4 @@ BACKEND: inventario:get:barcode:response
 -----LISTEN NOTIFICACIONES
 FRONTEND: notificaciones:get
 
-*/
+*************/
