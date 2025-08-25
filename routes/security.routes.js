@@ -44,8 +44,21 @@ router.get('/lista/tienda', async (req, res) => {
 router.get('/lista/registro/tiendas', async (req, res) => {
     let data = ((req || {}).body || [])[0];
     await pool.query(`SELECT * FROM TB_LISTA_TIENDA WHERE ESTATUS = 'ACTIVO';`)
-        .then(([rs]) => {
-            res.json({ data: rs });
+        .then(([requestSql]) => {
+            let responseJSON = [];
+            (requestSql || []).filter((store) => {
+                (responseJSON || []).push({
+                    serie: (store || {}).SERIE_TIENDA,
+                    description: (store || {}).DESCRIPCION,
+                    code_wharehouse: (store || {}).COD_ALMACEN,
+                    service_unit: (store || {}).UNID_SERVICIO,
+                    status: (store || {}).ESTATUS,
+                    store_type: (store || {}).TIPO_TIENDA,
+                    email: (store || {}).EMAIL,
+                    code_store_ejb: (store || {}).COD_TIENDA_EJB,
+                });
+            });
+            res.json(responseJSON);
         });
 });
 
