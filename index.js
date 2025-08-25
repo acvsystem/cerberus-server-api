@@ -1497,7 +1497,7 @@ io.on('connection', async (socket) => {
   })
 
   app.get("/calendario/listarHorario", async (req, res) => {
-    let [arHorarios] = await pool.query(`SELECT RANGO_DIAS,CODIGO_TIENDA FROM TB_HORARIO_PROPERTY ORDER BY  DATEDIFF(DATE(SUBSTRING_INDEX(RANGO_DIAS,' ',1)), CURDATE()) asc;`);
+    let [arHorarios] = await pool.query(`SELECT RANGO_DIAS,CODIGO_TIENDA,DATETIME FROM TB_HORARIO_PROPERTY ORDER BY  DATEDIFF(DATE(SUBSTRING_INDEX(RANGO_DIAS,' ',1)), CURDATE()) asc;`);
     console.log(arHorarios);
     if ((arHorarios || []).length) {
       res.json(arHorarios);
