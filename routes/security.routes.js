@@ -26,9 +26,6 @@ router.post('/service/cliente/list/delete', async (req, res) => {
     } else {
         res.json(defaultResponse.error.default);
     }
-
-
-
 });
 
 router.post('/add/tienda', async (req, res) => {

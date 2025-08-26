@@ -1664,7 +1664,7 @@ io.on('connection', async (socket) => {
       //REGISTRA UN NUEVO CALENDARIO
       console.log("REGISTRAR CALENDARIO");
 
-      await pool.query(`CALL SP_HORARIO_PROPERTY('${(hrr || {}).fecha}','${(hrr || {}).rango}','${(hrr || {}).cargo}','${(hrr || {}).codigo_tienda}',select time (NOW()) as hora,@output);`).then((a) => {
+      await pool.query(`CALL SP_HORARIO_PROPERTY('${(hrr || {}).fecha}','${(hrr || {}).rango}','${(hrr || {}).cargo}','${(hrr || {}).codigo_tienda}','${(hrr || {}).datetime}',@output);`).then((a) => {
 
         pool.query(`SELECT ID_HORARIO FROM TB_HORARIO_PROPERTY WHERE FECHA = '${(hrr || {}).fecha}' AND RANGO_DIAS = '${(hrr || {}).rango}' AND CARGO = '${(hrr || {}).cargo}' AND CODIGO_TIENDA = '${(hrr || {}).codigo_tienda}';`).then(([results]) => {
 
@@ -1787,7 +1787,71 @@ io.on('connection', async (socket) => {
 
                         if (requestSql.length - 1 == index) {
                           setTimeout(() => {
-                            res.json({ success: true, data: response });
+
+                            pool.query(`SELECT * FROM TB_LISTA_TIENDA WHERE SERIE_TIENDA = ${arHorario[0]['codigo_tienda']};`).then(async ([responseSQL]) => {
+                              let emailStore = ((responseSQL || [])[0] || {})['EMAIL'];
+                              let nameStore = ((responseSQL || [])[0] || {})['DESCRIPCION'];
+
+                              let bodyHTML = `<table style="width:100%;border-spacing:0">
+                                              <tbody>
+                                                  <tr style="display:flex">
+                                                      <td>
+                                                          <table style="border-radius:4px;border-spacing:0;border:1px solid #155795;min-width:450px">
+                                                              <tbody>
+                                                                  <tr>
+                                                                      <td
+                                                                          style="border-top-left-radius:4px;border-top-right-radius:4px;display:flex;background:#155795;padding:20px">
+                                                                          <p
+                                                                              style="margin-left:72px;color:#fff;font-weight:700;font-size:30px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
+                                                                              <span class="il">METAS PERU</span> S.A.C
+                                                                          </p>
+                                                                      </td>
+                                                                  </tr>
+                                                                  <tr>
+                                                                      <td
+                                                                          style="text-align: center;padding:10px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
+                                                                          <p style="text-align: center;font-weight: 500;"> Horario registrado con exito.</p>
+                                                                          <table style="border-radius:4px;border-spacing:0;border:1px solid #010911;">
+                                                                              <thead>
+                                                                                  <tr>
+                                                                                      <th style="border: 1px solid #9E9E9E;border-right:0px;width: 130px;font-size: 13px;"
+                                                                                          width="110px">
+                                                                                          TIENDA
+                                                                                      </th>
+                                                                                      <th style="border: 1px solid #9E9E9E;border-right:0px;width: 180px;font-size: 13px;"
+                                                                                          width="110px">
+                                                                                          RANGO DIAS
+                                                                                      </th>
+                                                                                      <th style="border: 1px solid #9E9E9E;border-right:0px;width: 151px;font-size: 13px;"
+                                                                                          width="110px">
+                                                                                          FECHA & HORA
+                                                                                      </th>
+                                                                                  </tr>
+                                                                              </thead>
+                                                                              <tbody>
+                                                                                  <tr style="text-align: center;font-size: 13px;">
+                                                                                      <td style="padding-top: 7px;padding-bottom: 7px;">${nameStore}</td>
+                                                                                      <td style="padding-top: 7px;padding-bottom: 7px;">${((arHorario || [])[0] || {})['rango']}</td>
+                                                                                      <td style="padding-top: 7px;padding-bottom: 7px;">${((arHorario || [])[0] || {})['datetime']}</td>
+                                                                                  </tr>
+                                                                              </tbody>
+                                                                          </table>
+                                                                      </td>
+                                                                  </tr>
+                                                              </tbody>
+                                                          </table>
+                                                      </td>
+                                                  </tr>
+                                              </tbody>
+                                            </table>`;
+
+                              emailController.sendEmail([emailStore], `HORARIO GENERADO ${nameStore}`, bodyHTML, null, null)
+                                .catch(error => res.send(error));
+
+                              res.json({ success: true, data: response });
+                            });
+
+
                           }, 2000);
                         }
                       });
@@ -2427,7 +2491,8 @@ io.on('connection', async (socket) => {
       { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@metasperu.com' },
       { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@metasperu.com' },
       { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com' },
-      { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
+      { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' },
+      { code: '9Q', name: 'VS SANTA ANITA', email: 'vsmallaventurasa@metasperu.com' }
     ];
 
     (arrDocumento || []).filter(async (doc) => {
