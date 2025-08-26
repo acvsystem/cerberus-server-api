@@ -1788,7 +1788,7 @@ io.on('connection', async (socket) => {
                         if (requestSql.length - 1 == index) {
                           setTimeout(() => {
 
-                            pool.query(`SELECT * FROM TB_LISTA_TIENDA WHERE SERIE_TIENDA = ${((arHorario || [])[0] || {})['codigo_tienda']};`).then(async ([responseSQL]) => {
+                            pool.query(`SELECT * FROM TB_LISTA_TIENDA WHERE SERIE_TIENDA = '${((arHorario || [])[0] || {})['codigo_tienda']}';`).then(async ([responseSQL]) => {
 
                               if ((responseSQL || []).length) {
                                 let emailStore = ((responseSQL || [])[0] || {})['EMAIL'];
