@@ -11,17 +11,24 @@ import { prop as defaultResponse } from "../const/defaultResponse.js";
 router.post('/login', Login);
 router.get('/emailList', EmailList);
 router.post('/service/cliente/list/delete', async (req, res) => {
-    let body = ((req || []).body[0] || {})['cliente'] || "";
+    let body = ((req || []).body || {})['client_clear'] || "";
     console.log(body);
+
     let [data] = await pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`)
 
-    if (!data.length) {
-        await pool.query(`INSERT INTO TB_CLIENTES_CLEAR_FORNT(LIST_CLIENTE)VALUES('${body}');`);
+    if ((body || "").length) {
+        if (!data.length) {
+            await pool.query(`INSERT INTO TB_CLIENTES_CLEAR_FORNT(LIST_CLIENTE)VALUES('${body}');`);
+        } else {
+            await pool.query(`UPDATE TB_CLIENTES_CLEAR_FORNT SET LIST_CLIENTE = '${body}' WHERE ID_CLIENTE_CLEAR = 1;`);
+        }
+        res.json(defaultResponse.success.default);
     } else {
-        await pool.query(`UPDATE TB_CLIENTES_CLEAR_FORNT SET LIST_CLIENTE = '${body}' WHERE ID_CLIENTE_CLEAR = 1;`);
+        res.json(defaultResponse.error.default);
     }
 
-    res.json(defaultResponse.success.default);
+
+
 });
 
 router.post('/add/tienda', async (req, res) => {
