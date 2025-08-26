@@ -1903,7 +1903,7 @@ io.on('connection', async (socket) => {
                                               </tbody>
                                             </table>`;
 
-                                emailController.sendEmail(['itperu@metasperu.com'], `HORARIO GENERADO OFICINA`, bodyHTML, null, null)
+                                emailController.sendEmail(['metasperurrhh2@gmail.com','asistenterrhhmetasperu@gmail.com','metasperurrhh@gmail.com'], `HORARIO GENERADO OFICINA`, bodyHTML, null, null)
                                   .catch(error => res.send(error));
                               }
 
