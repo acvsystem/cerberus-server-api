@@ -1788,11 +1788,13 @@ io.on('connection', async (socket) => {
                         if (requestSql.length - 1 == index) {
                           setTimeout(() => {
 
-                            pool.query(`SELECT * FROM TB_LISTA_TIENDA WHERE SERIE_TIENDA = ${arHorario[0]['codigo_tienda']};`).then(async ([responseSQL]) => {
-                              let emailStore = ((responseSQL || [])[0] || {})['EMAIL'];
-                              let nameStore = ((responseSQL || [])[0] || {})['DESCRIPCION'];
+                            pool.query(`SELECT * FROM TB_LISTA_TIENDA WHERE SERIE_TIENDA = ${((arHorario || [])[0] || {})['codigo_tienda']};`).then(async ([responseSQL]) => {
 
-                              let bodyHTML = `<table style="width:100%;border-spacing:0">
+                              if ((responseSQL || []).length) {
+                                let emailStore = ((responseSQL || [])[0] || {})['EMAIL'];
+                                let nameStore = ((responseSQL || [])[0] || {})['DESCRIPCION'];
+
+                                let bodyHTML = `<table style="width:100%;border-spacing:0">
                                               <tbody>
                                                   <tr style="display:flex">
                                                       <td>
@@ -1845,8 +1847,66 @@ io.on('connection', async (socket) => {
                                               </tbody>
                                             </table>`;
 
-                              emailController.sendEmail([emailStore], `HORARIO GENERADO ${nameStore}`, bodyHTML, null, null)
-                                .catch(error => res.send(error));
+                                emailController.sendEmail([emailStore], `HORARIO GENERADO ${nameStore}`, bodyHTML, null, null)
+                                  .catch(error => res.send(error));
+                              } else {
+                                let bodyHTML = `<table style="width:100%;border-spacing:0">
+                                              <tbody>
+                                                  <tr style="display:flex">
+                                                      <td>
+                                                          <table style="border-radius:4px;border-spacing:0;border:1px solid #155795;min-width:450px">
+                                                              <tbody>
+                                                                  <tr>
+                                                                      <td
+                                                                          style="border-top-left-radius:4px;border-top-right-radius:4px;display:flex;background:#155795;padding:20px">
+                                                                          <p
+                                                                              style="margin-left:72px;color:#fff;font-weight:700;font-size:30px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
+                                                                              <span class="il">METAS PERU</span> S.A.C
+                                                                          </p>
+                                                                      </td>
+                                                                  </tr>
+                                                                  <tr>
+                                                                      <td
+                                                                          style="text-align: center;padding:10px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
+                                                                          <p style="text-align: center;font-weight: 500;"> Horario registrado con exito.</p>
+                                                                          <table style="border-radius:4px;border-spacing:0;border:1px solid #010911;">
+                                                                              <thead>
+                                                                                  <tr>
+                                                                                      <th style="border: 1px solid #9E9E9E;border-right:0px;width: 130px;font-size: 13px;"
+                                                                                          width="110px">
+                                                                                          TIENDA
+                                                                                      </th>
+                                                                                      <th style="border: 1px solid #9E9E9E;border-right:0px;width: 180px;font-size: 13px;"
+                                                                                          width="110px">
+                                                                                          RANGO DIAS
+                                                                                      </th>
+                                                                                      <th style="border: 1px solid #9E9E9E;border-right:0px;width: 151px;font-size: 13px;"
+                                                                                          width="110px">
+                                                                                          FECHA & HORA
+                                                                                      </th>
+                                                                                  </tr>
+                                                                              </thead>
+                                                                              <tbody>
+                                                                                  <tr style="text-align: center;font-size: 13px;">
+                                                                                      <td style="padding-top: 7px;padding-bottom: 7px;">OFICINA</td>
+                                                                                      <td style="padding-top: 7px;padding-bottom: 7px;">${((arHorario || [])[0] || {})['rango']}</td>
+                                                                                      <td style="padding-top: 7px;padding-bottom: 7px;">${((arHorario || [])[0] || {})['datetime']}</td>
+                                                                                  </tr>
+                                                                              </tbody>
+                                                                          </table>
+                                                                      </td>
+                                                                  </tr>
+                                                              </tbody>
+                                                          </table>
+                                                      </td>
+                                                  </tr>
+                                              </tbody>
+                                            </table>`;
+
+                                emailController.sendEmail(['itperu@metasperu.com'], `HORARIO GENERADO OFICINA`, bodyHTML, null, null)
+                                  .catch(error => res.send(error));
+                              }
+
 
                               res.json({ success: true, data: response });
                             });
