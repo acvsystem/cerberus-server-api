@@ -2207,7 +2207,7 @@ io.on('connection', async (socket) => {
         INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
         WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${number_indentity}'
         AND FECHA_NUMBER = '${parseDate}';`).then(([arFeriado]) => {
-      console.log('*******************************', index, number_indentity, day, (((arFeriado || [])[0] || "")['FECHA_NUMBER'] || ""));
+      console.log('*******************************', index, number_indentity, parseDate, day, (((arFeriado || [])[0] || "")['FECHA_NUMBER'] || ""));
       let indexRow = (data || []).findIndex((row) => row.nroDocumento == number_indentity && row.dia == day);
       if ((arFeriado || []).length) {
         ((data || [])[indexRow] || {})['isException'] = true;
