@@ -2190,7 +2190,7 @@ io.on('connection', async (socket) => {
     (data || []).filter(async (dt, i) => {
 
       data = onSearchDescanso(data, i, (dt || {}).dia, (dt || {}).nroDocumento);
-      if (data.length - 1 == i) {
+      if ((data || []).length - 1 == i) {
         setTimeout(() => {
           socket.to(`${req.body[0]['socket']}`).emit("reporteHorario", { id: "servGeneral", data: data });
           res.json({ mensaje: 'Archivo recibido con éxito' });
