@@ -2190,18 +2190,17 @@ io.on('connection', async (socket) => {
     let responseJSON = [];
     (data || []).filter(async (dt, i) => {
 
-      data = onSearchDescanso(data, i, (dt || {}).dia, (dt || {}).nroDocumento);
+      onSearchDescanso(data, i, (dt || {}).dia, (dt || {}).nroDocumento, req.body.length);
 
       if ((data || []).length - 1 == i) {
         setTimeout(() => {
-          socket.to(`${req.body[0]['socket']}`).emit("reporteHorario", { id: "servGeneral", data: data });
           res.json({ mensaje: 'Archivo recibido con éxito' });
         }, 500);
       }
     });
   });
 
-  function onSearchDescanso(data, index, day, number_indentity) {
+  function onSearchDescanso(data, index, day, number_indentity, length) {
     let date = new Date(day).toLocaleDateString().split('/');
     let parseDate = `${date[0]}-${date[1]}-${date[2]}`;
     pool.query(`SELECT * FROM TB_DIAS_LIBRE 
@@ -2219,7 +2218,9 @@ io.on('connection', async (socket) => {
       pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${number_indentity}' AND FECHA_DESDE = '${day}';`).then(([papeleta]) => {
         ((data || [])[index] || {})['papeleta'] = papeleta || [];
 
-        return data;
+        if (length - 1 == index) {
+          socket.to(`${req.body[0]['socket']}`).emit("reporteHorario", { id: "servGeneral", data: data });
+        }
       });
     });
   }
