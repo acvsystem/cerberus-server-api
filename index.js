@@ -2185,11 +2185,13 @@ io.on('connection', async (socket) => {
 
   app.post("/frontRetail/search/horario", async (req, res) => {
 
-    let data = req.body;
+    let data = [];
+    data = req.body;
     let responseJSON = [];
     (data || []).filter(async (dt, i) => {
 
       data = onSearchDescanso(data, i, (dt || {}).dia, (dt || {}).nroDocumento);
+
       if ((data || []).length - 1 == i) {
         setTimeout(() => {
           socket.to(`${req.body[0]['socket']}`).emit("reporteHorario", { id: "servGeneral", data: data });
