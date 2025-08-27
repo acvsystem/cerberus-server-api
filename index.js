@@ -1903,7 +1903,7 @@ io.on('connection', async (socket) => {
                                               </tbody>
                                             </table>`;
 
-                                emailController.sendEmail(['metasperurrhh2@gmail.com','asistenterrhhmetasperu@gmail.com','metasperurrhh@gmail.com'], `HORARIO GENERADO OFICINA`, bodyHTML, null, null)
+                                emailController.sendEmail(['metasperurrhh2@gmail.com', 'asistenterrhhmetasperu@gmail.com', 'metasperurrhh@gmail.com'], `HORARIO GENERADO OFICINA`, bodyHTML, null, null)
                                   .catch(error => res.send(error));
                               }
 
@@ -2191,26 +2191,26 @@ io.on('connection', async (socket) => {
       let date = new Date((dt || {}).dia).toLocaleDateString().split('/');
       let parseDate = `${date[0]}-${date[1]}-${date[2]}`;
 
-      let [arFeriado] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE 
+      pool.query(`SELECT * FROM TB_DIAS_LIBRE 
         INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
         WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(dt || {}).nroDocumento}'
-        AND FECHA_NUMBER = '${parseDate}';`);
-        console.log("FERIADO****************************************",arFeriado);
-      if ((arFeriado || []).length) {
-        data[i]['isException'] = true;
-      } else {
-        data[i]['isException'] = false;
-      }
-
-      pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${(dt || {}).nroDocumento}' AND FECHA_DESDE = '${(dt || {}).dia}';`).then(([papeleta]) => {
-        ((data || [])[i] || {})['papeleta'] = papeleta || [];
-
-        if (data.length - 1 == i) {
-          setTimeout(() => {
-            socket.to(`${req.body[0]['socket']}`).emit("reporteHorario", { id: "servGeneral", data: req.body });
-            res.json({ mensaje: 'Archivo recibido con éxito' });
-          }, 500);
+        AND FECHA_NUMBER = '${parseDate}';`).then(([arFeriado]) => {
+        if ((arFeriado || []).length) {
+          data[i]['isException'] = true;
+        } else {
+          data[i]['isException'] = false;
         }
+
+        pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${(dt || {}).nroDocumento}' AND FECHA_DESDE = '${(dt || {}).dia}';`).then(([papeleta]) => {
+          ((data || [])[i] || {})['papeleta'] = papeleta || [];
+
+          if (data.length - 1 == i) {
+            setTimeout(() => {
+              socket.to(`${req.body[0]['socket']}`).emit("reporteHorario", { id: "servGeneral", data: req.body });
+              res.json({ mensaje: 'Archivo recibido con éxito' });
+            }, 500);
+          }
+        });
       });
     });
 
