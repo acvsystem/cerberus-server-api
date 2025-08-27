@@ -2209,9 +2209,9 @@ io.on('connection', async (socket) => {
       console.log('*******************************', number_indentity, date, (((arFeriado || [])[0] || "")['FECHA_NUMBER'] || ""));
       //let indexRow = (data || []).findIndex((row) => row.nroDocumento == number_indentity && row.dia == date);
       if ((arFeriado || []).length) {
-        data[index]['isException'] = true;
+        ((data || [])[index] || {})['isException'] = true;
       } else {
-        data[index]['isException'] = false;
+        ((data || [])[index] || {})['isException'] = false;
       }
 
       pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${number_indentity}' AND FECHA_DESDE = '${day}';`).then(([papeleta]) => {
