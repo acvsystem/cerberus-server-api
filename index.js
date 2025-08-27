@@ -2190,7 +2190,7 @@ io.on('connection', async (socket) => {
     let responseJSON = [];
     (data || []).filter(async (dt, i) => {
 
-      onSearchDescanso(data, i, (dt || {}).dia, (dt || {}).nroDocumento, req.body.length);
+      onSearchDescanso(data, i, (dt || {}).dia, (dt || {}).nroDocumento, req.body.length, req.body[0]['socket']);
 
       if ((data || []).length - 1 == i) {
         setTimeout(() => {
@@ -2200,7 +2200,7 @@ io.on('connection', async (socket) => {
     });
   });
 
-  function onSearchDescanso(data, index, day, number_indentity, length) {
+  function onSearchDescanso(data, index, day, number_indentity, length, socket) {
     let date = new Date(day).toLocaleDateString().split('/');
     let parseDate = `${date[0]}-${date[1]}-${date[2]}`;
     pool.query(`SELECT * FROM TB_DIAS_LIBRE 
@@ -2219,7 +2219,7 @@ io.on('connection', async (socket) => {
         ((data || [])[index] || {})['papeleta'] = papeleta || [];
 
         if (length - 1 == index) {
-          socket.to(`${req.body[0]['socket']}`).emit("reporteHorario", { id: "servGeneral", data: data });
+          socket.to(`${socket}`).emit("reporteHorario", { id: "servGeneral", data: data });
         }
       });
     });
