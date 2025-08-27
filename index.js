@@ -2195,11 +2195,12 @@ io.on('connection', async (socket) => {
         INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
         WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(dt || {}).nroDocumento}'
         AND FECHA_NUMBER = '${parseDate}';`).then(([arFeriado]) => {
-        console.log('*******************************', (dt || {}).nroDocumento, parseDate, (arFeriado || []).length);
+        console.log('*******************************', (dt || {}).nroDocumento, (dt || {}).dia, (arFeriado || []).length);
+        let indexRow = (data || []).findIndex((row) => row.nroDocumento == (dt || {}).nroDocumento && row.dia == (dt || {}).dia);
         if ((arFeriado || []).length) {
-          data[i]['isException'] = true;
+          data[indexRow]['isException'] = true;
         } else {
-          data[i]['isException'] = false;
+          data[indexRow]['isException'] = false;
         }
 
         pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${(dt || {}).nroDocumento}' AND FECHA_DESDE = '${(dt || {}).dia}';`).then(([papeleta]) => {
@@ -2214,8 +2215,9 @@ io.on('connection', async (socket) => {
         });
       });
     });
-
   });
+
+
 
   app.post('/facturas-pendiente', async (req, res) => {
     let request = ((req || []).body || [])
