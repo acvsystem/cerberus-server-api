@@ -2200,7 +2200,7 @@ io.on('connection', async (socket) => {
     });
   });
 
-  function onSearchDescanso(data, index, day, number_indentity, length, socket) {
+  function onSearchDescanso(data, index, day, number_indentity, length, socketID) {
     let date = new Date(day).toLocaleDateString().split('/');
     let parseDate = `${date[0]}-${date[1]}-${date[2]}`;
     pool.query(`SELECT * FROM TB_DIAS_LIBRE 
@@ -2219,7 +2219,7 @@ io.on('connection', async (socket) => {
         ((data || [])[index] || {})['papeleta'] = papeleta || [];
 
         if (length - 1 == index) {
-          socket.to(`${socket}`).emit("reporteHorario", { id: "servGeneral", data: data });
+          socket.to(`${socketID}`).emit("reporteHorario", { id: "servGeneral", data: data });
         }
       });
     });
