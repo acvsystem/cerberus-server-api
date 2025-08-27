@@ -2195,6 +2195,7 @@ io.on('connection', async (socket) => {
         INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
         WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(dt || {}).nroDocumento}'
         AND FECHA_NUMBER = '${parseDate}';`).then(([arFeriado]) => {
+        console.log('*******************************', (dt || {}).nroDocumento, parseDate, (arFeriado || []).length);
         if ((arFeriado || []).length) {
           data[i]['isException'] = true;
         } else {
