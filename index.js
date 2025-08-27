@@ -2202,7 +2202,7 @@ io.on('connection', async (socket) => {
 
   function onSearchDescanso(data, index, day, number_indentity, length, socketID) {
     let date = new Date(day).toLocaleDateString('en-US', { timeZone: 'UTC' }).split('/');
-    let parseDate = `${date[0]}-${date[1]}-${date[2]}`;
+    let parseDate = `${date[1]}-${date[0]}-${date[2]}`;
     pool.query(`SELECT * FROM TB_DIAS_LIBRE 
         INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
         WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${number_indentity}'
