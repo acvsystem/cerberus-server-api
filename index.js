@@ -2186,36 +2186,44 @@ io.on('connection', async (socket) => {
   app.post("/frontRetail/search/horario", async (req, res) => {
 
     let data = req.body;
-
+    let responseJSON = [];
     (data || []).filter(async (dt, i) => {
-      let date = new Date((dt || {}).dia).toLocaleDateString().split('/');
-      let parseDate = `${date[0]}-${date[1]}-${date[2]}`;
 
-      pool.query(`SELECT * FROM TB_DIAS_LIBRE 
-        INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
-        WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(dt || {}).nroDocumento}'
-        AND FECHA_NUMBER = '${parseDate}';`).then(([arFeriado]) => {
-        console.log('*******************************', (dt || {}).nroDocumento, (dt || {}).dia, (((arFeriado || [])[0] || "")['FECHA_NUMBER'] || ""));
-        let indexRow = (data || []).findIndex((row) => row.nroDocumento == (dt || {}).nroDocumento && row.dia == (dt || {}).dia);
-        if ((arFeriado || []).length) {
-          data[indexRow]['isException'] = true;
-        } else {
-          data[indexRow]['isException'] = false;
-        }
 
-        pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${(dt || {}).nroDocumento}' AND FECHA_DESDE = '${(dt || {}).dia}';`).then(([papeleta]) => {
-          ((data || [])[i] || {})['papeleta'] = papeleta || [];
-
-          if (data.length - 1 == i) {
-            setTimeout(() => {
-              socket.to(`${req.body[0]['socket']}`).emit("reporteHorario", { id: "servGeneral", data: req.body });
-              res.json({ mensaje: 'Archivo recibido con éxito' });
-            }, 500);
-          }
-        });
-      });
+      if (data.length - 1 == i) {
+        data = onSearchDescanso(data, i, (dt || {}).dia, (dt || {}).nroDocumento);
+        setTimeout(() => {
+          socket.to(`${req.body[0]['socket']}`).emit("reporteHorario", { id: "servGeneral", data: data });
+          res.json({ mensaje: 'Archivo recibido con éxito' });
+        }, 500);
+      }
     });
   });
+
+  function onSearchDescanso(data, index, day, number_indentity) {
+    let date = new Date(day).toLocaleDateString().split('/');
+    let parseDate = `${date[0]}-${date[1]}-${date[2]}`;
+    pool.query(`SELECT * FROM TB_DIAS_LIBRE 
+        INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
+        WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${number_indentity}'
+        AND FECHA_NUMBER = '${parseDate}';`).then(([arFeriado]) => {
+      console.log('*******************************', number_indentity, date, (((arFeriado || [])[0] || "")['FECHA_NUMBER'] || ""));
+      //let indexRow = (data || []).findIndex((row) => row.nroDocumento == number_indentity && row.dia == date);
+      if ((arFeriado || []).length) {
+        data[index]['isException'] = true;
+      } else {
+        data[index]['isException'] = false;
+      }
+
+      pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${number_indentity}' AND FECHA_DESDE = '${day}';`).then(([papeleta]) => {
+        ((data || [])[index] || {})['papeleta'] = papeleta || [];
+
+        return data;
+      });
+    });
+  }
+
+
 
 
 
