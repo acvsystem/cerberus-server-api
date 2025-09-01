@@ -102,7 +102,7 @@ const task_5 = cron.schedule('00 9 * * 0', () => {
 
 
 
-onVerificarCalendario();
+
 task_1.start();
 task_2.start();
 task_3.start();
@@ -388,6 +388,7 @@ io.on('connection', async (socket) => {
   /* CONSULTAR DOCUMENTOS FALTANTES */
 
   socket.on('comprobantes:get', (data) => {
+    onVerificarCalendario;
     console.log(
       `-----INIT SOLICITUD
        FRONTEND: comprobantes:get`
