@@ -255,7 +255,7 @@ io.on('connection', async (socket) => {
         console.log('Hora:', new Date().toISOString());
         console.log('IP:', clientIp);
         console.log('event_response:', event);
-        console.log('response:', responseData);
+       // console.log('response:', responseData);
         console.log('conectados:', arUsuarioSocket);
         console.log('Duración:', `${Date.now() - start}ms`);
         console.log('----------------------');

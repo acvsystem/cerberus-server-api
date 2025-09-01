@@ -31,7 +31,7 @@ class clsFacturacion {
             var cpParse = ((data || {}).cmpNumero || "").split('-');
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
         });
-        console.log(frontData);
+        
         (frontData || []).filter((data) => {
 
             let cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
