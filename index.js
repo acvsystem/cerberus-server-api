@@ -135,10 +135,18 @@ function sendNotification(usuario, notificacion) {
 
 function onVerificarCalendario() {
 
-  const now = new Date();
-  now.setDate(now.getDate());
-  let day = new Date(now).toLocaleDateString().split('/');
-  console.log('********************',`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE TRIM(SUBSTRING(RANGO_DIAS,1,9)) = '${parseInt(day[0]) + 1}-${parseInt(day[1])}-${parseInt(day[2])}' GROUP BY CODIGO_TIENDA;`);
+  const hoy = new Date();
+
+  const mañana = new Date(hoy.getTime() + 24 * 60 * 60 * 1000);
+
+  const fechaFormateada = mañana.toLocaleDateString('es-ES', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+
+  let day = fechaFormateada.split('/');
+
   pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE TRIM(SUBSTRING(RANGO_DIAS,1,9)) = '${parseInt(day[0]) + 1}-${parseInt(day[1])}-${parseInt(day[2])}' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
     let arCalendarios = ['9M'];
     (calendarios || []).filter((c) => {
@@ -181,8 +189,8 @@ function onVerificarCalendario() {
                 </tbody>
             </table>`;
 
-          /*  emailController.sendEmail(['itperu@metasperu.com', 'carlosmoron@metasperu.com', 'fieldleaderbbw@metasperu.com', 'fieldleadervs@metasperu.com', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com', 'paulodosreis@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
-              .catch(error => res.send(error));*/
+            /*  emailController.sendEmail(['itperu@metasperu.com', 'carlosmoron@metasperu.com', 'fieldleaderbbw@metasperu.com', 'fieldleadervs@metasperu.com', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com', 'paulodosreis@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
+                .catch(error => res.send(error));*/
 
           }
         }
@@ -255,7 +263,7 @@ io.on('connection', async (socket) => {
         console.log('Hora:', new Date().toISOString());
         console.log('IP:', clientIp);
         console.log('event_response:', event);
-       // console.log('response:', responseData);
+        // console.log('response:', responseData);
         console.log('conectados:', arUsuarioSocket);
         console.log('Duración:', `${Date.now() - start}ms`);
         console.log('----------------------');
@@ -347,7 +355,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('resClient', async (data) => {
-   // console.log('resClient', data);
+    // console.log('resClient', data);
     let response = JSON.parse(data);
     // let [tiendaExist] = await pool.query(`SELECT * FROM TB_CLIENTES_BLANCO WHERE SERIE_TIENDA = ${codeTerminal};`);
     //console.log('tiendaExist', tiendaExist);
@@ -388,7 +396,7 @@ io.on('connection', async (socket) => {
   /* CONSULTAR DOCUMENTOS FALTANTES */
 
   socket.on('comprobantes:get', (data) => {
-    onVerificarCalendario;
+
     console.log(
       `-----INIT SOLICITUD
        FRONTEND: comprobantes:get`
