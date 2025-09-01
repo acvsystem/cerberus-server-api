@@ -138,7 +138,7 @@ function onVerificarCalendario() {
   const now = new Date();
   now.setDate(now.getDate());
   let day = new Date(now).toLocaleDateString().split('/');
-
+  console.log('********************',`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE TRIM(SUBSTRING(RANGO_DIAS,1,9)) = '${parseInt(day[0]) + 1}-${parseInt(day[1])}-${parseInt(day[2])}' GROUP BY CODIGO_TIENDA;`);
   pool.query(`SELECT CODIGO_TIENDA FROM TB_HORARIO_PROPERTY WHERE TRIM(SUBSTRING(RANGO_DIAS,1,9)) = '${parseInt(day[0]) + 1}-${parseInt(day[1])}-${parseInt(day[2])}' GROUP BY CODIGO_TIENDA;`).then(([calendarios]) => {
     let arCalendarios = ['9M'];
     (calendarios || []).filter((c) => {
@@ -181,8 +181,8 @@ function onVerificarCalendario() {
                 </tbody>
             </table>`;
 
-            emailController.sendEmail(['itperu@metasperu.com', 'carlosmoron@metasperu.com', 'fieldleaderbbw@metasperu.com', 'fieldleadervs@metasperu.com', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com', 'paulodosreis@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
-              .catch(error => res.send(error));
+          /*  emailController.sendEmail(['itperu@metasperu.com', 'carlosmoron@metasperu.com', 'fieldleaderbbw@metasperu.com', 'fieldleadervs@metasperu.com', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com', 'paulodosreis@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
+              .catch(error => res.send(error));*/
 
           }
         }
@@ -347,7 +347,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('resClient', async (data) => {
-    console.log('resClient', data);
+   // console.log('resClient', data);
     let response = JSON.parse(data);
     // let [tiendaExist] = await pool.query(`SELECT * FROM TB_CLIENTES_BLANCO WHERE SERIE_TIENDA = ${codeTerminal};`);
     //console.log('tiendaExist', tiendaExist);
@@ -412,10 +412,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('comprobantes:get:sbk:response', async (resData) => { // RESPUESTA DESDE EL SERVIDOR BACKUP
-    console.log(
-      `-----ENVIO RESPUESTA DE SERVIDOR BACKUP A BACKEND
-       SERVIDOR BACKUP: comprobantes:get:sbk:response`
-    );
+
 
     if ((resData || "").id == "server") {
       let tiendasList = [];
@@ -428,10 +425,7 @@ io.on('connection', async (socket) => {
 
           if (tienda.length - 1 == i) {
             let listSessionConnect = await facturacionController.verificacionDocumentos({ serverData: resData['serverData'], frontData: resData['frontData']['data'], codigoFront: resData['codigoFront'] }, tiendasList);
-            console.log(
-              `-----ENVIO RESPUESTA A FRONTEND
-               BACKEND: comprobantes:get:response`
-            );
+
             socket.to(`${socketID}`).emit("comprobantes:get:response", listSessionConnect); // SE ENVIA A FRONTEND
           }
 
