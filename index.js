@@ -2152,9 +2152,9 @@ io.on('connection', async (socket) => {
         year: 'numeric'
       });
 
-      let day = fechaFormateada.split('/');
-      let parseDate = `${day[0]}-${day[1]}-${day[2]}`;
-
+      let parseDate = fechaFormateada.split('/');
+      //let parseDate = `${day[0]}-${day[1]}-${day[2]}`;
+      
       await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${(huellero || {}).nroDocumento}' AND FECHA_DESDE = '${(huellero || {}).dia}';`).then(([papeleta]) => {
         ((dataServGeneral || [])[i] || {})['papeleta'] = papeleta || [];
       });
