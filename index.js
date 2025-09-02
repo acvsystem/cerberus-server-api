@@ -189,8 +189,8 @@ function onVerificarCalendario() {
                 </tbody>
             </table>`;
 
-              emailController.sendEmail(['itperu@metasperu.com', 'carlosmoron@metasperu.com', 'fieldleaderbbw@metasperu.com', 'fieldleadervs@metasperu.com', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com', 'paulodosreis@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
-                .catch(error => res.send(error));
+            emailController.sendEmail(['itperu@metasperu.com', 'carlosmoron@metasperu.com', 'fieldleaderbbw@metasperu.com', 'fieldleadervs@metasperu.com', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com', 'paulodosreis@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
+              .catch(error => res.send(error));
 
           }
         }
@@ -2144,10 +2144,17 @@ io.on('connection', async (socket) => {
 
     (dataServGeneral || []).filter(async (huellero, i) => {
 
-      let date = new Date((huellero || {}).dia).toLocaleDateString().split('/');
-      let parseDate = `${date[0]}-${date[1]}-${date[2]}`;
+      const hoy = new Date((huellero || {}).dia);
+      const mañana = new Date(hoy.getTime() + 24 * 60 * 60 * 1000);
+      const fechaFormateada = mañana.toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
 
-      console.log('*******************************************************************',(huellero || {}).dia,parseDate);
+      let day = fechaFormateada.split('/');
+      let parseDate = `${day[0]}-${day[1]}-${day[2]}`;
+
       await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE ESTADO_PAPELETA != 'anulado' AND ID_PAP_TIPO_PAPELETA = 7 AND NRO_DOCUMENTO_EMPLEADO = '${(huellero || {}).nroDocumento}' AND FECHA_DESDE = '${(huellero || {}).dia}';`).then(([papeleta]) => {
         ((dataServGeneral || [])[i] || {})['papeleta'] = papeleta || [];
       });
