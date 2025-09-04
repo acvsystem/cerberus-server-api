@@ -17,10 +17,7 @@ class clsTransfers {
                         datetime: (transfers || {}).DATETIME
                     });
 
-                    if (requestSql.length - 1 == i) {
-                        console.log(responseJSON);
-                        res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/all', data: responseJSON || [] }));
-                    }
+                    res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/all', data: responseJSON || [] }));
                 });
 
 
