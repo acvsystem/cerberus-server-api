@@ -19,7 +19,7 @@ class clsTransfers {
                 });
 
                 res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/all', data: responseJSON || [] }));
-            }).catch((err) => { 
+            }).catch((err) => {
                 res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'error', message: err, api: '/transfers/all', data: responseJSON }));
             });
     }
@@ -49,21 +49,35 @@ class clsTransfers {
     }
 
 
-    inTransfers = (req, res) => {
+    inTransfers = async (req, res) => {
         let requesJSON = ((req || {}).body || {});
-        pool.query(`INSERT INTO TB_HEAD_TRASPASOS(CODIGO_TRASPASO,UNIDAD_SERVICIO,TIENDA_ORIGEN,TIENDA_DESTINO,CODIGO_ALM_ORIGEN,CODIGO_ALM_DESTINO,DATETIME)
-            VALUES('${requesJSON.code_transfer}','${requesJSON.unid_service}','${requesJSON.store_origin}','${requesJSON.store_destination}','${requesJSON.code_warehouse_origin}',
+
+        let data = ((req || {}).body || []);
+
+        pool.query(`SELECT * FROM TB_HEAD_PAPELETA;`).then(([codeTransfer]) => {
+
+            let code_transfer = this.generarCodigoSerie((arPapeleta || []).length + 1, 'T', 6);
+
+            pool.query(`INSERT INTO TB_HEAD_TRASPASOS(CODIGO_TRASPASO,UNIDAD_SERVICIO,TIENDA_ORIGEN,TIENDA_DESTINO,CODIGO_ALM_ORIGEN,CODIGO_ALM_DESTINO,DATETIME)
+            VALUES('${code_transfer}','${requesJSON.unid_service}','${requesJSON.store_origin}','${requesJSON.store_destination}','${requesJSON.code_warehouse_origin}',
             '${requesJSON.code_warehouse_destination}','${requesJSON.datetime}')`).then(() => {
 
-            ((requesJSON || {}).details || []).filter((det) => {
-                pool.query(`INSERT INTO TB_DETALLE_TRASPASOS(CODIGO_BARRA,CODIGO_ARTICULO,DESCRIPCION,TALLA,COLOR,STOCK,STOCK_SOLICITADO,ESTADO,CODIGO_TRASPASO)
+                ((requesJSON || {}).details || []).filter((det) => {
+                    pool.query(`INSERT INTO TB_DETALLE_TRASPASOS(CODIGO_BARRA,CODIGO_ARTICULO,DESCRIPCION,TALLA,COLOR,STOCK,STOCK_SOLICITADO,ESTADO,CODIGO_TRASPASO)
                     VALUES('${det.barcode}','${det.article_code}','${det.description}','${det.size}','${det.color}','${det.stock}','${det.stock_required}','${det.status}','${det.code_transfers}')`);
-            });
+                });
 
-            res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/new', data: [] }));
-        }).catch((err) => {
-            res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'error', message: err, api: '/transfers/new', data: [] }));
+                res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/new', data: [] }));
+            }).catch((err) => {
+                res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'error', message: err, api: '/transfers/new', data: [] }));
+            });
         });
+    }
+
+
+    generarCodigoSerie(numero, prefijo = 'T', longitud = 6) {
+        const numeroFormateado = numero.toString().padStart(longitud, '0');
+        return `${prefijo}${numeroFormateado}`;
     }
 }
 
