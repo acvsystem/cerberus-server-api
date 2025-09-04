@@ -12,6 +12,7 @@ import { EventEmitter } from "events";
 import securityRoutes from "./routes/security.routes.js";
 import recursosHumanosRoutes from "./routes/recursosHumanos.routes.js";
 import frontRetailRoutes from "./routes/frontRetail.routes.js";
+import transfersRoutes from "./routes/frontRetail.routes.js";
 import { prop as defaultResponse } from "./const/defaultResponse.js";
 import tokenController from './controllers/csToken.js';
 import fs from 'fs';
@@ -39,7 +40,7 @@ app.use(bodyParser.urlencoded({ limit: "1000000mb", extended: true }));
 app.use("/security", securityRoutes);
 app.use("/recursos_humanos", recursosHumanosRoutes);
 app.use("/sistema", frontRetailRoutes);
-
+app.use("/transfers", transfersRoutes);
 
 // Middleware de logging
 app.use((req, res, next) => {
