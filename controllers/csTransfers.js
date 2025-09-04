@@ -54,9 +54,9 @@ class clsTransfers {
 
         let data = ((req || {}).body || []);
 
-        pool.query(`SELECT * FROM TB_HEAD_PAPELETA;`).then(([codeTransfer]) => {
+        pool.query(`SELECT * FROM TB_HEAD_PAPELETA;`).then(([responseHead]) => {
 
-            let code_transfer = this.generarCodigoSerie((arPapeleta || []).length + 1, 'T', 6);
+            let code_transfer = this.generarCodigoSerie((responseHead || []).length + 1, 'T', 6);
 
             pool.query(`INSERT INTO TB_HEAD_TRASPASOS(CODIGO_TRASPASO,UNIDAD_SERVICIO,TIENDA_ORIGEN,TIENDA_DESTINO,CODIGO_ALM_ORIGEN,CODIGO_ALM_DESTINO,DATETIME)
             VALUES('${code_transfer}','${requesJSON.unid_service}','${requesJSON.store_origin}','${requesJSON.store_destination}','${requesJSON.code_warehouse_origin}',
