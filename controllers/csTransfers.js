@@ -16,8 +16,9 @@ class clsTransfers {
                         code_warehouse_destination: (transfers || {}).CODIGO_ALM_DESTINO,
                         datetime: (transfers || {}).DATETIME
                     });
-                    console.log(responseJSON);
+
                     if (requestSql.length - 1 == i) {
+                        console.log(responseJSON);
                         res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/all', data: responseJSON || [] }));
                     }
                 });
