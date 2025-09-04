@@ -2,7 +2,9 @@ import { Router } from 'express';
 const router = Router();
 import transfersController from '../controllers/csTransfers.js';
 
-router.post('/pap/gen_codigo_pap', generarCodigo);
+router.get('/all', transfersController.allTransfers);
+router.get('/search/detail', transfersController.searchDetailsTransfers);
+router.post('/new', transfersController.inTransfers);
 
 const transfersRoutes = router;
 export default transfersRoutes
