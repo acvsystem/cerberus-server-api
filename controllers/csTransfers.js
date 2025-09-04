@@ -3,7 +3,7 @@ import mdwErrorHandler from '../middleware/errorHandler.js';
 
 class clsTransfers {
     allTransfers = (req, res) => {
-        pool.query(`SELECT * FROM TB_HEAD_TRASPASOS;`)
+        pool.query(`SELECT * FROM TB_HEAD_TRASPASOS ORDER BY ID_TRASPASOS DESC;`)
             .then(([requestSql]) => {
                 let responseJSON = [];
                 (requestSql || []).filter((transfers) => {
@@ -54,7 +54,7 @@ class clsTransfers {
 
         let data = ((req || {}).body || []);
 
-        pool.query(`SELECT * FROM TB_HEAD_PAPELETA;`).then(([responseHead]) => {
+        pool.query(`SELECT * FROM TB_HEAD_TRASPASOS;`).then(([responseHead]) => {
 
             let code_transfer = this.generarCodigoSerie((responseHead || []).length + 1, 'T', 6);
 
@@ -63,8 +63,8 @@ class clsTransfers {
             '${requesJSON.code_warehouse_destination}','${requesJSON.datetime}')`).then(() => {
 
                 ((requesJSON || {}).details || []).filter((det) => {
-                    pool.query(`INSERT INTO TB_DETALLE_TRASPASOS(CODIGO_BARRA,CODIGO_ARTICULO,DESCRIPCION,TALLA,COLOR,STOCK,STOCK_SOLICITADO,ESTADO,CODIGO_TRASPASO)
-                    VALUES('${det.barcode}','${det.article_code}','${det.description}','${det.size}','${det.color}','${det.stock}','${det.stock_required}','${det.status}','${det.code_transfers}')`);
+                    pool.query(`INSERT INTO TB_DETALLE_TRASPASOS(CODIGO_BARRA,CODIGO_ARTICULO,DESCRIPCION,TALLA,COLOR,STOCK,STOCK_SOLICITADO,CODIGO_TRASPASO)
+                    VALUES('${det.barcode}','${det.article_code}','${det.description}','${det.size}','${det.color}','${det.stock}','${det.stock_required}','${code_transfer}')`);
                 });
 
                 res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/new', data: [] }));
