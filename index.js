@@ -12,7 +12,7 @@ import { EventEmitter } from "events";
 import securityRoutes from "./routes/security.routes.js";
 import recursosHumanosRoutes from "./routes/recursosHumanos.routes.js";
 import frontRetailRoutes from "./routes/frontRetail.routes.js";
-import transfersRoutes from "./routes/frontRetail.routes.js";
+import transfersRoutes from "./routes/transfersRoutes.routes.js";
 import { prop as defaultResponse } from "./const/defaultResponse.js";
 import tokenController from './controllers/csToken.js';
 import fs from 'fs';
