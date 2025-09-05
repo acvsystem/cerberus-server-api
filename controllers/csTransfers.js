@@ -21,7 +21,7 @@ class clsTransfers {
                     pool.query(`SELECT * FROM TB_DETALLE_TRASPASOS WHERE CODIGO_TRASPASO = '${code_transfers}';`).then(([requestSql]) => {
                         let indexTransfers = responseJSON.findIndex((trs) => trs.code_transfer == code_transfers);
                         (requestSql || []).filter((detail) => {
-                            (indexTransfers || [])['detail'].push({
+                            (indexTransfers || [])[indexTransfers]['detail'].push({
                                 barcode: detail.CODIGO_BARRA,
                                 article_code: detail.CODIGO_ARTICULO,
                                 description: detail.DESCRIPCION,
@@ -36,12 +36,12 @@ class clsTransfers {
                     });
 
                     if (requestSql.length - 1 == i) {
-                        res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/all', data: responseJSON || [] }));
+
                     }
 
                 });
 
-
+                res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/all', data: responseJSON || [] }));
             }).catch((err) => {
                 res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'error', message: err, api: '/transfers/all', data: responseJSON }));
             });
