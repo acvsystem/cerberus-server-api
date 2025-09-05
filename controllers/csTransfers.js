@@ -34,7 +34,7 @@ class clsTransfers {
                                 status: detail.ESTADO,
                                 code_transfers: detail.CODIGO_TRASPASO
                             });
-                             console.log(requestSql);
+                             console.log(responseJSON);
                         });
                     });
 
