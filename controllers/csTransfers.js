@@ -6,7 +6,7 @@ class clsTransfers {
         pool.query(`SELECT * FROM TB_HEAD_TRASPASOS ORDER BY ID_TRASPASOS DESC;`)
             .then(([requestSql]) => {
                 let responseJSON = [];
-                (requestSql || []).filter((transfers, i) => {
+                (requestSql || []).filter(async (transfers, i) => {
                     let code_transfers = (transfers || {}).CODIGO_TRASPASO;
                     (responseJSON || []).push({
                         code_transfer: code_transfers,
@@ -19,7 +19,7 @@ class clsTransfers {
                         detail: []
                     });
 
-                    pool.query(`SELECT * FROM TB_DETALLE_TRASPASOS WHERE CODIGO_TRASPASO = '${code_transfers}';`).then(([requestSql]) => {
+                    await pool.query(`SELECT * FROM TB_DETALLE_TRASPASOS WHERE CODIGO_TRASPASO = '${code_transfers}';`).then(([requestSql]) => {
                         let indexTransfers = responseJSON.findIndex((trs) => trs.code_transfer == code_transfers);
 
                         (requestSql || []).filter((detail) => {
@@ -34,14 +34,13 @@ class clsTransfers {
                                 status: detail.ESTADO,
                                 code_transfers: detail.CODIGO_TRASPASO
                             });
-
-                            if (requestSql.length - 1 == i) {
-                                res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/all', data: responseJSON || [] }));
-                            }
                         });
                     });
 
 
+                    if (requestSql.length - 1 == i) {
+                        res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/all', data: responseJSON || [] }));
+                    }
 
                 });
 
@@ -78,8 +77,6 @@ class clsTransfers {
 
     inTransfers = async (req, res) => {
         let requesJSON = ((req || {}).body || {});
-
-        let data = ((req || {}).body || []);
 
         pool.query(`SELECT * FROM TB_HEAD_TRASPASOS;`).then(([responseHead]) => {
 
