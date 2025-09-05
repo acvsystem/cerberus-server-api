@@ -15,11 +15,13 @@ class clsTransfers {
                         store_destination: (transfers || {}).TIENDA_DESTINO,
                         code_warehouse_origin: (transfers || {}).CODIGO_ALM_ORIGEN,
                         code_warehouse_destination: (transfers || {}).CODIGO_ALM_DESTINO,
-                        datetime: (transfers || {}).DATETIME
+                        datetime: (transfers || {}).DATETIME,
+                        detail: []
                     });
 
                     pool.query(`SELECT * FROM TB_DETALLE_TRASPASOS WHERE CODIGO_TRASPASO = '${code_transfers}';`).then(([requestSql]) => {
                         let indexTransfers = responseJSON.findIndex((trs) => trs.code_transfer == code_transfers);
+                        console.log(indexTransfers);
                         (requestSql || []).filter((detail) => {
                             (indexTransfers || [])[indexTransfers]['detail'].push({
                                 barcode: detail.CODIGO_BARRA,
@@ -36,12 +38,12 @@ class clsTransfers {
                     });
 
                     if (requestSql.length - 1 == i) {
-
+                        res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/all', data: responseJSON || [] }));
                     }
 
                 });
 
-                res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/all', data: responseJSON || [] }));
+
             }).catch((err) => {
                 res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'error', message: err, api: '/transfers/all', data: responseJSON }));
             });
