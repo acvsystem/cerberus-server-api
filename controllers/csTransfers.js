@@ -23,7 +23,7 @@ class clsTransfers {
                         let indexTransfers = responseJSON.findIndex((trs) => trs.code_transfer == code_transfers);
                         console.log(indexTransfers);
                         (requestSql || []).filter((detail) => {
-                            (indexTransfers || [])[indexTransfers]['detail'].push({
+                            (responseJSON || [])[indexTransfers]['detail'].push({
                                 barcode: detail.CODIGO_BARRA,
                                 article_code: detail.CODIGO_ARTICULO,
                                 description: detail.DESCRIPCION,
@@ -38,12 +38,12 @@ class clsTransfers {
                     });
 
                     if (requestSql.length - 1 == i) {
-                        res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/all', data: responseJSON || [] }));
+
                     }
 
                 });
 
-
+                res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/all', data: responseJSON || [] }));
             }).catch((err) => {
                 res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'error', message: err, api: '/transfers/all', data: responseJSON }));
             });
