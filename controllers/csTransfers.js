@@ -5,45 +5,49 @@ class clsTransfers {
     allTransfers = (req, res) => {
         pool.query(`SELECT * FROM TB_HEAD_TRASPASOS ORDER BY ID_TRASPASOS DESC;`)
             .then(([requestSql]) => {
-                let responseJSON = [];
-                (requestSql || []).filter(async (transfers, i) => {
-                    let code_transfers = (transfers || {}).CODIGO_TRASPASO;
-                    (responseJSON || []).push({
-                        code_transfer: code_transfers,
-                        unid_service: (transfers || {}).UNIDAD_SERVICIO,
-                        store_origin: (transfers || {}).TIENDA_ORIGEN,
-                        store_destination: (transfers || {}).TIENDA_DESTINO,
-                        code_warehouse_origin: (transfers || {}).CODIGO_ALM_ORIGEN,
-                        code_warehouse_destination: (transfers || {}).CODIGO_ALM_DESTINO,
-                        datetime: (transfers || {}).DATETIME,
-                        detail: []
-                    });
 
-                    await pool.query(`SELECT * FROM TB_DETALLE_TRASPASOS WHERE CODIGO_TRASPASO = '${code_transfers}';`).then(([requestSql]) => {
-                        let indexTransfers = responseJSON.findIndex((trs) => trs.code_transfer == code_transfers);
+                if (requestSql.length) {
+                    let responseJSON = [];
+                    (requestSql || []).filter(async (transfers, i) => {
+                        let code_transfers = (transfers || {}).CODIGO_TRASPASO;
+                        (responseJSON || []).push({
+                            code_transfer: code_transfers,
+                            unid_service: (transfers || {}).UNIDAD_SERVICIO,
+                            store_origin: (transfers || {}).TIENDA_ORIGEN,
+                            store_destination: (transfers || {}).TIENDA_DESTINO,
+                            code_warehouse_origin: (transfers || {}).CODIGO_ALM_ORIGEN,
+                            code_warehouse_destination: (transfers || {}).CODIGO_ALM_DESTINO,
+                            datetime: (transfers || {}).DATETIME,
+                            detail: []
+                        });
 
-                        (requestSql || []).filter((detail) => {
-                            (responseJSON || [])[indexTransfers]['detail'].push({
-                                barcode: detail.CODIGO_BARRA,
-                                article_code: detail.CODIGO_ARTICULO,
-                                description: detail.DESCRIPCION,
-                                size: detail.TALLA,
-                                color: detail.COLOR,
-                                stock: detail.STOCK,
-                                stock_required: detail.STOCK_SOLICITADO,
-                                status: detail.ESTADO,
-                                code_transfers: detail.CODIGO_TRASPASO
+                        await pool.query(`SELECT * FROM TB_DETALLE_TRASPASOS WHERE CODIGO_TRASPASO = '${code_transfers}';`).then(([requestSql]) => {
+                            let indexTransfers = responseJSON.findIndex((trs) => trs.code_transfer == code_transfers);
+
+                            (requestSql || []).filter((detail) => {
+                                (responseJSON || [])[indexTransfers]['detail'].push({
+                                    barcode: detail.CODIGO_BARRA,
+                                    article_code: detail.CODIGO_ARTICULO,
+                                    description: detail.DESCRIPCION,
+                                    size: detail.TALLA,
+                                    color: detail.COLOR,
+                                    stock: detail.STOCK,
+                                    stock_required: detail.STOCK_SOLICITADO,
+                                    status: detail.ESTADO,
+                                    code_transfers: detail.CODIGO_TRASPASO
+                                });
                             });
                         });
+
+
+                        if (requestSql.length - 1 == i) {
+                            res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/all', data: responseJSON || [] }));
+                        }
+
                     });
-
-
-                    if (requestSql.length - 1 == i) {
-                        res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/all', data: responseJSON || [] }));
-                    }
-
-                });
-
+                } else {
+                    res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/transfers/all', data: [] }));
+                }
 
             }).catch((err) => {
                 res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'error', message: err, api: '/transfers/all', data: responseJSON }));
