@@ -21,7 +21,7 @@ class clsTransfers {
 
                     pool.query(`SELECT * FROM TB_DETALLE_TRASPASOS WHERE CODIGO_TRASPASO = '${code_transfers}';`).then(([requestSql]) => {
                         let indexTransfers = responseJSON.findIndex((trs) => trs.code_transfer == code_transfers);
-                        console.log(requestSql);
+                       
                         (requestSql || []).filter((detail) => {
                             (responseJSON || [])[indexTransfers]['detail'].push({
                                 barcode: detail.CODIGO_BARRA,
@@ -34,6 +34,7 @@ class clsTransfers {
                                 status: detail.ESTADO,
                                 code_transfers: detail.CODIGO_TRASPASO
                             });
+                             console.log(requestSql);
                         });
                     });
 
