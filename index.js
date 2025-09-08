@@ -334,7 +334,7 @@ io.on('connection', async (socket) => {
     console.log("upgradedTransport", upgradedTransport);
   });
 
-  socekt.on('reportSalesDepartament', (configuracion) => {
+  socket.on('reportSalesDepartament', (configuracion) => {
     (configuracion || {})['socektID'] = socket.id;
     socket.emit('reportGetSaleDepartament', configuracion);
   });
