@@ -335,8 +335,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('reportSalesDepartament', (configuracion) => {
-    (configuracion || {})['socektID'] = socket.id;
-    socket.emit('reportGetSaleDepartament', configuracion);
+    socket.emit('reportGetSaleDepartament', configuracion, (socket || {}).id);
   });
 
   socket.on('report:get:fr:sales:departament:response', (response) => {
