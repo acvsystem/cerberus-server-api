@@ -334,8 +334,13 @@ io.on('connection', async (socket) => {
     console.log("upgradedTransport", upgradedTransport);
   });
 
+  socekt.on('reportSalesDepartament', (configuracion) => {
+    (configuracion || {})['socket'] = socket.id;
+    socket.emit('reportGetSaleDepartament', configuracion);
+  });
+
   socket.on('consultAsistencia', async (configuracion) => {
-    (configuracion || [])['socket'] = listClient.id;
+    (configuracion || {})['socket'] = listClient.id;
 
     socket.emit("searchAsistencia", configuracion);
   });
