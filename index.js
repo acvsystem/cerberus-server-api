@@ -335,8 +335,12 @@ io.on('connection', async (socket) => {
   });
 
   socekt.on('reportSalesDepartament', (configuracion) => {
-    (configuracion || {})['socket'] = socket.id;
+    (configuracion || {})['socektID'] = socket.id;
     socket.emit('reportGetSaleDepartament', configuracion);
+  });
+
+  socket.on('report:get:fr:sales:departament:response', (response) => {
+    socket.to(`${response.socektID}`)('report:sales:departament:response', response);
   });
 
   socket.on('consultAsistencia', async (configuracion) => {
