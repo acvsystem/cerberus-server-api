@@ -340,7 +340,7 @@ io.on('connection', async (socket) => {
 
   socket.on('report:get:fr:sales:departament:response', (response) => {
     console.log(response);
-    socket.to(`${(response || {}).socektID}`).emit('report:sales:departament:response', response);
+    socket.to(`${(response || {}).socketID}`).emit('report:sales:departament:response', response);
   });
 
   socket.on('consultAsistencia', async (configuracion) => {
