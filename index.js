@@ -98,8 +98,8 @@ const task_4 = cron.schedule('*/15 * * * *', () => {
   emitVerificationSUNAT();
 });
 
-const task_5 = cron.schedule('00 6 * * 0', () => {
-  console.log('00 6 * * 0');
+const task_5 = cron.schedule('00 8 * * 0', () => {
+  console.log('00 8 * * 0')
   onVerificarCalendario();
 });
 
