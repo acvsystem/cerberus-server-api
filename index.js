@@ -204,10 +204,9 @@ function onVerificarCalendario() {
 io.on('connection', async (socket) => {
   const clientIp = socket.handshake.address;
   const auth_token = socket.handshake.auth.token;
-  let payload = "";
-  if ((auth_token || "").length) {
-    payload = tokenController.verificationToken(auth_token);
-  }
+
+  const payload = tokenController.verificationToken(auth_token);
+
 
 
   const sockets = await io.fetchSockets(); // desde Socket.IO v4
