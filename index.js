@@ -201,6 +201,12 @@ function onVerificarCalendario() {
 
 
 
+const servidorbk = io.of("/servidor/Backup");
+servidorbk.on("connection", (socket) => {
+  console.log(socket);
+  console.log("Cliente conectado en /servidor/Backup");
+});
+
 io.on('connection', async (socket) => {
   const clientIp = socket.handshake.address;
   const auth_token = socket.handshake.auth.token;
@@ -283,7 +289,7 @@ io.on('connection', async (socket) => {
 
   if (codeTerminal != "SRVFACT" && isIcg != 'true') {
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
-    console.log("AQUI", codeTerminal);
+
     socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
   } else {
     if (codeTerminal == "SRVFACT") {
