@@ -2055,6 +2055,7 @@ io.on('connection', async (socket) => {
 
   socket.on("listaEmpleados", (response) => {
     let data = response;
+    console.log(data);
     socket.to(`${(data || [])['configuration']['socket']}`).emit("reporteEmpleadoTienda", { id: data.id, data: JSON.parse((data || {}).serverData || []) });
   });
 
