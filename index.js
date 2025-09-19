@@ -2119,6 +2119,7 @@ io.on('connection', async (socket) => {
 
     }
 
+    console.log(response);
     socket.to(`${IDSocket}`).emit("reporteHuellero", { id: data.id, data: JSON.parse((data || {}).serverData || []) });
     socket.to(`${IDSocket}`).emit("reporteEmpleadoTienda", { id: data.id, data: parseEJB });
   });
