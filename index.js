@@ -2119,8 +2119,8 @@ io.on('connection', async (socket) => {
 
     }
 
-    socket.to(`${listClient.id}`).emit("reporteHuellero", { id: data.id, data: JSON.parse((data || {}).serverData || []) });
-    socket.to(`${listClient.id}`).emit("reporteEmpleadoTienda", { id: data.id, data: parseEJB });
+    socket.to(`${IDSocket}`).emit("reporteHuellero", { id: data.id, data: JSON.parse((data || {}).serverData || []) });
+    socket.to(`${IDSocket}`).emit("reporteEmpleadoTienda", { id: data.id, data: parseEJB });
   });
 
 
