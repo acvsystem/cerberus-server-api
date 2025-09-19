@@ -201,10 +201,8 @@ function onVerificarCalendario() {
 
 
 
-const servidorbk = io.of("/servidor/Backup");
-servidorbk.on("connection", (socket) => {
-  console.log(socket);
-  console.log("Cliente conectado en /servidor/Backup");
+io.of("/servidor/Backup").on("connection", (socket) => {
+  console.log("Cliente conectado en /chat");
 });
 
 io.on('connection', async (socket) => {
