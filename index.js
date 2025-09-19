@@ -202,7 +202,7 @@ function onVerificarCalendario() {
 
 
 io.of("/servidor/Backup").on("connection", (socket) => {
-  console.log("Cliente conectado en /chat");
+  console.log("***********************************************Cliente conectado en /Server Monitor");
 });
 
 io.on('connection', async (socket) => {
