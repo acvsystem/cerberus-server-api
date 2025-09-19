@@ -2064,7 +2064,7 @@ io.on('connection', async (socket) => {
     let parseEJB = [];
     let parseHuellero = [];
     let dataResponse = [];
-    let IDSocket = data.socket;
+    let IDSocket = data.configuration.socket;
 
     if (data.id == "EJB") {
       let dataEJB = [];
