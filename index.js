@@ -677,7 +677,7 @@ io.on('connection', async (socket) => {
       dateList: configuracion.dateList
     };
 
-    socket.broadcast.emit("consultarEJB", configurationList);
+    socket.to(`${(socket || {}).customId}`).emit("consultarEJB", configurationList);
     socket.broadcast.emit("consultarServGen", configurationList);
   });
 
@@ -2047,7 +2047,7 @@ io.on('connection', async (socket) => {
       cntCosto: cntCosto
     };
     console.log(configurationList);
-    socket.broadcast.emit("consultarEJB", configurationList);
+    socket.to(`${(socket || {}).customId}`).emit("consultarEJB", configurationList);
     socket.broadcast.emit("consultarEmpleados", configurationList);
   });
 
@@ -2058,7 +2058,7 @@ io.on('connection', async (socket) => {
       cntCosto: cntCosto
     };
 
-    socket.broadcast.emit("consultarEJB", configurationList);
+    socket.to(`${(socket || {}).customId}`).emit("consultarEJB", configurationList);
   });
 
   socket.on("listaEmpleados", (response) => {
