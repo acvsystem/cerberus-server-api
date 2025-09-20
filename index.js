@@ -219,9 +219,9 @@ io.on('connection', async (socket) => {
 
   const customId = socket.handshake.auth.userId;
 
-  if ((customId || "").length && customId != 'undefined') {
+  if (customId == 'ejb$$@mt') {
     // Guardamos ese userId como propiedad del socket
-    (socket).customId = customId;
+    (socket).customId = socket.id;
 
     console.log(`Cliente conectado con customId = ${(socket).customId}`);
   }
