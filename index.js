@@ -217,12 +217,15 @@ io.on('connection', async (socket) => {
   const socketIds = sockets.map(s => s.id);
 
 
-  const userId = socket.handshake.auth.userId;
+  const customId = socket.handshake.auth.userId;
 
-  // Guardamos ese userId como propiedad del socket
-  (socket).customId = userId;
+  if ((customId || "").length && customId != 'undefined') {
+    // Guardamos ese userId como propiedad del socket
+    (socket).customId = customId;
 
-  console.log(`Cliente conectado con customId = ${(socket).customId}`);
+    console.log(`Cliente conectado con customId = ${(socket).customId}`);
+  }
+
 
 
 
