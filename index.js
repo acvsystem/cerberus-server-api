@@ -221,9 +221,7 @@ io.on('connection', async (socket) => {
 
   if (customId == 'ejb$$@mt') {
     // Guardamos ese userId como propiedad del socket
-    (socket).customId = socket.id;
-
-    console.log(`Cliente conectado con customId = ${(socket).customId}`);
+    clients[customId] = socket.id;
   }
 
 
@@ -2049,8 +2047,11 @@ io.on('connection', async (socket) => {
       socket: (socket || {}).id,
       cntCosto: cntCosto
     };
-    console.log('*****************************************************************',configurationList,(socket || {}).customId);
-    socket.to(`${(socket || {}).customId}`).emit("consultarEJB", configurationList);
+
+    const socketId = clients['ejb$$@mt'];
+    console.log(clients);
+    console.log('*****************************************************************', configurationList, socketId);
+    socket.to(`${socketId}`).emit("consultarEJB", configurationList);
     socket.broadcast.emit("consultarEmpleados", configurationList);
   });
 
