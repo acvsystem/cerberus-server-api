@@ -217,6 +217,14 @@ io.on('connection', async (socket) => {
   const socketIds = sockets.map(s => s.id);
 
 
+  const userId = socket.handshake.query.userId;
+
+  // Guardamos ese userId como propiedad del socket
+  (socket).customId = userId;
+
+  console.log(`Cliente conectado con customId = ${(socket).customId}`);
+
+
 
   let codeQuery = socket.handshake.query.code;
   let codeTerminal = socket.handshake.headers.code;
