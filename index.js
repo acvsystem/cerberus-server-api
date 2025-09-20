@@ -217,7 +217,7 @@ io.on('connection', async (socket) => {
   const socketIds = sockets.map(s => s.id);
 
 
-  const userId = socket.handshake.query.userId;
+  const userId = socket.handshake.auth.userId;
 
   // Guardamos ese userId como propiedad del socket
   (socket).customId = userId;
