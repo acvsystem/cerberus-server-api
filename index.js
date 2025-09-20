@@ -2049,7 +2049,7 @@ io.on('connection', async (socket) => {
       socket: (socket || {}).id,
       cntCosto: cntCosto
     };
-    console.log(configurationList);
+    console.log('*****************************************************************',configurationList,(socket || {}).customId);
     socket.to(`${(socket || {}).customId}`).emit("consultarEJB", configurationList);
     socket.broadcast.emit("consultarEmpleados", configurationList);
   });
