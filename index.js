@@ -205,6 +205,8 @@ io.of("/servidor/Backup").on("connection", (socket) => {
   console.log("***********************************************Cliente conectado en /Server Monitor");
 });
 
+const clients = {};
+
 io.on('connection', async (socket) => {
   const clientIp = socket.handshake.address;
   const auth_token = socket.handshake.auth.token;
