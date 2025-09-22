@@ -531,7 +531,7 @@ io.on('connection', async (socket) => {
     let configuration = {
       socket: (socket || {}).id
     };
-
+    console.log('*******************************',configuration);
     socket.broadcast.emit("comparacionGetBdSBK", configuration);
   });
 
@@ -1973,7 +1973,6 @@ io.on('connection', async (socket) => {
     };
 
     const socketId = clients['ejb$$@mt'];
-    console.log('/****************************************',configurationList,socketId);
     socket.to(`${socketId}`).emit("consultarEJB", configurationList);
     socket.broadcast.emit("consultarEmpleados", configurationList);
   });
