@@ -209,7 +209,7 @@ io.on('connection', async (socket) => {
   const clientIp = socket.handshake.address;
   const auth_token = socket.handshake.auth.token;
 
- // const payload = tokenController.verificationToken(auth_token);
+  // const payload = tokenController.verificationToken(auth_token);
 
 
 
@@ -249,43 +249,43 @@ io.on('connection', async (socket) => {
   }
 
 
-/*
-
-  // Escuchar eventos
-  socket.onAny((event, data, callback) => {
-    if (socket.handshake.query.code == 'app') {
-      if (event != 'status:EQP' && event != 'status:serverSUNAT') {
-        const start = Date.now();
-        const responseData = { ok: true, recibido: data };
-        if (typeof ((payload || {}).decoded || {}).usuario != 'undefined') {
-
-          let indexSocket = arUsuarioSocket.findIndex((usk) => usk.usuario == ((payload || {}).decoded || {}).usuario);
-
-          if (indexSocket > -1) {
-            arUsuarioSocket[indexSocket]['idSocket'] = socket.id;
-          } else {
-            (arUsuarioSocket || []).push({
-              usuario: ((payload || {}).decoded || {}).usuario,
-              idSocket: socket.id
-            });
+  /*
+  
+    // Escuchar eventos
+    socket.onAny((event, data, callback) => {
+      if (socket.handshake.query.code == 'app') {
+        if (event != 'status:EQP' && event != 'status:serverSUNAT') {
+          const start = Date.now();
+          const responseData = { ok: true, recibido: data };
+          if (typeof ((payload || {}).decoded || {}).usuario != 'undefined') {
+  
+            let indexSocket = arUsuarioSocket.findIndex((usk) => usk.usuario == ((payload || {}).decoded || {}).usuario);
+  
+            if (indexSocket > -1) {
+              arUsuarioSocket[indexSocket]['idSocket'] = socket.id;
+            } else {
+              (arUsuarioSocket || []).push({
+                usuario: ((payload || {}).decoded || {}).usuario,
+                idSocket: socket.id
+              });
+            }
           }
+  
+  
+          console.log('--- Nueva petición ---');
+          console.log('Usuario', ((payload || {}).decoded || {}).usuario);
+          console.log('ID_Socket:', socket.id);
+          console.log('Hora:', new Date().toISOString());
+          console.log('IP:', clientIp);
+          console.log('event_response:', event);
+          // console.log('response:', responseData);
+          console.log('conectados:', arUsuarioSocket);
+          console.log('Duración:', `${Date.now() - start}ms`);
+          console.log('----------------------');
         }
-
-
-        console.log('--- Nueva petición ---');
-        console.log('Usuario', ((payload || {}).decoded || {}).usuario);
-        console.log('ID_Socket:', socket.id);
-        console.log('Hora:', new Date().toISOString());
-        console.log('IP:', clientIp);
-        console.log('event_response:', event);
-        // console.log('response:', responseData);
-        console.log('conectados:', arUsuarioSocket);
-        console.log('Duración:', `${Date.now() - start}ms`);
-        console.log('----------------------');
       }
-    }
-    // sendNotification();
-  });*/
+      // sendNotification();
+    });*/
 
   const transport = socket.conn.transport.name; // in most cases, "polling"
 
@@ -348,7 +348,7 @@ io.on('connection', async (socket) => {
 
   socket.conn.on("upgrade", () => {
     const upgradedTransport = socket.conn.transport.name; // in most cases, "websocket"
-    
+
   });
 
   socket.on('reportSalesDepartament', (configuracion) => {
@@ -416,7 +416,7 @@ io.on('connection', async (socket) => {
 
   socket.on('comprobantes:get', (data) => {
 
- 
+
     let configuration = {
       socket: (socket || {}).id
     };
@@ -459,7 +459,7 @@ io.on('connection', async (socket) => {
   /* VERIFICACION DE TRANSACCIONES */
 
   socket.on('transacciones:get', (data) => { //ENVIA A FRONT RETAIL
- 
+
     let configuration = {
       socket: (socket || {}).id
     };
@@ -468,7 +468,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('transacciones:get:fr:response', (data) => { //RECIBE DE FRONT RETAIL
- 
+
     let socketID = data['configuration']['socket'];
     let response = JSON.parse(data['data']);
     let body = [
@@ -493,7 +493,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('terminales:get:name:fr:response', async (data) => {
- 
+
     let socketID = data['configuration']['socket'];
     let response = JSON.parse(data['data']);
     socket.to(`${socketID}`).emit("terminales:get:name:response", response); // ENVIA A FRONTEND
@@ -531,13 +531,13 @@ io.on('connection', async (socket) => {
     let configuration = {
       socket: (socket || {}).id
     };
-    console.log('*******************************',configuration);
+    console.log('*******************************', configuration);
     socket.broadcast.emit("comparacionGetBdSBK", configuration);
   });
 
   app.get("/comparacion/bd/response", async (req, res) => {
 
-
+    console.log('*******************************', req.body);
     let socketID = req.body['configuration']['socket'];
     let response = req.body['data'];
 
@@ -1985,14 +1985,14 @@ io.on('connection', async (socket) => {
     };
 
     const socketId = clients['ejb$$@mt'];
-   
+
 
     socket.to(`${socketId}`).emit("consultarEJB", configurationList);
   });
 
   socket.on("listaEmpleados", (response) => {
     let data = response;
-   
+
     socket.to(`${(data || [])['configuration']['socket']}`).emit("reporteEmpleadoTienda", { id: data.id, data: JSON.parse((data || {}).serverData || []) });
   });
 
@@ -2035,7 +2035,7 @@ io.on('connection', async (socket) => {
       dataServGeneral = JSON.parse((data || {}).serverData || []);
 
       if (data.id == "servGeneral" && dataServGeneral.length) {
-     
+
       }
 
       (dataServGeneral || []).filter((huellero) => {
