@@ -10,16 +10,16 @@ class clsToken {
             issuer: 'cerberus.server',
             audience: `${nivelUser}`
         };
-        console.log("createToken", option);
+       // console.log("createToken", option);
         const token = Jwt.sign({ id: id, usuario: usuario }, `${privateKey}`, option);
         return token;
     }
 
     verificationToken(token) {
-        let privateKey = prop.keyCrypt;
-        console.log("verificationToken", `${privateKey}`);
+        let privateKey = prop.keyCrypt || "";
+        //console.log("verificationToken", `${privateKey}`);
         return Jwt.verify(`${token}`, `${privateKey}`, function (err, decoded) {
-            console.log(err);
+            //console.log(err);
             if (err) {
                 return { isValid: false, decoded: decoded };
             }

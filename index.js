@@ -209,7 +209,7 @@ io.on('connection', async (socket) => {
   const clientIp = socket.handshake.address;
   const auth_token = socket.handshake.auth.token;
 
-  const payload = tokenController.verificationToken(auth_token);
+ // const payload = tokenController.verificationToken(auth_token);
 
 
 
