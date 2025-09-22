@@ -660,7 +660,6 @@ io.on('connection', async (socket) => {
     let socketID = ((response || {}).configuration || {}).socket;
     let data = [];
     data = (response || {}).front || [];
-    console.log(data);
     socket.to(`${socketID}`).emit("kardex:get:comprobantes:response", { id: response.id, data: data });
   });
 
@@ -693,7 +692,6 @@ io.on('connection', async (socket) => {
     let socketID = ((response || {}).configuration || {}).socket;
     let data = [];
     data = (response || {}).data || [];
-    console.log(data);
     socket.to(`${socketID}`).emit("kardex:post:camposlibres:response", { id: response.id, data: data });
   });
 
@@ -735,7 +733,6 @@ io.on('connection', async (socket) => {
     let socketID = ((response || {}).configuration || {}).socket;
     let data = [];
     data = (response || {}).front || [];
-    console.log(data);
     socket.to(`${socketID}`).emit("kardex:get:cuo:response", { id: response.id, data: data });
   });
 
@@ -1976,7 +1973,7 @@ io.on('connection', async (socket) => {
     };
 
     const socketId = clients['ejb$$@mt'];
-
+    console.log('/****************************************',configurationList,socketId);
     socket.to(`${socketId}`).emit("consultarEJB", configurationList);
     socket.broadcast.emit("consultarEmpleados", configurationList);
   });
