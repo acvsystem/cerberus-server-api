@@ -299,7 +299,7 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
   } else {
     if (codeTerminal == "SRVFACT") {
-      console.log('SERVIDOR', codeTerminal);
+      //('SERVIDOR', codeTerminal);
       let [conexionList] = await pool.query(`SELECT * FROM TB_ESTATUS_SERVER_BACKUP;`);
       await pool.query(`UPDATE TB_ESTATUS_SERVER_BACKUP SET ESTATUS_CONEXION = 1 WHERE ID_ESTATUS_SERVER = 1;`);
       /*
@@ -330,7 +330,7 @@ io.on('connection', async (socket) => {
 
       socket.broadcast.emit("status:serverSUNAT:send", { 'code': 'SRVFACT', 'online': 'false' });
     } else if (isIcg != 'true') {
-      console.log(`disconnect ${codeTerminal} - idApp`, listClient.id);
+      //console.log(`disconnect ${codeTerminal} - idApp`, listClient.id);
       let listSessionDisconnet = await sessionSocket.disconnect(codeTerminal);
       socket.broadcast.emit("comprobantes:get:response", listSessionDisconnet); //ENVIA A FRONTEND COMPROBANTES
     }
@@ -343,12 +343,12 @@ io.on('connection', async (socket) => {
       socket.broadcast.emit("desconexion:eqp:send", [{ 'mac': macEqp }]);
     }
 
-    console.log('user disconnected');
+    //console.log('user disconnected');
   });
 
   socket.conn.on("upgrade", () => {
     const upgradedTransport = socket.conn.transport.name; // in most cases, "websocket"
-    console.log("upgradedTransport", upgradedTransport);
+    
   });
 
   socket.on('reportSalesDepartament', (configuracion) => {
@@ -2638,8 +2638,8 @@ io.on('connection', async (socket) => {
 
   });
 
-  console.log(`connect ${codeTerminal} - idApp`, listClient.id);
-  console.log('a user connected');
+  //console.log(`connect ${codeTerminal} - idApp`, listClient.id);
+  //console.log('a user connected');
 });
 
 
