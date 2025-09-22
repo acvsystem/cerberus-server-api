@@ -43,7 +43,7 @@ app.use("/recursos_humanos", recursosHumanosRoutes);
 app.use("/sistema", frontRetailRoutes);
 app.use("/transfers", transfersRoutes);
 app.use("/store", storesRoutes);
-
+/*
 // Middleware de logging
 app.use((req, res, next) => {
   const start = Date.now();
@@ -72,7 +72,7 @@ app.use((req, res, next) => {
 
   next();
 });
-
+*/
 const emiter = new EventEmitter();
 
 var listClient = { id: '' };
@@ -166,7 +166,6 @@ function onVerificarCalendario() {
         }
 
         if ((arTiendas || []).length - 1 == i) {
-          console.log('arTiendasFaltantes', arTiendasFaltantes);
           if ((arTiendasFaltantes || []).length) {
             let bodyHTML = `<p>Tiendas sin el horario creado. '${parseInt(day[0]) + 1}-${parseInt(day[1])}-${parseInt(day[2])}'</p>
         
@@ -202,7 +201,6 @@ function onVerificarCalendario() {
 
 
 io.of("/servidor/Backup").on("connection", (socket) => {
-  console.log("***********************************************Cliente conectado en /Server Monitor");
 });
 
 const clients = {};
@@ -243,7 +241,6 @@ io.on('connection', async (socket) => {
   }
 
   if (codeQuery == 'app') {
-    console.log('app', socket.id);
     listClient.id = socket.id;
     let listSessionConnect = await sessionSocket.connect();
     socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
@@ -252,7 +249,7 @@ io.on('connection', async (socket) => {
   }
 
 
-
+/*
 
   // Escuchar eventos
   socket.onAny((event, data, callback) => {
@@ -288,7 +285,7 @@ io.on('connection', async (socket) => {
       }
     }
     // sendNotification();
-  });
+  });*/
 
   const transport = socket.conn.transport.name; // in most cases, "polling"
 
@@ -359,7 +356,6 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('report:get:fr:sales:departament:response', (response) => {
-    console.log(response);
     socket.to(`${(response || {}).socketID}`).emit('report:sales:departament:response', response);
   });
 
@@ -377,7 +373,6 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('responseStock', (data) => {
-    console.log(data);
     socket.to(`${listClient.id}`).emit("dataStock", data);
   });
 
@@ -404,19 +399,16 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('cleanClient', (data) => {
-    console.log('cleanClient');
     let socketID = (socket || {}).id;
     socket.broadcast.emit("searchCantCliente", data, socketID);
   });
 
   socket.on('emitCleanClient', (data) => {
-    console.log('cleanClient');
     let socketID = (socket || {}).id;
     socket.broadcast.emit("limpiarCliente", data, socketID);
   });
 
   socket.on('cleanColaFront', (data) => {
-    console.log('clearColaUpdatePanama');
     socket.broadcast.emit("clearColaUpdatePanama", data);
   });
 
@@ -424,10 +416,7 @@ io.on('connection', async (socket) => {
 
   socket.on('comprobantes:get', (data) => {
 
-    console.log(
-      `-----INIT SOLICITUD
-       FRONTEND: comprobantes:get`
-    );
+ 
     let configuration = {
       socket: (socket || {}).id
     };
@@ -436,10 +425,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('comprobantes:get:fr:response', (data) => {
-    console.log(
-      `-----ENVIO RESPUESTA DE FRONT RETAIL A BACKEND
-       FRONT RETAIL: comprobantes:get:fr:response`
-    );
+
 
     let selectAgente = (agenteList || []).find((data) => (data || {}).id == socket.id);
     if (typeof codeTerminal != 'undefined' && codeTerminal != '') {
@@ -473,11 +459,7 @@ io.on('connection', async (socket) => {
   /* VERIFICACION DE TRANSACCIONES */
 
   socket.on('transacciones:get', (data) => { //ENVIA A FRONT RETAIL
-    console.log(
-      `-----INIT SOLICITUD
-      FRONTEND: transacciones:get`
-    );
-
+ 
     let configuration = {
       socket: (socket || {}).id
     };
@@ -486,11 +468,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('transacciones:get:fr:response', (data) => { //RECIBE DE FRONT RETAIL
-    console.log(
-      `-----ENVIO RESPUESTA A FRONTEND
-       BACKEND: transacciones:get:response`
-    );
-
+ 
     let socketID = data['configuration']['socket'];
     let response = JSON.parse(data['data']);
     let body = [
@@ -506,10 +484,6 @@ io.on('connection', async (socket) => {
   /* CONSULTA NOMBRES DE TERMINALES FRONT RETAIL */
 
   socket.on('terminales:get:name', (data) => {
-    console.log(
-      `-----INIT SOLICITUD
-       FRONTEND: terminales:get:name`
-    );
 
     let configuration = {
       socket: (socket || {}).id
@@ -519,10 +493,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('terminales:get:name:fr:response', async (data) => {
-    console.log(
-      `-----ENVIO RESPUESTA DE FRONT RETAIL A BACKEND
-       FRONT RETAIL: terminales:get:name:fr:response`
-    );
+ 
     let socketID = data['configuration']['socket'];
     let response = JSON.parse(data['data']);
     socket.to(`${socketID}`).emit("terminales:get:name:response", response); // ENVIA A FRONTEND
@@ -531,10 +502,6 @@ io.on('connection', async (socket) => {
   /* CONSULTA CANTIDAD EN TERMINALES FRONT RETAIL */
 
   socket.on('terminales:get:cantidad', (data) => {
-    console.log(
-      `-----INIT SOLICITUD
-       FRONTEND: terminales:get:cantidad`
-    );
 
     let configuration = {
       socket: (socket || {}).id
@@ -544,10 +511,6 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('terminales:get:cantidad:fr:response', async (data) => {
-    console.log(
-      `-----ENVIO RESPUESTA A FRONTEND
-       BACKEND: terminales:get:cantidad:response`
-    );
 
     let socketID = data['configuration']['socket'];
     let response = JSON.parse(data['data']);
@@ -564,10 +527,6 @@ io.on('connection', async (socket) => {
   /* VERIFICACION DE BASES DE DATOS CON COE_DATA */
 
   socket.on('comparacion:get:bd', (response) => {
-    console.log(
-      `-----ENVIO A SERVIDOR BACKUP 
-       BACKEND: comparacionGetBdSBK`
-    );
 
     let configuration = {
       socket: (socket || {}).id
@@ -577,10 +536,7 @@ io.on('connection', async (socket) => {
   });
 
   app.get("/comparacion/bd/response", async (req, res) => {
-    console.log(
-      `-----ENVIO RESPUESTA A FRONTEND
-       BACKEND: comparacion:get:bd:response`
-    );
+
 
     let socketID = req.body['configuration']['socket'];
     let response = req.body['data'];
@@ -591,12 +547,12 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('comunicationStock', (email, arrCodeTienda) => {
-    console.log('comunicationStock');
+
     socket.broadcast.emit("searchStockTest", email, arrCodeTienda);
   });
 
   socket.on('comunicationStockTable', (arrCodeTienda, barcode) => {
-    console.log('comunicationStockTable');
+
     socket.broadcast.emit("searchStockTable", arrCodeTienda, barcode, (socket || {}).id);
   });
 
@@ -670,7 +626,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("consultaMarcacion", (configuracion) => {
-    console.log(configuracion);
+
     let configurationList = {
       socket: (socket || {}).id,
       isDefault: configuracion.isDefault,
@@ -689,7 +645,6 @@ io.on('connection', async (socket) => {
   /* CONSULTA KARDEX */
 
   socket.on("kardex:get:comprobantes", (configuracion) => {
-    console.log("-----INIT SOLICITUD FRONTEND: kardex:get:comprobantes");
     let configurationList = {
       socket: (socket || {}).id,
       init: configuracion.init,
@@ -701,7 +656,6 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("kardex:get:comprobantes:fr:response", (response) => {
-    console.log("-----ENVIO RESPUESTA A FRONTEND BACKEND: kardex:get:comprobantes:response");
 
     let socketID = ((response || {}).configuration || {}).socket;
     let data = [];
@@ -713,7 +667,6 @@ io.on('connection', async (socket) => {
   /* INSERTAR REGISTRO CAMPOS LIBRES KARDEX */
 
   socket.on("kardex:post:camposlibres", (configuracion) => {
-    console.log("-----INIT SOLICITUD FRONTEND: kardex:post:camposlibres");
     let configurationList = {
       socket: (socket || {}).id,
       code: (configuracion || {}).code,
@@ -736,7 +689,6 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("kardex:post:camposlibres:fr:response", (response) => {
-    console.log("-----ENVIO RESPUESTA A FRONTEND BACKEND: kardex:post:camposlibres:fr:response");
 
     let socketID = ((response || {}).configuration || {}).socket;
     let data = [];
@@ -748,7 +700,6 @@ io.on('connection', async (socket) => {
   /* INSERTAR CUO KARDEX */
 
   socket.on("kardex:post:cuo", (configuracion) => {
-    console.log("-----INIT SOLICITUD FRONTEND: kardex:post:cuo");
 
     let configurationList = {
       socket: (socket || {}).id,
@@ -759,19 +710,16 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("kardex:post:cuo:fr:response", (response) => {
-    console.log("-----ENVIO RESPUESTA A FRONTEND BACKEND: kardex:post:cuo:fr:response");
 
     let socketID = ((response || {}).configuration || {}).socket;
     let data = [];
     data = (response || {}).data || [];
-    console.log(data);
     socket.to(`${socketID}`).emit("kardex:post:cuo:response", { id: response.id, data: data });
   });
 
   /* CONSULTA CUO KARDEX */
 
   socket.on("kardex:get:cuo", (configuracion) => {
-    console.log("-----INIT SOLICITUD FRONTEND: kardex:get:cuo");
     let configurationList = {
       socket: (socket || {}).id,
       init: configuracion.init,
@@ -783,7 +731,6 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("kardex:get:cuo:fr:response", (response) => {
-    console.log("-----ENVIO RESPUESTA A FRONTEND BACKEND: kardex:get:comprobantes:response");
 
     let socketID = ((response || {}).configuration || {}).socket;
     let data = [];
@@ -795,17 +742,14 @@ io.on('connection', async (socket) => {
   /* CONSULTA STOCK TRASPASOS */
 
   socket.on("inventario:get:barcode", (configuracion) => {
-    console.log("-----INIT SOLICITUD FRONTEND: inventario:get:barcode");
     socket.broadcast.emit("inventarioGetbarcodeFR", configuracion.codigoTienda, configuracion.origen, configuracion.barcode, (socket || {}).id);
   });
 
   socket.on("inventario:get:fr:barcode:response", (response) => {
-    console.log("-----ENVIO RESPUESTA A FRONTEND BACKEND: inventario:get:fr:barcode:response");
 
     let socketID = (response || {}).socket;
     let data = [];
     data = (response || {}).data || [];
-    console.log(data);
     socket.to(`${socketID}`).emit("inventario:get:barcode:response", { data: data });
   });
 
@@ -841,7 +785,6 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("consultaPlanilla", (configuracion) => {
-    console.log(configuracion);
     let configurationList = {
       socket: (socket || {}).id,
       tipo: configuracion.tipo_planilla,
@@ -855,7 +798,6 @@ io.on('connection', async (socket) => {
     let socketID = (response || {}).configuration.socket;
     let dataEJB = [];
     dataEJB = JSON.parse((response || {}).serverData || []);
-    console.log(dataEJB);
     socket.to(`${socketID}`).emit("reporteQuincena", { id: response.id, data: dataEJB });
   });
 
@@ -882,7 +824,6 @@ io.on('connection', async (socket) => {
     let dataTemp = [];
     let dataRes = [];
     let socketID = (response[0] || {}).id;
-    console.log(socketID);
     await serverData.filter(async (dt, i) => {
       if (!codigoList.includes(dt['CODIGO'].trim())) {
         codigoList.push(dt['CODIGO'].trim());
@@ -952,7 +893,7 @@ io.on('connection', async (socket) => {
         XML_CHECK_PROMOCION,
         APLICACION_FILE FROM TB_CONFIGURACION_FILE_APLICACION WHERE APLICACION_FILE = 'plugin_sunat_icg';`);
 
-    console.log(arConfiguracion);
+
     res.json(arConfiguracion);
   });
 
@@ -974,10 +915,6 @@ io.on('connection', async (socket) => {
       if (date[2] == '2025') {
         if (i >= 0) {
           onConsultarHorarioOficina(i, parseDate, mc.documento).then(([responseHorario]) => {
-
-            if (parseDate == '30-6-2025' && mc.documento == '76542350') {
-              console.log((response || [])[(responseHorario || {}).index]);
-            }
 
             ((response || [])[(responseHorario || {}).index] || {})['rango_horario'] = (responseHorario || {}).horario || "";
             ((response || [])[(responseHorario || {}).index] || {})['isTardanza'] = false;
@@ -1095,13 +1032,11 @@ io.on('connection', async (socket) => {
                 INNER JOIN TB_LISTA_TIENDA ON TB_LISTA_TIENDA.ID_TIENDA = TB_USUARIO_TIENDAS_ASIGNADAS.ID_TIENDA_TASG
                 INNER JOIN TB_LOGIN ON TB_LOGIN.ID_LOGIN = TB_USUARIO_TIENDAS_ASIGNADAS.ID_USUARIO_TASG WHERE TB_LISTA_TIENDA.SERIE_TIENDA = '${(data || {}).codigo_tienda}';`).then(([tienda]) => {
 
-      console.log("solicitar_aprobacion_hrx", (data || {}).codigo_tienda, tienda);
 
       (tienda || []).filter((td, i) => {
         (correo || []).push((td || {}).EMAIL);
 
         if ((tienda || []).length - 1 == i) {
-          console.log("solicitar_aprobacion_hrx", correo);
 
           emailController.sendEmail(correo, `SOLICITUD DE APROBACION DE HORA EXTRA - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
             .catch(error => res.send(error));
@@ -1137,7 +1072,6 @@ io.on('connection', async (socket) => {
       let [arHrExtra] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE FECHA = '${data.fecha}' AND NRO_DOCUMENTO_EMPLEADO = '${data.nro_documento}' AND HR_EXTRA_ACUMULADO = '${data.hora_extra}';`);
 
       if ((arHrExtra || []).length || typeof arHrExtra != 'undefined') {
-        console.log(`UPDATE TB_HORA_EXTRA_EMPLEADO SET ESTADO = '${aprobado}',APROBADO = ${data.aprobado == true ? 1 : 0} WHERE ID_HR_EXTRA = ${((arHrExtra || [])[0] || {})['ID_HR_EXTRA']};`);
         await pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET ESTADO = '${aprobado}',APROBADO = ${data.aprobado == true ? 1 : 0} WHERE ID_HR_EXTRA = ${((arHrExtra || [])[0] || {})['ID_HR_EXTRA']};`);
       }
 
@@ -1277,7 +1211,6 @@ io.on('connection', async (socket) => {
     let password = objLogin["password"];
     const [dataUser] =
       await pool.query(`SELECT USUARIO,DEFAULT_PAGE,EMAIL FROM TB_LOGIN WHERE USUARIO = '${usuario}' AND PASSWORD = '${password}';`);
-    console.log(dataUser);
     let emeil = ((dataUser || [])[0] || {}).EMAIL;
 
     if (dataUser.length > 0) {
@@ -1301,7 +1234,6 @@ io.on('connection', async (socket) => {
           let codigoGenerado = Math.floor(Math.random() * (max - min + 1) + min);
 
           let tokenCode = tokenController.createTokenCode(emeil);
-          console.log(tokenCode);
 
           await pool.query(`INSERT INTO TB_AUTH_SESSION(
           EMAIL,
@@ -1372,7 +1304,6 @@ io.on('connection', async (socket) => {
   app.post("/auth_session", async (req, res) => {
     let data = req.body;
     let objLogin = req.body;
-    console.log(objLogin);
     let usuario = objLogin["usuario"].replace(/[^a-zA-Z-0-9 ]/g, "");
     let password = objLogin["password"];
     const [dataUser] =
@@ -1383,7 +1314,6 @@ io.on('connection', async (socket) => {
 
     if ((arSession || []).length) {
       let valid = tokenController.verificationToken(arSession[0]['HASH']);
-      console.log(valid);
       if ((valid || {}).isValid) {
         await pool.query(`INSERT INTO TB_SESSION_LOGIN(
           EMAIL,
@@ -1530,7 +1460,6 @@ io.on('connection', async (socket) => {
 
   app.get("/calendario/listarHorario", async (req, res) => {
     let [arHorarios] = await pool.query(`SELECT RANGO_DIAS,CODIGO_TIENDA,DATETIME FROM TB_HORARIO_PROPERTY ORDER BY  DATEDIFF(DATE(SUBSTRING_INDEX(RANGO_DIAS,' ',1)), CURDATE()) asc;`);
-    console.log(arHorarios);
     if ((arHorarios || []).length) {
       res.json(arHorarios);
     } else {
@@ -1694,7 +1623,6 @@ io.on('connection', async (socket) => {
 
     (arHorario || []).filter(async (hrr, index) => {
       //REGISTRA UN NUEVO CALENDARIO
-      console.log("REGISTRAR CALENDARIO");
 
       await pool.query(`CALL SP_HORARIO_PROPERTY('${(hrr || {}).fecha}','${(hrr || {}).rango}','${(hrr || {}).cargo}','${(hrr || {}).codigo_tienda}','${(hrr || {}).datetime}',@output);`).then((a) => {
 
@@ -1735,8 +1663,7 @@ io.on('connection', async (socket) => {
 
               let objDia = (arDiasHorario || []).find((dia) => (dia || {}).id == (diaTrb || {}).id_dia);
               let objRango = (arRangoHorario || []).find((rango) => (rango || {}).id == (diaTrb || {}).rg);
-              console.log(objDia);
-              console.log(objRango);
+
               pool.query(`SET FOREIGN_KEY_CHECKS=0;`);
               pool.query(`INSERT INTO TB_DIAS_TRABAJO(CODIGO_TIENDA,NUMERO_DOCUMENTO,NOMBRE_COMPLETO,ID_TRB_RANGO_HORA,ID_TRB_DIAS,ID_TRB_HORARIO) VALUES('${(diaTrb || {}).codigo_tienda}','${(diaTrb || {}).numero_documento}','${(diaTrb || {}).nombre_completo}',${(objRango || {}).id_rango_mysql},${(objDia || {}).id_dia_mysql},${id_horario})`);
             });
@@ -1768,7 +1695,6 @@ io.on('connection', async (socket) => {
         setTimeout(async () => {
           let response = [];
           let arObservation = [];
-          console.log(arHorario[0]['codigo_tienda'], arHorario[0]['rango']);
           let [requestSql] = await pool.query(`SELECT * FROM TB_HORARIO_PROPERTY WHERE CODIGO_TIENDA = '${arHorario[0]['codigo_tienda']}' AND RANGO_DIAS = '${arHorario[0]['rango']}';`);
 
           await (requestSql || []).filter(async (dth) => {
@@ -1981,8 +1907,6 @@ io.on('connection', async (socket) => {
           let dataRg = await pool.query(`SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rg || {}).codigo_tienda}' AND ID_RG_HORARIO = ${(dth || {}).id} AND RANGO_HORA = '${rg.rg}';`);
 
           if (!Object.values(dataRg[0]).length) {
-            console.log(dth.cargo, `SELECT * FROM TB_RANGO_HORA WHERE CODIGO_TIENDA = '${(rg || {}).codigo_tienda}' AND ID_RG_HORARIO = ${(dth || {}).id} AND RANGO_HORA = '${rg.rg}';`);
-            console.log(!Object.values(dataRg[0]).length);
             await pool.query(`INSERT INTO TB_RANGO_HORA(CODIGO_TIENDA,RANGO_HORA,ID_RG_HORARIO)VALUES('${dth.codigo_tienda}','${rg.rg}',${(dth || {}).id})`);
           }
         }
@@ -2031,7 +1955,6 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("consultaHorasTrab", (configuracion) => {
-    console.log("consultaHorasTrab", configuracion);
     let configurationList = {
       socket: (socket || {}).id,
       fechain: configuracion[0].fechain,
@@ -2046,7 +1969,7 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("consultaListaEmpleado", (cntCosto) => {
-    console.log(cntCosto);
+
     let configurationList = {
       socket: (socket || {}).id,
       cntCosto: cntCosto
@@ -2059,21 +1982,21 @@ io.on('connection', async (socket) => {
   });
 
   socket.on("horario/empleadoEJB", (cntCosto) => {
-    console.log(cntCosto);
+
     let configurationList = {
       socket: (socket || {}).id,
       cntCosto: cntCosto
     };
 
     const socketId = clients['ejb$$@mt'];
-    console.log(clients);
+   
 
     socket.to(`${socketId}`).emit("consultarEJB", configurationList);
   });
 
   socket.on("listaEmpleados", (response) => {
     let data = response;
-    console.log(data);
+   
     socket.to(`${(data || [])['configuration']['socket']}`).emit("reporteEmpleadoTienda", { id: data.id, data: JSON.parse((data || {}).serverData || []) });
   });
 
@@ -2089,7 +2012,6 @@ io.on('connection', async (socket) => {
       dataEJB = JSON.parse((data || {}).serverData || []);
 
       if (data.id == "EJB" && dataEJB.length) {
-        console.log("EJB", true);
       }
 
       (dataEJB || []).filter((ejb) => {
@@ -2117,8 +2039,7 @@ io.on('connection', async (socket) => {
       dataServGeneral = JSON.parse((data || {}).serverData || []);
 
       if (data.id == "servGeneral" && dataServGeneral.length) {
-        console.log("servGeneral", true);
-        console.log(dataServGeneral);
+     
       }
 
       (dataServGeneral || []).filter((huellero) => {
@@ -2137,7 +2058,7 @@ io.on('connection', async (socket) => {
 
     }
 
-    console.log(IDSocket);
+
     socket.to(`${IDSocket}`).emit("reporteHuellero", { id: data.id, data: JSON.parse((data || {}).serverData || []), socket: IDSocket });
     socket.to(`${IDSocket}`).emit("reporteEmpleadoTienda", { id: data.id, data: parseEJB, socket: IDSocket });
   });
@@ -2153,7 +2074,6 @@ io.on('connection', async (socket) => {
 
   app.post("/frontRetail/search/stock", async (req, res) => {
     let data = ((req || {}).body || []);
-    console.log(((data || [])[0] || {})['socketID'], ((data || [])[0] || {})['cCodigoTienda']);
     socket.to(`${((data || [])[0] || {})['socketID']}`).emit("dataStockParse", req.body);
 
     res.json({ mensaje: 'Archivo recibido con éxito' });
@@ -2161,7 +2081,6 @@ io.on('connection', async (socket) => {
 
   app.post("/frontRetail/search/stock", async (req, res) => {
     let data = ((req || {}).body || []);
-    console.log(((data || [])[0] || {})['socketID'], ((data || [])[0] || {})['cCodigoTienda']);
     socket.to(`${((data || [])[0] || {})['socketID']}`).emit("dataStockParse", req.body);
 
     res.json({ mensaje: 'Archivo recibido con éxito' });
@@ -2201,7 +2120,6 @@ io.on('connection', async (socket) => {
 
       setTimeout(() => {
         if (dataServGeneral.length - 1 == i) {
-          console.log("dataServGeneral", dataServGeneral.length);
 
           for (let i = 0; i < dataServGeneral.length; i += 1000) {
             const dataBlock = dataServGeneral.slice(i, i + 1000);
@@ -2216,7 +2134,6 @@ io.on('connection', async (socket) => {
   });
 
   function onSearchRango(index, nro_documento, fecha) {
-    console.log(`SELECT TB_DIAS_TRABAJO.CODIGO_TIENDA,TB_DIAS_TRABAJO.NOMBRE_COMPLETO,TB_DIAS_TRABAJO.NUMERO_DOCUMENTO,TB_RANGO_HORA.RANGO_HORA,TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '${fecha}' AND NUMERO_DOCUMENTO = '${nro_documento}';`)
     return pool.query(`SELECT TB_DIAS_TRABAJO.CODIGO_TIENDA,TB_DIAS_TRABAJO.NOMBRE_COMPLETO,TB_DIAS_TRABAJO.NUMERO_DOCUMENTO,TB_RANGO_HORA.RANGO_HORA,TB_DIAS_HORARIO.FECHA_NUMBER FROM TB_DIAS_TRABAJO INNER JOIN TB_RANGO_HORA ON TB_RANGO_HORA.ID_RANGO_HORA = TB_DIAS_TRABAJO.ID_TRB_RANGO_HORA INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_TRABAJO.ID_TRB_DIAS WHERE FECHA_NUMBER = '${fecha}' AND NUMERO_DOCUMENTO = '${nro_documento}';`).then(([rs]) => {
       return { index: index, rango: ((rs || [])[0] || {})['RANGO_HORA'] || "" };
     });
@@ -2253,7 +2170,6 @@ io.on('connection', async (socket) => {
         INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
         WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${number_indentity}'
         AND FECHA_NUMBER = '${parseDate}';`).then(([arFeriado]) => {
-      console.log('*******************************', index, number_indentity, parseDate, day, (((arFeriado || [])[0] || "")['FECHA_NUMBER'] || ""));
       let indexRow = (data || []).findIndex((row) => row.nroDocumento == number_indentity && row.dia == day);
       if ((arFeriado || []).length) {
         ((data || [])[indexRow] || {})['isException'] = true;
@@ -2322,7 +2238,6 @@ io.on('connection', async (socket) => {
 
   app.post('/createDirectory', async (req, res) => {
     let request = ((req || []).body || [])
-    console.log(request);
     fs.mkdir("./download/" + (request || {}).route, (error) => {
       if (error) {
         res.json({ msj: error.message })
@@ -2334,7 +2249,6 @@ io.on('connection', async (socket) => {
 
   app.post('/deleteDirectory', async (req, res) => {
     let request = ((req || []).body || [])
-    console.log(request);
     let evalueDir = ((request || {}).route || "").split(".");
     if (evalueDir.length >= 2) {
       fs.unlink("./download/" + (request || {}).route, (error) => {
@@ -2359,7 +2273,6 @@ io.on('connection', async (socket) => {
   app.get('/listDirectory', async (req, res) => {
     let arDirectory = [];
     fs.readdirSync('./download').forEach(async (file, i) => {
-      console.log(file);
       await fs.stat('./download' + file, (err, stats) => {
         arDirectory.push({
           name: file,
@@ -2381,7 +2294,6 @@ io.on('connection', async (socket) => {
     const file = "./download/" + (request || {}).route;
 
     var fileLocation = path.join('./', file);
-    console.log(file);
     res.download(fileLocation, file);
   });
 
@@ -2401,7 +2313,6 @@ io.on('connection', async (socket) => {
     destination: function (req, file, cb) {
       let __dirName = req.query.path || "";
       let dr = __dirName.length ? __dirName + "/" : "";
-      console.log('./download/' + dr);
       cb(null, './download/' + dr);
     },
     filename: function (req, file, cb) {
@@ -2553,7 +2464,6 @@ io.on('connection', async (socket) => {
   app.get('/notificaciones', async (req, res) => {
     const auth_token = req.header("Authorization") || "";
     const tokenResolve = tokenController.verificationToken(auth_token);
-    console.log("NOTIFICACIONES", tokenResolve);
 
     if ((tokenResolve || {}).isValid) {
       pool.query(`SELECT * FROM TB_USUARIO_NOTIFICACION INNER JOIN TB_NOTIFICACIONES ON ID_NOTIFICACION = ID_NOTIFICACION_NT WHERE ID_LOGIN_NT = ${(tokenResolve || {}).decoded.id};`).then(([notificaciones]) => {
@@ -2589,7 +2499,6 @@ io.on('connection', async (socket) => {
   app.post('/sunat-notification', async (req, res) => {
 
     let arrDocumento = (req || []).body || [];
-    console.log((req || []).body);
     let tiendasList = [
       { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
       { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
@@ -2717,8 +2626,6 @@ io.on('connection', async (socket) => {
         }
 
         if (Object.keys(selectedLocal).length && isEmailEnvio != 'true') {
-          console.log("sunat:codigo_tienda", codigo);
-          console.log("sunat:tienda", selectedLocal);
 
           await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET ENVIO_EMAIL ='true' WHERE CODIGO_DOCUMENTO = ${(doc || {}).CODIGO_DOCUMENTO};`);
 
