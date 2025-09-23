@@ -8,6 +8,7 @@ class clsStores {
                 let responseJSON = [];
                 (requestSql || []).filter((store) => {
                     (responseJSON || []).push({
+                        id: (store || {}).ID_TIENDA,
                         serie: (store || {}).SERIE_TIENDA,
                         description: (store || {}).DESCRIPCION,
                         code_wharehouse: (store || {}).COD_ALMACEN,
