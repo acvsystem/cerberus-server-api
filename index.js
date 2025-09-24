@@ -357,6 +357,20 @@ io.on('connection', async (socket) => {
 
   socket.on('report:get:fr:sales:departament:response', (response) => {
     console.log(JSON.parse((response || {}).data));
+    let conf = (response || {}).date;
+    let data = (response || {}).data;
+    let total_stock = 0;
+    let total_import = 0;
+    if (conf.column == 'Familia') {
+      (data || []).filter((dt) => {
+        total_stock =+ dt.cUnidades;
+        total_import =+ dt.cImporte;
+      });
+
+      (response || {}).date['total_stock'] = total_stock;
+      (response || {}).date['total_import'] = total_import;
+    }
+
     socket.to(`${(response || {}).socketID}`).emit('report:sales:departament:response', response);
   });
 
