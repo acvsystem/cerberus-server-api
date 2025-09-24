@@ -356,19 +356,33 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('report:get:fr:sales:departament:response', (response) => {
-    console.log(JSON.parse((response || {}).data));
     let conf = (response || {}).date;
     let data = JSON.parse((response || {}).data);
-    let total_stock = 0;
-    let total_import = 0;
+    let arFamilia = [];
     if (conf.column == 'Familia') {
-      (data || []).filter((dt) => {
-        total_stock =+ dt.cUnidades;
-        total_import =+ dt.cImporte;
+      (data || []).filter((dr) => {
+        let index = (arFamilia || []).findIndex((fm) => fm.departament == dr.cDepartamento);
+        let dataFamilia = { familia: dr.cFamilia, unid: parseInt(dr.cUnidades), importe: dr.cImporte };
+
+        if (index == -1) {
+          (arFamilia || []).push({
+            id: keyComparation,
+            store: (socketStore || {}).description,
+            column: dateResponse['column'],
+            semana: dateResponse['semana'],
+            departament: dr.cDepartamento,
+            total_import: dr.cImporte,
+            total_und: parseInt(dr.cUnidades),
+            data: [dataFamilia]
+          });
+        } else {
+          (((arFamilia || [])[index] || [])['data'] || []).push(dataFamilia);
+          ((arFamilia || [])[index] || [])['total_import'] = Number(arFamilia[index]['data'].reduce((acum, f) => acum + parseFloat(f.importe), 0).toFixed(2));
+          ((arFamilia || [])[index] || [])['total_und'] = Number(arFamilia[index]['data'].reduce((acum, f) => acum + parseFloat(f.unid), 0).toFixed(2));
+        }
       });
 
-      (response || {}).date['total_stock'] = total_stock;
-      (response || {}).date['total_import'] = total_import;
+      response['dataParse'] = arFamilia;
     }
 
     socket.to(`${(response || {}).socketID}`).emit('report:sales:departament:response', response);
