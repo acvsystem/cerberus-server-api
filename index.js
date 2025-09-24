@@ -366,10 +366,10 @@ io.on('connection', async (socket) => {
 
         if (index == -1) {
           (arFamilia || []).push({
-            id: response['key'],
-            store: (socketStore || {}).description,
-            column: dateResponse['column'],
-            semana: dateResponse['semana'],
+            id: conf['key'],
+            store: conf['description'],
+            column: conf['column'],
+            semana: conf['semana'],
             departament: dr.cDepartamento,
             total_import: dr.cImporte,
             total_und: parseInt(dr.cUnidades),
