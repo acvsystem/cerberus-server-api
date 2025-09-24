@@ -358,7 +358,7 @@ io.on('connection', async (socket) => {
   socket.on('report:get:fr:sales:departament:response', (response) => {
     console.log(JSON.parse((response || {}).data));
     let conf = (response || {}).date;
-    let data = (response || {}).data;
+    let data = JSON.parse((response || {}).data);
     let total_stock = 0;
     let total_import = 0;
     if (conf.column == 'Familia') {
