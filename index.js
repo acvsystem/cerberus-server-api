@@ -366,7 +366,7 @@ io.on('connection', async (socket) => {
 
         if (index == -1) {
           (arFamilia || []).push({
-            id: keyComparation,
+            id: response['key'],
             store: (socketStore || {}).description,
             column: dateResponse['column'],
             semana: dateResponse['semana'],
