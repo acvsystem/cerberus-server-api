@@ -358,6 +358,10 @@ io.on('connection', async (socket) => {
   socket.on('report:get:fr:sales:departament:response', (response) => {
     let conf = (response || {}).date;
     let data = JSON.parse((response || {}).data);
+    let dateResponse = response['date'];
+    let keyComparation = dateResponse['key'];
+    let anioData = dateResponse['anio'];
+    
     let arFamilia = [];
     if (conf.column == 'Familia') {
       (data || []).filter((dr) => {
