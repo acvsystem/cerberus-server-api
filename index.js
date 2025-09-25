@@ -384,7 +384,8 @@ io.on('connection', async (socket) => {
 
       (arFamilia || []).filter((fm, index) => {
         ((fm || {}).data || []).filter((dt, i) => {
-          (((arFamilia || [])[index] || [])['data'] || [])[i]['percentage'] = Math.round(((dt || {}).unid / ((arFamilia || [])[index] || [])['total_und']) * 100);
+          (((arFamilia || [])[index] || [])['data'] || [])[i]['percentage_unid'] = Math.round(((dt || {}).unid / ((arFamilia || [])[index] || [])['total_und']) * 100);
+          (((arFamilia || [])[index] || [])['data'] || [])[i]['percentage_import'] = Math.round(((dt || {}).importe / ((arFamilia || [])[index] || [])['total_import']) * 100);
         });
       });
 
