@@ -22,6 +22,7 @@ import multer from 'multer';
 import { Client } from "basic-ftp"
 import mdwErrorHandler from './middleware/errorHandler.js';
 import mdlNotificacion from './class/clsNotificaciones.js';
+import scheduleRoutes from "./routes/schedule.routes.js";
 //import services from './services/notificaciones.js';
 
 const app = express();
@@ -43,6 +44,7 @@ app.use("/recursos_humanos", recursosHumanosRoutes);
 app.use("/sistema", frontRetailRoutes);
 app.use("/transfers", transfersRoutes);
 app.use("/store", storesRoutes);
+app.use("/schedule", scheduleRoutes);
 /*
 // Middleware de logging
 app.use((req, res, next) => {
@@ -361,7 +363,7 @@ io.on('connection', async (socket) => {
     let dateResponse = response['date'];
     let keyComparation = dateResponse['key'];
     let anioData = dateResponse['anio'];
-    
+
     let arFamilia = [];
     if (conf.column == 'Familia') {
       (data || []).filter((dr) => {
