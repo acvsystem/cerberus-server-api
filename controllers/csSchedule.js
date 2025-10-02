@@ -3,7 +3,7 @@ import mdwErrorHandler from '../middleware/errorHandler.js';
 
 class clsSchedule {
 
-    notifyExitDialing = () => {
+    notifyExitDialing = (req, res) => {
         let response = [
             {
                 hora: "15:00",
