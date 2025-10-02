@@ -17,9 +17,16 @@ class clsSchedule {
                     "Sofía Torres",
                     "Miguel Herrera"
                 ]
+            },
+            {
+                hora: "12:00",
+                usuarios: [
+                    "Ana García",
+                    "Carlos López"
+                ]
             }
         ];
-        
+
         res.json(response);
     }
 
