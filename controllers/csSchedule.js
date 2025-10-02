@@ -19,7 +19,7 @@ class clsSchedule {
                 ]
             },
             {
-                hora: "12:00",
+                hora: "16:50",
                 usuarios: [
                     "Ana García",
                     "Carlos López"
