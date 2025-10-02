@@ -6,7 +6,7 @@ class clsSchedule {
     notifyExitDialing = (req, res) => {
         let response = [
             {
-                hora: "15:00",
+                hora: "16:59",
                 usuarios: [
                     "Ana García",
                     "Carlos López",
@@ -19,7 +19,7 @@ class clsSchedule {
                 ]
             },
             {
-                hora: "16:50",
+                hora: "17:00",
                 usuarios: [
                     "Ana García",
                     "Carlos López"
