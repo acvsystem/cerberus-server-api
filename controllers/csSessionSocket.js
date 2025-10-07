@@ -68,7 +68,8 @@ class clsSessionSocket {
         let [data] = await pool.query(`SELECT CODIGO_TERMINAL, TB_LISTA_TIENDA.DESCRIPCION, VERIFICACION, CANT_COMPROBANTES, ISONLINE, CANT_TRAFFIC FROM TB_TERMINAL_TIENDA 
         INNER JOIN TB_KEY_TERMINAL ON TB_KEY_TERMINAL.KEY_CODE = TB_TERMINAL_TIENDA.CODIGO_TERMINAL
         INNER JOIN TB_LISTA_TIENDA ON TB_TERMINAL_TIENDA.CODIGO_TERMINAL = TB_LISTA_TIENDA.SERIE_TIENDA WHERE CODIGO_TERMINAL = '${codigo}';`);
-
+        
+        data[0]['TRAFFIC_COUNTERS'] = await pool.query(`SELECT tb_traffic_counter_tienda WHERE CODIGO_TIENDA = '${codigo}';`);
         console.log(data);
         return data;
     }
