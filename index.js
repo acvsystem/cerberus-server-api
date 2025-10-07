@@ -2107,6 +2107,10 @@ io.on('connection', async (socket) => {
   app.post("/frontRetail/search/configuration/agente", async (req, res) => {
     let data = ((req || {}).body || []);
     let [configuration] = await pool.query(`SELECT * FROM TB_PARAMETROS_TIENDA WHERE MAC='${((data || {}).mac).toUpperCase()}';`);
+    let codeStore = ((configuration || [])[0] || {})['SERIE_TIENDA'];
+    let [arTraffic] = await pool.query(`SELECT * FROM tb_traffic_counter_tienda WHERE CODIGO_TIENDA = '${codeStore}';`) || [];
+    ((configuration || [])[0] || {})['TRAFFIC_COUNTERS'] = arTraffic || [];
+
     res.json(configuration)
   });
 

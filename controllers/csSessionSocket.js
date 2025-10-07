@@ -71,7 +71,7 @@ class clsSessionSocket {
 
         let [arTraffic] = await pool.query(`SELECT * FROM tb_traffic_counter_tienda WHERE CODIGO_TIENDA = '${codigo}';`) || [];
         ((data || [])[0] || {})['TRAFFIC_COUNTERS'] = arTraffic || [];
-        console.log(data);
+        
         return data;
     }
 
