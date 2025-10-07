@@ -541,10 +541,11 @@ io.on('connection', async (socket) => {
     socket.to(`${socketID}`).emit("terminales:get:name:response", response); // ENVIA A FRONTEND
   });
 
-  socket.on('traffic:get:online', (data) => {
+  socket.on('traffic:get:online', (code) => {
 
     let configuration = {
-      socket: (socket || {}).id
+      socket: (socket || {}).id,
+      code: code
     };
 
     socket.broadcast.emit("trafficGetOnline", configuration);
