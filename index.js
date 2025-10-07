@@ -553,7 +553,7 @@ io.on('connection', async (socket) => {
   socket.on('traffic:get:online:py:response', async (data) => {
     console.log(data);
     let socketID = data['configuration']['socket'];
-    let response = JSON.parse(data['data']);
+    let response = data['data'];
     socket.to(`${socketID}`).emit("traffic:get:online:response", response);
   });
 
