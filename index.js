@@ -541,6 +541,22 @@ io.on('connection', async (socket) => {
     socket.to(`${socketID}`).emit("terminales:get:name:response", response); // ENVIA A FRONTEND
   });
 
+  socket.on('traffic:get:online', (data) => {
+
+    let configuration = {
+      socket: (socket || {}).id
+    };
+
+    socket.broadcast.emit("trafficGetOnline", configuration);
+  });
+
+  socket.on('traffic:get:online:py:response', async (data) => {
+    let socketID = data['configuration']['socket'];
+    let response = JSON.parse(data['data']);
+    socket.to(`${socketID}`).emit("traffic:get:online:response", response);
+  });
+
+
   /* CONSULTA CANTIDAD EN TERMINALES FRONT RETAIL */
 
   socket.on('terminales:get:cantidad', (data) => {
@@ -666,6 +682,7 @@ io.on('connection', async (socket) => {
 
     socket.to(`${socketID}`).emit("update:file:status", statusList);
   });
+
 
   socket.on("consultaMarcacion", (configuracion) => {
 
