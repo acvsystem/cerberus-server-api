@@ -2111,7 +2111,7 @@ io.on('connection', async (socket) => {
     let [arTraffic] = await pool.query(`SELECT IP FROM tb_traffic_counter_tienda WHERE CODIGO_TIENDA = '${codeStore}';`) || [];
     let listTraffic = [];
     (arTraffic || []).filter((tr) => {
-      listTraffic.push(tr)
+      listTraffic.push((tr || {}).IP)
     });
 
     ((configuration || [])[0] || {})['TRAFFIC_COUNTERS'] = listTraffic;
