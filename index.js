@@ -2207,7 +2207,15 @@ io.on('connection', async (socket) => {
 
 
   app.get("/comprobantes/session/lista", async (req, res) => {
-    await pool.query(`SELECT * FROM TB_TERMINAL_TIENDA;`).then(([tiendasSession]) => {
+    await pool.query(`SELECT * FROM TB_TERMINAL_TIENDA;`).then(async ([tiendasSession]) => {
+      let codeStore = ((tiendasSession || [])[0] || {})['CODIGO_TERMINAL'];
+      let [arTraffic] = await pool.query(`SELECT IP FROM tb_traffic_counter_tienda WHERE CODIGO_TIENDA = '${codeStore}';`) || [];
+      let listTraffic = [];
+      (arTraffic || []).filter((tr) => {
+        listTraffic.push((tr || {}).IP)
+      });
+
+      ((tiendasSession || [])[0] || {})['TRAFFIC_COUNTERS'] = listTraffic;
       res.json({ data: tiendasSession });
     });
   });
