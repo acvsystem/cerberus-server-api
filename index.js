@@ -2223,7 +2223,7 @@ io.on('connection', async (socket) => {
         if (tiendasSession.length - 1 == i) {
           setTimeout(() => {
             res.json({ data: tiendasSession });
-          }, 2000);
+          }, 1000);
         }
       });
 
