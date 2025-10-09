@@ -2221,7 +2221,9 @@ io.on('connection', async (socket) => {
         ((tiendasSession || [])[i] || {})['TRAFFIC_COUNTERS'] = listTraffic;
 
         if (tiendasSession.length - 1 == i) {
-          res.json({ data: tiendasSession });
+          setTimeout(() => {
+            res.json({ data: tiendasSession });
+          }, 2000);
         }
       });
 
