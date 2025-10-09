@@ -2219,10 +2219,14 @@ io.on('connection', async (socket) => {
         });
 
         ((tiendasSession || [])[i] || {})['TRAFFIC_COUNTERS'] = listTraffic;
+
+        if (tiendasSession.length - 1 == i) {
+          res.json({ data: tiendasSession });
+        }
       });
 
 
-      res.json({ data: tiendasSession });
+
     });
   });
 
