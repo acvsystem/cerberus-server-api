@@ -123,7 +123,7 @@ function onEmitAlertaTraffic() {
     code: code
   };
 
-  io.broadcast.emit("trafficGetOnline", configuration);
+  io.emit("trafficGetOnline", configuration);
 }
 
 function emitVerificationSUNAT() {
