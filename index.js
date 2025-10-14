@@ -644,9 +644,8 @@ io.on('connection', async (socket) => {
                 </tbody>
             </table>`;
           console.log(bodyHTML);
-          let correo = ['itperu@metasperu.com'];
 
-          emailController.sendEmail(correo, `ALERTA TRAFFIC - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
+          emailController.sendEmail('itperu@metasperu.com', `ALERTA TRAFFIC - ${(selectedLocal || {}).name}`, bodyHTML, null, (selectedLocal || {}).name)
             .catch(err => console.log(err));
         }
       });
