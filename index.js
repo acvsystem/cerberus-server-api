@@ -128,7 +128,7 @@ function onEmitAlertaTraffic() {
         code: (td || {}).SERIE_TIENDA
       };
 
-      io.broadcast.emit("trafficGetOnline", configuration);
+      io.emit("trafficGetOnline", configuration);
 
     });
   });
