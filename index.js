@@ -643,11 +643,11 @@ io.on('connection', async (socket) => {
                     </tr>
                 </tbody>
             </table>`;
-
+          console.log(bodyHTML);
           let correo = ['itperu@metasperu.com'];
-
+/*
           emailController.sendEmail(correo, `ALERTA TRAFFIC - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
-            .catch(err => console.log(err));
+            .catch(err => console.log(err));*/
         }
       });
 
