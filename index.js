@@ -628,7 +628,7 @@ io.on('connection', async (socket) => {
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(data || {}).ip}</td>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(response || {}).ip}</td>
                                                         <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${!(response || {}).active ? 'ofline' : 'online'}</td>
                                                     </tr>
                                             
@@ -646,7 +646,7 @@ io.on('connection', async (socket) => {
           let correo = ['itperu@metasperu.com'];
 
           emailController.sendEmail(correo, `ALERTA TRAFFIC - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
-            .catch(error => res.send(error));
+            .catch(err => console.log(err));
         }
       });
 
