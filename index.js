@@ -655,7 +655,7 @@ io.on('connection', async (socket) => {
                 </tbody>
             </table>`;
 
-          emailController.sendEmail('itperu@metasperu.com', `ALERTA TRAFFIC - ${(selectedLocal || {}).name}`, bodyHTML, null, (selectedLocal || {}).name)
+          emailController.sendEmail('johnnygermano@metasperu.com', `ALERTA TRAFFIC - ${(selectedLocal || {}).name}`, bodyHTML, null, (selectedLocal || {}).name)
             .catch(err => console.log(err));
         }
       });
