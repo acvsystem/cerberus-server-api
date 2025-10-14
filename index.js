@@ -96,7 +96,7 @@ const task_3 = cron.schedule('00 19 * * *', () => {
 });
 
 const task_4 = cron.schedule('*/15 * * * *', () => {
-  console.log('/15 * * * *');
+  console.log('/30 * * * *');
   emitVerificationSUNAT();
 });
 
@@ -105,11 +105,25 @@ const task_5 = cron.schedule('00 8 * * 0', () => {
   onVerificarCalendario();
 });
 
+const task_6 = cron.schedule('*/15 * * * *', () => {
+  onEmitAlertaTraffic();
+});
+
 task_1.start();
 task_2.start();
 task_3.start();
 task_4.start();
 task_5.start();
+task_6.start();
+
+function onEmitAlertaTraffic() {
+  let configuration = {
+    socket: 'backend',
+    code: code
+  };
+
+  io.broadcast.emit("trafficGetOnline", configuration);
+}
 
 function emitVerificationSUNAT() {
   io.emit('consultingSUNAT', 'sunat');
@@ -318,6 +332,9 @@ io.on('connection', async (socket) => {
   socket.on('status:EQP', (data) => {
     socket.broadcast.emit("status:EQP:send", data);
   });
+
+
+
 
   socket.on('disconnect', async () => { // DESCONEXION DE ALGUN ENLACE (SE ENVIA A COMPROBANTES)
     if (codeTerminal == "SRVFACT") {
@@ -555,8 +572,62 @@ io.on('connection', async (socket) => {
     console.log(data);
     let socketID = data['configuration']['socket'];
     let response = data['data'];
+
+    pool.query(`SELECT ID_CONF_HP,ID_TIENDA,SERIE_TIENDA,DESCRIPCION,IS_FREE_HORARIO,IS_FREE_PAPELETA,IS_ALERT_TRAFFIC_COUNTER 
+      FROM TB_CONFIGURACION_HORARIO_PAP INNER JOIN TB_LISTA_TIENDA ON TB_LISTA_TIENDA.ID_TIENDA = TB_CONFIGURACION_HORARIO_PAP.ID_TIENDA_HP 
+      WHERE SERIE_TIENDA = '${(response || {}).code}';`)
+      .then(([rs]) => {
+        if (rs[0]['IS_ALERT_TRAFFIC_COUNTER'] && (response || {}).active) {
+          let bodyHTML = `<table style="width:100%;border-spacing:0">
+                <tbody>
+                    <tr style="display:flex">
+                        <td>
+                            <table style="border-radius:4px;border-spacing:0;border:1px solid #155795;min-width:450px">
+                                <tbody>
+                                    <tr>
+                                        <td style="border-top-left-radius:4px;border-top-right-radius:4px;display:flex;background:#155795;padding:20px">
+                                            <p style="margin-left:72px;color:#fff;font-weight:700;font-size:30px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif"><span class="il">METAS PERU</span> S.A.C</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center;padding:10px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
+                                            <p>TRAFFIC COUNTER</p> 
+
+                                            <table align="left" cellspacing="0" style="width: 100%;border: solid 1px;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">IP</th>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">ESTADO</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(data || {}).ip}</td>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${!(response || {}).active ? 'ofline':'online'}</td>
+                                                    </tr>
+                                            
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>`;
+
+          let correo = ['itperu@metasperu.com'];
+
+          emailController.sendEmail(correo, `ALERTA TRAFFIC - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
+            .catch(error => res.send(error));
+        }
+      });
+
     socket.to(`${socketID}`).emit("traffic:get:online:response", response);
   });
+
+
 
 
   /* CONSULTA CANTIDAD EN TERMINALES FRONT RETAIL */
