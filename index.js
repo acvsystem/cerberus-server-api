@@ -578,6 +578,32 @@ io.on('connection', async (socket) => {
       WHERE SERIE_TIENDA = '${(response || {}).code}';`)
       .then(([rs]) => {
         if (rs[0]['IS_ALERT_TRAFFIC_COUNTER'] && (response || {}).active) {
+
+          let tiendasList = [
+            { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
+            { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
+            { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@metasperu.com' },
+            { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@metasperu.com' },
+            { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@metasperu.com' },
+            { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@metasperu.com' },
+            { code: '7C', name: 'BBW SAN MIGUEL', email: 'bbwsanmiguel@metasperu.com' },
+            { code: '9C', name: 'VS SAN MIGUEL', email: 'vssanmiguel@metasperu.com' },
+            { code: '7D', name: 'BBW SALAVERRY', email: 'bbwsalaverry@metasperu.com' },
+            { code: '9I', name: 'VS SALAVERRY', email: 'vssalaverry@metasperu.com' },
+            { code: '9G', name: 'VS MALL DEL SUR', email: 'vsmalldelsur@metasperu.com' },
+            { code: '9H', name: 'VS PURUCHUCO', email: 'vspuruchuco@metasperu.com' },
+            { code: '9M', name: 'VS ECOMMERCE', email: 'vsecommpe@metasperu.com' },
+            { code: '7F', name: 'BBW ECOMMERCE', email: 'bbwecommperu@metasperu.com' },
+            { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@metasperu.com' },
+            { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@metasperu.com' },
+            { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@metasperu.com' },
+            { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@metasperu.com' },
+            { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com' },
+            { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
+          ];
+
+          let selectedLocal = tiendasList.find((td) => td.code == (response || {}).codigo_tienda) || {};
+
           let bodyHTML = `<table style="width:100%;border-spacing:0">
                 <tbody>
                     <tr style="display:flex">
@@ -603,7 +629,7 @@ io.on('connection', async (socket) => {
                                                 <tbody>
                                                     <tr>
                                                         <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(data || {}).ip}</td>
-                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${!(response || {}).active ? 'ofline':'online'}</td>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${!(response || {}).active ? 'ofline' : 'online'}</td>
                                                     </tr>
                                             
                                                 </tbody>
