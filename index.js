@@ -105,8 +105,8 @@ const task_5 = cron.schedule('00 8 * * 0', () => {
   onVerificarCalendario();
 });
 
-const task_6 = cron.schedule('*/1 * * * *', () => {
-  console.log('*/1 * * * *')
+const task_6 = cron.schedule('*/30 * * * *', () => {
+  console.log('*/30 * * * *')
   onEmitAlertaTraffic();
 });
 
