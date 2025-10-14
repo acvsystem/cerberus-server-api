@@ -118,12 +118,22 @@ task_5.start();
 task_6.start();
 
 function onEmitAlertaTraffic() {
-  let configuration = {
-    socket: 'backend',
-    code: code
-  };
 
-  io.emit("trafficGetOnline", configuration);
+  pool.query(`SELECT * FROM TB_LISTA_TIENDA;`).then(([tienda]) => {
+
+    (tienda || []).filter(async (td, i) => {
+
+      let configuration = {
+        socket: 'backend',
+        code: (td || {}).SERIE_TIENDA
+      };
+
+      io.broadcast.emit("trafficGetOnline", configuration);
+
+    });
+  });
+
+
 }
 
 function emitVerificationSUNAT() {
