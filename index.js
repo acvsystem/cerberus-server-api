@@ -578,7 +578,7 @@ io.on('connection', async (socket) => {
       WHERE SERIE_TIENDA = '${(response || {}).code}';`)
       .then(([rs]) => {
         console.log(response);
-        if (rs[0]['IS_ALERT_TRAFFIC_COUNTER'] && (response || {}).active) {
+        if (rs[0]['IS_ALERT_TRAFFIC_COUNTER'] && !(response || {}).active) {
 
           let tiendasList = [
             { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
@@ -629,7 +629,7 @@ io.on('connection', async (socket) => {
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">'${(response || {}).ip}'</td>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(response || {}).ip}</td>
                                                         <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${!(response || {}).active ? 'ofline' : 'online'}</td>
                                                     </tr>
                                             
@@ -645,9 +645,9 @@ io.on('connection', async (socket) => {
             </table>`;
           console.log(bodyHTML);
           let correo = ['itperu@metasperu.com'];
-/*
+
           emailController.sendEmail(correo, `ALERTA TRAFFIC - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
-            .catch(err => console.log(err));*/
+            .catch(err => console.log(err));
         }
       });
 
