@@ -629,7 +629,7 @@ io.on('connection', async (socket) => {
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(response || {}).ip}</td>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">'${(response || {}).ip}'</td>
                                                         <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${!(response || {}).active ? 'ofline' : 'online'}</td>
                                                     </tr>
                                             
