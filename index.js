@@ -577,6 +577,7 @@ io.on('connection', async (socket) => {
       FROM TB_CONFIGURACION_HORARIO_PAP INNER JOIN TB_LISTA_TIENDA ON TB_LISTA_TIENDA.ID_TIENDA = TB_CONFIGURACION_HORARIO_PAP.ID_TIENDA_HP 
       WHERE SERIE_TIENDA = '${(response || {}).code}';`)
       .then(([rs]) => {
+        console.log(response);
         if (rs[0]['IS_ALERT_TRAFFIC_COUNTER'] && (response || {}).active) {
 
           let tiendasList = [
