@@ -105,8 +105,6 @@ const task_5 = cron.schedule('00 8 * * 0', () => {
   onVerificarCalendario();
 });
 
-onVerificarCalendario();
-
 task_1.start();
 task_2.start();
 task_3.start();

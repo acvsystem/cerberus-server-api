@@ -90,7 +90,7 @@ router.get('/configuracion/permisos/hp', async (req, res) => {
 
 router.post('/configuracion/permisos/hp', async (req, res) => {
     let data = ((req || {}).body || [])[0];
-    await pool.query(`UPDATE TB_CONFIGURACION_HORARIO_PAP SET IS_FREE_HORARIO = ${(data || {}).isPermiso_h}, IS_FREE_PAPELETA = ${(data || {}).isPermiso_p} WHERE ID_CONF_HP = ${(data || {}).id};`)
+    await pool.query(`UPDATE TB_CONFIGURACION_HORARIO_PAP SET IS_FREE_HORARIO = ${(data || {}).isPermiso_h}, IS_FREE_PAPELETA = ${(data || {}).isPermiso_p}, IS_ALERT_TRAFFIC_COUNTER = ${(data || {}).isAlerta_t} WHERE ID_CONF_HP = ${(data || {}).id};`)
         .then(([rs]) => {
             pool.query(`SELECT ID_CONF_HP,ID_TIENDA,SERIE_TIENDA,DESCRIPCION,IS_FREE_HORARIO,IS_FREE_PAPELETA FROM TB_CONFIGURACION_HORARIO_PAP INNER JOIN TB_LISTA_TIENDA ON TB_LISTA_TIENDA.ID_TIENDA = TB_CONFIGURACION_HORARIO_PAP.ID_TIENDA_HP;`)
                 .then(([rs]) => {
