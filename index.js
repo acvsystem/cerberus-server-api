@@ -96,7 +96,7 @@ const task_3 = cron.schedule('00 19 * * *', () => {
 });
 
 const task_4 = cron.schedule('*/15 * * * *', () => {
-  console.log('/30 * * * *');
+  console.log('/15 * * * *');
   emitVerificationSUNAT();
 });
 
@@ -105,7 +105,8 @@ const task_5 = cron.schedule('00 8 * * 0', () => {
   onVerificarCalendario();
 });
 
-const task_6 = cron.schedule('*/15 * * * *', () => {
+const task_6 = cron.schedule('*/1 * * * *', () => {
+  console.log('*/1 * * * *')
   onEmitAlertaTraffic();
 });
 
