@@ -603,7 +603,7 @@ io.on('connection', async (socket) => {
             { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
           ];
 
-          let selectedLocal = tiendasList.find((td) => td.code == (response || {}).codigo_tienda) || {};
+          let selectedLocal = tiendasList.find((td) => td.code == (response || {}).code) || {};
 
           let bodyHTML = `<table style="width:100%;border-spacing:0">
                 <tbody>
@@ -630,7 +630,7 @@ io.on('connection', async (socket) => {
                                                 <tbody>
                                                     <tr>
                                                         <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(response || {}).ip}</td>
-                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${!(response || {}).active ? 'ofline' : 'online'}</td>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${!(response || {}).active ? 'offline' : 'online'}</td>
                                                     </tr>
                                             
                                                 </tbody>
