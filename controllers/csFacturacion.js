@@ -48,8 +48,6 @@ class clsFacturacion {
             }
 
             if (!(paseDataList || []).includes(cpParse)) {
-
-                console.log(cpParse);
                 pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND WHERE NRO_DOCUMENT = '${cpParse}';`).then(([documents]) => {
                     if (!(documents || []).length) {
                         pool.query(`INSERT INTO TB_DETAIL_DOCUMENT_NO_SEND(NRO_DOCUMENT,TYPE_DOCUMENT,DATE,EXPIRATION_DATE)VALUES('${cpParse}','${(data || {}).cmpTipo}','${(data || {}).cmpFecha}', DATE_ADD('${(data || {}).cmpFecha}', INTERVAL 3 DAY))`);
@@ -65,6 +63,14 @@ class clsFacturacion {
         });
 
 
+        pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND;`).then(([documents]) => {
+            (documents || []).filter((data) => {
+                let nroDocument = (data || {})['NRO_DOCUMENT'];
+                if ((paseDataList || []).includes(nroDocument)) {
+                    pool.query(`DELETE FROM TB_DETAIL_DOCUMENT_NO_SEND WHERE NRO_DOCUMENT = '${nroDocument}';`)
+                }
+            });
+        });
 
         let selectedLocal = tiendasList.find((data) => data.code == codigoFront);
         console.log(`${this.getDate()} - ${codigoFront} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length} - `, dataNoFound);
