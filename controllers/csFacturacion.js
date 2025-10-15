@@ -31,7 +31,7 @@ class clsFacturacion {
             var cpParse = ((data || {}).cmpNumero || "").split('-');
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
         });
-        
+
         (frontData || []).filter((data) => {
 
             let cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
@@ -48,6 +48,9 @@ class clsFacturacion {
             }
 
             if (!(paseDataList || []).includes(cpParse)) {
+
+                pool.query(`INSERT INTO TB_DETAIL_DOCUMENT_NO_SEND(NRO_DOCUMENT,TYPE_DOCUMENT,DATE)VALUES('${cpParse}','${(data || {}).cmpTipo}','${(data || {}).cmpFecha}')`);
+
                 (dataNoFound || []).push({
                     "CORRELATIVO": cpParse,
                     "TIPO DOCUMENTO": (data || {}).cmpTipo,
@@ -68,15 +71,10 @@ class clsFacturacion {
             const xlsFile = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
             emailController.sendEmail('johnnygermano@metasperu.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, null, xlsFile, (selectedLocal || {}).name)
                 .catch(err => console.log(err));
-        } else {
-           /* const workSheet = XLSX.utils.json_to_sheet((dataNoFound || []));
-            const workBook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
-            const xlsFile = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
-            emailController.sendEmail('itperu@metasperu.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, null, xlsFile, (selectedLocal || {}).name)
-                .catch(error => res.send(error));*/
         }
+
         console.log(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
+
         await pool.query(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
         let listSession = await sessionSocket.sessionOneList(codigoFront);
         return listSession;
