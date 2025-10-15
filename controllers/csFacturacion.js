@@ -49,7 +49,7 @@ class clsFacturacion {
 
             if (!(paseDataList || []).includes(cpParse)) {
 
-                pool.query(`INSERT INTO TB_DETAIL_DOCUMENT_NO_SEND(NRO_DOCUMENT,TYPE_DOCUMENT,DATE)VALUES('${cpParse}','${(data || {}).cmpTipo}','${(data || {}).cmpFecha}')`);
+                pool.query(`INSERT INTO TB_DETAIL_DOCUMENT_NO_SEND(NRO_DOCUMENT,TYPE_DOCUMENT,DATE,EXPIRATION_DATE)VALUES('${cpParse}','${(data || {}).cmpTipo}','${(data || {}).cmpFecha}', DATE_ADD('${(data || {}).cmpFecha}', INTERVAL 3 DAY))`);
 
                 (dataNoFound || []).push({
                     "CORRELATIVO": cpParse,
