@@ -166,7 +166,8 @@ function vrfDocumentPending() {
       }
 
       if (documents.length - 1 == i) {
-        let bodyHTML = `<table style="width:100%;border-spacing:0">
+        if ((documentPending || []).length) {
+          let bodyHTML = `<table style="width:100%;border-spacing:0">
                 <tbody>
                     <tr style="display:flex">
                         <td>
@@ -190,15 +191,15 @@ function vrfDocumentPending() {
                                                     </tr>
                                                 </thead>
                                                 <tbody>`;
-                                      (documentPending || []).filter((doc) => {
-                                       bodyHTML += `<tr>
+          (documentPending || []).filter((doc) => {
+            bodyHTML += `<tr>
                                                         <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(doc || {}).NRO_DOCUMENT}</td>
                                                         <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(doc || {}).DATE}</td>
                                                         <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(doc || {}).OWNER}</td>
                                                     </tr>`;
-                                      });
+          });
 
-                                  bodyHTML += `</tbody>
+          bodyHTML += `</tbody>
                                             </table>
                                         </td>
                                     </tr>
@@ -209,8 +210,9 @@ function vrfDocumentPending() {
                 </tbody>
             </table>`
 
-        emailController.sendEmail(['itperu@metasperu.com','johnnygermano@metasperu.com'], `DOCUMENTOS PENDIENTES EN FRONT`, bodyHTML, null, null)
-          .catch(error => res.send(error));
+          emailController.sendEmail(['itperu@metasperu.com', 'johnnygermano@metasperu.com'], `DOCUMENTOS PENDIENTES EN FRONT`, bodyHTML, null, null)
+            .catch(error => res.send(error));
+        }
       }
     });
   });
@@ -2894,7 +2896,7 @@ io.on('connection', async (socket) => {
 
           await pool.query(`UPDATE TB_DOCUMENTOS_ERROR_SUNAT SET ENVIO_EMAIL ='true' WHERE CODIGO_DOCUMENTO = ${(doc || {}).CODIGO_DOCUMENTO};`);
 
-          emailController.sendEmail([(selectedLocal || {}).email || '', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com','paulodosreis@metasperu.com','carlosmoron@metasperu.com'], `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
+          emailController.sendEmail([(selectedLocal || {}).email || '', 'johnnygermano@metasperu.com', 'josecarreno@metasperu.com', 'paulodosreis@metasperu.com', 'carlosmoron@metasperu.com'], `FACTURA CON RUC ERRADO ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
             .catch(error => res.send(error));
 
           res.send('RECEPCION EXITOSA..!!');
