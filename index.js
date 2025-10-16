@@ -153,7 +153,7 @@ function emitVerificationDoc() {
 }
 
 function vrfDocumentPending() {
-  pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND;`).then(([documents]) => {
+  pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND ORDER BY OWNER;`).then(([documents]) => {
     let documentPending = [];
     const hoy = new Date();
     const fechaFormateada = hoy.toISOString().split('T')[0];
@@ -186,6 +186,7 @@ function vrfDocumentPending() {
                                                     <tr>
                                                         <th style="border: 1px solid #9E9E9E;border-right:0px;border-bottom: 1px solid black;background: #c3d5ed;" width="110px">DOCUMENTO</th>
                                                         <th style="border: 1px solid #9E9E9E;border-right:0px;border-bottom: 1px solid black;background: #c3d5ed;" width="110px">FECHA CREACION</th>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px;border-bottom: 1px solid black;background: #c3d5ed;" width="110px">PROPIETARIO</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>`;
@@ -193,6 +194,7 @@ function vrfDocumentPending() {
                                        bodyHTML += `<tr>
                                                         <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(doc || {}).NRO_DOCUMENT}</td>
                                                         <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(doc || {}).DATE}</td>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(doc || {}).OWNER}</td>
                                                     </tr>`;
                                       });
 
