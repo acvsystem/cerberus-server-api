@@ -50,7 +50,8 @@ class clsFacturacion {
             if (!(paseDataList || []).includes(cpParse)) {
                 pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND WHERE NRO_DOCUMENT = '${cpParse}';`).then(([documents]) => {
                     if (!(documents || []).length) {
-                        pool.query(`INSERT INTO TB_DETAIL_DOCUMENT_NO_SEND(NRO_DOCUMENT,TYPE_DOCUMENT,DATE,EXPIRATION_DATE)VALUES('${cpParse}','${(data || {}).cmpTipo}','${(data || {}).cmpFecha}', DATE_ADD('${(data || {}).cmpFecha}', INTERVAL 3 DAY))`);
+                        pool.query(`INSERT INTO TB_DETAIL_DOCUMENT_NO_SEND(NRO_DOCUMENT,TYPE_DOCUMENT,DATE,EXPIRATION_DATE,STATUS,OWNER)
+                            VALUES('${cpParse}','${(data || {}).cmpTipo}','${(data || {}).cmpFecha}', DATE_ADD('${(data || {}).cmpFecha}', INTERVAL 3 DAY),'PENDING','FRONT RETAIL')`);
                     }
                 });
 
