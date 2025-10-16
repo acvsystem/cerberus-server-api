@@ -171,8 +171,6 @@ function vrfDocumentPending() {
                 <thead>
                     <tr>
                         <th style="border: 1px solid #9E9E9E;border-right:0px;width: 250px;" width="110px">DOCUMENTO</th>
-                    </tr>
-                    <tr>
                         <th style="border: 1px solid #9E9E9E;border-right:0px;width: 250px;" width="110px">CREACION</th>
                     </tr>
                 </thead>
@@ -182,8 +180,6 @@ function vrfDocumentPending() {
           bodyHTML += `
                       <tr>
                           <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(doc || {}).NRO_DOCUMENT}</td>
-                      </tr>
-                      <tr>
                           <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(doc || {}).DATE}</td>
                       </tr>`;
         });
@@ -192,7 +188,7 @@ function vrfDocumentPending() {
                 </tbody>
             </table>`;
 
-        emailController.sendEmail(['itperu@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
+        emailController.sendEmail(['itperu@metasperu.com'], `DOCUMENTOS PENDIENTES EN FRONT`, bodyHTML, null, null)
           .catch(error => res.send(error));
       }
     });
