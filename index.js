@@ -163,30 +163,50 @@ function vrfDocumentPending() {
       if (expirationDate == fechaFormateada) {
         (documentPending || []).push(data);
       }
-(documentPending || []).push(data);
+      (documentPending || []).push(data);
       if (documents.length - 1 == i) {
-        let bodyHTML = `<p>Documentos pendientes.</p>
-        
-            <table align="left" cellspacing="0" style="border-right: 1px solid #9e9e9e;">
-                <thead>
-                    <tr>
-                        <th style="border: 1px solid #9E9E9E;border-right:0px;width: 250px;" width="110px">DOCUMENTO</th>
-                        <th style="border: 1px solid #9E9E9E;border-right:0px;width: 250px;" width="110px">CREACION</th>
+        let bodyHTML = `<table style="width:100%;border-spacing:0">
+                <tbody>
+                    <tr style="display:flex">
+                        <td>
+                            <table style="border-radius:4px;border-spacing:0;border:1px solid #155795;min-width:450px">
+                                <tbody>
+                                    <tr>
+                                        <td style="border-top-left-radius:4px;border-top-right-radius:4px;display:flex;background:#155795;padding:20px">
+                                            <p style="margin-left:72px;color:#fff;font-weight:700;font-size:30px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif"><span class="il">METAS PERU</span> S.A.C</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center;padding:10px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
+                                            <b>DOCUMENTOS PENDIENTES</b> 
+
+                                            <table align="left" cellspacing="0" style="width: 100%;border: solid 1px;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">DOCUMENTO</th>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px" width="110px">FECHA CREACION</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>`;
+                                      (documentPending || []).filter((doc) => {
+                                       bodyHTML += `<tr>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(doc || {}).NRO_DOCUMENT}</td>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(doc || {}).DATE}</td>
+                                                    </tr>`;
+                                      });
+
+                                  bodyHTML += `</tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>`;
-
-        (documentPending || []).filter((doc) => {
-          bodyHTML += `
-                      <tr>
-                          <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(doc || {}).NRO_DOCUMENT}</td>
-                          <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(doc || {}).DATE}</td>
-                      </tr>`;
-        });
-
-        bodyHTML += `
                 </tbody>
-            </table>`;
+            </table>`
+
+
 
         emailController.sendEmail(['itperu@metasperu.com'], `DOCUMENTOS PENDIENTES EN FRONT`, bodyHTML, null, null)
           .catch(error => res.send(error));
