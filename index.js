@@ -183,8 +183,8 @@ function vrfDocumentPending() {
                                             <table align="left" cellspacing="0" style="width: 100%;border: solid 1px;">
                                                 <thead>
                                                     <tr>
-                                                        <th style="border: 1px solid #9E9E9E;border-right:0px;border-bottom: 1px solid black;background: #d8e6ed;" width="110px">DOCUMENTO</th>
-                                                        <th style="border: 1px solid #9E9E9E;border-right:0px;border-bottom: 1px solid black;background: #d8e6ed;" width="110px">FECHA CREACION</th>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px;border-bottom: 1px solid black;background: rgb(195 213 237);" width="110px">DOCUMENTO</th>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px;border-bottom: 1px solid black;background: rgb(195 213 237);" width="110px">FECHA CREACION</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>`;
