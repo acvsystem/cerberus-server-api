@@ -22,7 +22,7 @@ class clsFacturacion {
         var paseDataList = [];
         var serverData = JSON.parse((dataVerify || {}).serverData);
         var frontData = JSON.parse((dataVerify || {}).frontData);
-
+        console.log(frontData);
 
         var codigoFront = (dataVerify || {}).codigoFront;
         //console.log(codigoFront, dataNoFound);
