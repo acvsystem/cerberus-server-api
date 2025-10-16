@@ -179,7 +179,7 @@ function vrfDocumentPending() {
                                     <tr>
                                         <td style="text-align: center;padding:10px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
                                             <b>DOCUMENTOS PENDIENTES</b> 
-
+                                            <br>
                                             <table align="left" cellspacing="0" style="width: 100%;border: solid 1px;">
                                                 <thead>
                                                     <tr>
