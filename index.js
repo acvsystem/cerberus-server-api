@@ -160,10 +160,11 @@ function vrfDocumentPending() {
 
     (documents || []).filter((data, i) => {
       let expirationDate = (data || {})['EXPIRATION_DATE'];
+
       if (expirationDate == fechaFormateada) {
         (documentPending || []).push(data);
       }
-      (documentPending || []).push(data);
+
       if (documents.length - 1 == i) {
         let bodyHTML = `<table style="width:100%;border-spacing:0">
                 <tbody>
@@ -206,9 +207,7 @@ function vrfDocumentPending() {
                 </tbody>
             </table>`
 
-
-
-        emailController.sendEmail(['itperu@metasperu.com'], `DOCUMENTOS PENDIENTES EN FRONT`, bodyHTML, null, null)
+        emailController.sendEmail(['itperu@metasperu.com','johnnygermano@metasperu.com'], `DOCUMENTOS PENDIENTES EN FRONT`, bodyHTML, null, null)
           .catch(error => res.send(error));
       }
     });
