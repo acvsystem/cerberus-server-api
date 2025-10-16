@@ -110,12 +110,20 @@ const task_6 = cron.schedule('*/30 * * * *', () => {
   onEmitAlertaTraffic();
 });
 
+const task_7 = cron.schedule('00 7 * * 0', () => {
+  console.log('00 7 * * 0')
+  vrfDocumentPending();
+});
+
+vrfDocumentPending();
+
 task_1.start();
 task_2.start();
 task_3.start();
 task_4.start();
 task_5.start();
 task_6.start();
+task_7.start();
 
 function onEmitAlertaTraffic() {
 
@@ -142,6 +150,53 @@ function emitVerificationSUNAT() {
 
 function emitVerificationDoc() {
   io.emit('consultingToFront', 'emitVerificationDoc');
+}
+
+function vrfDocumentPending() {
+  pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND;`).then(([documents]) => {
+    let documentPending = [];
+    const hoy = new Date();
+    const fechaFormateada = hoy.toISOString().split('T')[0];
+
+    (documents || []).filter((data, i) => {
+      let expirationDate = (data || {})['EXPIRATION_DATE'];
+      if (expirationDate == fechaFormateada) {
+        (documentPending || []).push(data);
+      }
+
+      if (documents.length - 1 == i) {
+        let bodyHTML = `<p>Documentos pendientes.</p>
+        
+            <table align="left" cellspacing="0" style="border-right: 1px solid #9e9e9e;">
+                <thead>
+                    <tr>
+                        <th style="border: 1px solid #9E9E9E;border-right:0px;width: 250px;" width="110px">DOCUMENTO</th>
+                    </tr>
+                    <tr>
+                        <th style="border: 1px solid #9E9E9E;border-right:0px;width: 250px;" width="110px">CREACION</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+        (documentPending || []).filter((doc) => {
+          bodyHTML += `
+                      <tr>
+                          <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(doc || {}).NRO_DOCUMENT}</td>
+                      </tr>
+                      <tr>
+                          <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(doc || {}).DATE}</td>
+                      </tr>`;
+        });
+
+        bodyHTML += `
+                </tbody>
+            </table>`;
+
+        emailController.sendEmail(['itperu@metasperu.com'], `ALERTA TIENDAS SIN HORARIO CREADO`, bodyHTML, null, null)
+          .catch(error => res.send(error));
+      }
+    });
+  });
 }
 
 function onConsultarHorarioOficina(index, fecha, documento) {
