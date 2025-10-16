@@ -163,7 +163,7 @@ function vrfDocumentPending() {
       if (expirationDate == fechaFormateada) {
         (documentPending || []).push(data);
       }
-
+(documentPending || []).push(data);
       if (documents.length - 1 == i) {
         let bodyHTML = `<p>Documentos pendientes.</p>
         
