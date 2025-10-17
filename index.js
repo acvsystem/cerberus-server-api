@@ -745,8 +745,7 @@ io.on('connection', async (socket) => {
         } else {
           pool.query(`SELECT * FROM tb_traffic_counter_tienda WHERE IP = '${(response || {}).ip}' AND CODIGO_TIENDA = '${(response || {}).code}';`)
             .then(([rs2]) => {
-              console.log(rs2);
-              pool.query(`UPDATE tb_traffic_counter_tienda SET CALL_NOT_FOUND = 0 WHERE ID_TRAFFIC = ${rs2[0]['ID_TRAFFIC']}`);
+              pool.query(`UPDATE tb_traffic_counter_tienda SET CALL_NOT_FOUND = 0 WHERE ID_TRAFFIC = ${((rs2 || [])[0] || {})['ID_TRAFFIC']}`);
             });
         }
       });
