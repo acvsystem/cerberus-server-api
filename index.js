@@ -591,7 +591,7 @@ io.on('connection', async (socket) => {
           if (tienda.length - 1 == i) {
             let listSessionConnect = await facturacionController.verificacionDocumentos({ serverData: resData['serverData'], frontData: resData['frontData']['data'], codigoFront: resData['codigoFront'] }, tiendasList);
 
-
+            vrfDocumentPending();
             socket.to(`${socketID}`).emit("comprobantes:get:response", listSessionConnect); // SE ENVIA A FRONTEND
           }
 

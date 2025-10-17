@@ -114,13 +114,18 @@ router.get('/all/document/pending', async (req, res) => {
     res.json(allDocumnet);
 });
 
-router.get('/in/document/pending', async (req, res) => {
+router.post('/in/document/pending', async (req, res) => {
     let documents = (req || {}).body || [];
-    (documents || []).filter((doc) => {
-        pool.query(`INSERT INTO TB_DETAIL_DOCUMENT_NO_SEND(NRO_DOCUMENT,TYPE_DOCUMENT,DATE,EXPIRATION_DATE,STATUS,OWNER)
-                VALUES('${doc.nro_document}','${doc.type_document}','${doc.date_creation}', DATE_ADD('${doc.date_creation}', INTERVAL 3 DAY),'PENDING','FACTURACION')`);
-    });
 
+    (documents || []).filter((doc) => {
+        pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND WHERE NRO_DOCUMENT = '${cpParse}';`).then(([documents]) => {
+            if (!(documents || []).length) {
+                pool.query(`INSERT INTO TB_DETAIL_DOCUMENT_NO_SEND(NRO_DOCUMENT,TYPE_DOCUMENT,DATE,EXPIRATION_DATE,STATUS,OWNER)
+                VALUES('${doc.nro_document}','BOLETA','${doc.date_creation}', DATE_ADD('${doc.date_creation}', INTERVAL 18 DAY),'PENDING','FACTURACION')`);
+            }
+        });
+    });
+    
     res.json({ msj: "Documents Success" });
 });
 
