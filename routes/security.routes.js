@@ -128,7 +128,7 @@ router.post('/in/document/pending', async (req, res) => {
 
     let [data] = await pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND;`);
 
-    res.json({ data: data });
+    res.json(data);
 });
 
 router.post('/del/document/pending', async (req, res) => {
