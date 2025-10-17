@@ -664,7 +664,7 @@ io.on('connection', async (socket) => {
       .then(([rs]) => {
         console.log(response);
         if (rs[0]['IS_ALERT_TRAFFIC_COUNTER'] && !(response || {}).active) {
-
+          console.log("NOT FOUND ***************** ",response);
           pool.query(`SELECT * FROM tb_traffic_counter_tienda WHERE IP = '${(response || {}).ip}' AND CODIGO_TIENDA = '${(response || {}).code}';`)
             .then(([rs]) => {
 
