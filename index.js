@@ -735,7 +735,7 @@ io.on('connection', async (socket) => {
                     </tr>
                 </tbody>
             </table>`;
-
+                console.log("ENVIANDO EMAIL...!!!");
                 /* emailController.sendEmail('johnnygermano@metasperu.com', `ALERTA TRAFFIC - ${(selectedLocal || {}).name}`, bodyHTML, null, (selectedLocal || {}).name)
                    .catch(err => console.log(err));*/
               }
