@@ -737,13 +737,16 @@ io.on('connection', async (socket) => {
                 </tbody>
             </table>`;
 
-                emailController.sendEmail('johnnygermano@metasperu.com', `ALERTA TRAFFIC - ${(selectedLocal || {}).name}`, bodyHTML, null, (selectedLocal || {}).name)
-                  .catch(err => console.log(err));
+                /* emailController.sendEmail('johnnygermano@metasperu.com', `ALERTA TRAFFIC - ${(selectedLocal || {}).name}`, bodyHTML, null, (selectedLocal || {}).name)
+                   .catch(err => console.log(err));*/
               }
 
             });
         } else {
-          pool.query(`UPDATE tb_traffic_counter_tienda SET CALL_NOT_FOUND = 0 WHERE ID_TRAFFIC = ${rs[0]['ID_TRAFFIC']}`)
+          pool.query(`SELECT * FROM tb_traffic_counter_tienda WHERE IP = ${(response || {}).ip} AND SERIE_TIENDA = '${(response || {}).code}';`)
+            .then(([rs]) => {
+              pool.query(`UPDATE tb_traffic_counter_tienda SET CALL_NOT_FOUND = 0 WHERE ID_TRAFFIC = ${rs[0]['ID_TRAFFIC']}`);
+            });
         }
       });
 
