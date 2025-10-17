@@ -665,7 +665,7 @@ io.on('connection', async (socket) => {
         console.log(response);
         if (rs[0]['IS_ALERT_TRAFFIC_COUNTER'] && !(response || {}).active) {
 
-          pool.query(`SELECT * FROM tb_traffic_counter_tienda WHERE IP = ${(response || {}).ip} AND SERIE_TIENDA = '${(response || {}).code}';`)
+          pool.query(`SELECT * FROM tb_traffic_counter_tienda WHERE IP = '${(response || {}).ip}' AND SERIE_TIENDA = '${(response || {}).code}';`)
             .then(([rs]) => {
 
               if (rs[0]['CALL_NOT_FOUND'] <= callNumber) {
@@ -743,7 +743,7 @@ io.on('connection', async (socket) => {
 
             });
         } else {
-          pool.query(`SELECT * FROM tb_traffic_counter_tienda WHERE IP = ${(response || {}).ip} AND SERIE_TIENDA = '${(response || {}).code}';`)
+          pool.query(`SELECT * FROM tb_traffic_counter_tienda WHERE IP = '${(response || {}).ip}' AND SERIE_TIENDA = '${(response || {}).code}';`)
             .then(([rs]) => {
               pool.query(`UPDATE tb_traffic_counter_tienda SET CALL_NOT_FOUND = 0 WHERE ID_TRAFFIC = ${rs[0]['ID_TRAFFIC']}`);
             });
