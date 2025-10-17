@@ -657,7 +657,7 @@ io.on('connection', async (socket) => {
     console.log(data);
     let socketID = data['configuration']['socket'];
     let response = data['data'];
-
+    let callNumber = 3;
     pool.query(`SELECT ID_CONF_HP,ID_TIENDA,SERIE_TIENDA,DESCRIPCION,IS_FREE_HORARIO,IS_FREE_PAPELETA,IS_ALERT_TRAFFIC_COUNTER 
       FROM TB_CONFIGURACION_HORARIO_PAP INNER JOIN TB_LISTA_TIENDA ON TB_LISTA_TIENDA.ID_TIENDA = TB_CONFIGURACION_HORARIO_PAP.ID_TIENDA_HP 
       WHERE SERIE_TIENDA = '${(response || {}).code}';`)
@@ -665,32 +665,40 @@ io.on('connection', async (socket) => {
         console.log(response);
         if (rs[0]['IS_ALERT_TRAFFIC_COUNTER'] && !(response || {}).active) {
 
-          let tiendasList = [
-            { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
-            { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
-            { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@metasperu.com' },
-            { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@metasperu.com' },
-            { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@metasperu.com' },
-            { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@metasperu.com' },
-            { code: '7C', name: 'BBW SAN MIGUEL', email: 'bbwsanmiguel@metasperu.com' },
-            { code: '9C', name: 'VS SAN MIGUEL', email: 'vssanmiguel@metasperu.com' },
-            { code: '7D', name: 'BBW SALAVERRY', email: 'bbwsalaverry@metasperu.com' },
-            { code: '9I', name: 'VS SALAVERRY', email: 'vssalaverry@metasperu.com' },
-            { code: '9G', name: 'VS MALL DEL SUR', email: 'vsmalldelsur@metasperu.com' },
-            { code: '9H', name: 'VS PURUCHUCO', email: 'vspuruchuco@metasperu.com' },
-            { code: '9M', name: 'VS ECOMMERCE', email: 'vsecommpe@metasperu.com' },
-            { code: '7F', name: 'BBW ECOMMERCE', email: 'bbwecommperu@metasperu.com' },
-            { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@metasperu.com' },
-            { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@metasperu.com' },
-            { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@metasperu.com' },
-            { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@metasperu.com' },
-            { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com' },
-            { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
-          ];
+          pool.query(`SELECT * FROM tb_traffic_counter_tienda WHERE IP = ${(response || {}).ip} AND SERIE_TIENDA = '${(response || {}).code}';`)
+            .then(([rs]) => {
 
-          let selectedLocal = tiendasList.find((td) => td.code == (response || {}).code) || {};
+              if (rs[0]['CALL_NOT_FOUND'] <= callNumber) {
+                pool.query(`UPDATE tb_traffic_counter_tienda SET CALL_NOT_FOUND = ${rs[0]['CALL_NOT_FOUND'] + 1} WHERE ID_TRAFFIC = ${rs[0]['ID_TRAFFIC']}`)
+              }
 
-          let bodyHTML = `<table style="width:100%;border-spacing:0">
+              if (rs[0]['CALL_NOT_FOUND'] >= callNumber) {
+                let tiendasList = [
+                  { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
+                  { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
+                  { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@metasperu.com' },
+                  { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@metasperu.com' },
+                  { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@metasperu.com' },
+                  { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@metasperu.com' },
+                  { code: '7C', name: 'BBW SAN MIGUEL', email: 'bbwsanmiguel@metasperu.com' },
+                  { code: '9C', name: 'VS SAN MIGUEL', email: 'vssanmiguel@metasperu.com' },
+                  { code: '7D', name: 'BBW SALAVERRY', email: 'bbwsalaverry@metasperu.com' },
+                  { code: '9I', name: 'VS SALAVERRY', email: 'vssalaverry@metasperu.com' },
+                  { code: '9G', name: 'VS MALL DEL SUR', email: 'vsmalldelsur@metasperu.com' },
+                  { code: '9H', name: 'VS PURUCHUCO', email: 'vspuruchuco@metasperu.com' },
+                  { code: '9M', name: 'VS ECOMMERCE', email: 'vsecommpe@metasperu.com' },
+                  { code: '7F', name: 'BBW ECOMMERCE', email: 'bbwecommperu@metasperu.com' },
+                  { code: '9K', name: 'VS MEGA PLAZA', email: 'vsmegaplaza@metasperu.com' },
+                  { code: '9L', name: 'VS MINKA', email: 'vsoutletminka@metasperu.com' },
+                  { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@metasperu.com' },
+                  { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@metasperu.com' },
+                  { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com' },
+                  { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
+                ];
+
+                let selectedLocal = tiendasList.find((td) => td.code == (response || {}).code) || {};
+
+                let bodyHTML = `<table style="width:100%;border-spacing:0">
                 <tbody>
                     <tr style="display:flex">
                         <td>
@@ -729,8 +737,13 @@ io.on('connection', async (socket) => {
                 </tbody>
             </table>`;
 
-          emailController.sendEmail('johnnygermano@metasperu.com', `ALERTA TRAFFIC - ${(selectedLocal || {}).name}`, bodyHTML, null, (selectedLocal || {}).name)
-            .catch(err => console.log(err));
+                emailController.sendEmail('johnnygermano@metasperu.com', `ALERTA TRAFFIC - ${(selectedLocal || {}).name}`, bodyHTML, null, (selectedLocal || {}).name)
+                  .catch(err => console.log(err));
+              }
+
+            });
+        } else {
+          pool.query(`UPDATE tb_traffic_counter_tienda SET CALL_NOT_FOUND = 0 WHERE ID_TRAFFIC = ${rs[0]['ID_TRAFFIC']}`)
         }
       });
 
