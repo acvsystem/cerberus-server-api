@@ -133,7 +133,7 @@ router.post('/in/document/pending', async (req, res) => {
 
 router.post('/del/document/pending', async (req, res) => {
     let documents = (req || {}).body || [];
-    console.log(documents);
+    console.log("DELETE",documents);
     (documents || []).filter((doc) => {
         pool.query(`DELETE FROM TB_DETAIL_DOCUMENT_NO_SEND WHERE NRO_DOCUMENT = '${doc.nro_document}';`)
     });
