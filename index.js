@@ -663,7 +663,7 @@ io.on('connection', async (socket) => {
       WHERE SERIE_TIENDA = '${(response || {}).code}';`)
       .then(([rs]) => {
         if (rs[0]['IS_ALERT_TRAFFIC_COUNTER'] && !(response || {}).active) {
-          console.log("NOT FOUND ***************** ",response);
+          console.log("NOT FOUND ***************** ", response);
           pool.query(`SELECT * FROM tb_traffic_counter_tienda WHERE IP = '${(response || {}).ip}' AND CODIGO_TIENDA = '${(response || {}).code}';`)
             .then(([rs]) => {
 
@@ -742,10 +742,12 @@ io.on('connection', async (socket) => {
 
             });
         } else {
-          console.log("TRAFFIC: ",response);
+          console.log("TRAFFIC: ", response);
           pool.query(`SELECT * FROM tb_traffic_counter_tienda WHERE IP = '${(response || {}).ip}' AND CODIGO_TIENDA = '${(response || {}).code}';`)
             .then(([rs2]) => {
-              pool.query(`UPDATE tb_traffic_counter_tienda SET CALL_NOT_FOUND = 0 WHERE ID_TRAFFIC = ${((rs2 || [])[0] || {})['ID_TRAFFIC']}`);
+              if ((rs2 || []).length) {
+                pool.query(`UPDATE tb_traffic_counter_tienda SET CALL_NOT_FOUND = 0 WHERE ID_TRAFFIC = ${((rs2 || [])[0] || {})['ID_TRAFFIC']}`);
+              }
             });
         }
       });
