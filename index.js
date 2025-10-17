@@ -662,7 +662,6 @@ io.on('connection', async (socket) => {
       FROM TB_CONFIGURACION_HORARIO_PAP INNER JOIN TB_LISTA_TIENDA ON TB_LISTA_TIENDA.ID_TIENDA = TB_CONFIGURACION_HORARIO_PAP.ID_TIENDA_HP 
       WHERE SERIE_TIENDA = '${(response || {}).code}';`)
       .then(([rs]) => {
-        console.log(response);
         if (rs[0]['IS_ALERT_TRAFFIC_COUNTER'] && !(response || {}).active) {
           console.log("NOT FOUND ***************** ",response);
           pool.query(`SELECT * FROM tb_traffic_counter_tienda WHERE IP = '${(response || {}).ip}' AND CODIGO_TIENDA = '${(response || {}).code}';`)
@@ -743,6 +742,7 @@ io.on('connection', async (socket) => {
 
             });
         } else {
+          console.log("TRAFFIC: ",response);
           pool.query(`SELECT * FROM tb_traffic_counter_tienda WHERE IP = '${(response || {}).ip}' AND CODIGO_TIENDA = '${(response || {}).code}';`)
             .then(([rs2]) => {
               pool.query(`UPDATE tb_traffic_counter_tienda SET CALL_NOT_FOUND = 0 WHERE ID_TRAFFIC = ${((rs2 || [])[0] || {})['ID_TRAFFIC']}`);
