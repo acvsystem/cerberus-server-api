@@ -133,7 +133,8 @@ function onEmitAlertaTraffic() {
 
       let configuration = {
         socket: 'backend',
-        code: (td || {}).SERIE_TIENDA
+        code: (td || {}).SERIE_TIENDA,
+        isEmail: true
       };
 
       io.emit("trafficGetOnline", configuration);
@@ -643,11 +644,12 @@ io.on('connection', async (socket) => {
     socket.to(`${socketID}`).emit("terminales:get:name:response", response); // ENVIA A FRONTEND
   });
 
-  socket.on('traffic:get:online', (code) => {
+  socket.on('traffic:get:online', (request) => {
 
     let configuration = {
       socket: (socket || {}).id,
-      code: code
+      code: request.code,
+      isEmail: request.isEmail
     };
 
     socket.broadcast.emit("trafficGetOnline", configuration);
@@ -656,8 +658,9 @@ io.on('connection', async (socket) => {
   socket.on('traffic:get:online:py:response', async (data) => {
     console.log(data);
     let socketID = data['configuration']['socket'];
+    let isEmail = data['configuration']['isEmail'];
     let response = data['data'];
-    let callNumber = 3;
+    let callNumber = 6;
     pool.query(`SELECT ID_CONF_HP,ID_TIENDA,SERIE_TIENDA,DESCRIPCION,IS_FREE_HORARIO,IS_FREE_PAPELETA,IS_ALERT_TRAFFIC_COUNTER 
       FROM TB_CONFIGURACION_HORARIO_PAP INNER JOIN TB_LISTA_TIENDA ON TB_LISTA_TIENDA.ID_TIENDA = TB_CONFIGURACION_HORARIO_PAP.ID_TIENDA_HP 
       WHERE SERIE_TIENDA = '${(response || {}).code}';`)
@@ -667,7 +670,7 @@ io.on('connection', async (socket) => {
           pool.query(`SELECT * FROM tb_traffic_counter_tienda WHERE IP = '${(response || {}).ip}' AND CODIGO_TIENDA = '${(response || {}).code}';`)
             .then(([rs]) => {
 
-              if (rs[0]['CALL_NOT_FOUND'] <= callNumber) {
+              if (rs[0]['CALL_NOT_FOUND'] <= callNumber && isEmail) {
                 pool.query(`UPDATE tb_traffic_counter_tienda SET CALL_NOT_FOUND = ${rs[0]['CALL_NOT_FOUND'] + 1} WHERE ID_TRAFFIC = ${rs[0]['ID_TRAFFIC']}`)
               }
 
@@ -735,9 +738,9 @@ io.on('connection', async (socket) => {
                     </tr>
                 </tbody>
             </table>`;
-                console.log("ENVIANDO EMAIL...!!!");
-                /* emailController.sendEmail('johnnygermano@metasperu.com', `ALERTA TRAFFIC - ${(selectedLocal || {}).name}`, bodyHTML, null, (selectedLocal || {}).name)
-                   .catch(err => console.log(err));*/
+
+                emailController.sendEmail('johnnygermano@metasperu.com', `ALERTA TRAFFIC - ${(selectedLocal || {}).name}`, bodyHTML, null, (selectedLocal || {}).name)
+                  .catch(err => console.log(err));
               }
 
             });
