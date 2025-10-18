@@ -154,7 +154,7 @@ function emitVerificationDoc() {
 }
 
 function vrfDocumentPending() {
-  pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND WHERE ISEXPIRED = 1 ORDER BY OWNER;`).then(([documents]) => {
+  pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND ORDER BY OWNER;`).then(([documents]) => {
     let documentPending = [];
     const hoy = new Date();
     const fechaFormateada = hoy.toISOString().split('T')[0];
