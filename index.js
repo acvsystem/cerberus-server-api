@@ -168,7 +168,7 @@ function vrfDocumentPending() {
       }
 
       if (documents.length - 1 == i) {
-        if (!(data || {})['EXPIRATION_DATE']) {
+        if (!(data || {})['ISNOTIFICATED']) {
           if ((documentPending || []).length) {
             let bodyHTML = `<table style="width:100%;border-spacing:0">
                 <tbody>
