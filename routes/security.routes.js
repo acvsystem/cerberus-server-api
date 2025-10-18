@@ -108,7 +108,7 @@ router.get('/service/cliente/list/delete', async (req, res) => {
 });
 
 router.get('/all/document/pending', async (req, res) => {
-    let [data] = await pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND;`);
+    let [data] = await pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND WHERE ISEXPIRED = 1;`);
     console.log(data);
     let allDocumnet = data || [];
     res.json(allDocumnet);
