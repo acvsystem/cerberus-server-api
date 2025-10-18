@@ -163,14 +163,15 @@ function vrfDocumentPending() {
       let expirationDate = (data || {})['EXPIRATION_DATE'];
 
       if (expirationDate == fechaFormateada) {
-        (documentPending || []).push(data);
-        pool.query(`UPDATE TB_DETAIL_DOCUMENT_NO_SEND SET ISEXPIRED = 1, ISNOTIFICATED = 1 WHERE ID_DOCUMENT = ${(data || {})['ID_DOCUMENT']};`);
+        if ((data || {})['ISNOTIFICATED'] == 0) {
+          (documentPending || []).push(data);
+          pool.query(`UPDATE TB_DETAIL_DOCUMENT_NO_SEND SET ISEXPIRED = 1, ISNOTIFICATED = 1 WHERE ID_DOCUMENT = ${(data || {})['ID_DOCUMENT']};`);
+        }
       }
 
       if (documents.length - 1 == i) {
-        if ((data || {})['ISNOTIFICATED'] == 0) {
-          if ((documentPending || []).length) {
-            let bodyHTML = `<table style="width:100%;border-spacing:0">
+        if ((documentPending || []).length) {
+          let bodyHTML = `<table style="width:100%;border-spacing:0">
                 <tbody>
                     <tr style="display:flex">
                         <td>
@@ -194,15 +195,15 @@ function vrfDocumentPending() {
                                                     </tr>
                                                 </thead>
                                                 <tbody>`;
-            (documentPending || []).filter((doc) => {
-              bodyHTML += `<tr>
+          (documentPending || []).filter((doc) => {
+            bodyHTML += `<tr>
                                                         <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(doc || {}).NRO_DOCUMENT}</td>
                                                         <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(doc || {}).DATE}</td>
                                                         <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(doc || {}).OWNER}</td>
                                                     </tr>`;
-            });
+          });
 
-            bodyHTML += `</tbody>
+          bodyHTML += `</tbody>
                                             </table>
                                         </td>
                                     </tr>
@@ -213,9 +214,8 @@ function vrfDocumentPending() {
                 </tbody>
             </table>`
 
-            emailController.sendEmail(['itperu@metasperu.com'], `DOCUMENTOS PENDIENTES EN FRONT`, bodyHTML, null, null)
-              .catch(error => res.send(error));
-          }
+          emailController.sendEmail(['itperu@metasperu.com'], `DOCUMENTOS PENDIENTES EN FRONT`, bodyHTML, null, null)
+            .catch(error => res.send(error));
         }
       }
     });
