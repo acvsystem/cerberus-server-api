@@ -213,7 +213,7 @@ function vrfDocumentPending() {
                 </tbody>
             </table>`
 
-            emailController.sendEmail(['itperu@metasperu.com', 'johnnygermano@metasperu.com'], `DOCUMENTOS PENDIENTES EN FRONT`, bodyHTML, null, null)
+            emailController.sendEmail(['itperu@metasperu.com'], `DOCUMENTOS PENDIENTES EN FRONT`, bodyHTML, null, null)
               .catch(error => res.send(error));
           }
         }
