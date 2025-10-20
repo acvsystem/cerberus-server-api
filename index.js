@@ -1427,8 +1427,7 @@ io.on('connection', async (socket) => {
                 </tbody>
             </table>`;
 
-        //  let correo = ['itperu@metasperu.com', 'johnnygermano@metasperu.com', 'metasperurrhh@gmail.com', 'metasperurrhh2@gmail.com'];
-        let correo = ['itperu@metasperu.com'];
+        let correo = ['itperu@metasperu.com', 'johnnygermano@metasperu.com', 'metasperurrhh@gmail.com', 'metasperurrhh2@gmail.com'];
         emailController.sendEmail(correo, `NOTIFICACION H.EXTRA RECHAZADO POR MARCACION - ${(selectedLocal || {}).name || ''}`, bodyHTML, null, null)
           .catch(error => res.send(error));
       }
