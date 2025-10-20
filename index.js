@@ -154,6 +154,7 @@ function emitVerificationDoc() {
 }
 
 function vrfDocumentPending() {
+  /*
   pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND ORDER BY OWNER;`).then(([documents]) => {
     let documentPending = [];
     const hoy = new Date();
@@ -219,7 +220,7 @@ function vrfDocumentPending() {
         }
       }
     });
-  });
+  });*/
 }
 
 function onConsultarHorarioOficina(index, fecha, documento) {
