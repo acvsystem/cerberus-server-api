@@ -1353,7 +1353,7 @@ io.on('connection', async (socket) => {
 
     if (aprobado == 'rechazado') {
 
-      if ((data || {}).comentario == 'No marco su salida de turno' || (data || {}).comentario == 'No marco su salida a break') {
+      if ((data || {}).comentario != 'Error de sistema') {
         let tiendasList = [
           { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
           { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
