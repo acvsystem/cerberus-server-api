@@ -314,6 +314,11 @@ class clsSchedule {
             res.status(400).json(mdwErrorHandler.error({ status: 400, type: 'Error', message: err, api: '/schedule/observation', data: [] }));
         });
     }
+    allLimitRegister = (req, res) => {
+        let request = ((req || []).query || []);
+        console.log(request);
+        res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/schedule/observation', data: [] }));
+    }
 
     delObservation = (req, res) => {
         let id_observation = ((req || {}).query || {}).id_observation;
