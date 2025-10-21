@@ -316,7 +316,7 @@ class clsSchedule {
     }
     allLimitRegister = (req, res) => {
         let request = ((req || []).query || []);
-        pool.query(`SELECT RANGO_DIAS FROM tb_horario_property where codigo_tienda = '${(request || {}).code}' ORDER BY ID_HORARIO DESC LIMIT 1;`).then((schedule) => {
+        pool.query(`SELECT RANGO_DIAS FROM tb_horario_property where codigo_tienda = '${(request || {}).code}' ORDER BY ID_HORARIO DESC LIMIT 1;`).then(([schedule]) => {
             let dataResponse = [];
             console.log(schedule);
             (dataResponse || []).push({ rangeSchedule: ((schedule || [])[0] || {})['RANGO_DIAS'] });
