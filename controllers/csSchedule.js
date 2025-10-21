@@ -316,8 +316,11 @@ class clsSchedule {
     }
     allLimitRegister = (req, res) => {
         let request = ((req || []).query || []);
-        console.log(request);
-        res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/schedule/observation', data: [] }));
+        pool.query(`SELECT RANGO_DIAS FROM tb_horario_property where codigo_tienda = '${(request || {}).code}' ORDER BY ID_HORARIO DESC LIMIT 1;`).then((schedule) => {
+            let dataResponse = [];
+            (dataResponse || []).push({ rangeSchedule: ((schedule || [])[0] || {})['RANGO_DIAS'] });
+            res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/schedule/limit/register', data: dataResponse }));
+        });
     }
 
     delObservation = (req, res) => {
