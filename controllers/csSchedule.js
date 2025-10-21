@@ -318,6 +318,7 @@ class clsSchedule {
         let request = ((req || []).query || []);
         pool.query(`SELECT RANGO_DIAS FROM tb_horario_property where codigo_tienda = '${(request || {}).code}' ORDER BY ID_HORARIO DESC LIMIT 1;`).then((schedule) => {
             let dataResponse = [];
+            console.log(schedule);
             (dataResponse || []).push({ rangeSchedule: ((schedule || [])[0] || {})['RANGO_DIAS'] });
             res.status(200).json(mdwErrorHandler.error({ status: 200, type: 'OK', message: 'OK', api: '/schedule/limit/register', data: dataResponse }));
         });
