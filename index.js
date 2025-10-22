@@ -154,7 +154,7 @@ function emitVerificationDoc() {
 }
 
 function vrfDocumentPending() {
-  
+
   pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND ORDER BY OWNER;`).then(([documents]) => {
     let documentPending = [];
     const hoy = new Date();
@@ -582,6 +582,10 @@ io.on('connection', async (socket) => {
     }
   });
 
+  socket.on('evalue:document:pending:get', () => {
+    vrfDocumentPending();
+  });
+
   socket.on('comprobantes:get:sbk:response', async (resData) => { // RESPUESTA DESDE EL SERVIDOR BACKUP
 
     if ((resData || "").id == "server") {
@@ -596,7 +600,6 @@ io.on('connection', async (socket) => {
           if (tienda.length - 1 == i) {
             let listSessionConnect = await facturacionController.verificacionDocumentos({ serverData: resData['serverData'], frontData: resData['frontData']['data'], codigoFront: resData['codigoFront'] }, tiendasList);
 
-            vrfDocumentPending();
             socket.to(`${socketID}`).emit("comprobantes:get:response", listSessionConnect); // SE ENVIA A FRONTEND
           }
 
