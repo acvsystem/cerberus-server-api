@@ -174,7 +174,7 @@ function sendNotification(usuario, notificacion) {
 function emitClearClient() {
   pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`).then(([data]) => {
     let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
-    io.broadcast.emit("limpiarCliente", listCliente, '');
+    io.emit("limpiarCliente", listCliente, '');
   });
 }
 
