@@ -511,7 +511,6 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('evalue:document:pending:get', () => {
-    vrfDocumentPending();
     socket.broadcast.emit("documentPendingGetSBK", '');
   });
 
