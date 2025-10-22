@@ -38,6 +38,12 @@ class clsSessionSocket {
             }
 
             listSession = await this.sessionOneList(codigo);
+
+            let [data] = await pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`);
+
+            let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
+
+            console.log(listCliente);
         } else {
             listSession = await this.sessionList();
         }
@@ -71,7 +77,7 @@ class clsSessionSocket {
 
         let [arTraffic] = await pool.query(`SELECT * FROM tb_traffic_counter_tienda WHERE CODIGO_TIENDA = '${codigo}';`) || [];
         ((data || [])[0] || {})['TRAFFIC_COUNTERS'] = arTraffic || [];
-        
+
         return data;
     }
 

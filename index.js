@@ -228,7 +228,7 @@ function vrfDocumentPending() {
                   </tbody>
               </table>`
 
-          emailController.sendEmail(['itperu@metasperu.com','johnnygermano@metasperu.com'], `DOCUMENTOS PENDIENTES EN FRONT`, bodyHTML, null, null)
+          emailController.sendEmail(['itperu@metasperu.com', 'johnnygermano@metasperu.com'], `DOCUMENTOS PENDIENTES EN FRONT`, bodyHTML, null, null)
             .catch(error => res.send(error));
         }
       }
@@ -347,6 +347,11 @@ io.on('connection', async (socket) => {
     listClient.id = socket.id;
     let listSessionConnect = await sessionSocket.connect();
     socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
+
+
+
+
+
     let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
 
   }
