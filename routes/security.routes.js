@@ -116,7 +116,7 @@ router.get('/all/document/pending', async (req, res) => {
 
 router.post('/in/document/pending', async (req, res) => {
     let documents = (req || {}).body || [];
-    /*
+    
     (documents || []).filter((doc) => {
         pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND WHERE NRO_DOCUMENT = '${doc.nro_document}';`).then(([documents]) => {
             if (!(documents || []).length) {
@@ -127,7 +127,7 @@ router.post('/in/document/pending', async (req, res) => {
     });
 
     let [data] = await pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND;`);
-*/
+
     res.json(data);
 });
 

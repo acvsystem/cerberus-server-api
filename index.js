@@ -154,7 +154,7 @@ function emitVerificationDoc() {
 }
 
 function vrfDocumentPending() {
-  /*
+  
   pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND ORDER BY OWNER;`).then(([documents]) => {
     let documentPending = [];
     const hoy = new Date();
@@ -220,7 +220,7 @@ function vrfDocumentPending() {
         }
       }
     });
-  });*/
+  });
 }
 
 function onConsultarHorarioOficina(index, fecha, documento) {
@@ -2618,23 +2618,6 @@ io.on('connection', async (socket) => {
 
     res.json({ message: 'success' });
   });
-
-  /*
-   app.post('/uploadMultipleSingleField', upload.array('multipleFiles', 5), (req, res) => {
-     // The uploaded files are available in req.files
-     res.json({ message: 'Multiple files from a single field uploaded successfully!' });
-   });
- 
-   app.post('/uploadMultipleFields', upload.fields([
-     { name: 'field1Files', maxCount: 5 },
-     { name: 'field2Files', maxCount: 5 }
-   ]), (req, res) => {
-     // The uploaded files are available in req.files
-     // Use req.files['field1Files'] for files from the first field
-     // Use req.files['field2Files'] for files from the second field
-     res.json({ message: 'Multiple files from multiple fields uploaded successfully!' });
-   });
- */
 
   app.post('/oneListDirectory', async (req, res) => {
     let arDirectory = [];
