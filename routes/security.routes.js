@@ -116,7 +116,7 @@ router.get('/all/document/pending', async (req, res) => {
 
 router.post('/in/document/pending', async (req, res) => {
     let documents = (req || {}).body || [];
-    
+
     (documents || []).filter((doc) => {
         pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND WHERE NRO_DOCUMENT = '${doc.nro_document}';`).then(([documents]) => {
             if (!(documents || []).length) {
@@ -133,13 +133,86 @@ router.post('/in/document/pending', async (req, res) => {
 
 router.post('/del/document/pending', async (req, res) => {
     let documents = (req || {}).body || [];
-    console.log("DELETE",documents);
-   /* (documents || []).filter((doc) => {
+    console.log("DELETE", documents);
+    (documents || []).filter((doc, i) => {
         pool.query(`DELETE FROM TB_DETAIL_DOCUMENT_NO_SEND WHERE NRO_DOCUMENT = '${doc.nro_document}';`)
-    });*/
+        if (i == documents.length -1) {
+            vrfDocumentPending();
+        }
+    });
 
     res.json({ msj: "Documents Success" });
 });
+
+function vrfDocumentPending() {
+
+    pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND ORDER BY OWNER;`).then(([documents]) => {
+        let documentPending = [];
+        const hoy = new Date();
+        const fechaFormateada = hoy.toISOString().split('T')[0];
+
+        (documents || []).filter((data, i) => {
+            let expirationDate = (data || {})['EXPIRATION_DATE'];
+
+            if (expirationDate == fechaFormateada) {
+                if ((data || {})['ISNOTIFICATED'] == 0) {
+                    (documentPending || []).push(data);
+                    pool.query(`UPDATE TB_DETAIL_DOCUMENT_NO_SEND SET ISEXPIRED = 1, ISNOTIFICATED = 1 WHERE ID_DOCUMENT = ${(data || {})['ID_DOCUMENT']};`);
+                }
+            }
+
+            if (documents.length - 1 == i) {
+                if ((documentPending || []).length) {
+                    let bodyHTML = `<table style="width:100%;border-spacing:0">
+                <tbody>
+                    <tr style="display:flex">
+                        <td>
+                            <table style="border-radius:4px;border-spacing:0;border:1px solid #155795;min-width:450px">
+                                <tbody>
+                                    <tr>
+                                        <td style="border-top-left-radius:4px;border-top-right-radius:4px;display:flex;background:#155795;padding:20px">
+                                            <p style="margin-left:72px;color:#fff;font-weight:700;font-size:30px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif"><span class="il">METAS PERU</span> S.A.C</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: center;padding:10px;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
+                                            <b>DOCUMENTOS PENDIENTES</b> 
+                                            <br>
+                                            <table align="left" cellspacing="0" style="width: 100%;border: solid 1px;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px;border-bottom: 1px solid black;background: #c3d5ed;" width="110px">DOCUMENTO</th>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px;border-bottom: 1px solid black;background: #c3d5ed;" width="110px">FECHA CREACION</th>
+                                                        <th style="border: 1px solid #9E9E9E;border-right:0px;border-bottom: 1px solid black;background: #c3d5ed;" width="110px">PROPIETARIO</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>`;
+                    (documentPending || []).filter((doc) => {
+                        bodyHTML += `<tr>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center;border-right:0px">${(doc || {}).NRO_DOCUMENT}</td>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(doc || {}).DATE}</td>
+                                                        <td style="border: 1px solid #9E9E9E;border-top:0px;text-align:center">${(doc || {}).OWNER}</td>
+                                                    </tr>`;
+                    });
+
+                    bodyHTML += `</tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>`
+
+                    emailController.sendEmail(['itperu@metasperu.com'], `DOCUMENTOS PENDIENTES EN FRONT`, bodyHTML, null, null)
+                        .catch(error => res.send(error));
+                }
+            }
+        });
+    });
+}
 
 
 router.post('/create/hash/agente', (req, res) => {
