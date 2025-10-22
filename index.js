@@ -115,6 +115,10 @@ const task_7 = cron.schedule('00 7 * * 0', () => {
   vrfDocumentPending();
 });
 
+const task_8 = cron.schedule('00 6 * * 0', () => {
+  console.log('00 6 * * 0')
+  emitClearClient();
+});
 
 task_1.start();
 task_2.start();
@@ -123,6 +127,7 @@ task_4.start();
 task_5.start();
 task_6.start();
 task_7.start();
+task_8.start();
 
 function onEmitAlertaTraffic() {
 
@@ -164,6 +169,13 @@ function onConsultarHorarioOficina(index, fecha, documento) {
 function sendNotification(usuario, notificacion) {
   let userSocket = arUsuarioSocket.find((usk) => usk.usuario == usuario);
   io.to(`${(userSocket || {}).idSocket}`).emit("notificaciones:get", notificacion);
+}
+
+function emitClearClient() {
+  pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`).then(([data]) => {
+    let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
+    socket.broadcast.emit("limpiarCliente", listCliente, '');
+  });
 }
 
 function vrfDocumentPending() {
@@ -403,7 +415,7 @@ io.on('connection', async (socket) => {
 
   if (codeTerminal != "SRVFACT" && isIcg != 'true') {
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
-
+    emitClearClient();
     socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
   } else {
     if (codeTerminal == "SRVFACT") {

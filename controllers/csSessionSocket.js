@@ -39,11 +39,7 @@ class clsSessionSocket {
 
             listSession = await this.sessionOneList(codigo);
 
-            let [data] = await pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`);
 
-            let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
-
-            console.log(listCliente);
         } else {
             listSession = await this.sessionList();
         }
