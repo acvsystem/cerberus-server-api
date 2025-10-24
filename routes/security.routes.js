@@ -119,12 +119,14 @@ router.post('/in/document/pending', async (req, res) => {
     let documents = (req || {}).body || [];
 
     (documents || []).filter((doc) => {
-        pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND WHERE NRO_DOCUMENT = '${doc.nro_document}';`).then(([documents]) => {
-            if (!(documents || []).length) {
-                pool.query(`INSERT INTO TB_DETAIL_DOCUMENT_NO_SEND(NRO_DOCUMENT,TYPE_DOCUMENT,DATE,EXPIRATION_DATE,STATUS,OWNER)
+        if (doc.nro_document.split('*').length == 1) {
+            pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND WHERE NRO_DOCUMENT = '${doc.nro_document}';`).then(([documents]) => {
+                if (!(documents || []).length) {
+                    pool.query(`INSERT INTO TB_DETAIL_DOCUMENT_NO_SEND(NRO_DOCUMENT,TYPE_DOCUMENT,DATE,EXPIRATION_DATE,STATUS,OWNER)
                 VALUES('${doc.nro_document}','BOLETA','${doc.date_creation}', DATE_ADD('${doc.date_creation}', INTERVAL 3 DAY),'PENDING','FACTURACION')`);
-            }
-        });
+                }
+            });
+        }
     });
 
     let [data] = await pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND;`);
@@ -213,7 +215,7 @@ function vrfDocumentPending() {
                 </tbody>
             </table>`
 
-                    emailController.sendEmail(['itperu@metasperu.com','johnnygermano@metasperu.com'], `DOCUMENTOS PENDIENTES EN FRONT`, bodyHTML, null, null)
+                    emailController.sendEmail(['itperu@metasperu.com', 'johnnygermano@metasperu.com'], `DOCUMENTOS PENDIENTES EN FRONT`, bodyHTML, null, null)
                         .catch(error => res.send(error));
                 }
             }
