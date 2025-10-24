@@ -600,6 +600,9 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("documentPendingGetSBK", '');
   });
 
+  socket.on('evalue:document:pending:response', () => {
+    socket.broadcast.emit("evalue:document:pending:resolve", '');
+  });
 
 
 
