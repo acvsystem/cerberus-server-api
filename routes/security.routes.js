@@ -7,6 +7,7 @@ import { pathDownload } from '../const/routesDownload.js';
 import CryptoJS from 'crypto-js';
 import { pool } from "../conections/conexMysql.js";
 import { prop as defaultResponse } from "../const/defaultResponse.js";
+import emailController from '../sendEmail.js';
 
 router.post('/login', Login);
 router.get('/emailList', EmailList);
@@ -161,7 +162,6 @@ function vrfDocumentPending() {
             let expirationDate = (data || {})['EXPIRATION_DATE'];
 
             if (expirationDate == fechaFormateada) {
-                console.log((data || {})['ISNOTIFICATED']);
                 if ((data || {})['ISNOTIFICATED'] == 0 || (data || {})['ISNOTIFICATED'] == null) {
                     (documentPending || []).push(data);
                     pool.query(`UPDATE TB_DETAIL_DOCUMENT_NO_SEND SET ISEXPIRED = 1, ISNOTIFICATED = 1 WHERE ID_DOCUMENT = ${(data || {})['ID_DOCUMENT']};`);
@@ -213,7 +213,7 @@ function vrfDocumentPending() {
                 </tbody>
             </table>`
 
-                    emailController.sendEmail(['itperu@metasperu.com'], `DOCUMENTOS PENDIENTES EN FRONT`, bodyHTML, null, null)
+                    emailController.sendEmail(['itperu@metasperu.com','johnnygermano@metasperu.com'], `DOCUMENTOS PENDIENTES EN FRONT`, bodyHTML, null, null)
                         .catch(error => res.send(error));
                 }
             }
