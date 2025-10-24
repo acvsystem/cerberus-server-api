@@ -121,7 +121,7 @@ router.post('/in/document/pending', async (req, res) => {
         pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND WHERE NRO_DOCUMENT = '${doc.nro_document}';`).then(([documents]) => {
             if (!(documents || []).length) {
                 pool.query(`INSERT INTO TB_DETAIL_DOCUMENT_NO_SEND(NRO_DOCUMENT,TYPE_DOCUMENT,DATE,EXPIRATION_DATE,STATUS,OWNER)
-                VALUES('${doc.nro_document}','BOLETA','${doc.date_creation}', DATE_ADD('${doc.date_creation}', INTERVAL 18 DAY),'PENDING','FACTURACION')`);
+                VALUES('${doc.nro_document}','BOLETA','${doc.date_creation}', DATE_ADD('${doc.date_creation}', INTERVAL 4 DAY),'PENDING','FACTURACION')`);
             }
         });
     });
