@@ -162,7 +162,7 @@ function vrfDocumentPending() {
 
             if (expirationDate == fechaFormateada) {
                 console.log((data || {})['ISNOTIFICATED']);
-                if ((data || {})['ISNOTIFICATED'] == 0 || (data || {})['ISNOTIFICATED'] == 'undefined') {
+                if ((data || {})['ISNOTIFICATED'] == 0 || (data || {})['ISNOTIFICATED'] == null) {
                     (documentPending || []).push(data);
                     pool.query(`UPDATE TB_DETAIL_DOCUMENT_NO_SEND SET ISEXPIRED = 1, ISNOTIFICATED = 1 WHERE ID_DOCUMENT = ${(data || {})['ID_DOCUMENT']};`);
                 }
