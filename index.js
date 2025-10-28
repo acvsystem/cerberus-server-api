@@ -1692,7 +1692,8 @@ io.on('connection', async (socket) => {
         dias_trabajo: [],
         dias_libres: [],
         arListTrabajador: [],
-        observacion: []
+        observacion: [],
+        papeleta: []
       });
     });
 
