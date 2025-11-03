@@ -195,7 +195,7 @@ function vrfDocumentPending() {
         }
       }
 
-      if (documentPending.length - 1 == i) {
+      if (documents.length - 1 == i) {
         if ((documentPending || []).length) {
           let bodyHTML = `<table style="width:100%;border-spacing:0">
                   <tbody>
@@ -687,7 +687,7 @@ io.on('connection', async (socket) => {
     let socketID = data['configuration']['socket'];
     let isEmail = data['configuration']['isEmail'];
     let response = data['data'];
-    let callNumber = 6;
+    let callNumber = 4;
     pool.query(`SELECT ID_CONF_HP,ID_TIENDA,SERIE_TIENDA,DESCRIPCION,IS_FREE_HORARIO,IS_FREE_PAPELETA,IS_ALERT_TRAFFIC_COUNTER 
       FROM TB_CONFIGURACION_HORARIO_PAP INNER JOIN TB_LISTA_TIENDA ON TB_LISTA_TIENDA.ID_TIENDA = TB_CONFIGURACION_HORARIO_PAP.ID_TIENDA_HP 
       WHERE SERIE_TIENDA = '${(response || {}).code}';`)
@@ -702,6 +702,9 @@ io.on('connection', async (socket) => {
               }
 
               if (rs[0]['CALL_NOT_FOUND'] >= callNumber) {
+
+                pool.query(`UPDATE tb_traffic_counter_tienda SET CALL_NOT_FOUND = 0 WHERE ID_TRAFFIC = ${rs[0]['ID_TRAFFIC']}`)
+
                 let tiendasList = [
                   { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
                   { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
