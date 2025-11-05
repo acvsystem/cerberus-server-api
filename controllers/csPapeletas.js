@@ -280,6 +280,7 @@ export const seachPapeleta = async (req, res) => {
                 codigo_tienda: (pap || {}).CODIGO_TIENDA,
                 fecha_creacion: (pap || {}).FECHA_CREACION,
                 descripcion: (pap || {}).DESCRIPCION,
+                is_update: (pap || {}).ISUPDATE || 0,
                 horas_extras: []
             });
         });

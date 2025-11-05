@@ -1189,7 +1189,7 @@ io.on('connection', async (socket) => {
 
   app.post("/papeleta/update/fecha", async (req, res) => {
     let data = req.body[0];
-    await pool.query(`UPDATE TB_HEAD_PAPELETA SET FECHA_DESDE = '${(data || {}).fecha}', FECHA_HASTA = '${(data || {}).fecha}' WHERE ID_HEAD_PAPELETA = ${(data || {}).id_papeleta};`).then(() => {
+    await pool.query(`UPDATE TB_HEAD_PAPELETA SET ISUPDATE = 1, FECHA_DESDE = '${(data || {}).fecha}', FECHA_HASTA = '${(data || {}).fecha}' WHERE ID_HEAD_PAPELETA = ${(data || {}).id_papeleta};`).then(() => {
       res.json({ success: true });
     });
   });
