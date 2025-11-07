@@ -522,6 +522,19 @@ io.on('connection', async (socket) => {
     socket.to(`${(response || {}).socketID}`).emit('report:sales:departament:response', response);
   });
 
+  /** */
+
+  socket.on('consultaDocumentMall', async (configuracion) => {
+    (configuracion || {})['socket'] = listClient.id;
+    socket.emit("viewDocumentMallAventura", configuracion);
+  });
+
+  socket.on('view:document:mallaventura:response', async (resData) => {
+    socket.to(`${(resData || [])['configuration']['socket']}`).emit("consultaDocumentMall:response", configuracion);
+  });
+
+  /** */
+
   socket.on('consultAsistencia', async (configuracion) => {
     (configuracion || {})['socket'] = listClient.id;
 
