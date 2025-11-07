@@ -526,7 +526,7 @@ io.on('connection', async (socket) => {
 
   socket.on('consultaDocumentMall', async (configuracion) => {
     (configuracion || {})['socket'] = listClient.id;
-    socket.emit("viewDocumentMallAventura", configuracion);
+    socket.broadcast.emit("viewDocumentMallAventura", configuracion);
   });
 
   socket.on('view:document:mallaventura:response', async (resData) => {
