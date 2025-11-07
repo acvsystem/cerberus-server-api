@@ -524,9 +524,12 @@ io.on('connection', async (socket) => {
 
   /** */
 
-  socket.on('consultaDocumentMall', async (configuracion) => {
-    (configuracion || {})['socket'] = listClient.id;
-    socket.broadcast.emit("viewDocumentMallAventura", configuracion);
+  socket.on('consultaDocumentMall', async () => {
+    let configuration = {
+      socket: (socket || {}).id
+    };
+    
+    socket.broadcast.emit("viewDocumentMallAventura", configuration);
   });
 
   socket.on('view:document:mallaventura:response', async (resData) => {
