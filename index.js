@@ -528,13 +528,13 @@ io.on('connection', async (socket) => {
     let configuration = {
       socket: (socket || {}).id
     };
-    
+
     socket.broadcast.emit("viewDocumentMallAventura", configuration);
   });
 
   socket.on('view:document:mallaventura:response', async (resData) => {
     console.log(resData);
-    socket.to(`${(resData || {})['configuration']['socket']}`).emit("consultaDocumentMall:response", configuracion);
+    socket.to(`${(resData || {})['configuration']['socket']}`).emit("consultaDocumentMall:response", resData);
   });
 
   /** */
