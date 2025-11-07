@@ -530,7 +530,8 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('view:document:mallaventura:response', async (resData) => {
-    socket.to(`${(resData || [])['configuration']['socket']}`).emit("consultaDocumentMall:response", configuracion);
+    console.log(resData);
+    socket.to(`${(resData || {})['configuration']['socket']}`).emit("consultaDocumentMall:response", configuracion);
   });
 
   /** */
