@@ -15,14 +15,14 @@ class clsFacturacion {
     }
 
     async verificacionDocumentos(dataVerify, vTiendaList) {
-
+        console.log('verificacionDocumentos*******************');
         let tiendasList = vTiendaList;
 
         var dataNoFound = [];
         var paseDataList = [];
         var serverData = JSON.parse((dataVerify || {}).serverData);
         var frontData = JSON.parse((dataVerify || {}).frontData);
-        console.log(frontData);
+       
 
         var codigoFront = (dataVerify || {}).codigoFront;
         //console.log(codigoFront, dataNoFound);
@@ -86,7 +86,7 @@ class clsFacturacion {
                 .catch(err => console.log(err));
         }
 
-      //  console.log(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
+        console.log(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
 
         await pool.query(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
         let listSession = await sessionSocket.sessionOneList(codigoFront);

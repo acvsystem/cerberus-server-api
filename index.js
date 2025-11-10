@@ -635,7 +635,7 @@ io.on('connection', async (socket) => {
         (tienda || []).filter(async (td, i) => {
           tiendasList.push({ code: (td || {}).SERIE_TIENDA, name: (td || {}).DESCRIPCION });
 
-          if (tienda.length - 1 == i) {
+          if (tienda.length == tiendasList.length) {
             let listSessionConnect = await facturacionController.verificacionDocumentos({ serverData: resData['serverData'], frontData: resData['frontData']['data'], codigoFront: resData['codigoFront'] }, tiendasList);
 
             socket.to(`${socketID}`).emit("comprobantes:get:response", listSessionConnect); // SE ENVIA A FRONTEND
