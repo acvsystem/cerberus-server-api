@@ -625,7 +625,7 @@ io.on('connection', async (socket) => {
 
 
   socket.on('comprobantes:get:sbk:response', async (resData) => { // RESPUESTA DESDE EL SERVIDOR BACKUP
-
+    console.log('comprobantes:get:sbk:response');
     if ((resData || "").id == "server") {
       let tiendasList = [];
       let socketID = resData['frontData']['configuration']['socket'];
