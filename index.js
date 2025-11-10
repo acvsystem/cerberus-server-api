@@ -172,6 +172,7 @@ function sendNotification(usuario, notificacion) {
 }
 
 function emitClearClient() {
+  console.log("emitClearClient****************************************************");
   pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`).then(([data]) => {
     let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
     io.emit("limpiarCliente", listCliente, '');
@@ -415,7 +416,7 @@ io.on('connection', async (socket) => {
 
   if (codeTerminal != "SRVFACT" && isIcg != 'true') {
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
-    emitClearClient();
+    //emitClearClient();
     socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
   } else {
     if (codeTerminal == "SRVFACT") {
