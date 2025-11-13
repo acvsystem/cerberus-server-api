@@ -553,7 +553,6 @@ io.on('connection', async (socket) => {
     let configuration = {
       socket: (socket || {}).id
     };
-    onEmitJobMallAventura(1)
     socket.broadcast.emit("viewDocumentMallAventura", configuration);
   });
 
