@@ -609,7 +609,7 @@ io.on('connection', async (socket) => {
 
   socket.on('emitCleanClient', (data) => {
     let socketID = (socket || {}).id;
-    socket.broadcast.emit("limpiarCliente", { clientes: listCliente }, socketID, true);
+    socket.broadcast.emit("limpiarCliente", { clientes: listCliente, isCallGoblar: true }, socketID);
   });
 
   socket.on('cleanColaFront', (data) => {
