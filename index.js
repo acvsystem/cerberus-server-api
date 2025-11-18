@@ -195,11 +195,11 @@ function sendNotification(usuario, notificacion) {
   io.to(`${(userSocket || {}).idSocket}`).emit("notificaciones:get", notificacion);
 }
 
-function emitClearClient() {
+function emitClearClient(code) {
   console.log("emitClearClient****************************************************");
   pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`).then(([data]) => {
     let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
-    io.emit("limpiarCliente", listCliente, '');
+    io.emit("limpiarCliente", { clientes: listCliente, codeStore: code }, '');
   });
 }
 
@@ -440,7 +440,7 @@ io.on('connection', async (socket) => {
 
   if (codeTerminal != "SRVFACT" && isIcg != 'true') {
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
-    //emitClearClient();
+    emitClearClient(codeTerminal);
     socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
   } else {
     if (codeTerminal == "SRVFACT") {
@@ -609,7 +609,7 @@ io.on('connection', async (socket) => {
 
   socket.on('emitCleanClient', (data) => {
     let socketID = (socket || {}).id;
-    socket.broadcast.emit("limpiarCliente", data, socketID);
+    socket.broadcast.emit("limpiarCliente", data, socketID, true);
   });
 
   socket.on('cleanColaFront', (data) => {
