@@ -147,6 +147,7 @@ task_9.start();
 task_10.start();
 task_11.start();
 
+onEmitJobMallAventura(1);
 
 
 function onEmitJobMallAventura(number_job) {
@@ -384,10 +385,6 @@ io.on('connection', async (socket) => {
     listClient.id = socket.id;
     let listSessionConnect = await sessionSocket.connect();
     socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
-
-
-
-
 
     let [documentList] = await pool.query(`SELECT * FROM TB_DOCUMENTOS_ERROR_SUNAT;`);
 
@@ -1104,8 +1101,19 @@ io.on('connection', async (socket) => {
       await client.uploadFrom(filePath, fileName);
       await client.uploadFromDir(`ITPERU/${rutaDirectory}`)
 
+      let bodyHTML = `<p>Archivo subido al FTP con éxito</p>`;
+
+      emailController.sendEmail('itperu@metasperu.com', `NUEVO TRASPASO REALIZADO`, bodyHTML, null, null)
+        .catch(error => res.send(error));
+
       res.send('Archivo subido al FTP con éxito');
     } catch (err) {
+
+      let bodyHTML = `<p>${err}</p>`;
+
+      emailController.sendEmail('itperu@metasperu.com', `ERROR DE TRASPASO `, bodyHTML, null, null)
+        .catch(error => res.send(error));
+
       res.status(500).send('Error subiendo al FTP: ' + err.message);
     } finally {
       client.close();
