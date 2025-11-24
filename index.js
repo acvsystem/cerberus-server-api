@@ -1124,15 +1124,16 @@ io.on('connection', async (socket) => {
           .catch(error => res.send(error));
 
         res.send('Archivo subido al FTP con éxito');
+      }).catch((err) => {
+        let bodyHTML = `<p>${err}</p>`;
+
+        emailController.sendEmail('itperu@metasperu.com', `ERROR DE TRASPASO `, bodyHTML, null, null)
+          .catch(error => res.send(error));
+
+        res.status(500).send('Error subiendo al FTP: ' + err.message);
       });
     } catch (err) {
 
-      let bodyHTML = `<p>${err}</p>`;
-
-      emailController.sendEmail('itperu@metasperu.com', `ERROR DE TRASPASO `, bodyHTML, null, null)
-        .catch(error => res.send(error));
-
-      res.status(500).send('Error subiendo al FTP: ' + err.message);
     } finally {
       client.close();
       fs.unlinkSync(filePath); // Borrar archivo local temporal
