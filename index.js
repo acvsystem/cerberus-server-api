@@ -1114,10 +1114,9 @@ io.on('connection', async (socket) => {
         password: 'METAS20600516885',
         secure: false
       }).then(async (sc) => {
-        console.log(sc);
-        await client.ensureDir(`/ITPERU/VSBA`)
-        await client.uploadFrom(`/ITPERU/VSBA`, fileName);
-        await client.uploadFromDir(`/ITPERU/VSBA`)
+        await client.ensureDir(`ITPERU/`)
+        await client.uploadFrom('VSBA', fileName);
+        await client.uploadFromDir(`ITPERU/${rutaDirectory}`)
 
         let bodyHTML = `<p>Archivo subido al FTP con éxito</p>`;
 
