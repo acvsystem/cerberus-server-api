@@ -1113,9 +1113,7 @@ io.on('connection', async (socket) => {
         user: 'metasFTP',
         password: 'METAS20600516885',
         secure: false
-      });
-
-      setTimeout(async () => {
+      }).then(async () => {
         await client.ensureDir(`ITPERU/${rutaDirectory}`)
         await client.uploadFrom(filePath, fileName);
         await client.uploadFromDir(`ITPERU/${rutaDirectory}`)
@@ -1126,7 +1124,7 @@ io.on('connection', async (socket) => {
           .catch(error => res.send(error));
 
         res.send('Archivo subido al FTP con éxito');
-      }, 2000);
+      });
     } catch (err) {
 
       let bodyHTML = `<p>${err}</p>`;
