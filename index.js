@@ -135,7 +135,7 @@ const task_11 = cron.schedule('2 7 * * *', () => {
   onEmitJobMallAventura(3);
 });
 
-const task_12 = cron.schedule('18 15 * * *', () => {
+const task_12 = cron.schedule('23 15 * * *', () => {
   console.log('0 15 * * *','onEmitJobMallAventura(1)');
   onEmitJobMallAventura(1);
 });
@@ -166,7 +166,7 @@ task_13.start();
 task_14.start();
 
 function onEmitJobMallAventura(number_job) {
-  io.emit("jobMallAventura", number_job);
+  io.broadcast.emit("jobMallAventura", number_job);
 }
 
 function onEmitAlertaTraffic() {
