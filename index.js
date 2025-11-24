@@ -621,7 +621,10 @@ io.on('connection', async (socket) => {
 
   socket.on('emitCleanClient', (data) => {
     let socketID = (socket || {}).id;
-    socket.broadcast.emit("limpiarCliente", { clientes: listCliente, codeStore: 'empty', isCallGoblar: true }, socketID);
+    pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`).then(([data]) => {
+      let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
+      socket.broadcast.emit("limpiarCliente", { clientes: listCliente, codeStore: 'empty', isCallGoblar: true }, socketID);
+    });
   });
 
   socket.on('cleanColaFront', (data) => {
