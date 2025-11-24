@@ -145,7 +145,7 @@ const task_13 = cron.schedule('1 15 * * *', () => {
   onEmitJobMallAventura(2);
 });
 
-const task_14 = cron.schedule('32 15 * * *', () => {
+const task_14 = cron.schedule('2 15 * * *', () => {
   console.log('2 15 * * *','onEmitJobMallAventura(3)');
   onEmitJobMallAventura(3);
 });
