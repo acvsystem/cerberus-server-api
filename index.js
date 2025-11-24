@@ -1108,10 +1108,10 @@ io.on('connection', async (socket) => {
 
     try {
       await client.access({
-        host: '199.89.54.31',
-        port: 9879,
-        user: 'ftpuser25801247',
-        password: 'Cfz&}q)]i_^c~6MSVPI%',
+        host: '161.132.94.174',
+        port: 21,
+        user: 'metasFTP',
+        password: 'METAS20600516885',
         secure: false
       });
 
