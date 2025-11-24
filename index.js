@@ -1113,8 +1113,9 @@ io.on('connection', async (socket) => {
         user: 'metasFTP',
         password: 'METAS20600516885',
         secure: false
-      }).then(async () => {
-       // await client.ensureDir(`ITPERU/${rutaDirectory}`)
+      }).then(async (sc) => {
+        console.log(sc);
+        await client.ensureDir(`ITPERU/${rutaDirectory}`)
         await client.uploadFrom(filePath, fileName);
         await client.uploadFromDir(`ITPERU/${rutaDirectory}`)
 
