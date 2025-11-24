@@ -120,34 +120,34 @@ const task_8 = cron.schedule('00 6 * * 0', () => {
   emitClearClient();
 });
 
-const task_9 = cron.schedule('00 4 * * 0', () => {
-  console.log('00 7 * * *')
+const task_9 = cron.schedule('0 7 * * *', () => {
+  console.log('0 7 * * *')
   onEmitJobMallAventura(1);
 });
 
-const task_10 = cron.schedule('01 4 * * 0', () => {
-  console.log('01 7 * * *')
+const task_10 = cron.schedule('1 7 * * *', () => {
+  console.log('1 7 * * *')
   onEmitJobMallAventura(2);
 });
 
-const task_11 = cron.schedule('02 4 * * 0', () => {
-  console.log('02 7 * * *')
+const task_11 = cron.schedule('2 7 * * *', () => {
+  console.log('2 7 * * *')
   onEmitJobMallAventura(3);
 });
 
-const task_12 = cron.schedule('8 15 * * *', () => {
-  console.log('8 15 * * *','onEmitJobMallAventura(1)');
+const task_12 = cron.schedule('0 15 * * *', () => {
+  console.log('0 15 * * *','onEmitJobMallAventura(1)');
   console.log('0 15 * * *')
   onEmitJobMallAventura(1);
 });
 
-const task_13 = cron.schedule('9 15 * * *', () => {
-  console.log('9 15 * * *','onEmitJobMallAventura(2)');
+const task_13 = cron.schedule('1 15 * * *', () => {
+  console.log('1 15 * * *','onEmitJobMallAventura(2)');
   onEmitJobMallAventura(2);
 });
 
-const task_14 = cron.schedule('10 15 * * *', () => {
-  console.log('10 15 * * *','onEmitJobMallAventura(3)');
+const task_14 = cron.schedule('2 15 * * *', () => {
+  console.log('2 15 * * *','onEmitJobMallAventura(3)');
   onEmitJobMallAventura(3);
 });
 
