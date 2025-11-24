@@ -121,17 +121,32 @@ const task_8 = cron.schedule('00 6 * * 0', () => {
 });
 
 const task_9 = cron.schedule('00 4 * * 0', () => {
-  console.log('00 4 * * 0')
+  console.log('00 7 * * 0')
   onEmitJobMallAventura(1);
 });
 
 const task_10 = cron.schedule('01 4 * * 0', () => {
-  console.log('01 4 * * 0')
+  console.log('01 7 * * 0')
   onEmitJobMallAventura(2);
 });
 
 const task_11 = cron.schedule('02 4 * * 0', () => {
-  console.log('02 4 * * 0')
+  console.log('02 7 * * 0')
+  onEmitJobMallAventura(3);
+});
+
+const task_12 = cron.schedule('00 4 * * 0', () => {
+  console.log('00 15 * * 0')
+  onEmitJobMallAventura(1);
+});
+
+const task_13 = cron.schedule('01 4 * * 0', () => {
+  console.log('01 15 * * 0')
+  onEmitJobMallAventura(2);
+});
+
+const task_14 = cron.schedule('02 4 * * 0', () => {
+  console.log('02 15 * * 0')
   onEmitJobMallAventura(3);
 });
 
@@ -146,9 +161,9 @@ task_8.start();
 task_9.start();
 task_10.start();
 task_11.start();
-
-onEmitJobMallAventura(1);
-
+task_12.start();
+task_13.start();
+task_14.start();
 
 function onEmitJobMallAventura(number_job) {
   io.emit("jobMallAventura", number_job);
