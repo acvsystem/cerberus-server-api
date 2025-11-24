@@ -136,17 +136,17 @@ const task_11 = cron.schedule('2 7 * * *', () => {
 });
 
 const task_12 = cron.schedule('0 15 * * *', () => {
-  console.log('0 15 * * *', 'onEmitJobMallAventura(1)');
+  console.log('0 15 * * *','onEmitJobMallAventura(1)');
   onEmitJobMallAventura(1);
 });
 
 const task_13 = cron.schedule('1 15 * * *', () => {
-  console.log('1 15 * * *', 'onEmitJobMallAventura(2)');
+  console.log('1 15 * * *','onEmitJobMallAventura(2)');
   onEmitJobMallAventura(2);
 });
 
 const task_14 = cron.schedule('2 15 * * *', () => {
-  console.log('2 15 * * *', 'onEmitJobMallAventura(3)');
+  console.log('2 15 * * *','onEmitJobMallAventura(3)');
   onEmitJobMallAventura(3);
 });
 
@@ -1108,33 +1108,31 @@ io.on('connection', async (socket) => {
 
     try {
       await client.access({
-        host: '161.132.94.174',
-        port: 21,
-        user: 'metasFTP',
-        password: 'METAS20600516885',
+        host: '199.89.54.31',
+        port: 9879,
+        user: 'ftpuser25801247',
+        password: 'Cfz&}q)]i_^c~6MSVPI%',
         secure: false
-      }).then(async (sc) => {
-        await client.ensureDir(`ITPERU/`)
-        await client.uploadFrom('VSBA', fileName);
-        await client.uploadFromDir(`ITPERU/${rutaDirectory}`)
-
-        let bodyHTML = `<p>Archivo subido al FTP con éxito</p>`;
-
-        emailController.sendEmail('itperu@metasperu.com', `NUEVO TRASPASO REALIZADO`, bodyHTML, null, null)
-          .catch(error => res.send(error));
-
-        res.send('Archivo subido al FTP con éxito');
-      }).catch((err) => {
-        
-        let bodyHTML = `<p>${err}</p>`;
-
-        emailController.sendEmail('itperu@metasperu.com', `ERROR DE TRASPASO `, bodyHTML, null, null)
-          .catch(error => res.send(error));
-
-        res.status(500).send('Error subiendo al FTP: ' + err.message);
       });
+
+      await client.ensureDir(`ITPERU/${rutaDirectory}`)
+      await client.uploadFrom(filePath, fileName);
+      await client.uploadFromDir(`ITPERU/${rutaDirectory}`)
+
+      let bodyHTML = `<p>Archivo subido al FTP con éxito</p>`;
+
+      emailController.sendEmail('itperu@metasperu.com', `NUEVO TRASPASO REALIZADO`, bodyHTML, null, null)
+        .catch(error => res.send(error));
+
+      res.send('Archivo subido al FTP con éxito');
     } catch (err) {
 
+      let bodyHTML = `<p>${err}</p>`;
+
+      emailController.sendEmail('itperu@metasperu.com', `ERROR DE TRASPASO `, bodyHTML, null, null)
+        .catch(error => res.send(error));
+
+      res.status(500).send('Error subiendo al FTP: ' + err.message);
     } finally {
       client.close();
       fs.unlinkSync(filePath); // Borrar archivo local temporal
