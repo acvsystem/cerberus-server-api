@@ -135,19 +135,19 @@ const task_11 = cron.schedule('02 4 * * 0', () => {
   onEmitJobMallAventura(3);
 });
 
-const task_12 = cron.schedule('6 15 * * 0', () => {
-  console.log('6 15 * * *','onEmitJobMallAventura(1)');
-  console.log('0 15 * * 0')
+const task_12 = cron.schedule('8 15 * * *', () => {
+  console.log('8 15 * * *','onEmitJobMallAventura(1)');
+  console.log('0 15 * * *')
   onEmitJobMallAventura(1);
 });
 
-const task_13 = cron.schedule('7 15 * * 0', () => {
-  console.log('1 15 * * *','onEmitJobMallAventura(2)');
+const task_13 = cron.schedule('9 15 * * *', () => {
+  console.log('9 15 * * *','onEmitJobMallAventura(2)');
   onEmitJobMallAventura(2);
 });
 
-const task_14 = cron.schedule('8 15 * * 0', () => {
-  console.log('2 15 * * *','onEmitJobMallAventura(3)');
+const task_14 = cron.schedule('10 15 * * *', () => {
+  console.log('10 15 * * *','onEmitJobMallAventura(3)');
   onEmitJobMallAventura(3);
 });
 
