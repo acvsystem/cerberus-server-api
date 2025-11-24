@@ -215,7 +215,7 @@ function emitClearClient(code) {
   console.log("emitClearClient****************************************************");
   pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`).then(([data]) => {
     let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
-    io.emit("limpiarCliente", { clientes: listCliente, codeStore: code, isCallGoblar: false }, '');
+    io.emit("limpiarCliente", { clientes: listCliente, codeStore: code, isCallGoblar: false }, socketID);
   });
 }
 
