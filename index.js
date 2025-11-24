@@ -1114,7 +1114,7 @@ io.on('connection', async (socket) => {
         password: 'METAS20600516885',
         secure: false
       }).then(async () => {
-        await client.ensureDir(`ITPERU/${rutaDirectory}`)
+       // await client.ensureDir(`ITPERU/${rutaDirectory}`)
         await client.uploadFrom(filePath, fileName);
         await client.uploadFromDir(`ITPERU/${rutaDirectory}`)
 
@@ -1125,6 +1125,7 @@ io.on('connection', async (socket) => {
 
         res.send('Archivo subido al FTP con éxito');
       }).catch((err) => {
+        
         let bodyHTML = `<p>${err}</p>`;
 
         emailController.sendEmail('itperu@metasperu.com', `ERROR DE TRASPASO `, bodyHTML, null, null)
