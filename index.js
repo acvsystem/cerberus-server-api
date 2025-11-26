@@ -456,7 +456,12 @@ io.on('connection', async (socket) => {
 
   if (codeTerminal != "SRVFACT" && isIcg != 'true') {
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
-    emitClearClient(codeTerminal);
+
+    setTimeout(() => {
+      let code = codeTerminal;
+      emitClearClient(code);
+    }, 300000);
+
     socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
   } else {
     if (codeTerminal == "SRVFACT") {
