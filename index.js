@@ -120,8 +120,8 @@ const task_8 = cron.schedule('00 6 * * 0', () => {
   emitClearClient();
 });
 
-const task_9 = cron.schedule('31 9 * * *', () => {
-  console.log('0 7 * * *')
+const task_9 = cron.schedule('33 9 * * *', () => {
+  console.log('0 15 * * *','onEmitJobMallAventura(1)');
   onEmitJobMallAventura(1);
 });
 
