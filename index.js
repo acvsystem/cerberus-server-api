@@ -456,7 +456,7 @@ io.on('connection', async (socket) => {
 
   if (codeTerminal != "SRVFACT" && isIcg != 'true') {
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
-    
+
     emitClearClient(codeTerminal);
     socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
   } else {
@@ -1045,6 +1045,19 @@ io.on('connection', async (socket) => {
     let data = [];
     data = (response || {}).data || [];
     socket.to(`${socketID}`).emit("kardex:post:camposlibres:response", { id: response.id, data: data });
+  });
+
+
+  /* REINICIAR SERVICIO PLUGIN */
+
+  socket.on("service:restart", (configuracion) => {
+
+    let configurationList = {
+      socket: (socket || {}).id,
+      data: configuracion
+    };
+
+    socket.broadcast.emit("serviceRestart", 'DUNAMIS SERVICE');
   });
 
   /* INSERTAR CUO KARDEX */
