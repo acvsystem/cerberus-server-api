@@ -1057,7 +1057,7 @@ io.on('connection', async (socket) => {
       data: configuracion
     };
 
-    socket.broadcast.emit("serviceRestart", 'DUNAMIS SERVICE');
+    socket.broadcast.emit("serviceRestart", 'DUNAMIS SERVICES');
   });
 
   /* INSERTAR CUO KARDEX */
