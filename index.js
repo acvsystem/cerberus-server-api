@@ -165,6 +165,8 @@ task_12.start();
 task_13.start();
 task_14.start();
 
+onEmitJobMallAventura(1);
+
 function onEmitJobMallAventura(number_job) {
   io.broadcast.emit("jobMallAventura", number_job);
 }
