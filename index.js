@@ -168,7 +168,7 @@ task_14.start();
 onEmitJobMallAventura(1);
 
 function onEmitJobMallAventura(number_job) {
-  io.broadcast.emit("jobMallAventura", number_job);
+  io.emit("jobMallAventura", number_job);
 }
 
 function onEmitAlertaTraffic() {
