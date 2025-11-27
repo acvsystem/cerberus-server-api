@@ -120,35 +120,6 @@ const task_8 = cron.schedule('00 6 * * 0', () => {
   emitClearClient();
 });
 
-const task_9 = cron.schedule('41 9 * * *', () => {
-  console.log('0 15 * * *', 'onEmitJobMallAventura(1)');
-  onEmitJobMallAventura(1);
-});
-
-const task_10 = cron.schedule('1 7 * * *', () => {
-  console.log('1 7 * * *')
-  onEmitJobMallAventura(2);
-});
-
-const task_11 = cron.schedule('2 7 * * *', () => {
-  console.log('2 7 * * *')
-  onEmitJobMallAventura(3);
-});
-
-const task_12 = cron.schedule('0 15 * * *', () => {
-  console.log('0 15 * * *', 'onEmitJobMallAventura(1)');
-  onEmitJobMallAventura(1);
-});
-
-const task_13 = cron.schedule('1 15 * * *', () => {
-  console.log('1 15 * * *', 'onEmitJobMallAventura(2)');
-  onEmitJobMallAventura(2);
-});
-
-const task_14 = cron.schedule('2 15 * * *', () => {
-  console.log('2 15 * * *', 'onEmitJobMallAventura(3)');
-  onEmitJobMallAventura(3);
-});
 
 task_1.start();
 task_2.start();
@@ -158,20 +129,7 @@ task_5.start();
 task_6.start();
 task_7.start();
 task_8.start();
-task_9.start();
-task_10.start();
-task_11.start();
-task_12.start();
-task_13.start();
-task_14.start();
 
-setTimeout(() => {
-  onEmitJobMallAventura(1);
-}, 5000);
-
-function onEmitJobMallAventura(number_job) {
-  io.emit("jobMallAventura", number_job);
-}
 
 function onEmitAlertaTraffic() {
 
