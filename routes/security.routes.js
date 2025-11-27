@@ -13,8 +13,7 @@ router.post('/login', Login);
 router.get('/emailList', EmailList);
 router.post('/service/cliente/list/delete', async (req, res) => {
     let body = ((req || []).body || {})['client_clear'] || "";
-    console.log(body);
-
+    
     let [data] = await pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`)
 
     if ((body || "").length) {
@@ -103,7 +102,6 @@ router.post('/configuracion/permisos/hp', async (req, res) => {
 
 router.get('/service/cliente/list/delete', async (req, res) => {
     let [data] = await pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`);
-    console.log(data);
     let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
     res.json(listCliente);
 });
