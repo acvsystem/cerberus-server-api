@@ -45,6 +45,11 @@ app.use("/sistema", frontRetailRoutes);
 app.use("/transfers", transfersRoutes);
 app.use("/store", storesRoutes);
 app.use("/schedule", scheduleRoutes);
+
+app.get("/", (req, res) => {
+  res.send("API funcionando");
+});
+
 /*
 // Middleware de logging
 app.use((req, res, next) => {
