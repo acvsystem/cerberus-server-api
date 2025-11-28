@@ -30,11 +30,11 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: "*", methods: ["GET", "POST"], transports: ['websocket', 'polling'] } });
 const uploadTraspasos = multer({ dest: 'uploads/traspasos' });
 let arUsuarioSocket = [];
-app.use(cors({
-    origin: "https://metasperu.net.pe",  
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true
-}));
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 app.use(bodyParser.json({ limit: "1000000mb" }));
 app.use(bodyParser.urlencoded({ limit: "1000000mb", extended: true }));
