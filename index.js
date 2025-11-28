@@ -80,13 +80,13 @@ const emiter = new EventEmitter();
 var listClient = { id: '' };
 var agenteList = [];
 
-const task_1 = cron.schedule('50 10 * * *', () => {
+const task_1 = cron.schedule('51 10 * * *', () => {
   console.log('00 10');
   emitVerificationDoc();
 
   pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`).then(([data]) => {
     let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
-    io.emit("limpiarCliente", { clientes: listCliente, codeStore: 'empty', isCallGoblar: true }, socketID);
+    io.emit("limpiarCliente", { clientes: listCliente, codeStore: 'empty', isCallGoblar: true }, 'backend');
   });
 });
 
