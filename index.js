@@ -125,6 +125,14 @@ const task_8 = cron.schedule('00 6 * * 0', () => {
   emitClearClient();
 });
 
+const task_9 = cron.schedule('00 22 * * 0', () => {
+  console.log('00 22 * * 0')
+  pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`).then(([data]) => {
+    let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
+    io.emit("limpiarCliente", { clientes: listCliente, codeStore: 'empty', isCallGoblar: true }, 'backend');
+  });
+});
+
 
 task_1.start();
 task_2.start();
@@ -134,7 +142,7 @@ task_5.start();
 task_6.start();
 task_7.start();
 task_8.start();
-
+task_9.start();
 
 function onEmitAlertaTraffic() {
 
