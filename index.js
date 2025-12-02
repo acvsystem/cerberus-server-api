@@ -433,7 +433,7 @@ io.on('connection', async (socket) => {
   if (codeTerminal != "SRVFACT" && isIcg != 'true') {
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
 
-    //emitClearClient(codeTerminal);
+    mitClearClient(codeTerminal);
     socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
   } else {
     if (codeTerminal == "SRVFACT") {
@@ -620,7 +620,7 @@ io.on('connection', async (socket) => {
     let configuration = {
       socket: (socket || {}).id
     };
-
+    console.log(configuration,623);
     socket.broadcast.emit("comprobantesGetFR", configuration); //SE ENVIA AL PYTHON DEL FRONT RETAIL
   });
 
