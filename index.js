@@ -337,6 +337,15 @@ function onVerificarCalendario() {
 
 
 io.of("/servidor/Backup").on("connection", (socket) => {
+  socket.on('comprobantes:get', (data) => {
+
+
+    let configuration = {
+      socket: (socket || {}).id
+    };
+    console.log("SERVIDOR SALA",configuration, 623);
+    socket.broadcast.emit("comprobantesGetFR", configuration); //SE ENVIA AL PYTHON DEL FRONT RETAIL
+  });
 });
 
 const clients = {};
@@ -620,7 +629,7 @@ io.on('connection', async (socket) => {
     let configuration = {
       socket: (socket || {}).id
     };
-    console.log(configuration,623);
+    console.log(configuration, 623);
     socket.broadcast.emit("comprobantesGetFR", configuration); //SE ENVIA AL PYTHON DEL FRONT RETAIL
   });
 
