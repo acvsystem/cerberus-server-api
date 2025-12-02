@@ -713,7 +713,8 @@ io.on('connection', async (socket) => {
       code: request.code,
       isEmail: request.isEmail
     };
-
+    
+    console.log(request);
     socket.broadcast.emit("trafficGetOnline", configuration);
   });
 
