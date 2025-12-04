@@ -337,15 +337,6 @@ function onVerificarCalendario() {
 
 
 io.of("/servidor/Backup").on("connection", (socket) => {
-  socket.on('comprobantes:get', (data) => {
-
-
-    let configuration = {
-      socket: (socket || {}).id
-    };
-    console.log("SERVIDOR SALA",configuration, 623);
-    socket.broadcast.emit("comprobantesGetFR", configuration); //SE ENVIA AL PYTHON DEL FRONT RETAIL
-  });
 });
 
 const clients = {};
@@ -629,7 +620,7 @@ io.on('connection', async (socket) => {
     let configuration = {
       socket: (socket || {}).id
     };
-    console.log(configuration, 623);
+    console.log(configuration);
     socket.broadcast.emit("comprobantesGetFR", configuration); //SE ENVIA AL PYTHON DEL FRONT RETAIL
   });
 
@@ -2437,13 +2428,6 @@ io.on('connection', async (socket) => {
     ((configuration || [])[0] || {})['TRAFFIC_COUNTERS'] = listTraffic;
     console.log(configuration);
     res.json(configuration)
-  });
-
-  app.post("/frontRetail/search/stock", async (req, res) => {
-    let data = ((req || {}).body || []);
-    socket.to(`${((data || [])[0] || {})['socketID']}`).emit("dataStockParse", req.body);
-
-    res.json({ mensaje: 'Archivo recibido con éxito' });
   });
 
   app.post("/frontRetail/search/stock", async (req, res) => {
