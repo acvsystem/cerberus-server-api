@@ -435,21 +435,6 @@ io.on('connection', async (socket) => {
 
     emitClearClient(codeTerminal);
 
-    pool.query(`SELECT * FROM TB_LISTA_TIENDA;`).then(([tienda]) => {
-
-      (tienda || []).filter(async (td, i) => {
-
-        let configuration = {
-          socket: 'backend',
-          code: (td || {}).SERIE_TIENDA,
-          isEmail: true
-        };
-
-        io.emit("trafficGetOnline", configuration);
-
-      });
-    });
-
     socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
   } else {
     if (codeTerminal == "SRVFACT") {
@@ -638,6 +623,22 @@ io.on('connection', async (socket) => {
     };
     console.log(configuration);
     socket.broadcast.emit("comprobantesGetFR", configuration); //SE ENVIA AL PYTHON DEL FRONT RETAIL
+
+    pool.query(`SELECT * FROM TB_LISTA_TIENDA;`).then(([tienda]) => {
+
+      (tienda || []).filter(async (td, i) => {
+
+        let configuration = {
+          socket: (socket || {}).id,
+          code: (td || {}).SERIE_TIENDA,
+          isEmail: false
+        };
+
+        io.emit("trafficGetOnline", configuration);
+
+      });
+    });
+
   });
 
   socket.on('comprobantes:get:fr:response', (data) => {
