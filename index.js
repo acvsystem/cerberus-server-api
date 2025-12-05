@@ -434,6 +434,22 @@ io.on('connection', async (socket) => {
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
 
     emitClearClient(codeTerminal);
+
+    pool.query(`SELECT * FROM TB_LISTA_TIENDA;`).then(([tienda]) => {
+
+      (tienda || []).filter(async (td, i) => {
+
+        let configuration = {
+          socket: 'backend',
+          code: (td || {}).SERIE_TIENDA,
+          isEmail: true
+        };
+
+        io.emit("trafficGetOnline", configuration);
+
+      });
+    });
+
     socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
   } else {
     if (codeTerminal == "SRVFACT") {
