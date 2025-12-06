@@ -27,7 +27,16 @@ import scheduleRoutes from "./routes/schedule.routes.js";
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer, { cors: { origin: "*", methods: ["GET", "POST"], transports: ['websocket', 'polling'] } });
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+    transports: ['websocket', 'polling']
+  },
+  pingTimeout: 60000,
+  pingInterval: 25000
+});
+
 const uploadTraspasos = multer({ dest: 'uploads/traspasos' });
 let arUsuarioSocket = [];
 app.use(
