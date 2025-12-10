@@ -442,7 +442,7 @@ io.on('connection', async (socket) => {
   if (codeTerminal != "SRVFACT" && isIcg != 'true') {
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
 
-    //emitClearClient(codeTerminal);
+    emitClearClient(codeTerminal);
 
     socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
   } else {
@@ -673,13 +673,14 @@ io.on('connection', async (socket) => {
     if ((resData || "").id == "server") {
       let tiendasList = [];
       let socketID = resData['frontData']['configuration']['socket'];
-
+      console.log("comprobantes:get:sbk:response****************",resData['codigoFront']);
       pool.query(`SELECT * FROM TB_LISTA_TIENDA;`).then(([tienda]) => {
 
         (tienda || []).filter(async (td, i) => {
           tiendasList.push({ code: (td || {}).SERIE_TIENDA, name: (td || {}).DESCRIPCION });
           if (tienda.length - 1 == i) {
             let listSessionConnect = await facturacionController.verificacionDocumentos({ serverData: resData['serverData'], frontData: resData['frontData']['data'], codigoFront: resData['codigoFront'] }, tiendasList);
+
 
             socket.to(`${socketID}`).emit("comprobantes:get:response", listSessionConnect); // SE ENVIA A FRONTEND
           }
