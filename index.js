@@ -892,7 +892,7 @@ io.on('connection', async (socket) => {
 
   app.get("/comparacion/bd/response", async (req, res) => {
 
-    console.log('*******************************', req.body);
+    console.log('*******************************COMPARACION', req.body);
     let socketID = req.body['configuration']['socket'];
     let response = req.body['data'];
 
