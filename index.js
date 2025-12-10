@@ -23,6 +23,7 @@ import { Client } from "basic-ftp"
 import mdwErrorHandler from './middleware/errorHandler.js';
 import mdlNotificacion from './class/clsNotificaciones.js';
 import scheduleRoutes from "./routes/schedule.routes.js";
+import readline from "readline";
 //import services from './services/notificaciones.js';
 
 const app = express();
@@ -45,6 +46,7 @@ app.use(
   })
 );
 
+
 app.use(bodyParser.json({ limit: "1000000mb" }));
 app.use(bodyParser.urlencoded({ limit: "1000000mb", extended: true }));
 
@@ -58,6 +60,21 @@ app.use("/schedule", scheduleRoutes);
 app.get("/", (req, res) => {
   res.send("API funcionando");
 });
+
+app.post("/upload-stream", (req, res) => {
+  const rl = readline.createInterface({ input: req });
+
+  rl.on("line", line => {
+    const obj = JSON.parse(line);
+    console.log("recibido:", obj);
+    // procesar...
+  });
+
+  rl.on("close", () => {
+    res.json({ ok: true });
+  });
+});
+
 
 /*
 // Middleware de logging
@@ -673,7 +690,7 @@ io.on('connection', async (socket) => {
     if ((resData || "").id == "server") {
       let tiendasList = [];
       let socketID = resData['frontData']['configuration']['socket'];
-      console.log("comprobantes:get:sbk:response****************",resData['codigoFront']);
+      console.log("comprobantes:get:sbk:response****************", resData['codigoFront']);
       pool.query(`SELECT * FROM TB_LISTA_TIENDA;`).then(([tienda]) => {
 
         (tienda || []).filter(async (td, i) => {
