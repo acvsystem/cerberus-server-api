@@ -62,16 +62,72 @@ app.get("/", (req, res) => {
 });
 
 app.post("/upload-stream", (req, res) => {
-  const rl = readline.createInterface({ input: req });
-
-  rl.on("line", line => {
-    const obj = JSON.parse(line);
-    console.log("recibido:", obj);
-    // procesar...
+  const rl = readline.createInterface({
+    input: req,
+    crlfDelay: Infinity
   });
 
-  rl.on("close", () => {
-    res.json({ ok: true });
+  let configuration = null;
+
+  // Puedes usar estos arrays si quieres guardar temporalmente los datos
+  // (si lo guardas en BD directamente NO necesitas estos arrays)
+  const coeData = [];
+  const databk = [];
+
+  rl.on("line", (line) => {
+    try {
+      const obj = JSON.parse(line);
+
+      switch (obj.type) {
+        case "config":
+          configuration = obj.data;
+          console.log("Configuración recibida:", configuration);
+          break;
+
+        case "coe":
+          coeData.push(obj.data);
+          console.log("COE recibido:", obj.data);
+          break;
+
+        case "bk":
+          databk.push(obj.data);
+          console.log("BK recibido:", obj.data);
+          break;
+
+        default:
+          console.warn("Tipo desconocido:", obj);
+      }
+
+    } catch (err) {
+      console.error("Error al procesar línea:", err, "LINEA:", line);
+    }
+  });
+
+  rl.on("close", async () => {
+    console.log("STREAM COMPLETO");
+
+    // 👉 Aquí puedes guardar todo en tu base de datos si quieres
+    // Ejemplo:
+    // await db.insertMany("tabla_coe", coeData);
+    // await db.insertMany("tabla_bk", databk);
+
+    const coe = readline.createInterface({
+      input: coeData,
+      crlfDelay: Infinity
+    });
+
+    const dbk = readline.createInterface({
+      input: databk,
+      crlfDelay: Infinity
+    });
+
+
+    return res.json({
+      ok: true,
+      configuration: configuration,
+      coe: coe.length,
+      bk: dbk.length
+    });
   });
 });
 
