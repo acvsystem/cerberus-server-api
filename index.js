@@ -220,6 +220,17 @@ const task_9 = cron.schedule('00 22 * * 0', () => {
   });
 });
 
+const task_10 = cron.schedule('00 6 * * 0', () => {
+  console.log('00 6 * * 0')
+  emitMallAventura();
+});
+
+const task_11 = cron.schedule('00 11 * * 0', () => {
+  console.log('00 11 * * 0')
+  emitMallAventura();
+});
+
+
 
 task_1.start();
 task_2.start();
@@ -230,6 +241,7 @@ task_6.start();
 task_7.start();
 task_8.start();
 task_9.start();
+task_10.start();
 
 function onEmitAlertaTraffic() {
 
@@ -249,6 +261,10 @@ function onEmitAlertaTraffic() {
   });
 
 
+}
+
+function emitMallAventura() {
+  io.emit('taskMallAventuraVenta', 'ventas');
 }
 
 function emitVerificationSUNAT() {
