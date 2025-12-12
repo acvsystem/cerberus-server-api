@@ -86,9 +86,9 @@ class clsFacturacion {
                 .catch(err => console.log(err));
         }
 
-        console.log(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
+        console.log(`UPDATE TB_TERMINAL_TIENDA SET ISONLINE = true, VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
 
-        await pool.query(`UPDATE TB_TERMINAL_TIENDA SET VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
+        await pool.query(`UPDATE TB_TERMINAL_TIENDA SET ISONLINE = true, VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
         let listSession = await sessionSocket.sessionOneList(codigoFront);
         return listSession;
     }
