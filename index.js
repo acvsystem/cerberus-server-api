@@ -173,7 +173,7 @@ const task_1 = cron.schedule('00 10 * * *', () => {
 
   pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`).then(([data]) => {
     let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
-    io.emit("limpiarCliente", { clientes: listCliente, codeStore: 'empty', isCallGoblar: true }, 'backend');
+    io.emit("limpiarCliente", { clientes: listCliente, codeStore: '1', isCallGoblar: true }, 'backend');
   });
 });
 
@@ -216,7 +216,7 @@ const task_9 = cron.schedule('00 22 * * 0', () => {
   console.log('00 22 * * 0')
   pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`).then(([data]) => {
     let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
-    io.emit("limpiarCliente", { clientes: listCliente, codeStore: 'empty', isCallGoblar: true }, 'backend');
+    io.emit("limpiarCliente", { clientes: listCliente, codeStore: '2', isCallGoblar: true }, 'backend');
   });
 });
 
@@ -293,7 +293,7 @@ function emitClearClient(code) {
   console.log("emitClearClient****************************************************");
   pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`).then(([data]) => {
     let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
-    io.emit("limpiarCliente", { clientes: listCliente, codeStore: code || "backend", isCallGoblar: false }, "backend");
+    io.emit("limpiarCliente", { clientes: listCliente, codeStore: "3", isCallGoblar: false }, "backend");
   });
 }
 
@@ -703,7 +703,7 @@ io.on('connection', async (socket) => {
     let socketID = (socket || {}).id;
     pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`).then(([data]) => {
       let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
-      socket.broadcast.emit("limpiarCliente", { clientes: listCliente, codeStore: 'empty', isCallGoblar: true }, socketID);
+      socket.broadcast.emit("limpiarCliente", { clientes: listCliente, codeStore: '4', isCallGoblar: true }, socketID);
     });
   });
 
@@ -1373,9 +1373,8 @@ io.on('connection', async (socket) => {
   app.post("/oficina/marcacion", async (req, res) => {
     let response = req.body;
     let socketID = (response[0] || {}).socketID;
-     
+     console.log(parseDate);
     (response || []).filter(async (mc, i) => {
-      console.log(mc.checkinout);
       let date = new Date(mc.checkinout.split(' ')[0]).toLocaleDateString().split('/');
 
       let parseDate = `${date[0]}-${parseInt(date[1])}-${date[2]}`;
