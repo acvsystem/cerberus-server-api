@@ -1373,15 +1373,15 @@ io.on('connection', async (socket) => {
   app.post("/oficina/marcacion", async (req, res) => {
     let response = req.body;
     let socketID = (response[0] || {}).socketID;
-     console.log(parseDate);
+
     (response || []).filter(async (mc, i) => {
       let date = new Date(mc.checkinout.split(' ')[0]).toLocaleDateString().split('/');
 
       let parseDate = `${date[0]}-${parseInt(date[1])}-${date[2]}`;
-     
+      console.log(parseDate);
       if (date[2] == '2025') {
         if (i >= 0) {
-            
+
 
           onConsultarHorarioOficina(i, parseDate, mc.documento).then(([responseHorario]) => {
 
