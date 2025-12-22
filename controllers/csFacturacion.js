@@ -22,19 +22,33 @@ class clsFacturacion {
         var paseDataList = [];
         var serverData = JSON.parse((dataVerify || {}).serverData);
         var frontData = JSON.parse((dataVerify || {}).frontData);
-       
+
 
         var codigoFront = (dataVerify || {}).codigoFront;
+
+
         //console.log(codigoFront, dataNoFound);
 
         (serverData || []).filter((data) => {
+
             var cpParse = ((data || {}).cmpNumero || "").split('-');
+
+            if (cpParse[0] == 'B7R1') {
+                console.log('*****************serverData', cpParse[0] + '-' + Number(cpParse[1]));
+            }
+
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
         });
 
         (frontData || []).filter((data) => {
 
+
             let cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
+
+            if ((data || {}).cmpSerie == 'B7R1') {
+                console.log('*****************frontData', cpParse);
+            }
+
             let identify = ((data || {}).cmpSerie || "").split("");
 
             if (identify[0] == "N") {
@@ -64,15 +78,15 @@ class clsFacturacion {
             }
         });
 
-/*
-        pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND;`).then(([documents]) => {
-            (documents || []).filter((data) => {
-                let nroDocument = (data || {})['NRO_DOCUMENT'];
-                if ((paseDataList || []).includes(nroDocument)) {
-                    pool.query(`DELETE FROM TB_DETAIL_DOCUMENT_NO_SEND WHERE NRO_DOCUMENT = '${nroDocument}';`)
-                }
-            });
-        });*/
+        /*
+                pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND;`).then(([documents]) => {
+                    (documents || []).filter((data) => {
+                        let nroDocument = (data || {})['NRO_DOCUMENT'];
+                        if ((paseDataList || []).includes(nroDocument)) {
+                            pool.query(`DELETE FROM TB_DETAIL_DOCUMENT_NO_SEND WHERE NRO_DOCUMENT = '${nroDocument}';`)
+                        }
+                    });
+                });*/
 
         let selectedLocal = tiendasList.find((data) => data.code == codigoFront);
         console.log(`${this.getDate()} - ${codigoFront} - ${(selectedLocal || {}).name} - Comprobantes enviados: ${(dataNoFound || []).length} - `, dataNoFound);
@@ -82,8 +96,8 @@ class clsFacturacion {
             const workBook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
             const xlsFile = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
-            emailController.sendEmail('johnnygermano@metasperu.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, null, xlsFile, (selectedLocal || {}).name)
-                .catch(err => console.log(err));
+            /* emailController.sendEmail('johnnygermano@metasperu.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, null, xlsFile, (selectedLocal || {}).name)
+                 .catch(err => console.log(err));*/
         }
 
         console.log(`UPDATE TB_TERMINAL_TIENDA SET ISONLINE = true, VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
