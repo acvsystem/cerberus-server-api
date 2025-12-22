@@ -704,6 +704,7 @@ io.on('connection', async (socket) => {
     pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`).then(([data]) => {
       let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
       socket.broadcast.emit("SrvlimpiarCliente", { clientes: listCliente, codeStore: '4', isCallGoblar: true }, socketID);
+      socket.broadcast.emit("limpiarCliente", { clientes: listCliente, codeStore: code || "backend", isCallGoblar: false }, "backend");
     });
   });
 
