@@ -1665,6 +1665,13 @@ io.on('connection', async (socket) => {
 
   });
 
+  app.get("/store/user/agination", async (req, res) => {
+    pool.query(`SELECT USUARIO,DESCRIPCION_TIENDA FROM bd_metasperu.tb_usuario_tiendas_asignadas 
+                                            INNER JOIN tb_login ON tb_login.ID_LOGIN = tb_usuario_tiendas_asignadas.ID_USUARIO_TASG;;`).then((data) => {
+      res.json({ data: data, success: true });
+    });
+  });
+
   app.get("/login/users", async (req, res) => {
     let [arUsers] = await pool.query(`SELECT * FROM TB_LOGIN;`);
     if ((arUsers || []).length) {
