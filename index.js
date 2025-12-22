@@ -1442,7 +1442,9 @@ io.on('connection', async (socket) => {
       { code: '9F', name: 'VSFA JOCKEY FULL', email: 'vsfajockeyplaza@metasperu.com' },
       { code: '7A7', name: 'BBW ASIA', email: 'bbwasia@metasperu.com' },
       { code: '9P', name: 'VS MALL PLAZA', email: 'vsmallplazatrujillo@metasperu.com' },
-      { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' }
+      { code: '7I', name: 'BBW MALL PLAZA', email: 'bbwmallplazatrujillo@metasperu.com' },
+      { code: '8A', name: 'TUMI JOCKEY PLAZA', email: 'tumijockeyplaza@metasperu.com' },
+      { code: '7R', name: 'BBW SANTA ANITA', email: 'bbwmallaventurasa@metasperu.com' }
     ];
 
     let selectedLocal = tiendasList.find((td) => td.code == data.codigo_tienda) || {};
