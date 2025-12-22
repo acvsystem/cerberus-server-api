@@ -42,9 +42,8 @@ class clsFacturacion {
 
         (frontData || []).filter((data) => {
 
-
             let cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
-
+            console.log('*****************frontData', cpParse);
             if ((data || {}).cmpSerie == 'B7R1') {
                 console.log('*****************frontData', cpParse);
             }
