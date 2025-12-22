@@ -293,7 +293,7 @@ function emitClearClient(code) {
   console.log("emitClearClient****************************************************");
   pool.query(`SELECT * FROM TB_CLIENTES_CLEAR_FORNT;`).then(([data]) => {
     let listCliente = ((data || [])[0]['LIST_CLIENTE']).split(',');
-    io.emit("limpiarCliente", { clientes: listCliente, codeStore: code || "backend", isCallGoblar: false }, "backend");
+    io.emit("limpiarCliente", { clientes: listCliente, codeStore: "backend", isCallGoblar: true }, "backend");
   });
 }
 
@@ -531,7 +531,7 @@ io.on('connection', async (socket) => {
   if (codeTerminal != "SRVFACT" && isIcg != 'true') {
     let listSessionConnect = await sessionSocket.connect(codeTerminal);
 
-    //emitClearClient(codeTerminal);
+    emitClearClient(codeTerminal);
 
     socket.broadcast.emit("comprobantes:get:response", listSessionConnect);
   } else {
