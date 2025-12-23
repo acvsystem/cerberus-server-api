@@ -33,20 +33,12 @@ class clsFacturacion {
 
             var cpParse = ((data || {}).cmpNumero || "").split('-');
 
-            if (cpParse[0] == 'B7R1') {
-                console.log('*****************serverData', cpParse[0] + '-' + Number(cpParse[1]));
-            }
-
             (paseDataList || []).push(cpParse[0] + '-' + Number(cpParse[1]));
         });
 
         (frontData || []).filter((data) => {
 
             let cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
-            console.log('*****************frontData', cpParse);
-            if ((data || {}).cmpSerie == 'B7R1') {
-                console.log('*****************frontData', cpParse);
-            }
 
             let identify = ((data || {}).cmpSerie || "").split("");
 
