@@ -1382,7 +1382,7 @@ io.on('connection', async (socket) => {
 
       let parseDate = `${date[0]}-${parseInt(date[1])}-${date[2]}`;
       console.log(parseDate);
-      if (date[2] == '2025') {
+      if (date[2] == '2025' || date[2] == '2026') {
         if (i >= 0) {
 
 
