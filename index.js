@@ -40,10 +40,11 @@ const io = new Server(httpServer, {
 
 const uploadTraspasos = multer({ dest: 'uploads/traspasos' });
 let arUsuarioSocket = [];
-app.use(cors({
-  origin: (origin, callback) => callback(null, true), // Permite cualquier origen
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 
 app.use(bodyParser.json({ limit: "1000000mb" }));
