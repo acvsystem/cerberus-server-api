@@ -51,7 +51,7 @@ export const regHorasExtras = async (req, res) => {
                 const [feriados] = await pool.query(
                     `SELECT DL.NUMERO_DOCUMENTO FROM TB_DIAS_LIBRE DL
                      INNER JOIN TB_DIAS_HORARIO DH ON DH.ID_DIAS = DL.ID_TRB_DIAS
-                     WHERE DL.NUMERO_DOCUMENTO = ? AND DL.FECHA_NUMBER = ? LIMIT 1`,
+                     WHERE DL.NUMERO_DOCUMENTO = ? AND DH.FECHA_NUMBER = ? LIMIT 1`,
                     [hrx.documento, fechaHr]
                 );
 
