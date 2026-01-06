@@ -9,7 +9,6 @@ export const generarCodigo = async (req, res) => {
     let data = ((req || {}).body || []);
     let codigo_tienda = (data || {}).serie_tienda;
     let [arPapeleta] = await pool.query(`SELECT * FROM TB_HEAD_PAPELETA WHERE CODIGO_TIENDA = '${codigo_tienda}';`);
-    console.log((arPapeleta || []).length);
     let newCodigo = `P${codigo_tienda}${(arPapeleta || []).length + 1}`;
     res.json({ codigo: newCodigo })
 }
@@ -20,7 +19,6 @@ export const recalcularHorasExtras = async (req, res) => {
     pool.query(`DELETE FROM TB_HORA_EXTRA_EMPLEADO WHERE ID_HR_EXTRA = ${(data || "").id_hora_extra};`).then(() => {
         res.json(defaultResponse.success.default);
     });
-
 };
 
 //SE INSERTA EN LA TABLA HORA EXTRA GENERAL COMO UNA TABLA PRODUCTOS
@@ -28,30 +26,22 @@ export const regHorasExtras = async (req, res) => {
     let data = ((req || {}).body || []);
     let dataResponse = [];
 
-
     await (data || []).filter(async (hrx, i) => {
 
-        let [existHrx] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${(hrx || {}).documento}' AND FECHA = '${(hrx || {}).fecha}' AND  HR_EXTRA_ACUMULADO = '${(hrx || {}).hrx_acumulado}';`);
-
+        let [existHrx] = await pool.query(`SELECT * FROM TB_HORA_EXTRA_EMPLEADO WHERE NRO_DOCUMENTO_EMPLEADO = '${(hrx || {}).documento}' 
+                                            AND FECHA = '${(hrx || {}).fecha}' AND  HR_EXTRA_ACUMULADO = '${(hrx || {}).hrx_acumulado}';`);
+        console.log('********************',existHrx, (existHrx || []).length);
         if (!(existHrx || []).length || typeof existHrx == 'undefined') {
             let fh = ((hrx || {}).fecha || "").split("-");
             let fecha = (hrx || {}).fecha;
             let fechaHr = `${parseInt(fh[2])}-${parseInt(fecha.split("-")[1].substr(0, 1)) == 0 ? fecha.split("-")[1].substr(1, 2) : fecha.split("-")[1].substr(0, 2)}-${fh[0]}`;
-
-            console.log(`SELECT * FROM TB_DIAS_LIBRE 
-                INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
-                WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(hrx || {}).documento}'
-                AND FECHA_NUMBER = '${fechaHr}';`);
 
             let [arFeriado] = await pool.query(`SELECT * FROM TB_DIAS_LIBRE 
                 INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
                 WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(hrx || {}).documento}'
                 AND FECHA_NUMBER = '${fechaHr}';`);
 
-            console.log(fechaHr, arFeriado, (hrx || {}).hr_trabajadas);
-
             let hrxAcomulado = arFeriado.length ? (hrx || {}).hr_trabajadas : (hrx || {}).hrx_acumulado;
-            //let hrxAcomulado = (hrx || {}).hrx_acumulado;
 
             await pool.query(`INSERT INTO TB_HORA_EXTRA_EMPLEADO(
                     NRO_DOCUMENTO_EMPLEADO,
@@ -193,7 +183,7 @@ export const regPapeleta = async (req, res) => {
                             });
 
                         pool.query(`UPDATE TB_HORA_EXTRA_EMPLEADO SET HR_EXTRA_SOLICITADO = '${hrx.hrx_solicitado}',
-                             ESTADO = '${hrx.estado}', HR_EXTRA_SOBRANTE = '${sobrante}'
+                             ESTADO = '${hrx.estado}', HR_EXTRA_SOBRANTE = '${sobrante}', ISUPDATE = 1
                              WHERE ID_HR_EXTRA = ${hrx.id_hora_extra};`);
 
                     }
