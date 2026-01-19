@@ -860,8 +860,8 @@ io.on('connection', async (socket) => {
 
                 let tiendasList = [
                   { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
-                  { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
-                  { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@metasperu.com' },
+                  { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventuraAQP@metasperu.com' },
+                  { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventuraAQP@metasperu.com' },
                   { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@metasperu.com' },
                   { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@metasperu.com' },
                   { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@metasperu.com' },
@@ -1426,8 +1426,8 @@ io.on('connection', async (socket) => {
 
     let tiendasList = [
       { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
-      { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
-      { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@metasperu.com' },
+      { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventuraAQP@metasperu.com' },
+      { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventuraAQP@metasperu.com' },
       { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@metasperu.com' },
       { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@metasperu.com' },
       { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@metasperu.com' },
@@ -1566,8 +1566,8 @@ io.on('connection', async (socket) => {
       if ((data || {}).comentario != 'Error de sistema') {
         let tiendasList = [
           { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
-          { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
-          { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@metasperu.com' },
+          { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventuraAQP@metasperu.com' },
+          { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventuraAQP@metasperu.com' },
           { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@metasperu.com' },
           { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@metasperu.com' },
           { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@metasperu.com' },
@@ -2986,8 +2986,8 @@ io.on('connection', async (socket) => {
     let arrDocumento = (req || []).body || [];
     let tiendasList = [
       { code: '7A', name: 'BBW JOCKEY', email: 'bbwjockeyplaza@metasperu.com' },
-      { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventura@metasperu.com' },
-      { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventura@metasperu.com' },
+      { code: '9N', name: 'VS MALL AVENTURA', email: 'vsmallaventuraAQP@metasperu.com' },
+      { code: '7J', name: 'BBW MALL AVENTURA', email: 'bbwmallaventuraAQP@metasperu.com' },
       { code: '7E', name: 'BBW LA RAMBLA', email: 'bbwlarambla@metasperu.com' },
       { code: '9D', name: 'VS LA RAMBLA', email: 'vslarambla@metasperu.com' },
       { code: '9B', name: 'VS PLAZA NORTE', email: 'vsplazanorte@metasperu.com' },
