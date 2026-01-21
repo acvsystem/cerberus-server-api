@@ -37,10 +37,9 @@ class clsFacturacion {
         });
 
         (frontData || []).filter((data) => {
-
+            let identify = ((data || {}).cmpSerie || "").split("");
             let cpParse = (data || {}).cmpSerie + '-' + (data || {}).cmpNumero;
 
-            let identify = ((data || {}).cmpSerie || "").split("");
 
             if (identify[0] == "N") {
                 let newSerie = (data || {}).cmpSerie.slice(1, 4);
@@ -49,10 +48,10 @@ class clsFacturacion {
 
             if (identify[0] == "H") {
                 let newSerie = (data || {}).cmpSerie.slice(1, 4);
-                //   cpParse = `F${newSerie}` + '-' + (data || {}).cmpNumero;
+                cpParse = `F${newSerie}` + '-' + (data || {}).cmpNumero;
             }
 
-            if (!(paseDataList || []).includes(cpParse)) {
+            if (!(paseDataList || []).includes(cpParse) && !identify[0] == "T") {
                 /*
                 pool.query(`SELECT * FROM TB_DETAIL_DOCUMENT_NO_SEND WHERE NRO_DOCUMENT = '${cpParse}';`).then(([documents]) => {
                     if (!(documents || []).length) {
