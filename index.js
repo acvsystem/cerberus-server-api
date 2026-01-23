@@ -837,6 +837,8 @@ io.on('connection', async (socket) => {
 
   socket.on('traffic:get:online:py:response', async (data) => {
     console.log(data);
+
+    /*
     let socketID = data['configuration']['socket'];
     let isEmail = data['configuration']['isEmail'];
     let response = data['data'];
@@ -938,9 +940,9 @@ io.on('connection', async (socket) => {
               }
             });
         }
-      });
+      });*/
 
-    socket.to(`${socketID}`).emit("traffic:get:online:response", response);
+    socket.to(`${socketID}`).emit("traffic:get:online:response", data);
   });
 
 
