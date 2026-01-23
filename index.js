@@ -941,7 +941,7 @@ io.on('connection', async (socket) => {
         }
       });
 
-    socket.to(`${socketID}`).emit("traffic:get:online:response", data);
+    socket.broadcast.emit("traffic:get:online:response", data);
   });
 
 
