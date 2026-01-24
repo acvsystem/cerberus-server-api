@@ -43,12 +43,12 @@ class clsFacturacion {
 
             if (identify[0] == "N") {
                 let newSerie = (data || {}).cmpSerie.slice(1, 4);
-                //cpParse = `B${newSerie}` + '-' + (data || {}).cmpNumero;
+                cpParse = `B${newSerie}` + '-' + (data || {}).cmpNumero;
             }
 
             if (identify[0] == "H") {
                 let newSerie = (data || {}).cmpSerie.slice(1, 4);
-                //cpParse = `F${newSerie}` + '-' + (data || {}).cmpNumero;
+                cpParse = `F${newSerie}` + '-' + (data || {}).cmpNumero;
             }
 
             if (!(paseDataList || []).includes(cpParse) && !identify[0] == "T") {
@@ -86,8 +86,8 @@ class clsFacturacion {
             const workBook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workBook, workSheet, "attendance");
             const xlsFile = XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
-            /* emailController.sendEmail('johnnygermano@metasperu.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, null, xlsFile, (selectedLocal || {}).name)
-                 .catch(err => console.log(err));*/
+            emailController.sendEmail('johnnygermano@metasperu.com', `${(selectedLocal || {}).name} - FACTURAS FALTANTES EN SERVIDOR`, null, xlsFile, (selectedLocal || {}).name)
+                .catch(err => console.log(err));
         }
 
         console.log(`UPDATE TB_TERMINAL_TIENDA SET ISONLINE = true, VERIFICACION = true, CANT_COMPROBANTES = ${(dataNoFound || []).length} WHERE CODIGO_TERMINAL = '${codigoFront}'`);
