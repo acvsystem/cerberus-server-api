@@ -43,12 +43,12 @@ class clsFacturacion {
 
             if (identify[0] == "N") {
                 let newSerie = (data || {}).cmpSerie.slice(1, 4);
-                cpParse = `B${newSerie}` + '-' + (data || {}).cmpNumero;
+                //cpParse = `B${newSerie}` + '-' + (data || {}).cmpNumero;
             }
 
             if (identify[0] == "H") {
                 let newSerie = (data || {}).cmpSerie.slice(1, 4);
-                cpParse = `F${newSerie}` + '-' + (data || {}).cmpNumero;
+                //cpParse = `F${newSerie}` + '-' + (data || {}).cmpNumero;
             }
 
             if (!(paseDataList || []).includes(cpParse) && !identify[0] == "T") {
