@@ -74,7 +74,7 @@ export const EmailList = async (req, res) => {
 
   res.json([
     { mail: "auditor@metasperu.com" },
-    { mail: "josecarreno@metasperu.com" },
+    { mail: "inventariogd.peru@gmail.com" },
     { mail: "itperu@metasperu.com" },
     { mail: "johnnygermano@metasperu.com" },
     { mail: "logisticaperu@metasperu.com" },
