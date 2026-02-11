@@ -41,6 +41,11 @@ export const regHorasExtras = async (req, res) => {
                 WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(hrx || {}).documento}'
                 AND FECHA_NUMBER = '${fechaHr}';`);
 
+                console.log(`SELECT * FROM TB_DIAS_LIBRE 
+                INNER JOIN TB_DIAS_HORARIO ON TB_DIAS_HORARIO.ID_DIAS = TB_DIAS_LIBRE.ID_TRB_DIAS
+                WHERE TB_DIAS_LIBRE.NUMERO_DOCUMENTO = '${(hrx || {}).documento}'
+                AND FECHA_NUMBER = '${fechaHr}';`);
+
             let hrxAcomulado = arFeriado.length ? (hrx || {}).hr_trabajadas : (hrx || {}).hrx_acumulado;
 
             await pool.query(`INSERT INTO TB_HORA_EXTRA_EMPLEADO(
