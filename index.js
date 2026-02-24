@@ -1451,7 +1451,7 @@ io.on('connection', async (socket) => {
     ];
 
     let selectedLocal = tiendasList.find((td) => td.code == data.codigo_tienda) || {};
-
+    console.log(arAutorizacion);
     socket.broadcast.emit("lista_solicitudes", arAutorizacion);
 
     let bodyHTML = `<table style="width:100%;border-spacing:0">
