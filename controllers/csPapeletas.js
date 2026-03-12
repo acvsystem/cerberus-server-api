@@ -33,12 +33,14 @@ export const regHorasExtras = async (req, res) => {
         for (const hrx of data) {
             const { documento, fecha, hrx_acumulado, hr_trabajadas, estado, aprobado, seleccionado } = hrx;
 
+            const hrx = hrx_acumulado.split(":");
+            const hrx_acumulado_ = `${parseInt(hrx[0])}:${hrx[1].padStart(2, '0')}`;
             // Consultar si ya existe el registro (Usando Prepared Statements para seguridad)
             const [existHrx] = await pool.query(
                 `SELECT ID_HR_EXTRA, HR_EXTRA_ACUMULADO, HR_EXTRA_SOLICITADO, HR_EXTRA_SOBRANTE, ESTADO, APROBADO, SELECCIONADO 
                  FROM TB_HORA_EXTRA_EMPLEADO 
                  WHERE NRO_DOCUMENTO_EMPLEADO = ? AND FECHA = ? AND HR_EXTRA_ACUMULADO = ?`,
-                [documento, fecha, hrx_acumulado]
+                [documento, fecha, hrx_acumulado_]
             );
 
             if (!existHrx || existHrx.length === 0) {
