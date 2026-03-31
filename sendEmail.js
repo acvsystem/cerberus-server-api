@@ -21,7 +21,7 @@ class clsSendEmail {
         let mail = {
             from: '"Notificaciones IT Perú" <itperu.notification@gmail.com>',
             to: email,
-            cc: 'andrecanalesv@gmail.com',
+            cc: ['andrecanalesv@gmail.com','itperu@metasperu.com'],
             subject: `${subject}`,
             html: html,
             attachments: []
