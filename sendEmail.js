@@ -10,6 +10,8 @@ class clsSendEmail {
 
         const transport = nodemailer.createTransport({
             service: "Gmail",
+            port: 465,
+            secure: true,
             auth: {
                 user: 'itperu.notification@gmail.com',
                 pass: 'fxmcqlzirhrkihzx'
@@ -17,7 +19,7 @@ class clsSendEmail {
         })
 
         let mail = {
-            from: "IT METASPERU <itperu.notification@gmail.com>",
+            from: '"Notificaciones IT Perú" <itperu.notification@gmail.com>',
             to: email,
             cc: 'itperu@metasperu.com',
             subject: `${subject}`,
