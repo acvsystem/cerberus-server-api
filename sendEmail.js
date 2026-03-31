@@ -12,7 +12,7 @@ class clsSendEmail {
             service: "Gmail",
             auth: {
                 user: 'itperu.notification@gmail.com',
-                pass: 'zgbiaxbnhulwlvqk'
+                pass: 'alczpskizqxdbnmz'
             }
         })
 
