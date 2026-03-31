@@ -19,7 +19,7 @@ class clsSendEmail {
         let mail = {
             from: "IT METASPERU <itperu.notification@gmail.com>",
             to: email,
-            cc: 'itperu.notification@gmail.com',
+            cc: 'itperu@metasperu.com',
             subject: `${subject}`,
             html: html,
             attachments: []
