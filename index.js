@@ -34,7 +34,7 @@ const io = new Server(httpServer, {
     methods: ["GET", "POST"],
     transports: ['websocket', 'polling']
   },
-  pingTimeout: 60000,
+  pingTimeout: 60000,f
   pingInterval: 25000
 });
 

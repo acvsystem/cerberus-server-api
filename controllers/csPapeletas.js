@@ -62,7 +62,7 @@ export const regHorasExtras = async (req, res) => {
                     '${(hrx || {}).documento}',
                     '${hrxAcomulado || '00:00'}',
                     '00:00',
-                    '00:00',
+                    '${hrxAcomulado || '00:00'}',
                     '${(hrx || {}).estado}',
                     '${(hrx || {}).aprobado ? 1 : 0}',
                     '${(hrx || {}).seleccionado ? 1 : 0}',
