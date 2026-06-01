@@ -194,7 +194,7 @@ const task_4 = cron.schedule('*/15 * * * *', () => {
 
 const task_5 = cron.schedule('00 8 * * 0', () => {
   console.log('00 8 * * 0')
-  onVerificarCalendario();
+  //onVerificarCalendario();
 });
 
 const task_6 = cron.schedule('*/30 * * * *', () => {
