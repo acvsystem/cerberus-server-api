@@ -834,7 +834,7 @@ io.on('connection', async (socket) => {
     console.log(request);
     socket.broadcast.emit("trafficGetOnline", configuration);
   });
-
+/*
   socket.on('traffic:get:online:py:response', async (data) => {
     console.log(data);
     
@@ -925,7 +925,7 @@ io.on('connection', async (socket) => {
                 </tbody>
             </table>`;
 
-                emailController.sendEmail('johnnygermano@metasperu.com', `ALERTA TRAFFIC - ${(selectedLocal || {}).name}`, bodyHTML, null, (selectedLocal || {}).name)
+                emailController.sendEmail('itperu@metasperu.com', `ALERTA TRAFFIC - ${(selectedLocal || {}).name}`, bodyHTML, null, (selectedLocal || {}).name)
                   .catch(err => console.log(err));
               }
 
@@ -942,9 +942,7 @@ io.on('connection', async (socket) => {
       });
 
     socket.broadcast.emit("traffic:get:online:response", data);
-  });
-
-
+  });*/
 
 
   /* CONSULTA CANTIDAD EN TERMINALES FRONT RETAIL */
