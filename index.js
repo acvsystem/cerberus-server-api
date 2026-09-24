@@ -167,7 +167,7 @@ const emiter = new EventEmitter();
 var listClient = { id: '' };
 var agenteList = [];
 
-const task_1 = cron.schedule('20 17 * * *', () => {
+const task_1 = cron.schedule('00 10 * * *', () => {
   console.log('00 10');
   emitVerificationDoc();
 
