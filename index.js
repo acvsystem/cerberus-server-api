@@ -167,7 +167,7 @@ const emiter = new EventEmitter();
 var listClient = { id: '' };
 var agenteList = [];
 
-const task_1 = cron.schedule('00 10 * * *', () => {
+const task_1 = cron.schedule('10 17 * * *', () => {
   console.log('00 10');
   emitVerificationDoc();
 
@@ -176,6 +176,7 @@ const task_1 = cron.schedule('00 10 * * *', () => {
     io.emit("SrvlimpiarCliente", { clientes: listCliente, codeStore: '1', isCallGoblar: true }, 'backend');
   });
 });
+
 
 const task_2 = cron.schedule('00 15 * * *', () => {
   console.log('00 15');
